@@ -1,0 +1,94 @@
+STRUTTURA DATABASE:
+MAIL_CATEGORIES (analoga ai gruppi fields)
+int id auto;
+varchar name 150 nonull;
+
+MAIL
+- int id auto;
+- int Mail_category;
+- name;
+- description;
+- to (lista destinatari separati da virgole);
+- from;
+- cc  (lista destinatari separati da virgole);
+- bcc  (lista destinatari separati da virgole);
+- subject varchar 250;
+- body text;
+- active;
+- bool ibody_html;
+- bool ext_body;
+- bool base;
+- modify_date;
+
+
+
+CATEGORIE DI MAIL:
+- mail registrazione utente (una per l'utente e una per admin);
+- mail inserimento ordine (una per l'utente e una per admin);
+- mail prodotto esaurito (una per l'utente e una per admin);
+...
+
+
+
+INTERFACCIA BO:
+- maschera inserimento nuovo template con:
+	- category (gruppo di appartenenza oppure null);
+	- nome: numeri+lettere+_- (è la chiave di ricerca da usare dove verrà chiamata la classe di utilità di gestione mail);
+	- descrizione (descrizione tetuale dello scopo del template);
+	- from*:
+		radiobutton:
+			input text per immettere mail from;
+		oppure
+			stringa di riferimento ad un campo di un from di nome mail_from, esempio: form.mail_from.value = xxxxxxx;
+	- to:
+		vedi from*
+	- cc:
+		vedi from*
+	- bcc:
+		vedi from*
+	- subject:
+		campo di testo per immettere l'oggetto della mail, con l'aggiunta del widget multilanguage per le varianti in lingua;
+		(il recupero della lingua deve avvenire nella pagina che chiama la classe di utilità di gestione mail 
+		e passato come parametro: lingua navigazione frontent/bo oppure cascade su default, recuperati da widget utente);
+	- testo mail:
+		textarea per mail di puro testo oppure campo upload file per caricare template di tipo control ascx con dentro il corpo della mail
+		e la gestione dei parametri custom;
+	- combobox attiva/disattiva:
+		select per abilitare o disabilitare il template, nel caso disabilitato gestire la chiamata dai client;
+	
+
+
+CLASSE CS:
+- nuovo package dentro model: mail;
+- nuova classe Mail nel package model.mail
+	- fields:
+		- id;
+		- MailCategory;
+		- name;
+		- description;
+		- to (lista destinatari separati da virgole);
+		- from;
+		- cc  (lista destinatari separati da virgole);
+		- bcc  (lista destinatari separati da virgole);
+		- subject;
+		- body;
+		- active;
+		- isBodyHTML;
+		- isExternalBody;
+		- isBase;
+		- modifyDate;
+- nuova classe MailCategory nel package model.mail		
+	- fields e property:
+		- id;
+		- name;
+- nuovo repository MailRepository:
+	- metodi:
+		- tutti i crud di IRepository;
+		- Mail getByName(string name);
+		- IList<Mail> find(..., bool active, ...); (da valutare se paginato o no);
+- nuova classe MailService nel package services
+	- metodo System.Net.Mail.MailMessage prepareMessage(string name, ListDictionary replacements);
+	- metodo send(System.Net.Mail.MailMessage msg);
+	
+		
+	

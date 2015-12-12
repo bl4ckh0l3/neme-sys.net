@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="com.nemesys.model" assembly="App_Code">
+    <class name="Payment" table="PAYMENT">
+	<id name="id">
+		<column name="id" sql-type="int(11)" not-null="true"/>
+		<generator class="native" />
+	</id>
+	<property name="description" column="description" />
+	<property name="paymentData" column="payment_data" />
+	<property name="commission" type="Decimal" column="commission" not-null="true" />
+	<property name="commissionType" type="Int32" column="commission_type" not-null="true" />
+	<property name="hasExternalUrl" type="Boolean" column="external_url" not-null="true" />
+	<property name="idModule" type="Int32" column="id_module" />
+	<property name="isActive" type="Boolean" column="active" not-null="true" />
+	<property name="paymentType" type="Int32" column="payment_type" not-null="true" />
+	<property name="applyTo" type="Int32" column="apply_to" not-null="true" />
+	<bag name="fields" inverse="true" lazy="true" cascade="all">
+		<key column="idPayment"/>
+		<one-to-many class="PaymentField"/>
+	</bag>
+    </class>
+
+    <class name="PaymentField" table="PAYMENT_FIELDS">
+        <id name="id">
+            <column name="id" sql-type="int(11)" not-null="true"/>
+            <generator class="native" />
+        </id>
+	<property name="idPayment" column="id_payment" type="Int32" not-null="true" />
+	<property name="idModule" column="id_module" type="Int32"/>
+	<property name="keyword" column="keyword" not-null="true" />		
+	<property name="value" column="value" />	
+	<property name="matchField" column="match_field" />
+    </class>
+
+    <class name="PaymentFieldFixed" table="PAYMENT_FIELDS_FIXED">
+        <id name="id">
+            <column name="id" sql-type="int(11)" not-null="true"/>
+            <generator class="native" />
+        </id>
+	<property name="keyword" column="keyword" not-null="true" />		
+	<property name="value" column="value" />
+	<property name="used" type="Boolean" column="used" not-null="true" />
+    </class>
+
+    <class name="PaymentModule" table="PAYMENT_MODULES">
+        <id name="id">
+            <column name="id" sql-type="int(11)" not-null="true"/>
+            <generator class="native" />
+        </id>
+	<property name="name" column="name" not-null="true" />		
+	<property name="icon" column="icon" />
+	<property name="idOrderField" column="id_order_field" not-null="true" />	
+	<property name="ipProvider" column="ip_provider" not-null="true" />		
+    </class>
+
+    <class name="PaymentModuleField" table="PAYMENT_MODULES_FIELDS">
+        <id name="id">
+            <column name="id" sql-type="int(11)" not-null="true"/>
+            <generator class="native" />
+        </id>
+	<property name="idModule" column="id_module" type="Int32"/>
+	<property name="keyword" column="keyword" not-null="true" />		
+	<property name="value" column="value" />		
+	<property name="matchField" column="match_field" />
+    </class>
+
+    <class name="PaymentTransaction" table="PAYMENT_TRANSACTIONS">
+        <id name="id">
+            <column name="id" sql-type="int(11)" not-null="true"/>
+            <generator class="native" />
+        </id>
+	<property name="idOrder" column="id_order" type="Int32"/>
+	<property name="idModule" column="id_module" type="Int32"/>
+	<property name="idTransaction" column="id_transaction" not-null="true" />		
+	<property name="status" column="status" />		
+	<property name="notified" type="Boolean" column="notified" not-null="true" />
+	<property name="insertDate">
+	<column name="insert_date" sql-type="timestamp" />
+	</property>	
+    </class>
+</hibernate-mapping>

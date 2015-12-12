@@ -1,0 +1,1 @@
+INSERT INTO `MODULES` (`keyword`, `description`, `version`, `active`) VALUES ('mod-voucher', 'voucher module installation', 'buildVersSql', '1');

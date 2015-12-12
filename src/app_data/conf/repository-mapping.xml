@@ -1,0 +1,149 @@
+<repository>
+  <ICategoryRepository>
+    <value>com.nemesys.database.repository.CategoryRepository</value>
+    <description>nhibernate implementation of ICategoryRepository</description>
+  </ICategoryRepository>
+  
+  <ICountryRepository>
+    <value>com.nemesys.database.repository.CountryRepository</value>
+    <description>nhibernate implementation of ICountryRepository</description>
+  </ICountryRepository>
+  
+  <ICurrencyRepository>
+    <value>com.nemesys.database.repository.CurrencyRepository</value>
+    <description>nhibernate implementation of ICurrencyRepository</description>
+  </ICurrencyRepository>
+  
+  <IGeolocalizationRepository>
+    <value>com.nemesys.database.repository.GeolocalizationRepository</value>
+    <description>nhibernate implementation of IGeolocalizationRepository</description>
+  </IGeolocalizationRepository>
+  
+  <ILanguageRepository>
+    <value>com.nemesys.database.repository.LanguageRepository</value>
+    <description>nhibernate implementation of ILanguageRepository</description>
+  </ILanguageRepository>
+  
+  <ILoggerRepository>
+    <value>com.nemesys.database.repository.LoggerRepository</value>
+    <description>nhibernate implementation of ILoggerRepository</description>
+  </ILoggerRepository>
+  
+  <IMailRepository>
+    <value>com.nemesys.database.repository.MailRepository</value>
+    <description>nhibernate implementation of IMailRepository</description>
+  </IMailRepository>
+  
+  <IMultiLanguageRepository>
+    <value>com.nemesys.database.repository.MultiLanguageRepository</value>
+    <description>nhibernate implementation of IMultiLanguageRepository</description>
+  </IMultiLanguageRepository>
+  
+  <IUserRepository>
+    <value>com.nemesys.database.repository.UserRepository</value>
+    <description>nhibernate implementation of IUserRepository</description>
+  </IUserRepository>
+  
+  <ITemplateRepository>
+    <value>com.nemesys.database.repository.TemplateRepository</value>
+    <description>nhibernate implementation of ITemplateRepository</description>
+  </ITemplateRepository>
+  
+  <INewsletterRepository>
+    <value>com.nemesys.database.repository.NewsletterRepository</value>
+    <description>nhibernate implementation of INewsletterRepository</description>
+  </INewsletterRepository>
+  
+  <IContentRepository>
+    <value>com.nemesys.database.repository.ContentRepository</value>
+    <description>nhibernate implementation of IContentRepository</description>
+  </IContentRepository>
+  
+  <ICommonRepository>
+    <value>com.nemesys.database.repository.CommonRepository</value>
+    <description>nhibernate implementation of ICommonRepository</description>
+  </ICommonRepository>
+  
+  <ICommentRepository>
+    <value>com.nemesys.database.repository.CommentRepository</value>
+    <description>nhibernate implementation of ICommentRepository</description>
+  </ICommentRepository>
+  
+  <IUserPreferencesRepository>
+    <value>com.nemesys.database.repository.UserPreferencesRepository</value>
+    <description>nhibernate implementation of IUserPreferencesRepository</description>
+  </IUserPreferencesRepository>
+  
+  <ISearchRepository>
+    <value>com.nemesys.database.repository.SearchRepository</value>
+    <description>nhibernate implementation of ISearchRepository</description>
+  </ISearchRepository>
+
+<!-- ecommerce repositories -->
+  
+  <IPaymentRepository>
+    <value>com.nemesys.database.repository.PaymentRepository</value>
+    <description>nhibernate implementation of IPaymentRepository</description>
+  </IPaymentRepository>
+  
+  <IPaymentModuleRepository>
+    <value>com.nemesys.database.repository.PaymentModuleRepository</value>
+    <description>nhibernate implementation of IPaymentModuleRepository</description>
+  </IPaymentModuleRepository>
+  
+  <IPaymentTransactionRepository>
+    <value>com.nemesys.database.repository.PaymentTransactionRepository</value>
+    <description>nhibernate implementation of IPaymentTransactionRepository</description>
+  </IPaymentTransactionRepository>
+  
+  <ISupplementRepository>
+    <value>com.nemesys.database.repository.SupplementRepository</value>
+    <description>nhibernate implementation of ISupplementRepository</description>
+  </ISupplementRepository>
+  
+  <ISupplementGroupRepository>
+    <value>com.nemesys.database.repository.SupplementGroupRepository</value>
+    <description>nhibernate implementation of ISupplementGroupRepository</description>
+  </ISupplementGroupRepository>
+  
+  <IFeeRepository>
+    <value>com.nemesys.database.repository.FeeRepository</value>
+    <description>nhibernate implementation of IFeeRepository</description>
+  </IFeeRepository>
+  
+  <IProductRepository>
+    <value>com.nemesys.database.repository.ProductRepository</value>
+    <description>nhibernate implementation of IProductRepository</description>
+  </IProductRepository>
+  
+  <IShippingAddressRepository>
+    <value>com.nemesys.database.repository.ShippingAddressRepository</value>
+    <description>nhibernate implementation of IShippingAddressRepository</description>
+  </IShippingAddressRepository>
+  
+  <IBillsAddressRepository>
+    <value>com.nemesys.database.repository.BillsAddressRepository</value>
+    <description>nhibernate implementation of IBillsAddressRepository</description>
+  </IBillsAddressRepository>
+  
+  <IShoppingCartRepository>
+    <value>com.nemesys.database.repository.ShoppingCartRepository</value>
+    <description>nhibernate implementation of IShoppingCartRepository</description>
+  </IShoppingCartRepository>
+  
+  <IOrderRepository>
+    <value>com.nemesys.database.repository.OrderRepository</value>
+    <description>nhibernate implementation of IOrderRepository</description>
+  </IOrderRepository>
+  
+  <IAdsRepository>
+    <value>com.nemesys.database.repository.AdsRepository</value>
+    <description>nhibernate implementation of IAdsRepository</description>
+  </IAdsRepository>
+  
+  <IBusinessRuleRepository>
+    <value>com.nemesys.database.repository.BusinessRuleRepository</value>
+    <description>nhibernate implementation of IBusinessRuleRepository</description>
+  </IBusinessRuleRepository>
+  
+</repository>

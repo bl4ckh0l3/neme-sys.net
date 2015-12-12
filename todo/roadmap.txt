@@ -1,0 +1,51 @@
+PARZIALE   - revisione script di build per neme-sys .net, con aggiornamento di tutti i file accessori di markers e configurazioni vari, idem per le immagini dei loghi e i testi di base;
+ 
+ 
+01) TODO    - analisi di utilizzo json per passare gli oggetti tra le pagine;
+ 
+02) TODO    - aggiungere se serve le constraint al DB per il cascade sulla tabella delle geolocalizzazioni,  in modo che se viene cancellata una entità correlata, viene cancellato anche il record delle geolocalizzazione a cui si riferisce;
+ 
+03) TODO    - terminare completamento del file global.asax(pulizia carrello);
+ 
+
+OK        - implementare gestione contenuti utente(blog) con aggiunta dei field per contenuti utente lato BO
+                    aggiungere due tab come in lista utenti, il tab field funzionerà come quello degli utenti;
+                    aggiungerà i nuovi field con il flag forBlog = true;
+                    nel BO non verranno recuperati tra quelli disponibili in inserimento contenuti;
+                    nell'area utente invece saranno gli unici field sempre visualizzati in inserimento contenuti; 
+OK        - template ricerca base;
+OK        - test prima build di nemesys .net;
+OK        - implementare i report, la mailtoafriend, i popup, i feed rss, i contenuti via xml e tutte le microfunzion accessorie;
+OK        - terminare l'area utente con:
+                     l'album fotografico;
+
+                     la pagina del profilo pubblico (visualizzazione album foto interno alla pagina);
+OK        - modificare il log dei file scaricati, trasformarlo in un log su tabella come nel vecchio neme-sys e gestire il report csv dalla lista contenuti del BO;
+OK        - implementare tutta la sezione area utente e pagina di registrazione, con widget utente, user mask, user online, friends ecc...;
+                     manca pagina profilo utente, pagina lista amici, pagina album foto;
+                     nell area utente accorpare profilo, bacheca e statistiche in un unico tab rivisto graficamente;
+                     aggiungere tag agenda appuntamenti personali, integrata nel sistema  e i commenti sia come widget che ne backoffice
+                     (compresi filtri e mail conferma commenti);
+                      in pagina registrazione aggiungere alla sessione anche i valori dei field utente, per gestire il caso di errore registrazione in modo completo. 
+OK        - integrare gestione url https e url assoluti dove servono (vedere usi attuali del base_url);    
+OK        - terminare la sezione utenti con fields utente, filtri e ordinamento completi in lista utenti; 
+OK        - implementare field x contenuti (una parte delle tabelle e oggetti field sarà condivisa tra contenuti, utenti e prodotti); 
+OK        - implementare il primo template di frontend partendo dal base di neme-sys e se easy implementare un altro paio di template con allegati e geolocalizzazione;
+OK        - aggiungere i log agli eventi di insert/update/delete delle pagine bo già implementate;
+OK        - implementare sezione newsletter con scelta template dai template delle mail;
+OK        - capire come implementare la urlrewrite programmatica (web.config o global.asax);
+OK        - capire come gestire upload di file di ogni dimensione;
+OK        - terminare la sezione categorie con la gestione effettiva dei template;
+OK        - invio mail nuova password da pagina login.aspx;
+OK        - implementare la sezione template con gestione file zip e revisione generale dei file recuperati
+               gestione caricamento onfly dei singoli file, e del cambio priorità, eliminazione sottodir (rimane solo img);
+OK        - eliminare le chiavi di configurazioni inutili e inserire quella nuova per urlrewrite con o senza il prefisso lingua;
+OK        - verificare che tutte le operazioni fatte prima nella initData siano state replicate;
+OK        - trovare soluzione ottimale per gestire le transazioni multiple nei salvataggi dei dati  (categorie+user+multilingua, utenti+fields, ecc);
+               vedere come fare metodi repository che accettano la Session nhibernate e gestire la transazione direttamente nella pagina che chiama i vari metodi repository;
+OK        - studiare oggetti e strategia di invio mail, per i templates html se da usare devono essere control recuperati come file ...cercare esempi su web;    
+OK        - nella pagina bo configurazioni una label CHIAVE non sembra essere tradotta e mancano le traduzioni multilingua per questa key: url_with_langcode_prefix;
+OK        - Terminare e testare la classe Guids con tutti i metodi della vecchia classe implementati;
+OK        - terminare implementazione classe GeolocalizationRepository con tutte le funzioni di utilità per gestire i poligoni e le ricerche geolocalizzate con googlemap;
+OK        - terminare implementazione login con gestione cookie;
+OK        - terminare implementazione pagina logoff con cancellazione degli utenti online

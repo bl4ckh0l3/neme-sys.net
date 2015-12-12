@@ -1,0 +1,1 @@
+INSERT INTO `MODULES` (`keyword`, `description`, `version`, `active`) VALUES ('mod-blog', 'blog module installation', 'buildVersSql', '1');

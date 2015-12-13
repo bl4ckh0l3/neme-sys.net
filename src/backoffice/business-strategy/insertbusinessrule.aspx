@@ -26,10 +26,10 @@ var billsStrategyMap;
 billsStrategyMap = new Hashtable();
 var billsStrategyCounter = 0;
 
-var selectedType = <%=fee.type%>;
+var selectedType = <%=brule.ruleType%>;
 
 <%
-if(bolFoundLista){
+/*if(bolFoundLista){
 	string oldgroupname = "";
 	
 	foreach (Fee f in fees){
@@ -39,11 +39,11 @@ if(bolFoundLista){
 			oldgroupname = f.feeGroup;
 		}
 	}
-}
+}*/
 %>
 
 
-function insertSpesa(){
+function insertRule(){
 	
 	if(document.form_inserisci.descrizione.value == ""){
 		alert("<%=lang.getTranslated("backend.spese.detail.js.alert.insert_descrizione_value")%>");
@@ -124,24 +124,6 @@ function insertSpesa(){
 	document.form_inserisci.submit();
 }
 
-function checkGroupFormat(field){
-	var fieldVal = field;	
-	
-	/*
-	var expr1 = /^\d+,\d+$/;
-	var expr2 = /^\d+$/;			
-	var expr3 = /(^\d$)|(^\d,\d$)|(^10$)|(^10,0$)/;
-	var expr4 = /(^\d{4}\/([1-9]|10|11|12)$)/;
-	var expr5 = /^[0-9]$/
-	var expr = /(^\d+$)|(^\d+\.\d+$)|(\.\d+$)/
-	*/
-	
-	var expr = /^\w+$/
-	var ok = expr.test(fieldVal);
-	
-	return ok;
-}
-
 var tempX = 0;
 var tempY = 0;
 
@@ -178,9 +160,9 @@ function addStrategyValues(billsStratCounter, type){
 	$("#td_prod_field"+counter).append($('<input type="hidden"/>').attr('name', "id"+counter).attr('value', ""));		
 	$("#td_prod_field"+counter).append($('<select>').attr('name', "id_prod_field"+counter).attr('class', "formFieldSelect").attr('id', "id_prod_field"+counter));
 	$("#id_prod_field"+counter).append('<option value=""></option>');	
-	<%foreach(ProductField f in productFields){%>
-		$("#id_prod_field"+counter).append('<option value="<%=f.description%>"><%=f.description%></option>');
-	<%}%>	
+	<%/*foreach(ProductField f in productFields){%>
+		$("#id_prod_field"+counter).append('<option value="<%//=f.description%>"><%//=f.description%></option>');
+	<%}*/%>	
 	if(type!=7 && type!=8){
 		$(".id_prod_field_elem").hide();
 	}else{
@@ -278,7 +260,7 @@ function checkFrom(counter){
 }*/ 
 </script>
 </head>
-<body onLoad="javascript:document.form_inserisci.descrizione.focus();">
+<body>
 <div id="backend-warp">
 	<CommonHeader:insert runat="server" />	
 	<div id="container">
@@ -288,42 +270,58 @@ function checkFrom(counter){
 		<table border="0" cellspacing="0" cellpadding="0" class="principal">
 		<tr>
 		<td>
-		<form action="/backoffice/fees/insertfee.aspx" method="post" name="form_inserisci">
-		  <input type="hidden" value="<%=fee.id%>" name="id">		  
+		<form action="/backoffice/business-strategy/insertbusinessrule.aspx" method="post" name="form_inserisci">
+		  <input type="hidden" value="<%=brule.id%>" name="id">		  
 		  <input type="hidden" value="" name="bills_strategy_counter">	  
 		  <input type="hidden" value="insert" name="operation">
 		  
 		  
-		  <span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.descrizione_spesa")%></span><br>
-		  <input type="text" name="descrizione" value="<%=fee.description%>" class="formFieldTXTLong">
-		  <a href="javascript:showHideDiv('description_ml');" class="labelForm"><img width="25" height="25" border="0" style="padding-left:0px;padding-right:0px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" title="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" src="/backoffice/img/multilanguages5.jpeg"></a><br/>
-			<div style="visibility:hidden;position:absolute;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="description_ml">
+		  <span class="labelForm"><%=lang.getTranslated("backend.margini.detail.table.label.label_rule")%></span><br>
+		  <input type="text" name="label" value="<%=brule.label%>" class="formFieldTXTLong">
+		  <a href="javascript:showHideDiv('label_ml');" class="labelForm"><img width="25" height="25" border="0" style="padding-left:0px;padding-right:0px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" title="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" src="/backoffice/img/multilanguages5.jpeg"></a><br/>
+			<div style="visibility:hidden;position:absolute;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="label_ml">
 			<%
 			foreach (Language x in languages){%>
-			<input type="text" hspace="2" vspace="2" name="description_<%=x.label%>" id="description_<%=x.label%>" value="<%=mlangrep.translate("backend.fee.description.label."+fee.description, x.label, lang.defaultLangCode)%>" class="formFieldTXTInternationalization">
+			<input type="text" hspace="2" vspace="2" name="label_<%=x.label%>" id="label_<%=x.label%>" value="<%=mlangrep.translate("backend.businessrule.label.label."+brule.label, x.label, lang.defaultLangCode)%>" class="formFieldTXTInternationalization">
 			&nbsp;<img width="16" height="11" border="0" style="padding-left:5px;padding-right:5px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" title="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" src="/backoffice/img/flag/flag-<%=x.label%>.png"><br/>
 			<%}%>				
 			</div>
+		  <br/><br/>	
+		  <div align="left"><span class="labelForm"><%=lang.getTranslated("backend.margini.detail.table.label.desc_rule")%></span><br>
+		  <textarea name="description" class="formFieldTXTAREAAbstract"><%=brule.description%></textarea>
+		  </div>	
+		  <br/>		 	
+		  <div align="left"><span class="labelForm"><%=lang.getTranslated("backend.margini.detail.table.label.activate_rule")%></span><br>
+			<select name="active" class="formFieldTXTShort">
+			<option value="0"<%if (!brule.active) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.commons.no")%></option>	
+			<option value="1"<%if (brule.active) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.commons.yes")%></option>	
+			</SELECT>
+		  </div>
 		  <br/><br/>
-		  <div align="left"><span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.tipo_valore")%></span><br>
-			<select name="tipo_valore" id="tipo_valore" class="formFieldTXTLong">
-			<option value="1" <%if (1==fee.type) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.spese.label.tipologia_fisso")%></option>	
-			<option value="2" <%if (2==fee.type) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.spese.label.tipologia_percentuale")%></option>	
-			<option value="3" <%if (3==fee.type) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.spese.label.tipologia_fisso_range_imp")%></option>	
-			<option value="4" <%if (4==fee.type) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.spese.label.tipologia_percentuale_range_imp")%></option>	
-			<option value="5" <%if (5==fee.type) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.spese.label.tipologia_fisso_qta")%></option>	
-			<option value="6" <%if (6==fee.type) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.spese.label.tipologia_fisso_qta_incr")%></option>	
-			<option value="7" <%if (7==fee.type) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.spese.label.tipologia_fisso_field")%></option>	
-			<option value="8" <%if (8==fee.type) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.spese.label.tipologia_fisso_field_incr")%></option>	
+		  <div align="left"><span class="labelForm"><%=lang.getTranslated("backend.margini.detail.table.label.tipo_rule")%></span><br>
+			<select name="rule_type" id="rule_type" class="formFieldTXTLong">
+			<%if(showOneTwo){%>
+			<option value="1" <%if (1==brule.ruleType){Response.Write(" selected");}%>><%=lang.getTranslated("backend.margini.label.amount_order_rule")%></option>	
+			<option value="2" <%if (2==brule.ruleType){Response.Write(" selected");}%>><%=lang.getTranslated("backend.margini.label.percentage_order_rule")%></option>
+			<%}%>
+<!--nsys-voucher2--> 
+			<option value="3" <%if (3==brule.ruleType){Response.Write(" selected");}%>><%=lang.getTranslated("backend.margini.label.voucher_order_rule")%></option>
+<!---nsys-voucher2-->
+			<%if(showFourFive){%>
+			<option value="4" <%if (4==brule.ruleType){Response.Write(" selected");}%>><%=lang.getTranslated("backend.margini.label.first_amount_order_rule")%></option>	
+			<option value="5" <%if (5==brule.ruleType){Response.Write(" selected");}%>><%=lang.getTranslated("backend.margini.label.first_percentage_order_rule")%></option>
+			<%}%>
+			<option value="6" <%if (6==brule.ruleType){Response.Write(" selected");}%>><%=lang.getTranslated("backend.margini.label.amount_qta_product_rule")%></option>	
+			<option value="7" <%if (7==brule.ruleType){Response.Write(" selected");}%>><%=lang.getTranslated("backend.margini.label.percentage_qta_product_rule")%></option>	
+			<option value="8" <%if (8==brule.ruleType){Response.Write(" selected");}%>><%=lang.getTranslated("backend.margini.label.amount_related_product_rule")%></option>
+			<option value="9" <%if (9==brule.ruleType){Response.Write(" selected");}%>><%=lang.getTranslated("backend.margini.label.percentage_related_product_rule")%></option>
+			<option value="10" <%if (10==brule.ruleType){Response.Write(" selected");}%>><%=lang.getTranslated("backend.margini.label.exclude_bills_product_rule")%></option>				
 			</SELECT>&nbsp;<a href="#" onMouseOver="javascript:showDiv('help_desc_type_value');" class="labelForm" onmouseout="javascript:hideDiv('help_desc_type_value');">?</a>
 			  <div align="left" style="z-index:1000;position:absolute;margin-bottom:3px;vertical-align:top;text-align:left;font-size: 10px;text-decoration: none;visibility:hidden;display:none;border:1px solid;padding:10px;background:#FFFFFF;width:550px;" id="help_desc_type_value">
-			  <%=lang.getTranslated("backend.prodotti.detail.table.label.field_help_desc_type_value")%>
+			  <%=lang.getTranslated("backend.margini.detail.table.label.help_rule_type_value")%>
 			  </div>	
-		  </div><br>	
-		  <div align="left" id="simple_value">
-		  <span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.valore")%></span><br>
-		  <input type="text" name="valore" value="<%=fee.amount.ToString("#0.00#")%>" class="formFieldTXTShort" onkeypress="javascript:return isDouble(event);">&nbsp;&nbsp;
-		  </div>	
+		  </div>
+		  <br><br>
 		  <div align="left" id="complex_value">
 			  <span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.alt.strategy_value")%></span>&nbsp;<a href="javascript:addStrategyValues(billsStrategyCounter,selectedType);"><img src="/backoffice/img/add.png" title="<%=lang.getTranslated("backend.spese.detail.table.alt.add_strategy_value")%>" alt="<%=lang.getTranslated("backend.spese.detail.table.alt.add_strategy_value")%>" hspace="5" vspace="0" border="0"></a>
 			  <table border="0" align="top" cellpadding="0" cellspacing="0" class="inner-table-nowitdh" id="add_field_values_div">
@@ -339,34 +337,34 @@ function checkFrom(counter){
 				int valuesCounter = 0;
 				int totalCounter = 0;
 				
-				if(fee.configs != null && fee.configs.Count>0){
-					totalCounter = fee.configs.Count;
-				}
+				//if(fee.configs != null && fee.configs.Count>0){
+				//	totalCounter = fee.configs.Count;
+				//}
 				
 				if(totalCounter > 0) {					
-					foreach(FeeConfig j in fee.configs){%>
+					//foreach(FeeConfig j in fee.configs){%>
 						<tr id="field_values_container<%=valuesCounter%>">
 						<td class="id_prod_field_elem">
-						<input type="hidden" name="id<%=valuesCounter%>" value="<%=j.id%>">
+						<input type="hidden" name="id<%=valuesCounter%>" value="<%//=j.id%>">
 						<select name="id_prod_field<%=valuesCounter%>" id="id_prod_field<%=valuesCounter%>" class="formFieldSelect">
 							<option value=""></option>
-							<%if(bolFoundProdF){
-								foreach(ProductField pf in productFields){%>
-									<option value="<%=pf.description%>" <%if (j.descProdField != null && pf.description==j.descProdField) { Response.Write("selected");}%>><%=pf.description%></option>
-								<%}
-							}%> 
+							<%//if(bolFoundProdF){
+								//foreach(ProductField pf in productFields){%>
+									<option value="<%//=pf.description%>" <%//if (j.descProdField != null && pf.description==j.descProdField) { Response.Write("selected");}%>><%//=pf.description%></option>
+								<%//}
+							//}%> 
 						</select>
 						</td>						
-						<td><input type="text" name="rate_from<%=valuesCounter%>" id="rate_from<%=valuesCounter%>" value="<%=j.rateFrom.ToString("#0.##")%>" class="formFieldTXTMedium" onkeypress="javascript:return isDouble(event);"></td>
-						<td><input type="text" name="rate_to<%=valuesCounter%>" id="rate_to<%=valuesCounter%>" value="<%=j.rateTo.ToString("#0.##")%>" class="formFieldTXTMedium" onkeypress="javascript:return isDouble(event);" onblur="javascript:return checkFrom(<%=valuesCounter%>);"></td>
+						<td><input type="text" name="rate_from<%=valuesCounter%>" id="rate_from<%=valuesCounter%>" value="<%//=j.rateFrom.ToString("#0.##")%>" class="formFieldTXTMedium" onkeypress="javascript:return isDouble(event);"></td>
+						<td><input type="text" name="rate_to<%=valuesCounter%>" id="rate_to<%=valuesCounter%>" value="<%//=j.rateTo.ToString("#0.##")%>" class="formFieldTXTMedium" onkeypress="javascript:return isDouble(event);" onblur="javascript:return checkFrom(<%=valuesCounter%>);"></td>
 						<td class="operation_elem" align="center">
 						<select name="operation<%=valuesCounter%>" id="operation<%=valuesCounter%>" class="formFieldSelect">
-							<option value="1"<%if (1==j.operation) {Response.Write(" selected");}%>>+</option>	
-							<option value="2"<%if (2==j.operation) {Response.Write(" selected");}%>>-</option>
+							<option value="1"<%//if (1==j.operation) {Response.Write(" selected");}%>>+</option>	
+							<option value="2"<%//if (2==j.operation) {Response.Write(" selected");}%>>-</option>
 						</select>
 						</td>
-						<td><input type="text" name="valore<%=valuesCounter%>" id="valore<%=valuesCounter%>" value="<%=j.value.ToString("#0.00")%>" class="formFieldTXTMedium" onkeypress="javascript:return isDouble(event);"></td>
-						<td>&nbsp;<a href="javascript:delStrategyValues(<%=valuesCounter%>,'<%=j.id%>','field_values_container<%=valuesCounter%>',1);"><img src="/backoffice/img/delete.png" title="<%=lang.getTranslated("backend.spese.detail.table.alt.del_strategy_value")%>" alt="<%=lang.getTranslated("backend.spese.detail.table.alt.del_strategy_value")%>" hspace="5" vspace="0" border="0"></a>
+						<td><input type="text" name="valore<%=valuesCounter%>" id="valore<%=valuesCounter%>" value="<%//=j.value.ToString("#0.00")%>" class="formFieldTXTMedium" onkeypress="javascript:return isDouble(event);"></td>
+						<td>&nbsp;<a href="javascript:delStrategyValues(<%=valuesCounter%>,'<%//=j.id%>','field_values_container<%=valuesCounter%>',1);"><img src="/backoffice/img/delete.png" title="<%=lang.getTranslated("backend.spese.detail.table.alt.del_strategy_value")%>" alt="<%=lang.getTranslated("backend.spese.detail.table.alt.del_strategy_value")%>" hspace="5" vspace="0" border="0"></a>
 						<script>
 							// aggiorno la mappa dei field
 							billsStrategyMap.put(<%=valuesCounter%>,<%=valuesCounter%>);
@@ -374,7 +372,7 @@ function checkFrom(counter){
 						</td>
 						</tr>
 						<%valuesCounter++;
-					}
+					//}
 				}
 			  
 				if(valuesCounter == 0) {%>
@@ -383,11 +381,11 @@ function checkFrom(counter){
 					<input type="hidden" name="id<%=valuesCounter%>" value="-1">			
 					<select name="id_prod_field<%=valuesCounter%>" id="id_prod_field<%=valuesCounter%>" class="formFieldSelect">
 						<option value=""></option>
-						<%if(bolFoundProdF){
-							foreach(ProductField pf in productFields){%>
-								<option value="<%=pf.description%>"><%=pf.description%></option>
-							<%}
-						}%> 
+						<%//if(bolFoundProdF){
+							//foreach(ProductField pf in productFields){%>
+								<option value="<%//=pf.description%>"><%//=pf.description%></option>
+							<%//}
+						//}%> 
 					</select>
 					</td>				
 					<td><input type="text" name="rate_from<%=valuesCounter%>" id="rate_from<%=valuesCounter%>" value="" class="formFieldTXTMedium" onkeypress="javascript:return isDouble(event);"></td>
@@ -459,108 +457,11 @@ function checkFrom(counter){
 				$("#complex_value").show();
 			}
 			</script>
-
-		  
-		  <span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.tassa_applicata")%></span><br>
-		  <select name="id_tassa_applicata" class="formFieldTXT">
-		  <option value="-1"></option>
-			<%if(bolFoundSup){
-				foreach(Supplement sup in supplements){%>
-				<option value="<%=sup.id%>" <%if (fee.idSupplement != null && sup.id==fee.idSupplement) { Response.Write("selected");}%>><%=sup.description%></option>
-				<%}
-			}%>  
-		  </select>		
-		  <br/><br/>
-		  
-		  <span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.taxs_group")%></span><br>
-		  <select name="taxs_group" class="formFieldTXT">
-		  <option value="-1"></option>
-			<%if(bolFoundSupG){
-				foreach(SupplementGroup supg in supplementGroups){%>
-				<option value="<%=supg.id%>" <%if (fee.supplementGroup != null && supg.id==fee.supplementGroup) { Response.Write("selected");}%>><%=supg.description%></option>
-				<%}
-			}%> 
-		  </select>		
-		  <br/><br/>		
-		  <div align="left" style="float:left;padding-right:10px;"><span class="labelForm"><%=lang.getTranslated("backend.fees.lista.table.header.apply_to")%>&nbsp;&nbsp;&nbsp;</span><br>
-			<select name="apply_to" class="formFieldTXT">
-				<OPTION VALUE="0" <%if (fee.applyTo==0) { Response.Write("selected");}%>><%=lang.getTranslated("backend.fees.lista.table.applyto_front")%></OPTION>
-				<OPTION VALUE="1" <%if (fee.applyTo==1) { Response.Write("selected");}%>><%=lang.getTranslated("backend.fees.lista.table.applyto_back")%></OPTION>
-				<OPTION VALUE="2" <%if (fee.applyTo==2) { Response.Write("selected");}%>><%=lang.getTranslated("backend.fees.lista.table.applyto_both")%></OPTION>	
-			</SELECT>	
-		  </div>	
-		  <div align="left"><span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.type_view")%></span><br>
-			<select name="type_view" class="formFieldTXT">
-			<option value="0"<%if (0==fee.typeView) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.spese.detail.option.label.bigzeroamount")%></option>	
-			<option value="1"<%if (1==fee.typeView) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.spese.detail.option.label.always")%></option>	
-			</SELECT>&nbsp;<a href="#" onMouseOver="javascript:showDiv('help_desc_type_view');" class="labelForm" onmouseout="javascript:hideDiv('help_desc_type_view');">?</a>
-			  <div align="left" style="z-index:1000;position:absolute;margin-bottom:3px;vertical-align:top;text-align:left;font-size: 10px;text-decoration: none;visibility:hidden;display:none;border:1px solid;padding:10px;background:#FFFFFF;width:550px;" id="help_desc_type_view">
-			  <%=lang.getTranslated("backend.spese.detail.table.label.type_view_help_desc")%>
-			  </div>	
-			</div>		
-		  <br/><br/>	
-		  <div align="left" style="float:left;"><span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.autoactive")%>&nbsp;&nbsp;&nbsp;</span><br>
-			<select name="autoactive" id="autoactive" class="formFieldTXTShort">
-			<option value="0"<%if (!fee.autoactive) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.commons.no")%></option>	
-			<option value="1"<%if (fee.autoactive) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.commons.yes")%></option>	
-			</SELECT>	
-		  </div>	
-		  <div align="left" style="float:left;" id="multiply"><span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.multiply")%>&nbsp;&nbsp;&nbsp;</span><br>
-			<select name="multiply" class="formFieldTXTShort">
-			<option value="0"<%if (!fee.multiply) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.commons.no")%></option>	
-			<option value="1"<%if (fee.multiply) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.commons.yes")%></option>	
-			</SELECT>	
-		  </div>	
-		  <div align="left" id="required"><span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.required")%></span><br>
-			<select name="required" class="formFieldTXTShort">
-			<option value="0"<%if (!fee.required) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.commons.no")%></option>	
-			<option value="1"<%if (fee.required) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.commons.yes")%></option>	
-			</SELECT>	
-		  </div>
-		  <br/><br/>
-		  <div align="left" id="group"><span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.group")%></span><br>
-		  <input type="text" name="group" value="<%=fee.feeGroup%>" class="formFieldTXTLong">
-		  <a href="javascript:showHideDiv('group_ml');" class="labelForm"><img width="25" height="25" border="0" style="padding-left:0px;padding-right:0px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" title="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" src="/backoffice/img/multilanguages5.jpeg"></a><br/>
-			<div style="visibility:hidden;position:absolute;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="group_ml">
-			<%
-			foreach (Language x in languages){%>
-			<input type="text" hspace="2" vspace="2" name="group_<%=x.label%>" id="group_<%=x.label%>" value="<%=mlangrep.translate("backend.fee.group.label."+fee.feeGroup, x.label, lang.defaultLangCode)%>" class="formFieldTXTInternationalization">
-			&nbsp;<img width="16" height="11" border="0" style="padding-left:5px;padding-right:5px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" title="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" src="/backoffice/img/flag/flag-<%=x.label%>.png"><br/>
-			<%}%>				
-			</div>
-		  </div>
-
-
-		<script>
-		$('#autoactive').change(function() {
-			var autoactive_val_ch = $('#autoactive').val();
-			if(autoactive_val_ch==1){
-				$("#multiply").hide();
-				$("#required").hide();
-				$("#group").hide();
-			}else{
-				$("#multiply").show();
-				$("#required").show();
-				$("#group").show();
-			}
-		});
-
-		var autoactive_val = $('#autoactive').val();
-		if(autoactive_val==1){
-			$("#multiply").hide();
-			$("#required").hide();
-			$("#group").hide();
-		}else{
-			$("#multiply").show();
-			$("#required").show();
-			$("#group").show();
-		}
-		</script> 
 		</form>
 		
 		</td></tr>
 		</table>	<br> 
-		  <input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.spese.detail.button.inserisci.label")%>" onclick="javascript:insertSpesa();" />&nbsp;&nbsp;<input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.commons.back")%>" onclick="javascript:location.href='/backoffice/fees/feelist.aspx?cssClass=<%=cssClass%>';" />
+		  <input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.margini.lista.button.label.inserisci_rule")%>" onclick="javascript:insertRule();" />&nbsp;&nbsp;<input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.commons.back")%>" onclick="javascript:location.href='/backoffice/business-strategy/strategylist.aspx?cssClass=<%=cssClass%>&showtab=businessrulelist';" />
 		<br/><br/>	
 		</div>
 	</div>

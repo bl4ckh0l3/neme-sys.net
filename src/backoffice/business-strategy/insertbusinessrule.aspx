@@ -379,7 +379,7 @@ function checkFrom(counter, ref){
 		  </div>
 		  <br/><br/>
 		  <div align="left"><span class="labelForm"><%=lang.getTranslated("backend.margini.detail.table.label.tipo_rule")%></span><br>
-			<select name="rule_type" id="rule_type" class="formFieldTXTLong">
+			<select name="rule_type" id="rule_type" class="formFieldSelect">
 			<%if(showOneTwo){%>
 			<option value="1" <%if (1==brule.ruleType){Response.Write(" selected");}%>><%=lang.getTranslated("backend.margini.label.amount_order_rule")%></option>	
 			<option value="2" <%if (2==brule.ruleType){Response.Write(" selected");}%>><%=lang.getTranslated("backend.margini.label.percentage_order_rule")%></option>

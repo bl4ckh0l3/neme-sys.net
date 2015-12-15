@@ -267,8 +267,8 @@ protected void Page_Load(object sender, EventArgs e)
 								string tmpLabel = w.label;                 
 								decimal tmpAmountRule = w.value;
 								orderProdRules+="<li>";
-								if(!String.IsNullOrEmpty(lang.getTranslated("portal.commons.business_rule.label."+tmpLabel))){
-									orderProdRules+=lang.getTranslated("portal.commons.business_rule.label."+tmpLabel);
+								if(!String.IsNullOrEmpty(lang.getTranslated("backend.businessrule.label.label."+tmpLabel))){
+									orderProdRules+=lang.getTranslated("backend.businessrule.label.label."+tmpLabel);
 								}else{
 									orderProdRules+=tmpLabel;
 								}
@@ -394,8 +394,8 @@ protected void Page_Load(object sender, EventArgs e)
 			string orderRulesDesc = "";
 			if(hasOrderRule){
 				foreach(OrderBusinessRule x in orderRules){
-					if(!String.IsNullOrEmpty(lang.getTranslated("portal.commons.business_rule.label."+x.label))){ 
-						orderRulesDesc+=lang.getTranslated("portal.commons.business_rule.label."+x.label);
+					if(!String.IsNullOrEmpty(lang.getTranslated("backend.businessrule.label.label."+x.label))){ 
+						orderRulesDesc+=lang.getTranslated("backend.businessrule.label.label."+x.label);
 					}else{
 						orderRulesDesc+=x.label;
 					}
@@ -454,8 +454,8 @@ protected void Page_Load(object sender, EventArgs e)
 					<%if(hasOrderRule){
 						foreach(OrderBusinessRule x in orderRules){
 							string orLabel = x.label;
-							if(!String.IsNullOrEmpty(lang.getTranslated("portal.commons.business_rule.label."+orLabel))){ 
-								orLabel = lang.getTranslated("portal.commons.business_rule.label."+orLabel);
+							if(!String.IsNullOrEmpty(lang.getTranslated("backend.businessrule.label.label."+orLabel))){ 
+								orLabel = lang.getTranslated("backend.businessrule.label.label."+orLabel);
 							}%>
 							<div class="spese-div"><%=orLabel%>:&nbsp;<strong>&euro;&nbsp;<%=x.value.ToString("#,###0.00")%></strong></div>
 						<%}

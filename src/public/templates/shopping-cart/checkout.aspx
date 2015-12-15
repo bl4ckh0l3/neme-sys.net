@@ -877,8 +877,8 @@ function selectPayAndBills4Form(applyBills){
 											if(defCurrency != null && userCurrency != null){
 												tmpAmountRule = currrep.convertCurrency(tmpAmountRule, defCurrency.currency, userCurrency.currency);
 											}
-											if(!String.IsNullOrEmpty(lang.getTranslated("portal.commons.business_rule.label."+tmpLabel))){
-												tmpLabel = lang.getTranslated("portal.commons.business_rule.label."+tmpLabel);
+											if(!String.IsNullOrEmpty(lang.getTranslated("backend.businessrule.label.label."+tmpLabel))){
+												tmpLabel = lang.getTranslated("backend.businessrule.label.label."+tmpLabel);
 											}
 											%>
 											<li><%=tmpLabel%>
@@ -926,8 +926,8 @@ function selectPayAndBills4Form(applyBills){
 									oamount = Convert.ToDecimal(oelements[0]);
 									olabel = Convert.ToString(oelements[1]);
 									
-									if(!String.IsNullOrEmpty(lang.getTranslated("portal.commons.business_rule.label."+olabel))){
-										olabel = lang.getTranslated("portal.commons.business_rule.label."+olabel);
+									if(!String.IsNullOrEmpty(lang.getTranslated("backend.businessrule.label.label."+olabel))){
+										olabel = lang.getTranslated("backend.businessrule.label.label."+olabel);
 									}
 								}%>
 								<span class="rules"><%=olabel%></span>:&nbsp;<%=currency%>&nbsp;<%=oamount.ToString("#,###0.00")%><br/>

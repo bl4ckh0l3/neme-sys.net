@@ -160,54 +160,59 @@ public partial class _BusinessRule : Page
 				brule.active = active;
 				brule.voucherId = voucherId;
 				
+				IList<BusinessRuleConfig> saveConfigs = new List<BusinessRuleConfig>();
+				
 				try{			
-					/*
-					fee.configs.Clear();	
-					
-					if(fee.type>2){
-						if(!String.IsNullOrEmpty(rulesStrategyCounter)){							
-							string[] arrFieldList = rulesStrategyCounter.Split(',');							
+					if(!String.IsNullOrEmpty(rulesStrategyCounter)){							
+						string[] arrConfigList = rulesStrategyCounter.Split(',');							
+						
+						foreach (string xConfig in arrConfigList){
 							
-							foreach (string xField in arrFieldList){
-								string tmpDescProdField = !String.IsNullOrEmpty(Request["id_prod_field"+xField]) ? Request["id_prod_field"+xField] : "";
-								int tmpOperation = !String.IsNullOrEmpty(Request["operation"+xField]) ? Convert.ToInt32(Request["operation"+xField]) : 0;
-								
-								if(fee.type !=7 && fee.type !=8){
-									tmpDescProdField = "";
-								}
-								if(fee.type !=6 && fee.type !=8){
-									tmpOperation = -1;
-								}
-								
-								FeeConfig fct = new FeeConfig();
-								fct.id=-1;
-								fct.idFee = fee.id;								
-								fct.rateFrom=!String.IsNullOrEmpty(Request["rate_from"+xField]) ? Convert.ToDecimal(Request["rate_from"+xField]) : -1;
-								fct.rateTo=!String.IsNullOrEmpty(Request["rate_to"+xField]) ? Convert.ToDecimal(Request["rate_to"+xField]) : -1;
-								fct.value=!String.IsNullOrEmpty(Request["valore"+xField]) ? Convert.ToDecimal(Request["valore"+xField]) : -1;									
-								fct.descProdField=tmpDescProdField;
-								fct.operation=tmpOperation;		
-								
-								fee.configs.Add(fct);								
-							}				
-						}	
-					}					
-					*/
-				}catch (Exception ex){}						
+							int tmpProdId = !String.IsNullOrEmpty(Request["id_prod_orig"+xConfig]) && (type==6 || type==7 || type==8 || type==9 || type==10) ? Convert.ToInt32(Request["id_prod_orig"+xConfig]) : -1;
+							decimal tmpRateFrom = !String.IsNullOrEmpty(Request["rate_from"+xConfig]) ? Convert.ToDecimal(Request["rate_from"+xConfig]) : 0;
+							decimal tmpRateTo = !String.IsNullOrEmpty(Request["rate_to"+xConfig]) ? Convert.ToDecimal(Request["rate_to"+xConfig]) : 0;
+							int tmpProdRefId = !String.IsNullOrEmpty(Request["id_prod_ref"+xConfig]) && (type==6 || type==7 || type==8 || type==9 || type==10) ? Convert.ToInt32(Request["id_prod_ref"+xConfig]) : -1;
+							decimal tmpRateRefFrom = !String.IsNullOrEmpty(Request["rate_from_ref"+xConfig]) && (type==8 || type==9) ? Convert.ToDecimal(Request["rate_from_ref"+xConfig]) : 0;
+							decimal tmpRateRefTo = !String.IsNullOrEmpty(Request["rate_to_ref"+xConfig]) && (type==8 || type==9) ? Convert.ToDecimal(Request["rate_to_ref"+xConfig]) : 0;
+							int tmpOperation = !String.IsNullOrEmpty(Request["operation"+xConfig]) ? Convert.ToInt32(Request["operation"+xConfig]) : 0;
+							int tmpApplyTo = !String.IsNullOrEmpty(Request["applyto"+xConfig]) && (type==6 || type==7 || type==8 || type==9 || type==10) ? Convert.ToInt32(Request["applyto"+xConfig]) : 0;
+							int tmpApply4Qty = !String.IsNullOrEmpty(Request["apply_4_qta"+xConfig]) && type!=3 && type!=10 && (type==6 || type==7 || type==8 || type==9 || type==10) ? Convert.ToInt32(Request["apply_4_qta"+xConfig]) : 0;
+							decimal tmpValue = !String.IsNullOrEmpty(Request["valore"+xConfig]) && type!=3 && type!=10 ? Convert.ToDecimal(Request["valore"+xConfig]) : 0;
+												
+							BusinessRuleConfig brc = new BusinessRuleConfig();
+							brc.id=-1;
+							brc.ruleId = brule.id;								
+							brc.productId = tmpProdId;
+							brc.productRefId = tmpProdRefId;
+							brc.rateFrom = tmpRateFrom;
+							brc.rateTo = tmpRateTo;
+							brc.rateRefFrom = tmpRateRefFrom;
+							brc.rateRefTo = tmpRateRefTo;
+							brc.operation = tmpOperation;
+							brc.applyTo = tmpApplyTo;
+							brc.applyToQuantity = tmpApply4Qty;
+							brc.value = tmpValue;
+							
+							saveConfigs.Add(brc);								
+						}				
+					}
+				}catch (Exception ex){
+					carryOn = false;
+					//Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
+				}						
 					
 				
-				// ************** AGGIUNGO TUTTE LE CHIAVI MULTILINGUA PER LE TRADUZIONI DI descrizione ecc				
-				/*
+				// ************** AGGIUNGO TUTTE LE CHIAVI MULTILINGUA PER LE TRADUZIONI DI label				
 				IList<MultiLanguage> newtranslactions = new List<MultiLanguage>();
 				IList<MultiLanguage> updtranslactions = new List<MultiLanguage>();
 				IList<MultiLanguage> deltranslactions = new List<MultiLanguage>();
 				MultiLanguage ml;
 				if(languages!=null){
 					foreach (Language x in languages){
-						//*** insert description
-						ml = mlangrep.find("backend.fee.description.label."+fee.description, x.label);
+						//*** insert label
+						ml = mlangrep.find("backend.businessrule.label.label."+brule.label, x.label);
 						if(ml != null){
-							ml.value = Request["description_"+x.label];							
+							ml.value = Request["label_"+x.label];							
 							if(!String.IsNullOrEmpty(ml.value)){
 								updtranslactions.Add(ml);
 							}else{
@@ -215,39 +220,18 @@ public partial class _BusinessRule : Page
 							}
 						}else{
 							ml = new MultiLanguage();
-							ml.keyword = "backend.fee.description.label."+fee.description;
+							ml.keyword = "backend.businessrule.label.label."+brule.label;
 							ml.langCode = x.label;
-							ml.value = Request["description_"+x.label];
-							if(!String.IsNullOrEmpty(ml.value)){					
-								newtranslactions.Add(ml);
-							}
-						}
-						
-						//*** insert group
-						ml = mlangrep.find("backend.fee.group.label."+fee.feeGroup, x.label);
-						if(ml != null){
-							ml.value = Request["group_"+x.label];							
-							if(!String.IsNullOrEmpty(ml.value)){
-								updtranslactions.Add(ml);
-							}else{
-								deltranslactions.Add(ml);									
-							}
-						}else{
-							ml = new MultiLanguage();
-							ml.keyword = "backend.fee.group.label."+fee.feeGroup;
-							ml.langCode = x.label;
-							ml.value = Request["group_"+x.label];
+							ml.value = Request["label_"+x.label];
 							if(!String.IsNullOrEmpty(ml.value)){					
 								newtranslactions.Add(ml);
 							}
 						}
 					}
 				}
-				*/
 				try
 				{
-					/*
-					feerep.saveCompleteFee(fee, newtranslactions, updtranslactions, deltranslactions);
+					brulerep.saveCompleteRule(brule, saveConfigs, newtranslactions, updtranslactions, deltranslactions);
 
 					foreach(MultiLanguage value in updtranslactions){
 						MultiLanguageRepository.cleanCache(value);
@@ -258,7 +242,6 @@ public partial class _BusinessRule : Page
 					foreach(MultiLanguage value in newtranslactions){
 						MultiLanguageRepository.cleanCache(value);
 					}
-					*/
 				}
 				catch(Exception ex)
 				{

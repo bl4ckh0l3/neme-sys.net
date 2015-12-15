@@ -176,8 +176,8 @@ protected void Page_Load(object sender, EventArgs e)
 			if(orderRules != null && orderRules.Count>0){
 				foreach(OrderBusinessRule x in orderRules){
 					string orLabel = x.label;
-					if(!String.IsNullOrEmpty(lang.getTranslated("portal.commons.business_rule.label."+orLabel))){ 
-						orLabel=lang.getTranslated("portal.commons.business_rule.label."+orLabel);
+					if(!String.IsNullOrEmpty(lang.getTranslated("backend.businessrule.label.label."+orLabel))){ 
+						orLabel=lang.getTranslated("backend.businessrule.label.label."+orLabel);
 					}
 					orderRulesDesc+="<span class=\"labelForm\">"+orLabel+":</span>&nbsp;&euro;&nbsp;"+x.value.ToString("#,###0.00")+"<br/>";
 				}
@@ -397,8 +397,8 @@ function hideCommentform(){
 										string tmpLabel = w.label;                 
 										decimal tmpAmountRule = w.value;
 										orderProdRulesDesc+="<li>";
-										if(!String.IsNullOrEmpty(lang.getTranslated("portal.commons.business_rule.label."+tmpLabel))){
-											orderProdRulesDesc+=lang.getTranslated("portal.commons.business_rule.label."+tmpLabel);
+										if(!String.IsNullOrEmpty(lang.getTranslated("backend.businessrule.label.label."+tmpLabel))){
+											orderProdRulesDesc+=lang.getTranslated("backend.businessrule.label.label."+tmpLabel);
 										}else{
 											orderProdRulesDesc+=tmpLabel;
 										}

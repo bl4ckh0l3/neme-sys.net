@@ -13,17 +13,17 @@ public partial class _BusinessRule : Page
 	public ASP.BoMultiLanguageControl lang;
 	public ASP.UserLoginControl login;
 	protected string cssClass;	
-	protected bool bolFoundLista = false;
-	protected bool bolFoundSup = false;	
-	protected bool bolFoundSupG = false;	
-	protected bool bolFoundProdF = false;		
+	protected bool hasVoucherCampaign = false;	
+	protected bool hasProducts = false;
+	protected IList<Category> categories;		
 	protected IList<Language> languages;
-	protected Fee fee;
-	protected IList<Fee> fees;
-	protected IList<Supplement> supplements;	
-	protected IList<SupplementGroup> supplementGroups;
-	protected IList<ProductField> productFields;
+	//protected IList<VoucherCampaign> voucherCampaign;
+	protected IList<Product> products;
+	protected BusinessRule brule;
+	protected IList<BusinessRuleConfig> bruleconfigs;
 	protected IMultiLanguageRepository mlangrep;
+	protected bool showOneTwo = false;
+	protected bool showFourFive=false;
 	
 	protected void Page_Init(Object sender, EventArgs e)
 	{
@@ -36,38 +36,64 @@ public partial class _BusinessRule : Page
 		lang.set();
 		Response.Charset="UTF-8";
 		Session.CodePage  = 65001;	
-		cssClass="LSP";	
+		cssClass="LM";	
 		login.acceptedRoles = "1,2";
 		if(!login.checkedUser()){
 			Response.Redirect("~/login.aspx?error_code=002");
 		}	
-		IFeeRepository feerep = RepositoryFactory.getInstance<IFeeRepository>("IFeeRepository");
-		ILanguageRepository langrep = RepositoryFactory.getInstance<ILanguageRepository>("ILanguageRepository");
 		ILoggerRepository lrep = RepositoryFactory.getInstance<ILoggerRepository>("ILoggerRepository");
 		mlangrep = RepositoryFactory.getInstance<IMultiLanguageRepository>("IMultiLanguageRepository");
-		ISupplementRepository suprep = RepositoryFactory.getInstance<ISupplementRepository>("ISupplementRepository");
-		ISupplementGroupRepository supgrep = RepositoryFactory.getInstance<ISupplementGroupRepository>("ISupplementGroupRepository");
 		IProductRepository prodrep = RepositoryFactory.getInstance<IProductRepository>("IProductRepository");
 		IBusinessRuleRepository brulerep = RepositoryFactory.getInstance<IBusinessRuleRepository>("IBusinessRuleRepository");
+		ICategoryRepository catrep = RepositoryFactory.getInstance<ICategoryRepository>("ICategoryRepository");
+		ILanguageRepository langrep = RepositoryFactory.getInstance<ILanguageRepository>("ILanguageRepository");
 		
-		fee = new Fee();		
-		fee.id = -1;
-		fee.configs = new List<FeeConfig>();
+		brule = new BusinessRule();		
+		brule.id = -1;
+		bruleconfigs = new List<BusinessRuleConfig>();
+		//voucherCampaign = null;
 		StringBuilder url = new StringBuilder("/error.aspx?error_code=");		
 		Logger log = new Logger();
+		IList<BusinessRule> brules = new List<BusinessRule>();
+		IDictionary<int, int> orderRulesMap = new Dictionary<int, int>();
 
 		if(!String.IsNullOrEmpty(Request["id"]) && Request["id"]!= "-1")
 		{
 			try{
-				fee = feerep.getById(Convert.ToInt32(Request["id"]));
+				brule = brulerep.getById(Convert.ToInt32(Request["id"]));
+				bruleconfigs = brulerep.findBusinessRuleConfig(Convert.ToInt32(Request["id"]),-1);
 			}catch (Exception ex){
-				fee = new Fee();		
-				fee.id = -1;
-				fee.configs = new List<FeeConfig>();
+				brule = new BusinessRule();		
+				brule.id = -1;
+				bruleconfigs = new List<BusinessRuleConfig>();
 			}	
 		}
-					
-		// recupero elementi della pagina necessari
+		
+		try{
+			//voucherCampaign = voucherrep.findCampaign();
+			//if(voucherCampaign != null && voucherCampaign.Count>0){
+				//hasVoucherCampaign = true;
+			//}
+		}catch (Exception ex){
+			hasVoucherCampaign = false;
+		}
+		
+		try{
+			products = prodrep.find("","","",-1,"","",null,null,-1,null,null,false,false,true,false,false,false);
+			if(products != null && products.Count>0){
+				hasProducts = true;
+			}
+		}catch (Exception ex){
+			hasProducts = false;
+		}		
+		try{				
+			categories = catrep.findActive();
+			if(categories == null){				
+				categories = new List<Category>();						
+			}
+		}catch (Exception ex){
+			categories = new List<Category>();
+		}
 		try{			
 			languages = langrep.getLanguageList();	
 			if(languages == null){				
@@ -76,97 +102,71 @@ public partial class _BusinessRule : Page
 		}catch (Exception ex){
 			languages = new List<Language>();
 		}
-		try{
-			fees = feerep.find(null, -1, null, false);
-			if(fees != null){				
-				bolFoundLista = true;			
-			}	    	
+		
+		try{			
+			brules = brulerep.find("1,2,4,5", 1);	
+			if(brules == null){				
+				brules = new List<BusinessRule>();
+				orderRulesMap = new Dictionary<int, int>();
+			}
+			foreach(BusinessRule br in brules){
+				orderRulesMap[br.ruleType] = br.id;
+			}
 		}catch (Exception ex){
-			//Response.Write("bolFoundLista Exception:"+ex.Message+"<br>");
-			fees = new List<Fee>();
-			bolFoundLista = false;
+			brules = new List<BusinessRule>();
+			orderRulesMap = new Dictionary<int, int>();
 		}
-		try{
-			supplements = suprep.find(null,-1,false);			
-			if(supplements != null && supplements.Count>0){				
-				bolFoundSup = true;		
-			}			    	
-		}catch (Exception ex){
-			//Response.Write("bolFoundSup Exception:"+ex.Message+"<br>");
-			supplements = new List<Supplement>();
-			//Response.Write(ex.Message);
-			bolFoundSup = false;
-		}		
-		try{
-			supplementGroups = supgrep.find(null, false);
-			if(supplementGroups != null && supplementGroups.Count>0){				
-				bolFoundSupG = true;				
-			}    	
-		}catch (Exception ex){
-			//Response.Write("bolFoundSupG Exception:"+ex.Message+"<br>");
-			supplementGroups = new List<SupplementGroup>();
-			bolFoundSupG = false;
-		}		
-		try{
-			IList<ProductField> productFieldsTmp = prodrep.getProductFields(-1, "true", "false");
-			IList<string> descs = new List<string>();
-			//Response.Write("productFieldsTmp.Count: "+productFieldsTmp.Count);
-			if(productFieldsTmp != null && productFieldsTmp.Count>0){				
-				bolFoundProdF = true;
-				productFields = new List<ProductField>();
-				foreach(ProductField pft in productFieldsTmp){
-					//Response.Write("pft.description: "+pft.description+"<br>");
-					if(!descs.Contains(pft.description)){
-						if(pft.typeContent==3 || pft.typeContent==4){
-							productFields.Add(pft);	
-						}
-						descs.Add(pft.description);
-					}
-				}
-			}	
-		}catch (Exception ex){
-			//Response.Write("bolFoundProdF Exception:"+ex.Message+"<br>");
-			productFields = new List<ProductField>();
-			bolFoundProdF = false;
-		}	
+
+		if(!orderRulesMap.ContainsKey(1) && !orderRulesMap.ContainsKey(2)){
+			showOneTwo = true;
+		}
+		if(orderRulesMap.ContainsKey(1) && orderRulesMap[1]==brule.id){
+			showOneTwo=true;
+		}
+		if(orderRulesMap.ContainsKey(2) && orderRulesMap[2]==brule.id){
+			showOneTwo=true;
+		}
+
+		if(!orderRulesMap.ContainsKey(4) && !orderRulesMap.ContainsKey(5)){
+			showFourFive = true;
+		}
+		if(orderRulesMap.ContainsKey(4) && orderRulesMap[4]==brule.id){
+			showFourFive=true;
+		}
+		if(orderRulesMap.ContainsKey(5) && orderRulesMap[5]==brule.id){
+			showFourFive=true;
+		}
+			
 		
 		//******** INSERISCO NUOVA CURRENCY / MODIFICO ESISTENTE
 		if("insert".Equals(Request["operation"]))
 		{
 			bool carryOn = true;				
 			try
-			{				
-				string description = Request["descrizione"];
-				decimal amount = Convert.ToDecimal(Request["valore"]);	
-				int type = Convert.ToInt32(Request["tipo_valore"]);	
-				int idSupplement = Convert.ToInt32(Request["id_tassa_applicata"]);
-				int supplementGroup = Convert.ToInt32(Request["taxs_group"]);
-				int applyTo = Convert.ToInt32(Request["apply_to"]);	
-				bool autoactive = Convert.ToBoolean(Convert.ToInt32(Request["autoactive"]));
-				bool multiply = Convert.ToBoolean(Convert.ToInt32(Request["multiply"]));
-				bool required = Convert.ToBoolean(Convert.ToInt32(Request["required"]));
-				string feeGroup = Request["group"];
-				int typeView = Convert.ToInt32(Request["type_view"]);
-				string billsStrategyCounter = Request["bills_strategy_counter"];
+			{	
+				int type = Convert.ToInt32(Request["rule_type"]);	
+				string label = Request["label"];
+				string description = Request["description"];
+				int voucherId = -1;
+				if(!String.IsNullOrEmpty(Request["voucher_id"])){
+					voucherId = Convert.ToInt32(Request["voucher_id"]);
+				}
+				bool active = Convert.ToBoolean(Convert.ToInt32(Request["active"]));
+				string rulesStrategyCounter = Request["rules_strategy_counter"];
 				
-				fee.description = description;
-				fee.amount = amount;
-				fee.type = type;
-				fee.idSupplement = idSupplement;
-				fee.supplementGroup = supplementGroup;
-				fee.applyTo = applyTo;
-				fee.autoactive = autoactive;
-				fee.multiply = multiply;
-				fee.required = required;
-				fee.feeGroup = feeGroup;
-				fee.typeView = typeView;
+				brule.label = label;
+				brule.description = description;
+				brule.ruleType = type;
+				brule.active = active;
+				brule.voucherId = voucherId;
 				
 				try{			
+					/*
 					fee.configs.Clear();	
 					
 					if(fee.type>2){
-						if(!String.IsNullOrEmpty(billsStrategyCounter)){							
-							string[] arrFieldList = billsStrategyCounter.Split(',');							
+						if(!String.IsNullOrEmpty(rulesStrategyCounter)){							
+							string[] arrFieldList = rulesStrategyCounter.Split(',');							
 							
 							foreach (string xField in arrFieldList){
 								string tmpDescProdField = !String.IsNullOrEmpty(Request["id_prod_field"+xField]) ? Request["id_prod_field"+xField] : "";
@@ -192,11 +192,12 @@ public partial class _BusinessRule : Page
 							}				
 						}	
 					}					
-					
+					*/
 				}catch (Exception ex){}						
 					
 				
 				// ************** AGGIUNGO TUTTE LE CHIAVI MULTILINGUA PER LE TRADUZIONI DI descrizione ecc				
+				/*
 				IList<MultiLanguage> newtranslactions = new List<MultiLanguage>();
 				IList<MultiLanguage> updtranslactions = new List<MultiLanguage>();
 				IList<MultiLanguage> deltranslactions = new List<MultiLanguage>();
@@ -242,9 +243,10 @@ public partial class _BusinessRule : Page
 						}
 					}
 				}
-
+				*/
 				try
 				{
+					/*
 					feerep.saveCompleteFee(fee, newtranslactions, updtranslactions, deltranslactions);
 
 					foreach(MultiLanguage value in updtranslactions){
@@ -256,6 +258,7 @@ public partial class _BusinessRule : Page
 					foreach(MultiLanguage value in newtranslactions){
 						MultiLanguageRepository.cleanCache(value);
 					}
+					*/
 				}
 				catch(Exception ex)
 				{
@@ -267,7 +270,7 @@ public partial class _BusinessRule : Page
 			}
 			
 			if(carryOn){
-				Response.Redirect("/backoffice/fees/feelist.aspx?cssClass="+Request["cssClass"]);
+				Response.Redirect("/backoffice/business-strategy/strategylist.aspx?showtab=businessrulelist&cssClass="+Request["cssClass"]);
 			}else{
 				Response.Redirect(url.ToString());
 			}										

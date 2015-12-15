@@ -908,6 +908,9 @@ function selectPayAndBills4Form(applyBills){
 							<%if(totalDiscountAmount>0){%><%=lang.getTranslated("frontend.carrello.table.label.totale_sconti")%>:&nbsp;<strong><%=currency%>&nbsp;<%=totalDiscountAmount.ToString("#,###0.00")%></strong><br/><%}%>
 							<br/>
 						<%}%>
+
+						<%=lang.getTranslated("frontend.carrello.table.label.totale_prodotti")%>:&nbsp;<strong><%=currency%>&nbsp;<%=totalProductAmount.ToString("#,###0.00")%></strong>
+						<br/>
 						
 						<%
 						//*******************  SE ESISTONO DELLE RULES PER ORDINE LE APLICO AL TOTALE CARRELLO PRIMA DI PROSEGUIRE CON GLI ALTRI CALCOLI
@@ -931,8 +934,6 @@ function selectPayAndBills4Form(applyBills){
 							<%}
 						}%>  
 						
-						<%=lang.getTranslated("frontend.carrello.table.label.totale_prodotti")%>:&nbsp;<strong><%=currency%>&nbsp;<%=totalProductAmount.ToString("#,###0.00")%></strong>
-						<br/>
 						<%
 						if(ug != null){
 							if(logged && login.userLogged.discount != null && login.userLogged.discount >0){

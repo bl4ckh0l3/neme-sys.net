@@ -129,4 +129,16 @@
 		<property name="label" column="label" not-null="true" />
 		<property name="value" column="value" not-null="true" />
 	</class> 
+		
+	<class name="OrderVoucher" table="ORDER_VOUCHERS">
+		<composite-id>
+			<key-property name="orderId" column="id_order" type="Int32" />
+			<key-property name="voucherId" column="id_voucher" type="Int32" />
+			<key-property name="voucherCode" column="voucher_code" />
+			<key-property name="insertDate">
+				<column name="insert_date" sql-type="timestamp" />
+			</key-property>
+		</composite-id>
+		<property name="voucherAmount" column="voucher_amount" not-null="true" />
+	</class>
 </hibernate-mapping>

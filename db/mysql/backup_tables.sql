@@ -1380,17 +1380,17 @@ CREATE TABLE IF NOT EXISTS `ADS_PROMOTION` (
 
 -- --------------------------------------------------------
 -- 
--- Structure of table `voucher_campaign`
+-- Structure of table `VOUCHER_CAMPAIGN`
 -- 
-DROP TABLE IF EXISTS `voucher_campaign`;
-CREATE TABLE IF NOT EXISTS `voucher_campaign` (
-  `id` int(10) unsigned NOT NULL auto_increment,
+DROP TABLE IF EXISTS `VOUCHER_CAMPAIGN`;
+CREATE TABLE IF NOT EXISTS `VOUCHER_CAMPAIGN` (
+  `id` int(11) unsigned NOT NULL auto_increment,
   `label` varchar(100) NOT NULL,
   `voucher_type` int(10) unsigned NOT NULL default '0' COMMENT 'tipo di voucher creato - 0=one shot, 1=per x volte, 2=one shot entro il periodo specificato, 3=per x volte entro il periodo specificato, 4=gift (come one shot ma con id_utente che ha fatto il regalo associato al voucher)',
   `description` text,
-  `valore` decimal(20,4) NOT NULL,
+  `voucher_amount` decimal(20,4) NOT NULL,
   `operation` smallint(1) unsigned NOT NULL default '0' COMMENT 'tipo di calcolo applicato - 0=percentuale, 1=fisso',
-  `activate` smallint(1) unsigned NOT NULL default '0',
+  `active` smallint(1) unsigned NOT NULL default '0',
   `max_generation` int(10) NOT NULL default '-1',
   `max_usage` int(10) NOT NULL default '-1',
   `enable_date` timestamp NULL default NULL,
@@ -1403,16 +1403,16 @@ CREATE TABLE IF NOT EXISTS `voucher_campaign` (
 
 -- --------------------------------------------------------
 -- 
--- Structure of table `voucher_code`
+-- Structure of table `VOUCHER_CODE`
 -- 
-DROP TABLE IF EXISTS `voucher_code`;
-CREATE TABLE IF NOT EXISTS `voucher_code` (
-  `id` int(10) unsigned NOT NULL auto_increment,
+DROP TABLE IF EXISTS `VOUCHER_CODE`;
+CREATE TABLE IF NOT EXISTS `VOUCHER_CODE` (
+  `id` int(11) unsigned NOT NULL auto_increment,
   `code` varchar(100) NOT NULL COMMENT 'il codice voucher verrà generato con un nuovo GUID ad hoc',
   `voucher_campaign` int(10) NOT NULL,
   `insert_date` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `usage_counter` int(10) unsigned NOT NULL default '0',
-  `id_user_ref` int(10) unsigned default NULL,
+  `id_user` int(10) unsigned default NULL,
   PRIMARY KEY  (`id`,`code`),
   KEY `Index_vc` (`voucher_campaign`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
@@ -1420,14 +1420,14 @@ CREATE TABLE IF NOT EXISTS `voucher_code` (
 
 -- --------------------------------------------------------
 -- 
--- Structure of table `voucher_x_ordine`
+-- Structure of table `ORDER_VOUCHERS`
 -- 
-DROP TABLE IF EXISTS `voucher_x_ordine`;
-CREATE TABLE IF NOT EXISTS `voucher_x_ordine` (
-  `id_order` int(10) NOT NULL,
+DROP TABLE IF EXISTS `ORDER_VOUCHERS`;
+CREATE TABLE IF NOT EXISTS `ORDER_VOUCHERS` (
+  `id_order` int(11) NOT NULL,
+  `id_voucher` int(11) NOT NULL,
   `voucher_code` varchar(100) NOT NULL,
-  `id_voucher` int(10) NOT NULL,
-  `valore` decimal(20,4) NOT NULL,
+  `voucher_amount` decimal(20,4) NOT NULL,
   `insert_date` TIMESTAMP NOT NULL ,
   PRIMARY KEY  (`id_order`,`voucher_code`,`id_voucher`, `insert_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

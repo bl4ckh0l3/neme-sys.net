@@ -146,4 +146,9 @@
     <description>nhibernate implementation of IBusinessRuleRepository</description>
   </IBusinessRuleRepository>
   
+  <IVoucherRepository>
+    <value>com.nemesys.database.repository.VoucherRepository</value>
+    <description>nhibernate implementation of IVoucherRepository</description>
+  </IVoucherRepository>
+  
 </repository>

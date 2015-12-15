@@ -54,6 +54,54 @@ namespace com.nemesys.database.repository
 			}				
 		}
 		
+		public void saveCompleteRule(BusinessRule businessRule, IList<BusinessRuleConfig> configs, IList<MultiLanguage> newtranslactions, IList<MultiLanguage> updtranslactions, IList<MultiLanguage> deltranslactions)
+		{
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			using (ITransaction tx = session.BeginTransaction())
+			{					
+				try{
+					if(businessRule.id != -1){
+						session.Update(businessRule);								
+						session.CreateQuery("delete from BusinessRuleConfig where ruleId=:ruleId").SetInt32("ruleId",businessRule.id).ExecuteUpdate();				
+
+						if(configs != null && configs.Count>0){						
+							foreach(BusinessRuleConfig k in configs){
+								k.ruleId = businessRule.id;
+								session.Save(k);
+							}					
+						}						
+					}else{			
+						session.Save(businessRule);		
+				
+						if(configs != null && configs.Count>0){
+							foreach(BusinessRuleConfig k in configs){
+								k.ruleId = businessRule.id;
+								session.Save(k);
+							}				
+						}
+					}
+						
+					// ************** AGGIUNGO TGUTTE LE CHIAVI MULTILINGUA PER LE TRADUZIONI DI label
+					foreach (MultiLanguage mu in deltranslactions){
+						session.Delete(mu);
+					}
+					foreach (MultiLanguage mu in updtranslactions){
+						session.SaveOrUpdate(mu);
+					}
+					foreach (MultiLanguage mi in newtranslactions){
+						session.Save(mi);
+					}
+					tx.Commit();
+					NHibernateHelper.closeSession();
+				}catch(Exception exx){
+					//System.Web.HttpContext.Current.Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
+					tx.Rollback();
+					NHibernateHelper.closeSession();
+					throw;	
+				}
+			}			
+		}
+		
 		public BusinessRule getById(int id)
 		{
 			BusinessRule businessRule = null;

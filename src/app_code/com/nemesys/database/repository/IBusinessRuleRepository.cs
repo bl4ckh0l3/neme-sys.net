@@ -13,6 +13,8 @@ namespace com.nemesys.database.repository
 		
 		void delete(BusinessRule businessRule);
 		
+		void saveCompleteRule(BusinessRule businessRule, IList<BusinessRuleConfig> configs, IList<MultiLanguage> newtranslactions, IList<MultiLanguage> updtranslactions, IList<MultiLanguage> deltranslactions);
+		
 		BusinessRule getById(int id);
 		
 		IList<BusinessRule> find(string type, int active);

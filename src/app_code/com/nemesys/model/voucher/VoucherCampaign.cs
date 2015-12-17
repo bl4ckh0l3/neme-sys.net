@@ -3,13 +3,13 @@ using System.Text;
 
 namespace com.nemesys.model
 {
-	public class Voucher
+	public class VoucherCampaign
 	{	
 		private int _id;
 		private int _type;
 		private string _label;
 		private string _description;
-		private decimal _value;
+		private decimal _voucherAmount;
 		private bool _active;
 		private bool _excludeProdRule;
 		private int _operation;
@@ -19,7 +19,7 @@ namespace com.nemesys.model
 		private DateTime _expireDate;
 		
 		
-		public Voucher(){}
+		public VoucherCampaign(){}
 
 		public virtual int id {
 			get { return _id; }
@@ -41,9 +41,9 @@ namespace com.nemesys.model
 			set { _description = value; }
 		}
 
-		public virtual decimal value {
-			get { return _value; }
-			set { _value = value; }
+		public virtual decimal voucherAmount {
+			get { return _voucherAmount; }
+			set { _voucherAmount = value; }
 		}
 
 		public virtual bool active {
@@ -82,12 +82,12 @@ namespace com.nemesys.model
 		}				
 		
 		public virtual string ToString() {
-			StringBuilder builder = new StringBuilder("Voucher: ")
+			StringBuilder builder = new StringBuilder("VoucherCampaign: ")
 			.Append(" - id: ").Append(this._id)
 			.Append(" - type: ").Append(this._type)
 			.Append(" - label: ").Append(this._label)
 			.Append(" - description: ").Append(this._description)
-			.Append(" - value: ").Append(this._value)
+			.Append(" - voucherAmount: ").Append(this._voucherAmount)
 			.Append(" - active: ").Append(this._active)
 			.Append(" - excludeProdRule: ").Append(this._excludeProdRule)
 			.Append(" - operation: ").Append(this._operation)

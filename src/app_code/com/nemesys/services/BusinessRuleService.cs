@@ -22,7 +22,7 @@ namespace com.nemesys.services
 	{
 		protected static IBusinessRuleRepository brulerep = RepositoryFactory.getInstance<IBusinessRuleRepository>("IBusinessRuleRepository");
 	
-		public static decimal getOrderAmountByStrategy(BusinessRule rule, decimal orderAmount, Voucher voucher)
+		public static decimal getOrderAmountByStrategy(BusinessRule rule, decimal orderAmount, VoucherCampaign voucher)
 		{
 			decimal strategyAmount = 0;
 			
@@ -86,14 +86,14 @@ namespace com.nemesys.services
 						foreach(BusinessRuleConfig rc in ruleConfs){
 							decimal tmpRF = rc.rateFrom;
 							decimal tmpRT = rc.rateTo;
-							if(orderAmount>=tmpRF && orderAmount<=tmpRT && voucher.id==rule.voucherId){
+							if(orderAmount>=tmpRF && orderAmount<=tmpRT && voucher != null && voucher.id==rule.voucherId){
 								switch (voucher.operation)
 								{
 									case 0:
-										strategyAmount-=orderAmount/100*voucher.value;
+										strategyAmount-=orderAmount/100*voucher.voucherAmount;
 										break;
 									case 1:
-										strategyAmount-=voucher.value;		
+										strategyAmount-=voucher.voucherAmount;		
 										break;						
 								}
 								break;

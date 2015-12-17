@@ -1,53 +1,40 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="com.nemesys.model" assembly="App_Code">
-    <class name="FOrder" table="ORDERS">
+    <class name="VoucherCampaign" table="VOUCHER_CAMPAIGN">
 		<id name="id">
 		    <column name="id" sql-type="int(11)" not-null="true"/>
 		    <generator class="native" />
 		</id>	
 	
-		<property name="userId" type="Int32" column="id_user" not-null="true" />
-		<property name="guid" column="guid" not-null="true" />
-		<property name="notes" column="notes" />
-		<property name="status" column="status" not-null="true" type="Int32" />
-		<property name="amount" column="amount" not-null="true" />
-		<property name="taxable" column="taxable" not-null="true" />
-		<property name="supplement" column="supplement" not-null="true" />
-		<property name="paymentId" column="payment_id" not-null="true" type="Int32" />
-		<property name="paymentCommission" column="payment_commission" not-null="true" />
-		<property name="paymentDone" column="payment_done" not-null="true"  type="Boolean" />
-		<property name="downloadNotified" column="download_notified" not-null="true"  type="Boolean" />
-		<property name="noRegistration" column="no_registration" not-null="true"  type="Boolean" />
-		<property name="lastUpdate">
-		    <column name="last_update" sql-type="timestamp" />
-		</property>
-		<property name="insertDate">
-		    <column name="insert_date" sql-type="timestamp" />
-		</property>
-    </class>
-
-	
-    <class name="OrderProductAttachmentDownload" table="ORDER_PRODUCT_ATTACHMENT_DOWNLOAD">
-		<id name="id">
-		    <column name="id" sql-type="int(11)" not-null="true"/>
-		    <generator class="native" />
-		</id>	
-
-		<property name="idOrder" type="Int32" column="id_order" not-null="true" />	
-		<property name="idParentProduct" type="Int32" column="id_parent_product" not-null="true" />	
-		<property name="idDownFile" type="Int32" column="id_down_file" not-null="true" />	
-		<property name="userId" type="Int32" column="id_user" not-null="true" />
+		<property name="type" type="Int32" column="voucher_type" not-null="true" />
+		<property name="label" column="label" not-null="true" />
+		<property name="description" column="description" />
+		<property name="voucherAmount" column="voucher_amount" not-null="true" />
+		<property name="operation" column="operation" not-null="true" type="Int32" />
 		<property name="active" column="active" not-null="true"  type="Boolean" />
-		<property name="maxDownload" type="Int32" column="max_download" not-null="true" />	
-		<property name="insertDate">
-		    <column name="insert_date" sql-type="timestamp" />
+		<property name="excludeProdRule" column="exclude_prod_rule" not-null="true"  type="Boolean" />
+		<property name="maxGeneration" column="max_generation" not-null="true" type="Int32" />
+		<property name="maxUsage" column="max_usage" not-null="true" type="Int32" />
+		<property name="enableDate">
+		    <column name="enable_date" sql-type="timestamp" />
 		</property>
 		<property name="expireDate">
-		    <column name="expire_date" sql-type="datetime" />
-		</property>	
-		<property name="downloadDate">
-		    <column name="download_date" sql-type="timestamp" />
-		</property>	
-		<property name="downloadCounter" column="download_counter" type="Int32" />
+		    <column name="expire_date" sql-type="timestamp" />
+		</property>
+	</class>
+  
+    <class name="VoucherCode" table="VOUCHER_CODE">
+		<id name="id">
+		    <column name="id" sql-type="int(11)" not-null="true"/>
+		    <generator class="native" />
+		</id>	
+
+		<property name="code" column="code" not-null="true" />
+		<property name="campaign" type="Int32" column="voucher_campaign" not-null="true" />	
+		<property name="usageCounter" column="usage_counter" type="Int32"  not-null="true" />
+		<property name="userId" type="Int32" column="id_user" />
+		<property name="insertDate">
+		    <column name="insert_date" sql-type="timestamp" />
+		</property>
     </class>
 </hibernate-mapping>

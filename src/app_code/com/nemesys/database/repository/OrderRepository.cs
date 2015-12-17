@@ -538,9 +538,13 @@ namespace com.nemesys.database.repository
 						}	
 						
 						if(vc != null){
-							VoucherCode savedVC = session.Get<VoucherCode>(vc.id);
-							savedVC.usageCounter+=1;
-							session.Update(vc);
+							//VoucherCode savedVC = session.Get<VoucherCode>(vc.id);
+							//savedVC.usageCounter+=1;
+							//session.Update(savedVC);
+							session.CreateQuery("update VoucherCode set usageCounter=:usageCounter where id=:id")
+							.SetInt32("usageCounter",vc.usageCounter+1)
+							.SetInt32("id",vc.id)
+							.ExecuteUpdate();
 						}
 						
 						
@@ -902,6 +906,47 @@ namespace com.nemesys.database.repository
 			using (ISession session = NHibernateHelper.getCurrentSession())	
 			{
 				session.CreateQuery("delete from OrderBusinessRule where orderId=:idOrder and ruleType=:type").SetInt32("idOrder",idOrder).SetInt32("type",idRule).ExecuteUpdate();
+				NHibernateHelper.closeSession();
+			}					
+		}
+
+		//************ MANAGE ORDER VOUCHER  ************
+		public OrderVoucher getOrderVoucher(int idOrder)
+		{
+			OrderVoucher orderVoucher = null;	
+							
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			{				
+				orderVoucher = session.CreateQuery("from OrderVoucher where idOrder=:idOrder").SetInt32("idOrder",idOrder).UniqueResult<OrderVoucher>();	
+				NHibernateHelper.closeSession();
+			}
+			
+			return orderVoucher;			
+		}
+		
+		public void insertOrderVoucher(OrderVoucher orderVoucher)
+		{
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			{				
+				session.Save(orderVoucher);	
+				NHibernateHelper.closeSession();
+			}
+		}
+		
+		public void updateOrderVoucher(OrderVoucher orderVoucher)
+		{
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			{				
+				session.Update(orderVoucher);	
+				NHibernateHelper.closeSession();
+			}
+		}		
+		
+		public void deleteOrderVoucherByOrder(int idOrder)
+		{
+			using (ISession session = NHibernateHelper.getCurrentSession())	
+			{
+				session.CreateQuery("delete from OrderVoucher where orderId=:idOrder").SetInt32("idOrder",idOrder).ExecuteUpdate();
 				NHibernateHelper.closeSession();
 			}					
 		}

@@ -17,7 +17,7 @@ public partial class _BusinessRule : Page
 	protected bool hasProducts = false;
 	protected IList<Category> categories;		
 	protected IList<Language> languages;
-	//protected IList<VoucherCampaign> voucherCampaign;
+	protected IList<VoucherCampaign> voucherCampaign;
 	protected IList<Product> products;
 	protected BusinessRule brule;
 	protected IList<BusinessRuleConfig> bruleconfigs;
@@ -47,11 +47,12 @@ public partial class _BusinessRule : Page
 		IBusinessRuleRepository brulerep = RepositoryFactory.getInstance<IBusinessRuleRepository>("IBusinessRuleRepository");
 		ICategoryRepository catrep = RepositoryFactory.getInstance<ICategoryRepository>("ICategoryRepository");
 		ILanguageRepository langrep = RepositoryFactory.getInstance<ILanguageRepository>("ILanguageRepository");
+		IVoucherRepository voucherrep = RepositoryFactory.getInstance<IVoucherRepository>("IVoucherRepository");
 		
 		brule = new BusinessRule();		
 		brule.id = -1;
 		bruleconfigs = new List<BusinessRuleConfig>();
-		//voucherCampaign = null;
+		voucherCampaign = null;
 		StringBuilder url = new StringBuilder("/error.aspx?error_code=");		
 		Logger log = new Logger();
 		IList<BusinessRule> brules = new List<BusinessRule>();
@@ -70,10 +71,10 @@ public partial class _BusinessRule : Page
 		}
 		
 		try{
-			//voucherCampaign = voucherrep.findCampaign();
-			//if(voucherCampaign != null && voucherCampaign.Count>0){
-				//hasVoucherCampaign = true;
-			//}
+			voucherCampaign = voucherrep.find("",1);
+			if(voucherCampaign != null && voucherCampaign.Count>0){
+				hasVoucherCampaign = true;
+			}
 		}catch (Exception ex){
 			hasVoucherCampaign = false;
 		}

@@ -51,5 +51,11 @@ namespace com.nemesys.database.repository
 		void deleteOrderBusinessRuleByOrder(int idOrder);
 		void deleteOrderBusinessRuleByOrderAndItem(int idOrder, int idItem);
 		void deleteOrderBusinessRuleByOrderAndRule(int idOrder, int idRule);
+		
+		OrderVoucher getOrderVoucher(int idOrder);
+		
+		void insertOrderVoucher(OrderVoucher orderVoucher);
+		void updateOrderVoucher(OrderVoucher orderVoucher);
+		void deleteOrderVoucherByOrder(int idOrder);
 	}
 }

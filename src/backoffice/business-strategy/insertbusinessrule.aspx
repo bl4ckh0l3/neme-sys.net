@@ -674,9 +674,9 @@ function checkFrom(counter, ref){
 		  <option value=""></option>
 		  <%
 		  if(hasVoucherCampaign){
-			//foreach(VoucherCampaign vc in voucherCampaign){%>
-				<option value="<%//=vc.id%>" <%//if(vc.id=brule.voucherId){Response.Write(" selected");}%>><%//=vc.label%></option>
-			<%//}
+			foreach(VoucherCampaign vc in voucherCampaign){%>
+				<option value="<%=vc.id%>" <%if(vc.id==brule.voucherId){Response.Write(" selected");}%>><%=vc.label%></option>
+			<%}
 		  }%>
 		  </select>&nbsp;&nbsp;
 		  </div>

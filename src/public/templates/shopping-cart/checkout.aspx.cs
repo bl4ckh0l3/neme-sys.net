@@ -52,10 +52,6 @@ public partial class _Checkout : Page
 	protected BillsAddress billsaddr = null;
 	protected bool hasShipAddress = false;
 	protected bool hasBillsAddress = false;
-	protected bool voucherExcludeProdRule;
-	protected string voucher_code = "";
-	protected string voucher_message = "";
-	protected bool activeVoucherCampaign;
 	protected IList<UserField> usrfields;
 	protected bool bolFoundFields;
 	protected string noRegEmail = "";
@@ -76,8 +72,13 @@ public partial class _Checkout : Page
 	protected IList<Country> stateRegions;
 	protected IList<BusinessRule> businessRules;
 	protected IList<BusinessRule> productBusinessRules;
-	protected Voucher voucher;
 	protected IDictionary<int,BusinessRuleProductVO> productsVO;
+	protected VoucherCampaign voucherCampaign;
+	protected VoucherCode voucherCode;
+	protected bool voucherExcludeProdRule;
+	protected string voucher_code = "";
+	protected string voucherMessage = "";
+	protected bool activeVoucherCampaign;
 	
 	private string _pageTitle;	
 	public string pageTitle {
@@ -203,7 +204,8 @@ public partial class _Checkout : Page
 		Scpf4Bills = new List<FeeStrategyField>();
 		businessRules = null;
 		productBusinessRules = null;
-		voucher = null;
+		voucherCampaign = null;
+		voucherCode = null;
 		productsVO = new Dictionary<int,BusinessRuleProductVO>();
 	
 		string shopcartcufoff = confservice.get("day_carrello_is_valid").value;
@@ -427,16 +429,16 @@ public partial class _Checkout : Page
 					Session["voucher_code"] = Request["voucher_code"];
 				}
 				voucher_code = (string)Session["voucher_code"];
-				
+					
 				if (!String.IsNullOrEmpty(voucher_code)){
-					//voucher = VoucherService.validateVoucherCode(voucher_code);
-					if (voucher != null){
+					voucherCode = VoucherService.validateVoucherCode(voucher_code, out voucherCampaign);
+					if (voucherCode != null){
 						hasOrderRule = true;
-						if(voucher.excludeProdRule){
+						if(voucherCampaign.excludeProdRule){
 							voucherExcludeProdRule = true;
 						}
 					}else{
-						voucher_message = lang.getTranslated("portal.commons.voucher.message.error_invalid");
+						voucherMessage = lang.getTranslated("portal.commons.voucher.message.error_invalid");
 						Session["voucher_code"]="";
 						voucher_code = (string)Session["voucher_code"];
 						hasOrderRule = false;
@@ -1054,7 +1056,7 @@ public partial class _Checkout : Page
 					//*******************  SE ESISTONO DELLE RULES PER ORDINE LE APLICO AL TOTALE CARRELLO PRIMA DI PROSEGUIRE CON GLI ALTRI CALCOLI		
 					if(hasOrderRule){
 						foreach(BusinessRule or in businessRules){
-							decimal foundAmount = BusinessRuleService.getOrderAmountByStrategy(or, totalProductAmount, voucher);
+							decimal foundAmount = BusinessRuleService.getOrderAmountByStrategy(or, totalProductAmount, voucherCampaign);
 							if(foundAmount!=0){
 								totalCartAmount+=foundAmount;
 								if(defCurrency != null && userCurrency != null){
@@ -1377,7 +1379,6 @@ public partial class _Checkout : Page
 					IList<OrderFee> ofs =  new List<OrderFee>();
 					IList<OrderBusinessRule> obrs =  new List<OrderBusinessRule>();
 					IList<OrderVoucher> ovs =  new List<OrderVoucher>();
-					VoucherCode vc = null;
 					
 					
 					//******************* CREO LA LISTA DI PRODOTTI E FIELDS PER ORDINE
@@ -1471,7 +1472,7 @@ public partial class _Checkout : Page
 					if(hasOrderRule){
 						decimal orderRuleAmount = 0.00M;
 						foreach(BusinessRule or in businessRules){
-							decimal foundAmount = BusinessRuleService.getOrderAmountByStrategy(or, orderAmount, voucher);
+							decimal foundAmount = BusinessRuleService.getOrderAmountByStrategy(or, orderAmount, voucherCampaign);
 							if(foundAmount!=0){
 								orderRuleAmount+=foundAmount;
 
@@ -1482,24 +1483,10 @@ public partial class _Checkout : Page
 								obr.value = foundAmount;
 								obrs.Add(obr); 
 								
-								if(or.ruleType==3 && voucher != null){
-									/* TODO: da capire se bisogna impostare questo tipo di oggetto per l'ordine e non un semplice voucher
-									
-									Set objTmpVCode = new VoucherCodeClass	
-									objTmpVCode.setID(objVoucher.getObjVoucherCode().getID())	
-									objTmpVCode.setVoucherCode(objVoucher.getObjVoucherCode().getVoucherCode())	
-									objTmpVCode.setVoucherCampaign(objVoucher.getObjVoucherCode().getVoucherCampaign())	
-									objTmpVCode.setInsertDate(objVoucher.getObjVoucherCode().getInsertDate())	
-									objTmpVCode.setUsageCounter(objVoucher.getObjVoucherCode().getUsageCounter())	
-									objTmpVCode.setIdUserRef(objVoucher.getObjVoucherCode().getIdUserRef())		
-									objTmpVCode.setValore(found_amount)								
-									objDictVoucherUsed.add objVoucher.getObjVoucherCode().getID(), objTmpVCode
-									Set objTmpVCode = nothing	
-									*/
-									
+								if(or.ruleType==3 && voucherCode != null){					
 									OrderVoucher ov = new OrderVoucher();
-									ov.voucherId = voucher.id;
-									ov.voucherCode = vc.code;
+									ov.voucherId = voucherCode.campaign;
+									ov.voucherCode = voucherCode.code;
 									ov.voucherAmount = foundAmount;
 									ovs.Add(ov);
 								}
@@ -1642,7 +1629,7 @@ public partial class _Checkout : Page
 					
 					
 					//******************* SALVO ORDINE COMPLETO (VERIFICO SE LE QUANTITA DEI PRODOTTI E FIELDS CORRISPONDONO E AGGIORNO LE QUANTITA DI OGNI PRODOTTO E FIELDS)
-					orderep.saveCompleteOrder(newOrder, ops, opfs, opads, ofs, userBillsaddr, orderBillsaddr, userShipaddr, orderShipaddr, obrs, ovs, vc);
+					orderep.saveCompleteOrder(newOrder, ops, opfs, opads, ofs, userBillsaddr, orderBillsaddr, userShipaddr, orderShipaddr, obrs, ovs, voucherCode);
 					finalOrderId=newOrder.id;
 				}catch(QuantityException ex){
 					orderCompleted = false;
@@ -1650,7 +1637,7 @@ public partial class _Checkout : Page
 					error_msg=HttpUtility.UrlEncode(lang.getTranslated("frontend.carrello.table.label.error_wrong_qta")+"&nbsp;"+Regex.Replace(ex.Message, @"\t|\n|\r", " "));
 				}catch(Exception ex){
 					orderCompleted = false;
-					//Response.Write("Generic error: " + ex.Message+"<br><br><br>"+ex.StackTrace);
+					Response.Write("Generic error: " + ex.Message+"<br><br><br>"+ex.StackTrace);
 					error_msg=lang.getTranslated("frontend.carrello.table.label.error_generic");
 				}
 				
@@ -1716,7 +1703,7 @@ public partial class _Checkout : Page
 						redirectUrl+="?";
 					}
 					redirectUrl+="&hierarchy="+Request["hierarchy"]+"&id_ads="+Request["id_ads"]+"&voucher_code="+Request["voucher_code"]+"&error=1&error_msg="+error_msg;
-					Response.Redirect(redirectUrl);
+					//Response.Redirect(redirectUrl);
 				}
 			}			
 			

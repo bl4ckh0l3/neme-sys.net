@@ -950,8 +950,8 @@ function selectPayAndBills4Form(applyBills){
 							<div class="spese-div">
 								<form action="<%=shoppingcardURL%>" method="post" name="form_carrello_voucher">
 									<input type="hidden" value="0" name="voucher_delete">
-									<%if(!String.IsNullOrEmpty(voucher_message)){
-										Response.Write("<span class=error>"+voucher_message+"</span><br/>");
+									<%if(!String.IsNullOrEmpty(voucherMessage)){
+										Response.Write("<span class=error>"+voucherMessage+"</span><br/>");
 									}%>
 									<strong><%=lang.getTranslated("frontend.carrello.table.label.voucher_code")%></strong>&nbsp;<input type="text" id="voucher_code" name="voucher_code" value="<%=voucher_code%>">
 									<input class="buttonForm" vspace="4" type="button" hspace="2" border="0" align="absmiddle" onclick="javascript:insertVoucher(0);" value="<%=lang.getTranslated("frontend.carrello.table.label.insert_voucher")%>">&nbsp;<input class="buttonForm" vspace="4" type="button" hspace="2" border="0" align="absmiddle" onclick="javascript:insertVoucher(1);" value="<%=lang.getTranslated("frontend.carrello.table.label.delete_voucher")%>">   

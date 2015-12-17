@@ -1379,6 +1379,7 @@ public partial class _Checkout : Page
 					IList<OrderFee> ofs =  new List<OrderFee>();
 					IList<OrderBusinessRule> obrs =  new List<OrderBusinessRule>();
 					IList<OrderVoucher> ovs =  new List<OrderVoucher>();
+					int voucherCodeId = -1;
 					
 					
 					//******************* CREO LA LISTA DI PRODOTTI E FIELDS PER ORDINE
@@ -1489,6 +1490,8 @@ public partial class _Checkout : Page
 									ov.voucherCode = voucherCode.code;
 									ov.voucherAmount = foundAmount;
 									ovs.Add(ov);
+									
+									voucherCodeId = voucherCode.id;
 								}
 							}
 						}
@@ -1629,7 +1632,7 @@ public partial class _Checkout : Page
 					
 					
 					//******************* SALVO ORDINE COMPLETO (VERIFICO SE LE QUANTITA DEI PRODOTTI E FIELDS CORRISPONDONO E AGGIORNO LE QUANTITA DI OGNI PRODOTTO E FIELDS)
-					orderep.saveCompleteOrder(newOrder, ops, opfs, opads, ofs, userBillsaddr, orderBillsaddr, userShipaddr, orderShipaddr, obrs, ovs, voucherCode);
+					orderep.saveCompleteOrder(newOrder, ops, opfs, opads, ofs, userBillsaddr, orderBillsaddr, userShipaddr, orderShipaddr, obrs, ovs, voucherCodeId);
 					finalOrderId=newOrder.id;
 				}catch(QuantityException ex){
 					orderCompleted = false;

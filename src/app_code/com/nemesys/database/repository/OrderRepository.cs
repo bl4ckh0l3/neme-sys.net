@@ -299,7 +299,7 @@ namespace com.nemesys.database.repository
 			return results;
 		}		
 		
-		public void saveCompleteOrder(FOrder order, IList<OrderProduct> ops, IList<OrderProductField> opfs, IList<OrderProductAttachmentDownload> opads, IList<OrderFee> ofs, BillsAddress billsAddress, OrderBillsAddress orderBillsAddress, ShippingAddress shippingAddress, OrderShippingAddress orderShippingAddress, IList<OrderBusinessRule> obrs, IList<OrderVoucher> ovs, VoucherCode vc)
+		public void saveCompleteOrder(FOrder order, IList<OrderProduct> ops, IList<OrderProductField> opfs, IList<OrderProductAttachmentDownload> opads, IList<OrderFee> ofs, BillsAddress billsAddress, OrderBillsAddress orderBillsAddress, ShippingAddress shippingAddress, OrderShippingAddress orderShippingAddress, IList<OrderBusinessRule> obrs, IList<OrderVoucher> ovs, int voucherCodeId)
 		{
 			IDictionary<int,int> productQtyCheck = new Dictionary<int,int>();
 			IDictionary<string,int> productFieldsQtyCheck = new Dictionary<string,int>();
@@ -534,16 +534,17 @@ namespace com.nemesys.database.repository
 						
 						foreach(OrderVoucher ov in ovs){
 							ov.orderId=order.id;
+							ov.insertDate=DateTime.Now;
 							session.Save(ov);
 						}	
 						
-						if(vc != null){
-							//VoucherCode savedVC = session.Get<VoucherCode>(vc.id);
+						if(voucherCodeId>0){
+							VoucherCode savedVC = session.Get<VoucherCode>(voucherCodeId);
 							//savedVC.usageCounter+=1;
 							//session.Update(savedVC);
 							session.CreateQuery("update VoucherCode set usageCounter=:usageCounter where id=:id")
-							.SetInt32("usageCounter",vc.usageCounter+1)
-							.SetInt32("id",vc.id)
+							.SetInt32("usageCounter",savedVC.usageCounter+1)
+							.SetInt32("id",savedVC.id)
 							.ExecuteUpdate();
 						}
 						

@@ -417,7 +417,8 @@ protected void Page_Load(object sender, EventArgs e)
 			MailService.prepareAndSend("order-confirmed", lang.currentLangCode, lang.defaultLangCode, "backend.mails.detail.table.label.subject_", replacementsUser, null, builder.ToString());
 			MailService.prepareAndSend("order-confirmed", lang.currentLangCode, lang.defaultLangCode, "backend.mails.detail.table.label.subject_", replacementsAdmin, null, builder.ToString());				
 
-			
+			//***** ripulisco la sessione dal voucher
+			Session["voucher_code"] = "";			
 		}catch(Exception ex){
 			StringBuilder builder = new StringBuilder("Exception: ")
 			.Append("An error occured: ").Append(ex.Message).Append("<br><br><br>").Append(ex.StackTrace);

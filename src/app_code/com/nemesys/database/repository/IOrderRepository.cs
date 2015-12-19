@@ -23,7 +23,7 @@ namespace com.nemesys.database.repository
 		
 		int countByIdUser(int idUser);
 				
-		IList<FOrder> find(bool withItems);
+		IList<FOrder> find(string guid, int idUser, string dateFrom, string dateTo, string status, int paymentType, string paymentDone, int orderBy, bool withItems);
 		
 		IList<OrderFee> findFeesByOrderId(int idOrder);
 		

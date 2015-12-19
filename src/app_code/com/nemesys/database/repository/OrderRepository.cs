@@ -198,11 +198,88 @@ namespace com.nemesys.database.repository
 			return count;
 		}
 				
-		public IList<FOrder> find(bool withItems)
+		public IList<FOrder> find(string guid, int idUser, string dateFrom, string dateTo, string status, int paymentType, string paymentDone, int orderBy, bool withItems)
 		{
 			IList<FOrder> results = null;
 			
-			string strSQL = "from FOrder order by lastUpdate desc";				
+			string strSQL = "from FOrder where 1=1";
+			
+			if (!String.IsNullOrEmpty(guid)){			
+				strSQL += " and guid=:guid";
+			}
+			
+			if (idUser > 0){			
+				strSQL += " and userId=:userId";
+			}
+
+			if (!String.IsNullOrEmpty(dateFrom)){
+				strSQL += " and insertDate >= :dateFrom";
+			}
+
+			if (!String.IsNullOrEmpty(dateTo)){
+				strSQL += " and insertDate <= :dateTo";
+			}
+			
+			if (!String.IsNullOrEmpty(status)){			
+				List<string> ids = new List<string>();
+				string[] tstatus = status.Split(',');
+				foreach(string r in tstatus){
+					ids.Add(r);
+				}						
+				if(ids.Count>0){strSQL+=string.Format(" and status in({0})",string.Join(",",ids.ToArray()));}
+			}
+			
+			if (paymentType > 0){			
+				strSQL += " and paymentId=:paymentId";
+			}
+			
+			if (!String.IsNullOrEmpty(paymentDone)){			
+				strSQL += " and paymentDone=:paymentDone";
+			}
+			
+			switch (orderBy)
+			{
+			    case 1:
+				strSQL +=" order by userId asc";
+				break;
+			    case 2:
+				strSQL +=" order by userId desc";
+				break;
+			    case 3:
+				strSQL +=" order by insertDate asc";
+				break;
+			    case 4:
+				strSQL +=" order by insertDate desc";
+				break;
+			    case 5:
+				strSQL +=" order by status asc";
+				break;
+			    case 6:
+				strSQL +=" order by status desc";
+				break;
+			    case 7:
+				strSQL +=" order by amount asc";
+				break;
+			    case 8:
+				strSQL +=" order by amount desc";
+				break;
+			    case 9:
+				strSQL +=" order by paymentId asc";
+				break;
+			    case 10:
+				strSQL +=" order by paymentId desc";
+				break;
+			    case11:
+				strSQL +=" order by paymentDone asc";
+				break;
+			    case 12:
+				strSQL +=" order by paymentDonec desc";
+				break;
+			    default:
+				strSQL +=" order by id desc";
+				break;
+			}
+			
 			
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			using (ITransaction tx = session.BeginTransaction())
@@ -210,6 +287,25 @@ namespace com.nemesys.database.repository
 				IQuery q = session.CreateQuery(strSQL);
 				try
 				{
+					if (!String.IsNullOrEmpty(guid)){
+						q.SetString("guid", guid);
+					}
+					if (idUser > 0){
+						q.SetInt32("userId", Convert.ToInt32(idUser));
+					}
+					if (!String.IsNullOrEmpty(dateFrom)){
+						q.SetDateTime("insertDate", Convert.ToDateTime(dateFrom));
+					}
+					if (!String.IsNullOrEmpty(dateTo)){
+						q.SetDateTime("insertDate", Convert.ToDateTime(dateTo));
+					}
+					if (paymentType > 0){
+						q.SetInt32("paymentId", Convert.ToInt32(paymentType));
+					}
+					if (!String.IsNullOrEmpty(paymentDone)){
+						q.SetBoolean("paymentDone", Convert.ToBoolean(paymentDone));
+					}					
+					
 					results = q.List<FOrder>();
 
 					if(results != null && results.Count>0){

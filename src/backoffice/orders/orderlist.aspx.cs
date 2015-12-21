@@ -11,12 +11,16 @@ public partial class _OrderList : Page
 	public ASP.BoMultiLanguageControl lang;
 	public ASP.UserLoginControl login;
 	protected bool bolFoundLista = false;	
+	protected bool bolFoundUser = false;
+	protected bool bolFoundFees = false;
 	protected int itemsXpage, numPage;
 	protected string cssClass;
 	protected string search_guid, search_datefrom, search_dateto, search_status, search_paydone;	
 	protected int search_user, search_orderby, search_paytype;
 	protected IList<FOrder> orders;
 	protected IOrderRepository orderrep;
+	protected IList<User> users;
+	protected IList<Payment> payments;
 	
 	private int _totalPages;	
 	public int totalPages {
@@ -41,7 +45,12 @@ public partial class _OrderList : Page
 		}	
 		
 		orderrep = RepositoryFactory.getInstance<IOrderRepository>("IOrderRepository");
+		IUserRepository usrrep = RepositoryFactory.getInstance<IUserRepository>("IUserRepository");
+		IPaymentRepository payrep = RepositoryFactory.getInstance<IPaymentRepository>("IPaymentRepository");
 
+		users = new List<User>();
+		payments = new List<Payment>();
+		
 		if (!String.IsNullOrEmpty(Request["items"])) {
 			Session["orderItems"] = Convert.ToInt32(Request["items"]);
 			itemsXpage = (int)Session["orderItems"];
@@ -183,7 +192,32 @@ public partial class _OrderList : Page
 			Session["payment_done"] = null;
 			search_paydone = (string)Session["payment_done"];
 		}
+		
+		try
+		{
+			users = usrrep.find(null, "3", "true", null, "false", 1, false, false, false, false, false, false);
+			if(users != null && users.Count>0){				
+				bolFoundUser = true;
+			}	    	
+		}
+		catch (Exception ex)
+		{
+			//Response.Write("An error occured: " + ex.Message);
+			bolFoundUser = false;
+			users = new List<User>();
+		}
 
+		try{
+			payments = payrep.find(-1, -1, null, null, true, false);
+			if(payments != null && payments.Count>0){				
+				bolFoundFees = true;			
+			}	    	
+		}catch (Exception ex){
+			//Response.Write("bolFoundLista Exception:"+ex.Message+"<br>");
+			payments = new List<Payment>();
+			bolFoundFees = false;
+		}		
+		
 		//***** SE SI TRATTA DI UPDATE DELETE O MULTI RECUPERO I PARAMETRI ED ESEGUO OPERAZIONI	
 		long totalcount=0L;
 		try

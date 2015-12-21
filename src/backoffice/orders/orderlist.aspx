@@ -35,13 +35,106 @@ function deleteCategoria(id_objref, row, refreshrows){
 	<div id="container">
 		<CommonMenu:insert runat="server" />
 		<div id="backend-content">
-			<div id="ajaxresp" align="center" style="background-color:#FFFF00; border:1px solid #000000; color:#000000; display:none;"></div>		
-			<form action="<%=Request.Url.AbsolutePath%>" method="post" name="form_search" accept-charset="UTF-8">
-			<input type="hidden" value="1" name="page">
-			<input type="hidden" value="<%=cssClass%>" name="cssClass">
-			<input type="submit" value="<%=lang.getTranslated("backend.categorie.lista.label.search")%>" class="buttonForm" hspace="4">
-			<input type="text" name="search_key" value="<%//=search_key%>" class="formFieldTXTLong">	
-			</form>
+			<div id="ajaxresp" align="center" style="background-color:#FFFF00; border:1px solid #000000; color:#000000; display:none;"></div>	
+			<table align="top" border="0" class="principal" cellpadding="0" cellspacing="0">
+			  <form action="<%=Request.Url.AbsolutePath%>" method="post" name="form_search" accept-charset="UTF-8">
+			  <input type="hidden" value="<%=cssClass%>" name="cssClass">
+			  <input type="hidden" value="1" name="page">
+		       <tr> 
+				<th><%=lang.getTranslated("backend.ordini.lista.table.header.cliente")%></th>
+				<th><%=lang.getTranslated("backend.ordini.lista.table.search.header.data_insert")%></th>
+				<th><%=lang.getTranslated("backend.ordini.lista.table.search.header.data_insert_to")%></th>
+				  </tr>
+				<tr>
+				<td>
+				  <select name="order_user" class="formFieldTXT">
+				  <option value=""></option>
+				  <%if(bolFoundUser){
+					  foreach(User y in users){%>		  
+						<option value="<%=y.id%>" <%if(search_user == y.id){Response.Write("selected");}%>><%=y.username%></option>
+					  <%}
+				  }%>
+				  </select>	
+				  </td>
+					<td>
+					<input type="text" value="<%=search_datefrom%>" name="order_date_from" class="formFieldTXT">
+					</td>
+				  <td>			  
+				  <input type="text" value="<%=search_dateto%>" name="order_date_to" class="formFieldTXT">	  
+				  </td> 
+				  </tr>
+				  <tr> 
+					<th><%=lang.getTranslated("backend.ordini.lista.table.search.header.type_pagam")%></th>
+					<th><%=lang.getTranslated("backend.ordini.lista.table.search.header.pagam_done")%></th>
+					<th><%=lang.getTranslated("backend.ordini.lista.table.search.header.order_by")%></th>
+				  </tr>	
+				  <tr>
+				  <td>			  
+				  <select name="order_payment" class="formFieldTXT">		
+					<option value=""></option>		
+				  <%if(bolFoundFees){			  
+					  foreach(Payment k in payments){
+						string pdesc = k.description;
+						if(!String.IsNullOrEmpty(lang.getTranslated("backend.payment.description.label."+pdesc))){
+							pdesc = lang.getTranslated("backend.payment.description.label."+pdesc);
+						}%>
+						<option value="<%=k.id%>" <%if(search_paytype == k.id){Response.Write("selected");}%>><%=pdesc%></option>					
+					  <%}
+				  }%> 
+				  </select>
+				  </td>
+				  <td>			  
+				  <select name="payment_done" class="formFieldChangeStato">
+					<option value=""></option>
+					<option value="0" <%if("0".Equals(search_paydone)){Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.no")%></option>
+					<option value="1" <%if("1".Equals(search_paydone)){Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.yes")%></option>
+				  </select>		  
+				  </td> 
+				<td>			  
+				  <select name="order_by" class="formFieldSelect">
+					  <option value=""></option>
+					  <option value="3" <%if(search_orderby == 3){Response.Write("selected");}%>><%=lang.getTranslated("backend.ordini.lista.table.select.option.ord_by_dta_ins_asc")%></option>
+					  <option value="4" <%if(search_orderby == 4){Response.Write("selected");}%>><%=lang.getTranslated("backend.ordini.lista.table.select.option.ord_by_dta_ins_desc")%></option>
+					  <option value="5" <%if(search_orderby == 5){Response.Write("selected");}%>><%=lang.getTranslated("backend.ordini.lista.table.select.option.ord_by_stato_ordine_asc")%></option>
+					  <option value="6" <%if(search_orderby == 6){Response.Write("selected");}%>><%=lang.getTranslated("backend.ordini.lista.table.select.option.ord_by_stato_ordine_desc")%></option>
+					  <option value="7" <%if(search_orderby == 7){Response.Write("selected");}%>><%=lang.getTranslated("backend.ordini.lista.table.select.option.ord_by_amount_ordine_asc")%></option>
+					  <option value="8" <%if(search_orderby == 8){Response.Write("selected");}%>><%=lang.getTranslated("backend.ordini.lista.table.select.option.ord_by_amount_ordine_desc")%></option>
+					  <option value="11" <%if(search_orderby == 11){Response.Write("selected");}%>><%=lang.getTranslated("backend.ordini.lista.table.select.option.ord_by_pagam_effettuato_asc")%></option>
+					  <option value="12" <%if(search_orderby == 12){Response.Write("selected");}%>><%=lang.getTranslated("backend.ordini.lista.table.select.option.ord_by_pagam_effettuato_desc")%></option>
+				  </select>					                                                                                                                                                                     
+				  </td>
+			  </tr>
+				<tr> 
+					<th colspan="2"><%=lang.getTranslated("backend.ordini.lista.table.search.header.order_guid")%></th>
+					<th><%=lang.getTranslated("backend.ordini.lista.table.search.header.stato_ord")%></th>
+				  </tr>	
+				<tr><td colspan="2">
+					<input type="text" value="<%=search_guid%>" name="order_guid" class="formFieldTXTBig">
+					</td>
+					  <td>			  
+					  <select name="order_status" class="formFieldChangeStato">
+						<option value=""></option>
+						<option value="1" <%if("1".Equals(search_status)){Response.Write("selected");}%>><%=lang.getTranslated("backend.ordini.view.table.label.ord_inserting")%></option>
+						<option value="2" <%if("2".Equals(search_status)){Response.Write("selected");}%>><%=lang.getTranslated("backend.ordini.view.table.label.ord_executing")%></option>
+						<option value="3" <%if("3".Equals(search_status)){Response.Write("selected");}%>><%=lang.getTranslated("backend.ordini.view.table.label.ord_executed")%></option>
+						<option value="4" <%if("4".Equals(search_status)){Response.Write("selected");}%>><%=lang.getTranslated("backend.ordini.view.table.label.ord_sca")%></option>
+					  </select> 
+					  </td> 
+				</tr>
+			  <tr><td colspan="3">			  
+				  <input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.ordini.lista.button.search.label")%>" onclick="javascript:sendSearchOrder();" />&nbsp;
+				  <input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.ordini.lista.button.label.download_excel")%>" onclick="javascript:openWinExcel('<%//=Application("baseroot")&"/editor/report/CreateOrderExcel.asp?search_ordini="&request("search_ordini")&"&id_utente_search="&id_user_search&"&dta_ins_search_from="&dta_ins_search_from&"&dta_ins_search_to="&dta_ins_search_to&"&tipo_pagam_search="&tipo_pagam_search&"&pagam_done_search="&pagam_done_search&"&stato_ord_search="&stato_ord_search&"&ord_by_search="&ord_by_search&"&ord_guid_search="&ord_guid_search%>','crea_excel',400,400,100,100);" />
+				<br/><br/>
+				</td></tr>	    
+			  </form>
+		 	</table>			
+			
+			
+			
+			
+			
+			
+			
 			<table border="0" cellpadding="0" cellspacing="0" class="principal">
 				<tr> 
 				<th colspan="8" align="left">

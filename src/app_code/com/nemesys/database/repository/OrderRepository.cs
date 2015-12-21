@@ -269,7 +269,7 @@ namespace com.nemesys.database.repository
 			    case 10:
 				strSQL +=" order by paymentId desc";
 				break;
-			    case11:
+			    case 11:
 				strSQL +=" order by paymentDone asc";
 				break;
 			    case 12:

@@ -13,14 +13,22 @@ public partial class _OrderList : Page
 	protected bool bolFoundLista = false;	
 	protected bool bolFoundUser = false;
 	protected bool bolFoundFees = false;
+	protected bool showChart = false;
 	protected int itemsXpage, numPage;
 	protected string cssClass;
 	protected string search_guid, search_datefrom, search_dateto, search_status, search_paydone;	
 	protected int search_user, search_orderby, search_paytype;
 	protected IList<FOrder> orders;
 	protected IOrderRepository orderrep;
+	protected IUserRepository usrrep;
+	protected IPaymentRepository payrep;
 	protected IList<User> users;
 	protected IList<Payment> payments;
+	// charts variables
+	protected long totalOrderc;
+	protected string chartReference;
+	protected IDictionary<int, int> dictChart;
+	protected IDictionary<int, string> dictMonths;
 	
 	private int _totalPages;	
 	public int totalPages {
@@ -45,11 +53,15 @@ public partial class _OrderList : Page
 		}	
 		
 		orderrep = RepositoryFactory.getInstance<IOrderRepository>("IOrderRepository");
-		IUserRepository usrrep = RepositoryFactory.getInstance<IUserRepository>("IUserRepository");
-		IPaymentRepository payrep = RepositoryFactory.getInstance<IPaymentRepository>("IPaymentRepository");
+		usrrep = RepositoryFactory.getInstance<IUserRepository>("IUserRepository");
+		payrep = RepositoryFactory.getInstance<IPaymentRepository>("IPaymentRepository");
 
 		users = new List<User>();
 		payments = new List<Payment>();
+		totalOrderc = 0;
+		chartReference = "";
+		dictChart = new Dictionary<int, int>();
+		dictMonths = new Dictionary<int, string>();
 		
 		if (!String.IsNullOrEmpty(Request["items"])) {
 			Session["orderItems"] = Convert.ToInt32(Request["items"]);
@@ -217,6 +229,77 @@ public partial class _OrderList : Page
 			payments = new List<Payment>();
 			bolFoundFees = false;
 		}		
+
+		
+		//****************************** creo il grafico vendite su base annua/mensile
+		dictMonths.Add(1, lang.getTranslated("backend.ordini.lista.table.chart.gen"));
+		dictMonths.Add(2, lang.getTranslated("backend.ordini.lista.table.chart.feb"));
+		dictMonths.Add(3, lang.getTranslated("backend.ordini.lista.table.chart.mar"));
+		dictMonths.Add(4, lang.getTranslated("backend.ordini.lista.table.chart.apr"));
+		dictMonths.Add(5, lang.getTranslated("backend.ordini.lista.table.chart.mag"));
+		dictMonths.Add(6, lang.getTranslated("backend.ordini.lista.table.chart.giu"));
+		dictMonths.Add(7, lang.getTranslated("backend.ordini.lista.table.chart.lug"));
+		dictMonths.Add(8, lang.getTranslated("backend.ordini.lista.table.chart.ago"));
+		dictMonths.Add(9, lang.getTranslated("backend.ordini.lista.table.chart.set"));
+		dictMonths.Add(10, lang.getTranslated("backend.ordini.lista.table.chart.ott"));
+		dictMonths.Add(11, lang.getTranslated("backend.ordini.lista.table.chart.nov"));
+		dictMonths.Add(12, lang.getTranslated("backend.ordini.lista.table.chart.dic"));	
+		
+		string dtaChartFrom = "";
+		string dtaChartTo = "";
+                        	
+		if("m".Equals(Request["chart_filter"])){
+			int currentDay = DateTime.Now.Day;
+			chartReference = dictMonths[DateTime.Now.Month];
+			
+			for(int counter = 1; counter<=currentDay; counter++){
+				dictChart.Add(counter, 0);
+			}
+			
+			dtaChartFrom = "01/"+DateTime.Now.Month.ToString()+"/"+DateTime.Now.Year.ToString();
+			dtaChartTo = DateTime.Now.ToString("dd/MM/yyyy");
+		}else{
+			int currMonth = DateTime.Now.Month;
+			chartReference = DateTime.Now.Year.ToString();
+			
+			for(int counter = 1; counter<=currMonth; counter++){
+				dictChart.Add(counter, 0);
+			}
+			
+			dtaChartFrom = "01/01/"+DateTime.Now.Year.ToString();
+			dtaChartTo = DateTime.Now.Day.ToString()+"/"+DateTime.Now.Month.ToString()+"/"+DateTime.Now.Year.ToString();		
+		}
+
+		try
+		{		
+			IList<FOrder> ordersC = orderrep.find(null, -1, dtaChartFrom, dtaChartTo, "3", -1, "1", -1, true);
+	
+			if(ordersC != null && ordersC.Count>0){	
+				showChart = true;
+				totalOrderc = ordersC.Count;
+				foreach(FOrder x in ordersC){
+					int baseC = 0;
+					if("m".Equals(Request["chart_filter"])){
+						baseC = x.insertDate.Day;
+					}else{
+						baseC = x.insertDate.Month;
+					}
+					int val = 0;
+
+					if(dictChart.TryGetValue(baseC, out val)){
+						dictChart[baseC] = val+1;
+					}
+				}
+			}	
+		}
+		catch (Exception ex)
+		{
+			Response.Write("An error occured: " + ex.Message);
+			totalOrderc = 0;
+			showChart = false;
+			chartReference = "";
+		}
+		
 		
 		//***** SE SI TRATTA DI UPDATE DELETE O MULTI RECUPERO I PARAMETRI ED ESEGUO OPERAZIONI	
 		long totalcount=0L;

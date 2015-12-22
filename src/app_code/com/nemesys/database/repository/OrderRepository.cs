@@ -280,6 +280,8 @@ namespace com.nemesys.database.repository
 				break;
 			}
 			
+			//System.Web.HttpContext.Current.Response.Write(strSQL);
+			
 			
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			using (ITransaction tx = session.BeginTransaction())
@@ -294,16 +296,16 @@ namespace com.nemesys.database.repository
 						q.SetInt32("userId", Convert.ToInt32(idUser));
 					}
 					if (!String.IsNullOrEmpty(dateFrom)){
-						q.SetDateTime("insertDate", Convert.ToDateTime(dateFrom));
+						q.SetDateTime("dateFrom", Convert.ToDateTime(dateFrom));
 					}
 					if (!String.IsNullOrEmpty(dateTo)){
-						q.SetDateTime("insertDate", Convert.ToDateTime(dateTo));
+						q.SetDateTime("dateTo", Convert.ToDateTime(dateTo));
 					}
 					if (paymentType > 0){
 						q.SetInt32("paymentId", Convert.ToInt32(paymentType));
 					}
 					if (!String.IsNullOrEmpty(paymentDone)){
-						q.SetBoolean("paymentDone", Convert.ToBoolean(paymentDone));
+						q.SetBoolean("paymentDone", Convert.ToBoolean(Convert.ToInt32(paymentDone)));
 					}					
 					
 					results = q.List<FOrder>();

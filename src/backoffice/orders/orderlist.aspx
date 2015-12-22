@@ -17,7 +17,9 @@
 <head>
 <CommonMeta:insert runat="server" />
 <CommonCssJs:insert runat="server" />
+<script type="text/javascript" src="/common/js/highcharts.js"></script>
 <script language="JavaScript">
+/*
 function editCategoria(idCat){
 	location.href='/backoffice/categories/insertcategory.aspx?cssClass=LCE&id='+idCat;
 }
@@ -27,6 +29,129 @@ function deleteCategoria(id_objref, row, refreshrows){
 		ajaxDeleteItem(id_objref,"Category|ICategoryRepository",row, refreshrows);
 	}
 }
+*/
+
+/**
+ * DHTML date validation script. Courtesy of SmartWebby.com (http://www.smartwebby.com/dhtml/)
+ */
+// Declaring valid date character, minimum year and maximum year
+var dtCh= "/";
+var minYear=1900;
+var maxYear=2100;
+
+function isInteger(s){
+	var i;
+    for (i = 0; i < s.length; i++){   
+        // Check that current character is number.
+        var c = s.charAt(i);
+        if (((c < "0") || (c > "9"))) return false;
+    }
+    // All characters are numbers.
+    return true;
+}
+
+function stripCharsInBag(s, bag){
+	var i;
+    var returnString = "";
+    // Search through string's characters one by one.
+    // If character is not in bag, append to returnString.
+    for (i = 0; i < s.length; i++){   
+        var c = s.charAt(i);
+        if (bag.indexOf(c) == -1) returnString += c;
+    }
+    return returnString;
+}
+
+function daysInFebruary (year){
+	// February has 29 days in any year evenly divisible by four,
+    // EXCEPT for centurial years which are not also divisible by 400.
+    return (((year % 4 == 0) && ( (!(year % 100 == 0)) || (year % 400 == 0))) ? 29 : 28 );
+}
+function DaysArray(n) {
+	for (var i = 1; i <= n; i++) {
+		this[i] = 31
+		if (i==4 || i==6 || i==9 || i==11) {this[i] = 30}
+		if (i==2) {this[i] = 29}
+   } 
+   return this
+}
+
+function isDate(dtStr){
+	var daysInMonth = DaysArray(12)
+	var pos1=dtStr.indexOf(dtCh)
+	var pos2=dtStr.indexOf(dtCh,pos1+1)
+	var strDay=dtStr.substring(0,pos1)
+	var strMonth=dtStr.substring(pos1+1,pos2)
+	var strYear=dtStr.substring(pos2+1)
+	strYr=strYear
+	if (strDay.charAt(0)=="0" && strDay.length>1) strDay=strDay.substring(1)
+	if (strMonth.charAt(0)=="0" && strMonth.length>1) strMonth=strMonth.substring(1)
+	for (var i = 1; i <= 3; i++) {
+		if (strYr.charAt(0)=="0" && strYr.length>1) strYr=strYr.substring(1)
+	}
+	month=parseInt(strMonth)
+	day=parseInt(strDay)
+	year=parseInt(strYr)
+	if (pos1==-1 || pos2==-1){
+		alert("The date format should be : dd/mm/yyyy")
+		return false
+	}
+	if (strMonth.length<1 || month<1 || month>12){
+		alert("Please enter a valid month")
+		return false
+	}
+	if (strDay.length<1 || day<1 || day>31 || (month==2 && day>daysInFebruary(year)) || day > daysInMonth[month]){
+		alert("Please enter a valid day")
+		return false
+	}
+	if (strYear.length != 4 || year==0 || year<minYear || year>maxYear){
+		alert("Please enter a valid 4 digit year between "+minYear+" and "+maxYear)
+		return false
+	}
+	if (dtStr.indexOf(dtCh,pos2+1)!=-1 || isInteger(stripCharsInBag(dtStr, dtCh))==false){
+		alert("Please enter a valid date")
+		return false
+	}
+return true
+}
+
+function sendSearchOrder(){
+	var dtf=document.form_search.order_date_from;
+	if(dtf.value != ""){
+		if (isDate(dtf.value)==false){
+			dtf.focus();
+			return;
+		}
+		
+	}
+	var dtt=document.form_search.order_date_to;
+	if(dtt.value != ""){
+		if (isDate(dtt.value)==false){
+			dtt.focus();
+			return;
+		}
+		
+	}
+    document.form_search.submit();
+}
+
+$(function() {
+	$('#dta_from').datepicker({
+		dateFormat: 'dd/mm/yy',
+		changeMonth: true,
+		changeYear: true
+	});
+	$('#ui-datepicker-div').hide();	
+});
+
+$(function() {
+	$('#dta_to').datepicker({
+		dateFormat: 'dd/mm/yy',
+		changeMonth: true,
+		changeYear: true
+	});
+	$('#ui-datepicker-div').hide();	
+});
 </script>
 </head>
 <body>
@@ -57,10 +182,10 @@ function deleteCategoria(id_objref, row, refreshrows){
 				  </select>	
 				  </td>
 					<td>
-					<input type="text" value="<%=search_datefrom%>" name="order_date_from" class="formFieldTXT">
+					<input type="text" value="<%=search_datefrom%>" name="order_date_from" id="dta_from" class="formFieldTXT">
 					</td>
 				  <td>			  
-				  <input type="text" value="<%=search_dateto%>" name="order_date_to" class="formFieldTXT">	  
+				  <input type="text" value="<%=search_dateto%>" name="order_date_to" id="dta_to" class="formFieldTXT">	  
 				  </td> 
 				  </tr>
 				  <tr> 
@@ -130,14 +255,114 @@ function deleteCategoria(id_objref, row, refreshrows){
 		 	</table>			
 			
 			
-			
-			
-			
-			
-			
+			<%if(showChart){%>
+				<table border="0" class="chart" align="top" cellpadding="0" cellspacing="0">
+				<tr>
+				<td valign="middle" align="right">
+					<form action="<%=Request.Url.AbsolutePath%>" method="post" name="form_change_chart">
+					<input type="hidden" value="<%=search_orderby%>" name="order_by">
+					<input type="hidden" value="<%=itemsXpage%>" name="items">			
+					<input type="hidden" value="<%=numPage%>" name="page">	
+					<input type="hidden" value="<%=cssClass%>" name="cssClass">		
+					  <select name="chart_filter" class="formFieldChangeStato" onChange="document.form_change_chart.submit();">
+						<option value="m" <%if ("m".Equals(Request["chart_filter"])){Response.Write("selected");}%>><%=lang.getTranslated("backend.ordini.lista.table.chart.month")%></option>
+						<option value="y" <%if ("y".Equals(Request["chart_filter"]) || String.IsNullOrEmpty(Request["chart_filter"])){Response.Write("selected");}%>><%=lang.getTranslated("backend.ordini.lista.table.chart.year")%></option>
+					  </select>			
+					</form>
+				</td>
+				<td>
+					<script type="text/javascript">
+					$(function () {
+						var chart;
+						$(document).ready(function() {
+						chart = new Highcharts.Chart({
+							chart: {
+							renderTo: 'chartbox',
+							type: 'line',
+							marginRight: 130,
+							marginBottom: 25,
+							width: 800,
+							height: 200					
+							},
+							title: {
+							text: '<%=lang.getTranslated("backend.ordini.lista.table.chart.sales_rep")%><%if ("m".Equals(Request["chart_filter"])){Response.Write(" "+lang.getTranslated("backend.ordini.lista.table.chart.month"));}else{Response.Write(" "+lang.getTranslated("backend.ordini.lista.table.chart.year"));}%><%=" ("+chartReference+")"%>',
+							x: -20 //center
+							},
+							subtitle: {
+							text: '(<%=lang.getTranslated("backend.ordini.lista.table.chart.sales_rep_sub")+" "+totalOrderc%>)',
+							x: -20 //center
+							},
+							xAxis: {
+							categories: [
+							<%
+							string categories = "";
+							foreach(int q in dictChart.Keys){
+								if("m".Equals(Request["chart_filter"])){
+									categories+= "'"+ q.ToString() +"',";							
+								}else{
+									categories+= "'"+ dictMonths[q] +"',";						
+								}
+							}					
+							if(categories.LastIndexOf(',')>0){
+								categories = categories.Substring(0,categories.LastIndexOf(','));
+							}			
+							Response.Write(categories);
+							%>					
+							]
+							},
+							yAxis: {
+							title: {
+								text: ''
+							},
+							plotLines: [{
+								value: 0,
+								width: 1,
+								color: '#808080'
+							}],
+							min: 0,
+							tickInterval: 1
+							},
+							tooltip: {
+							formatter: function() {
+								return '<b>'+ this.series.name +'</b><br/>'+this.x +': '+ this.y;
+							}
+							},
+							legend: {
+							layout: 'vertical',
+							align: 'right',
+							verticalAlign: 'top',
+							x: -10,
+							y: 100,
+							borderWidth: 0
+							},
+							series: [{
+							name: '<%=lang.getTranslated("backend.ordini.lista.table.chart.orders_label")%>',
+							data: [
+							<%
+							string series = "";
+							foreach(int q in dictChart.Keys){
+								series+= dictChart[q].ToString() +",";
+							}					
+							if(series.LastIndexOf(',')>0){
+								series = series.Substring(0,series.LastIndexOf(','));
+							}			
+							Response.Write(series);
+							%>
+							]
+							}]
+						});
+						});
+						
+					});
+					</script>
+					<div id="chartbox" style="width: 700px; height: 230px; margin: 0 auto"></div>
+				</td>
+				</tr>
+				</table>
+			<%}%>
 			<table border="0" cellpadding="0" cellspacing="0" class="principal">
 				<tr> 
-				<th colspan="8" align="left">
+				<th colspan="10" align="left">
 				<div style="float:left;padding-right:3px;height:15px;">
 				<form action="<%=Request.Url.AbsolutePath%>" method="post" name="item_x_page">
 				<input type="hidden" value="<%=cssClass%>" name="cssClass">	
@@ -151,56 +376,36 @@ function deleteCategoria(id_objref, row, refreshrows){
 				</th>
 		      	</tr>
 			    <tr> 
-				<th colspan="2">&nbsp;</td>
-				<th><lang:getTranslated keyword="backend.categorie.lista.table.header.num_menu" runat="server" /></th>
-				<th><lang:getTranslated keyword="backend.categorie.lista.table.header.gerarchia" runat="server" /></th>
-				<th><lang:getTranslated keyword="backend.categorie.lista.table.header.descrizione" runat="server" /></th>
-				<th><lang:getTranslated keyword="backend.categorie.lista.table.header.visible" runat="server" /></th>
-				<th><lang:getTranslated keyword="backend.categorie.lista.table.header.contains_elements" runat="server" /></th>
-				<th><lang:getTranslated keyword="backend.categorie.lista.table.header.automatic" runat="server" /></th>
+				<th colspan="3">&nbsp;</td>
+				<th><%=lang.getTranslated("backend.ordini.lista.table.header.id_ordine")%></th>
+				<th><%=lang.getTranslated("backend.ordini.lista.table.header.cliente")%></th>
+				<th><%=lang.getTranslated("backend.ordini.lista.table.header.data_insert")%></th>
+				<th><%=lang.getTranslated("backend.ordini.lista.table.header.type_pagam")%></th>
+				<th><%=lang.getTranslated("backend.ordini.lista.table.header.pagam_done")%></th>
+				<th><%=lang.getTranslated("backend.ordini.lista.table.header.totale_order")%></th>
+				<th><%=lang.getTranslated("backend.ordini.lista.table.header.stato_ord")%></th>
 			    </tr>
 				<%
 				int counter = 0;				
 				if(bolFoundLista){
 					foreach (FOrder k in orders){%>	
 							<tr id="tr_delete_list_<%=counter%>" class="<%if(counter % 2 == 0){Response.Write("table-list-on");}else{Response.Write("table-list-off");}%>">
+							<td align="center" width="25"><a href="javascript:editCategoria(<%=k.id%>);"><img src="/backoffice/img/zoom.png" alt="<%=lang.getTranslated("backend.contenuti.lista.table.alt.view")%>" hspace="2" vspace="0" border="0"></a></td>
 							<td align="center" width="25"><a href="javascript:editCategoria(<%=k.id%>);"><img src="/backoffice/img/pencil.png" title="<%=lang.getTranslated("backend.categorie.lista.table.alt.modify_cat")%>" hspace="2" vspace="0" border="0"></a></td>
 							<td align="center" width="25"><a href="javascript:deleteCategoria(<%=k.id%>,'tr_delete_list_<%=counter%>','tr_delete_list_');"><img src="/backoffice/img/cancel.png" title="<%=lang.getTranslated("backend.categorie.lista.table.alt.delete_cat")%>" hspace="2" vspace="0" border="0"></a></td>
-							<td align="center">	
-							<div class="ajax" id="view_num_menu_<%=counter%>" onmouseover="javascript:showHide('view_num_menu_<%=counter%>','edit_num_menu_<%=counter%>','num_menu_<%=counter%>',500, false);"><%//=k.numMenu%></div>
-							<div class="ajax" id="edit_num_menu_<%=counter%>"><input type="text" class="formfieldAjaxShort" id="num_menu_<%=counter%>" name="numMenu" onmouseout="javascript:restoreField('edit_num_menu_<%=counter%>','view_num_menu_<%=counter%>','num_menu_<%=counter%>','Category|ICategoryRepository|int',<%=k.id%>,1,<%=counter%>);" value="<%//=k.numMenu%>" maxlength="2" onkeypress="javascript:return isInteger(event);"></div>
-							<script>
-							$("#edit_num_menu_<%=counter%>").hide();
-							</script>
-							</td>
-							<td width="17%">	
-							<div class="ajax" id="view_gerarchia_<%=counter%>" onmouseover="javascript:showHide('view_gerarchia_<%=counter%>','edit_gerarchia_<%=counter%>','gerarchia_<%=counter%>',500, false);"><%//=k.hierarchy%></div>
-							<div class="ajax" id="edit_gerarchia_<%=counter%>"><input type="text" class="formfieldAjax" id="gerarchia_<%=counter%>" name="hierarchy" onmouseout="javascript:restoreField('edit_gerarchia_<%=counter%>','view_gerarchia_<%=counter%>','gerarchia_<%=counter%>','Category|ICategoryRepository|string',<%=k.id%>,1,<%=counter%>);" value="<%//=k.hierarchy%>" onkeypress="javascript:return isDecimal(event);"></div>
-							<script>
-							$("#edit_gerarchia_<%=counter%>").hide();
-							</script>
-							</td>
-							<td><%//=k.description%></td>
-							<td>
-							<div class="ajax" id="view_visibile_<%=counter%>" onmouseover="javascript:showHide('view_visibile_<%=counter%>','edit_visibile_<%=counter%>','visibile_<%=counter%>',500, true);">
-							<%
-							/*if (k.visible) { 
-								Response.Write(lang.getTranslated("backend.commons.yes"));
-							}else{ 
-								Response.Write(lang.getTranslated("backend.commons.no"));
-							}*/
-							%>
-							</div>
-							<div class="ajax" id="edit_visibile_<%=counter%>">
-							<select name="visible" class="formfieldAjaxSelect" id="visibile_<%=counter%>" onblur="javascript:updateField('edit_visibile_<%=counter%>','view_visibile_<%=counter%>','visibile_<%=counter%>','Category|ICategoryRepository|bool',<%=k.id%>,2,<%=counter%>);">
-							<OPTION VALUE="0" <%//if (!k.visible) { Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.no")%></OPTION>
-							<OPTION VALUE="1" <%//if (k.visible) { Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.yes")%></OPTION>
-							</SELECT>	
-							</div>
-							<script>
-							$("#edit_visibile_<%=counter%>").hide();
-							</script>
-							</td>
+							<td><%=k.id%></td>
+							<td><%=usrrep.getById(k.userId).username%></td>
+							<td><%=k.insertDate.ToString("dd/MM/yyyy HH:mm")%></td>
+							<td><%
+							Payment p = payrep.getByIdCached(k.paymentId, true);
+							if(p != null){
+								string paydesc = p.description;
+								if(!String.IsNullOrEmpty(lang.getTranslated("backend.payment.description.label."+paydesc))){
+									paydesc = lang.getTranslated("backend.payment.description.label."+paydesc);
+								}							
+								Response.Write(paydesc);
+							}
+							%></td>
 							<td>
 							<div class="ajax" id="view_contiene_elements_<%=counter%>" onmouseover="javascript:showHide('view_contiene_elements_<%=counter%>','edit_contiene_elements_<%=counter%>','contiene_elements_<%=counter%>',500, true);">
 							<%//if(k.hasElements) {
@@ -220,14 +425,27 @@ function deleteCategoria(id_objref, row, refreshrows){
 							$("#edit_contiene_elements_<%=counter%>").hide();
 							</script>
 							</td>
+							<td>&euro;&nbsp;<%=k.amount.ToString("#,###0.00")%></td>
 							<td>
-							<%/*if(k.automatic) {
-								 Response.Write(lang.getTranslated("backend.commons.yes"));
-							}else{
+							<div class="ajax" id="view_visibile_<%=counter%>" onmouseover="javascript:showHide('view_visibile_<%=counter%>','edit_visibile_<%=counter%>','visibile_<%=counter%>',500, true);">
+							<%
+							/*if (k.visible) { 
+								Response.Write(lang.getTranslated("backend.commons.yes"));
+							}else{ 
 								Response.Write(lang.getTranslated("backend.commons.no"));
 							}*/
 							%>
-							</td>							
+							</div>
+							<div class="ajax" id="edit_visibile_<%=counter%>">
+							<select name="visible" class="formfieldAjaxSelect" id="visibile_<%=counter%>" onblur="javascript:updateField('edit_visibile_<%=counter%>','view_visibile_<%=counter%>','visibile_<%=counter%>','Category|ICategoryRepository|bool',<%=k.id%>,2,<%=counter%>);">
+							<OPTION VALUE="0" <%//if (!k.visible) { Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.no")%></OPTION>
+							<OPTION VALUE="1" <%//if (k.visible) { Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.yes")%></OPTION>
+							</SELECT>	
+							</div>
+							<script>
+							$("#edit_visibile_<%=counter%>").hide();
+							</script>							
+							</td>
 							</tr>			
 						<%
 						counter++;
@@ -235,7 +453,7 @@ function deleteCategoria(id_objref, row, refreshrows){
 				}%>	  
 
 			<tr> 
-				<th colspan="8" align="left">
+				<th colspan="10" align="left">
 				<div style="float:left;padding-right:3px;height:15px;">
 				<form action="<%=Request.Url.AbsolutePath%>" method="post" name="item_x_page">
 				<input type="hidden" value="<%=cssClass%>" name="cssClass">	

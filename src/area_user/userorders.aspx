@@ -70,13 +70,25 @@
 							
 							string orderStatus = "";
 							if(k.status==1){
-								orderStatus = lang.getTranslated("backend.ordini.view.table.label.ord_inserting");
+								orderStatus = statusOrder[k.status];
+								if(!String.IsNullOrEmpty(lang.getTranslated("backend.ordini.view.table.label."+orderStatus))){
+									orderStatus = lang.getTranslated("backend.ordini.view.table.label."+orderStatus);
+								}
 							}else if(k.status==2){
-								orderStatus = lang.getTranslated("backend.ordini.view.table.label.ord_executing");
+								orderStatus = statusOrder[k.status];
+								if(!String.IsNullOrEmpty(lang.getTranslated("backend.ordini.view.table.label."+orderStatus))){
+									orderStatus = lang.getTranslated("backend.ordini.view.table.label."+orderStatus);
+								}
 							}else if(k.status==3){
-								orderStatus = lang.getTranslated("backend.ordini.view.table.label.ord_executed");
+								orderStatus = statusOrder[k.status];
+								if(!String.IsNullOrEmpty(lang.getTranslated("backend.ordini.view.table.label."+orderStatus))){
+									orderStatus = lang.getTranslated("backend.ordini.view.table.label."+orderStatus);
+								}
 							}else if(k.status==4){
-								orderStatus = lang.getTranslated("backend.ordini.view.table.label.ord_sca");
+								orderStatus = statusOrder[k.status];
+								if(!String.IsNullOrEmpty(lang.getTranslated("backend.ordini.view.table.label."+orderStatus))){
+									orderStatus = lang.getTranslated("backend.ordini.view.table.label."+orderStatus);
+								}
 							}
 							
 							string ptype = "";

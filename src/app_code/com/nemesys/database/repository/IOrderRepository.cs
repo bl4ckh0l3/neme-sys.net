@@ -17,7 +17,7 @@ namespace com.nemesys.database.repository
 		
 		FOrder getById(int id);
 		
-		FOrder getById(int id, bool withItems);
+		FOrder getByIdExtended(int id, bool withItems);
 		
 		IList<FOrder> getByIdUser(int idUser, bool withItems);
 		

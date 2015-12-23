@@ -20,6 +20,7 @@ public partial class _FeOrderList : Page
 	
 	protected IList<FOrder> orders;	
 	protected IDictionary<int,string> paymentTypes;
+	protected IDictionary<int,string> statusOrder;
 	
 	private int _totalPages;	
 	public int totalPages {
@@ -50,6 +51,7 @@ public partial class _FeOrderList : Page
 		paymentTypes = new Dictionary<int,string>();
 		fromOrder = 0;
 		toOrder = 0;
+		statusOrder = OrderService.getOrderStatus();
 		
 		if (!String.IsNullOrEmpty(Request["items"])) {
 			Session["listUOrder"] = Convert.ToInt32(Request["items"]);

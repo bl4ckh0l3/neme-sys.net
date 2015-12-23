@@ -76,7 +76,7 @@ namespace com.nemesys.database.repository
 			return order;
 		}		
 		
-		public FOrder getById(int id, bool withItems)
+		public FOrder getByIdExtended(int id, bool withItems)
 		{
 			FOrder order = null;
 							

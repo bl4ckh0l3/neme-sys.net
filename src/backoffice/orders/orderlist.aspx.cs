@@ -3,6 +3,7 @@ using System.Data;
 using System.Web.UI;
 using com.nemesys.model;
 using com.nemesys.database.repository;
+using com.nemesys.services;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -15,6 +16,7 @@ public partial class _OrderList : Page
 	protected bool bolFoundFees = false;
 	protected bool showChart = false;
 	protected int itemsXpage, numPage;
+	protected int fromOrder, toOrder;
 	protected string cssClass;
 	protected string search_guid, search_datefrom, search_dateto, search_status, search_paydone;	
 	protected int search_user, search_orderby, search_paytype;
@@ -22,8 +24,10 @@ public partial class _OrderList : Page
 	protected IOrderRepository orderrep;
 	protected IUserRepository usrrep;
 	protected IPaymentRepository payrep;
+	protected IPaymentTransactionRepository paytransrep;
 	protected IList<User> users;
 	protected IList<Payment> payments;
+	protected IDictionary<int,string> orderStatus;
 	// charts variables
 	protected long totalOrderc;
 	protected string chartReference;
@@ -55,6 +59,7 @@ public partial class _OrderList : Page
 		orderrep = RepositoryFactory.getInstance<IOrderRepository>("IOrderRepository");
 		usrrep = RepositoryFactory.getInstance<IUserRepository>("IUserRepository");
 		payrep = RepositoryFactory.getInstance<IPaymentRepository>("IPaymentRepository");
+		paytransrep = RepositoryFactory.getInstance<IPaymentTransactionRepository>("IPaymentTransactionRepository");
 
 		users = new List<User>();
 		payments = new List<Payment>();
@@ -62,6 +67,7 @@ public partial class _OrderList : Page
 		chartReference = "";
 		dictChart = new Dictionary<int, int>();
 		dictMonths = new Dictionary<int, string>();
+		orderStatus = OrderService.getOrderStatus();
 		
 		if (!String.IsNullOrEmpty(Request["items"])) {
 			Session["orderItems"] = Convert.ToInt32(Request["items"]);
@@ -302,13 +308,11 @@ public partial class _OrderList : Page
 		
 		
 		//***** SE SI TRATTA DI UPDATE DELETE O MULTI RECUPERO I PARAMETRI ED ESEGUO OPERAZIONI	
-		long totalcount=0L;
 		try
 		{
 			orders = orderrep.find(search_guid, search_user, search_datefrom, search_dateto, search_status, search_paytype, search_paydone, search_orderby, true);
 			if(orders != null && orders.Count>0){				
 				bolFoundLista = true;
-				totalcount = orders.Count;
 			}	    	
 		}
 		catch (Exception ex)
@@ -317,13 +321,22 @@ public partial class _OrderList : Page
 			orders = new List<FOrder>();
 			bolFoundLista = false;
 		}
-	
-		if(itemsXpage>0){_totalPages = (int)totalcount/itemsXpage;}
+
+		int iIndex = orders.Count;
+		fromOrder = ((this.numPage * itemsXpage) - itemsXpage);
+		int diff = (iIndex - ((this.numPage * itemsXpage)-1));
+		if(diff < 1) {
+			diff = 1;
+		}
+		
+		toOrder = iIndex - diff;
+			
+		if(itemsXpage>0){_totalPages = iIndex/itemsXpage;}
 		if(_totalPages < 1) {
 			_totalPages = 1;
-		}else if(totalcount % itemsXpage != 0 &&  (_totalPages * itemsXpage) < totalcount) {
+		}else if(orders.Count % itemsXpage != 0 &&  (_totalPages * itemsXpage) < iIndex) {
 			_totalPages = _totalPages +1;	
-		}
+		}	
 			
 		this.pg1.totalPages = this.totalPages;
 		this.pg1.defaultLangCode = lang.defaultLangCode;

@@ -1798,10 +1798,10 @@ INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.pagam_bb', 'IT', 'bonifico bancario');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.pagam_order_done', 'IT', 'Pagamento effettuato');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.stato_order', 'IT', 'Stato ordine');
-INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.ord_inserting', 'IT', 'inserito');
-INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.ord_executing', 'IT', 'esecuzione');
-INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.ord_executed', 'IT', 'evaso');
-INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.ord_sca', 'IT', 'scaduto');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.added', 'IT', 'inserito');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.execution', 'IT', 'esecuzione');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.processed', 'IT', 'evaso');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.rejected', 'IT', 'scartato');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.attached_prods', 'IT', 'Lista prodotti');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.header.nome_prod', 'IT', 'NOME PRODOTTO');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.header.qta_prod', 'IT', 'QUANTIT&Agrave;');
@@ -3067,10 +3067,10 @@ INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.pagam_bb', 'EN', 'bank');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.pagam_order_done', 'EN', 'Payment done');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.stato_order', 'EN', 'Order status');
-INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.ord_inserting', 'EN', 'added');
-INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.ord_executing', 'EN', 'execution');
-INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.ord_executed', 'EN', 'processed');
-INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.ord_sca', 'EN', 'expired');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.added', 'EN', 'added');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.execution', 'EN', 'execution');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.processed', 'EN', 'processed');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.rejected', 'EN', 'rejected');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.attached_prods', 'EN', 'Products list');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.header.nome_prod', 'EN', 'PRODUCT NAME');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.header.qta_prod', 'EN', 'QUANTITY');
@@ -7047,3 +7047,5 @@ INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.prodotti.detail.table.label.ads_duration', 'IT', 'Durata annuncio (giorni)');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.prodotti.detail.js.alert.insert_ads_duration', 'EN', 'Insert ads duration');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.prodotti.detail.js.alert.insert_ads_duration', 'IT', 'Inserire durata annuncio');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.lista.table.select.option.ord_by_amount_ordine_desc', 'EN', 'order amount desc');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.lista.table.select.option.ord_by_amount_ordine_desc', 'IT', 'importo ordine desc');

@@ -208,7 +208,8 @@ namespace com.nemesys.database.repository
 		}
 		
 		public bool hasPaymentTransactionNotified(int idOrder)
-		{			
+		{
+			bool notified = false;
 			IList<PaymentTransaction> results = null;
 			
 			string strSQL = "from PaymentTransaction where 1=1";
@@ -241,11 +242,11 @@ namespace com.nemesys.database.repository
 				NHibernateHelper.closeSession();
 			}
 			
-			if(results == null){
-				return false;
+			if(results != null && results.Count>0){
+				notified = true;
 			}
 						
-			return true;	
+			return notified;	
 		}
 	}
 }

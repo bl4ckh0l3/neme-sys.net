@@ -83,6 +83,17 @@ namespace com.nemesys.services
 			}
 
 			return deleted;			
-		}		
+		}
+		
+		public static IDictionary<int,string> getOrderStatus()
+		{
+			IDictionary<int,string> status = new Dictionary<int,string>();
+			status.Add(1,"added");
+			status.Add(2,"execution");
+			status.Add(3,"processed");
+			status.Add(4,"rejected");
+			
+			return status;
+		}
 	}
 }

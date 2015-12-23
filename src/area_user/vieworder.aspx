@@ -95,11 +95,12 @@ protected void Page_Load(object sender, EventArgs e)
 	orderProdRulesDesc = "";
 	orderRules = null;
 	productRules = null;
+	IDictionary<int,string> statusOrder = OrderService.getOrderStatus();
 	
 	if(!String.IsNullOrEmpty(Request["orderid"])){	
 		try{
 			orderid = Convert.ToInt32(Request["orderid"]);
-			order = orderep.getById(orderid, true);
+			order = orderep.getByIdExtended(orderid, true);
 			
 			paymentDone = order.paymentDone;
 			paymentCommissions = order.paymentCommission;
@@ -133,13 +134,25 @@ protected void Page_Load(object sender, EventArgs e)
 
 			//****** MANAGE ORDER STATUS
 			if(order.status==1){
-				orderStatus = lang.getTranslated("backend.ordini.view.table.label.ord_inserting");
+				orderStatus = statusOrder[order.status];
+				if(!String.IsNullOrEmpty(lang.getTranslated("backend.ordini.view.table.label."+orderStatus))){
+					orderStatus = lang.getTranslated("backend.ordini.view.table.label."+orderStatus);
+				}
 			}else if(order.status==2){
-				orderStatus = lang.getTranslated("backend.ordini.view.table.label.ord_executing");
+				orderStatus = statusOrder[order.status];
+				if(!String.IsNullOrEmpty(lang.getTranslated("backend.ordini.view.table.label."+orderStatus))){
+					orderStatus = lang.getTranslated("backend.ordini.view.table.label."+orderStatus);
+				}
 			}else if(order.status==3){
-				orderStatus = lang.getTranslated("backend.ordini.view.table.label.ord_executed");
+				orderStatus = statusOrder[order.status];
+				if(!String.IsNullOrEmpty(lang.getTranslated("backend.ordini.view.table.label."+orderStatus))){
+					orderStatus = lang.getTranslated("backend.ordini.view.table.label."+orderStatus);
+				}
 			}else if(order.status==4){
-				orderStatus = lang.getTranslated("backend.ordini.view.table.label.ord_sca");
+				orderStatus = statusOrder[order.status];
+				if(!String.IsNullOrEmpty(lang.getTranslated("backend.ordini.view.table.label."+orderStatus))){
+					orderStatus = lang.getTranslated("backend.ordini.view.table.label."+orderStatus);
+				}
 			}
 			
 			//****** MANAGE SHIPPING ADDRESS

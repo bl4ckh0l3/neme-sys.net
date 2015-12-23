@@ -388,7 +388,9 @@ $(function() {
 				<%
 				int counter = 0;				
 				if(bolFoundLista){
-					foreach (FOrder k in orders){%>	
+					for(counter = fromOrder; counter<= toOrder;counter++){
+							FOrder k = orders[counter];
+							bool hasExtURL = false;%>	
 							<tr id="tr_delete_list_<%=counter%>" class="<%if(counter % 2 == 0){Response.Write("table-list-on");}else{Response.Write("table-list-off");}%>">
 							<td align="center" width="25"><a href="javascript:editCategoria(<%=k.id%>);"><img src="/backoffice/img/zoom.png" alt="<%=lang.getTranslated("backend.contenuti.lista.table.alt.view")%>" hspace="2" vspace="0" border="0"></a></td>
 							<td align="center" width="25"><a href="javascript:editCategoria(<%=k.id%>);"><img src="/backoffice/img/pencil.png" title="<%=lang.getTranslated("backend.categorie.lista.table.alt.modify_cat")%>" hspace="2" vspace="0" border="0"></a></td>
@@ -399,6 +401,7 @@ $(function() {
 							<td><%
 							Payment p = payrep.getByIdCached(k.paymentId, true);
 							if(p != null){
+								hasExtURL = p.hasExternalUrl;
 								string paydesc = p.description;
 								if(!String.IsNullOrEmpty(lang.getTranslated("backend.payment.description.label."+paydesc))){
 									paydesc = lang.getTranslated("backend.payment.description.label."+paydesc);
@@ -407,48 +410,76 @@ $(function() {
 							}
 							%></td>
 							<td>
-							<div class="ajax" id="view_contiene_elements_<%=counter%>" onmouseover="javascript:showHide('view_contiene_elements_<%=counter%>','edit_contiene_elements_<%=counter%>','contiene_elements_<%=counter%>',500, true);">
-							<%//if(k.hasElements) {
-								 //Response.Write(lang.getTranslated("backend.commons.yes"));
-							//}else{
-								//Response.Write(lang.getTranslated("backend.commons.no"));
-							//}
-							%>
-							</div>
-							<div class="ajax" id="edit_contiene_elements_<%=counter%>">
-							<select name="hasElements" class="formfieldAjaxSelect" id="contiene_elements_<%=counter%>" onblur="javascript:updateField('edit_contiene_elements_<%=counter%>','view_contiene_elements_<%=counter%>','contiene_elements_<%=counter%>','Category|ICategoryRepository|bool',<%=k.id%>,2,<%=counter%>);">
-							<OPTION VALUE="0" <%//if (!k.hasElements) { Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.no")%></OPTION>
-							<OPTION VALUE="1" <%//if (k.hasElements) { Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.yes")%></OPTION>
-							</SELECT>	
-							</div>
-							<script>
-							$("#edit_contiene_elements_<%=counter%>").hide();
-							</script>
+							<%
+							if(k.paymentDone){
+								bool payNotified = false;
+								
+								if(paytransrep.hasPaymentTransactionNotified(k.id)){
+									payNotified = true;
+								}
+								
+								if(payNotified || !hasExtURL){%>
+									&nbsp;&nbsp;<img src="/backoffice/img/sema_no.png" title="<%=lang.getTranslated("backend.ordini.lista.table.alt.order_paied_notified")%>" alt="<%=lang.getTranslated("backend.ordini.lista.table.alt.order_paied_notified")%>" hspace="2" vspace="0" border="0" align="absmiddle">
+								<%}else{%>
+									&nbsp;&nbsp;<a href="javascript:confirmNotify('<%=k.id%>');"><img src="/backoffice/img/sema_adup.png" title="<%=lang.getTranslated("backend.ordini.lista.table.alt.order_paied_no_notified")%>" alt="<%=lang.getTranslated("backend.ordini.lista.table.alt.order_paied_no_notified")%>" hspace="2" vspace="0" border="0" align="absmiddle"></a>
+								<%}							
+								Response.Write(lang.getTranslated("backend.commons.yes"));							
+							}else{%>
+								&nbsp;&nbsp;<img src="/backoffice/img/sema_al.png" title="<%=lang.getTranslated("backend.ordini.lista.table.alt.order_to_pay")%>" alt="<%=lang.getTranslated("backend.ordini.lista.table.alt.order_to_pay")%>" hspace="2" vspace="0" border="0" align="absmiddle">
+								<%Response.Write(lang.getTranslated("backend.commons.no"));
+							}%>
 							</td>
 							<td>&euro;&nbsp;<%=k.amount.ToString("#,###0.00")%></td>
-							<td>
-							<div class="ajax" id="view_visibile_<%=counter%>" onmouseover="javascript:showHide('view_visibile_<%=counter%>','edit_visibile_<%=counter%>','visibile_<%=counter%>',500, true);">
+							<td width="150">
+							<div class="ajax" id="view_status_<%=counter%>" onmouseover="javascript:showHide('view_status_<%=counter%>','edit_status_<%=counter%>','status_<%=counter%>',500, true);">
 							<%
-							/*if (k.visible) { 
-								Response.Write(lang.getTranslated("backend.commons.yes"));
-							}else{ 
-								Response.Write(lang.getTranslated("backend.commons.no"));
-							}*/
+							string labelStatus = "";
+							if (k.status==1) {
+								labelStatus = orderStatus[k.status];
+								if(!String.IsNullOrEmpty(lang.getTranslated("backend.ordini.view.table.label."+labelStatus))){
+									labelStatus = lang.getTranslated("backend.ordini.view.table.label."+labelStatus);
+								}
+								Response.Write(labelStatus);
+							}else if(k.status==2){ 
+								labelStatus = orderStatus[k.status];
+								if(!String.IsNullOrEmpty(lang.getTranslated("backend.ordini.view.table.label."+labelStatus))){
+									labelStatus = lang.getTranslated("backend.ordini.view.table.label."+labelStatus);
+								}
+								Response.Write(labelStatus);
+							}else if(k.status==3){ 
+								labelStatus = orderStatus[k.status];
+								if(!String.IsNullOrEmpty(lang.getTranslated("backend.ordini.view.table.label."+labelStatus))){
+									labelStatus = lang.getTranslated("backend.ordini.view.table.label."+labelStatus);
+								}
+								Response.Write(labelStatus);
+							}else if(k.status==4){ 
+								labelStatus = orderStatus[k.status];
+								if(!String.IsNullOrEmpty(lang.getTranslated("backend.ordini.view.table.label."+labelStatus))){
+									labelStatus = lang.getTranslated("backend.ordini.view.table.label."+labelStatus);
+								}
+								Response.Write(labelStatus);
+							}
 							%>
 							</div>
-							<div class="ajax" id="edit_visibile_<%=counter%>">
-							<select name="visible" class="formfieldAjaxSelect" id="visibile_<%=counter%>" onblur="javascript:updateField('edit_visibile_<%=counter%>','view_visibile_<%=counter%>','visibile_<%=counter%>','Category|ICategoryRepository|bool',<%=k.id%>,2,<%=counter%>);">
-							<OPTION VALUE="0" <%//if (!k.visible) { Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.no")%></OPTION>
-							<OPTION VALUE="1" <%//if (k.visible) { Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.yes")%></OPTION>
+							<div class="ajax" id="edit_status_<%=counter%>">
+							<select name="status" class="formfieldAjaxSelect" id="status_<%=counter%>" onblur="javascript:updateField('edit_status_<%=counter%>','view_status_<%=counter%>','status_<%=counter%>','FOrder|IOrderRepository|int',<%=k.id%>,2,<%=counter%>);">
+							<%string optLabelStatus = "";
+							foreach(int status in orderStatus.Keys){
+								optLabelStatus = orderStatus[status];
+								if(!String.IsNullOrEmpty(lang.getTranslated("backend.ordini.view.table.label."+optLabelStatus))){
+									optLabelStatus = lang.getTranslated("backend.ordini.view.table.label."+optLabelStatus);
+								}
+								%>
+								<OPTION VALUE="<%=status%>" <%if (k.status==status) { Response.Write("selected");}%>><%=optLabelStatus%></OPTION>
+							<%}%>
 							</SELECT>	
 							</div>
 							<script>
-							$("#edit_visibile_<%=counter%>").hide();
+							$("#edit_status_<%=counter%>").hide();
 							</script>							
 							</td>
 							</tr>			
 						<%
-						counter++;
 					}
 				}%>	  
 

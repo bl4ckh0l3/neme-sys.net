@@ -1,6 +1,10 @@
 using System;
 using System.Data;
 using System.Web.UI;
+using System.Web;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.IO;
 using com.nemesys.model;
 using com.nemesys.database.repository;
 using com.nemesys.services;
@@ -18,7 +22,7 @@ public partial class _OrderList : Page
 	protected int itemsXpage, numPage;
 	protected int fromOrder, toOrder;
 	protected string cssClass;
-	protected string search_guid, search_datefrom, search_dateto, search_status, search_paydone;	
+	protected string search_guid, search_datefrom, search_dateto, search_status, search_paydone, chart_filter;	
 	protected int search_user, search_orderby, search_paytype;
 	protected IList<FOrder> orders;
 	protected IOrderRepository orderrep;
@@ -33,6 +37,7 @@ public partial class _OrderList : Page
 	protected string chartReference;
 	protected IDictionary<int, int> dictChart;
 	protected IDictionary<int, string> dictMonths;
+	protected StringBuilder urlParamOrderFilter;
 	
 	private int _totalPages;	
 	public int totalPages {
@@ -189,6 +194,18 @@ public partial class _OrderList : Page
 			}
 		}
 
+		if (!String.IsNullOrEmpty(Request["chart_filter"])) {
+			Session["chart_filter"] = Request["chart_filter"];
+			chart_filter = (string)Session["chart_filter"];
+		}else{
+			if (Session["chart_filter"] != null) {
+				chart_filter = (string)Session["chart_filter"];
+			}else{
+				Session["chart_filter"] = "";
+				chart_filter = (string)Session["chart_filter"];
+			}
+		}
+
 		if(!String.IsNullOrEmpty(Request["resetMenu"]) && Request["resetMenu"] == "1") 
 		{
 			Session["orderPage"] = 1;
@@ -209,6 +226,8 @@ public partial class _OrderList : Page
 			search_status = (string)Session["order_status"];
 			Session["payment_done"] = null;
 			search_paydone = (string)Session["payment_done"];
+			Session["chart_filter"] = null;
+			chart_filter = (string)Session["chart_filter"];
 		}
 		
 		try
@@ -254,7 +273,7 @@ public partial class _OrderList : Page
 		string dtaChartFrom = "";
 		string dtaChartTo = "";
                         	
-		if("m".Equals(Request["chart_filter"])){
+		if("m".Equals(chart_filter)){
 			int currentDay = DateTime.Now.Day;
 			chartReference = dictMonths[DateTime.Now.Month];
 			
@@ -285,7 +304,7 @@ public partial class _OrderList : Page
 				totalOrderc = ordersC.Count;
 				foreach(FOrder x in ordersC){
 					int baseC = 0;
-					if("m".Equals(Request["chart_filter"])){
+					if("m".Equals(chart_filter)){
 						baseC = x.insertDate.Day;
 					}else{
 						baseC = x.insertDate.Month;
@@ -337,7 +356,17 @@ public partial class _OrderList : Page
 		}else if(orders.Count % itemsXpage != 0 &&  (_totalPages * itemsXpage) < iIndex) {
 			_totalPages = _totalPages +1;	
 		}	
-			
+		
+		urlParamOrderFilter= new StringBuilder()
+		.Append("payment_done=").Append(search_paydone)
+		.Append("&order_status=").Append(search_status)
+		.Append("&order_date_from=").Append(search_datefrom)
+		.Append("&order_date_to=").Append(search_dateto)
+		.Append("&order_payment=").Append(search_paytype)
+		.Append("&order_user=").Append(search_user)
+		.Append("&order_guid=").Append(search_guid)
+		.Append("&order_by=").Append(search_orderby);
+		
 		this.pg1.totalPages = this.totalPages;
 		this.pg1.defaultLangCode = lang.defaultLangCode;
 		this.pg1.currentPage = this.numPage;

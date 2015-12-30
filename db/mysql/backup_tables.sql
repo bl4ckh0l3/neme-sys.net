@@ -1188,7 +1188,7 @@ CREATE TABLE `ORDER_PRODUCT_ATTACHMENT_DOWNLOAD` (
 `max_download` INT(3) NOT NULL  default '-1',
 `insert_date` TIMESTAMP NOT NULL ,
 `expire_date` datetime NOT NULL default '9999-12-31 23:59:59',
-`download_date` TIMESTAMP NOT NULL,
+`download_date` datetime NOT NULL default '9999-12-31 23:59:59',
 `download_counter` INT(3) UNSIGNED NOT NULL  default '0',
  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

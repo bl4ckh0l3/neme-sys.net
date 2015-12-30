@@ -67,7 +67,7 @@ body {
 #backend-content table td.icons{text-align:center;vertical-align:top;}
 #backend-content table.inner-table{width:100%;}
 #backend-content table.inner-table th{text-align:left;font-weight: bold;color: #FFFFFF; background-color: #bc9e9e;vertical-align: middle;padding:3px;margin:0px;}
-#backend-content table.inner-table td{text-align:left;vertical-align: middle;padding:3px;margin:0px;}
+#backend-content table.inner-table td{text-align:left;vertical-align: top;padding:3px;margin:0px;}
 #backend-content table.filter-table{width:60%}
 #backend-content table.filter-table tr{margin:0px;padding:0px;height:10px;}
 #backend-content table.filter-table td{text-align:left;vertical-align:top;padding-left:3px;margin:0px;}

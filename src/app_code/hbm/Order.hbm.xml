@@ -74,7 +74,7 @@
 		    <column name="id" sql-type="int(11)" not-null="true"/>
 		    <generator class="native" />
 		</id>	
-
+		
 		<property name="idOrder" type="Int32" column="id_order" not-null="true" />	
 		<property name="idParentProduct" type="Int32" column="id_parent_product" not-null="true" />	
 		<property name="idDownFile" type="Int32" column="id_down_file" not-null="true" />	
@@ -88,7 +88,7 @@
 		    <column name="expire_date" sql-type="datetime" />
 		</property>	
 		<property name="downloadDate">
-		    <column name="download_date" sql-type="timestamp" />
+		    <column name="download_date" sql-type="datetime" />
 		</property>	
 		<property name="downloadCounter" column="download_counter" type="Int32" />
     </class>

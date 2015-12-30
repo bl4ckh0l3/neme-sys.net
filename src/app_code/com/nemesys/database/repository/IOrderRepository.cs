@@ -29,6 +29,8 @@ namespace com.nemesys.database.repository
 		
 		IList<OrderProductField> findItemFields(int idOrder, int idProd, int prodCounter);
 		
+		IList<OrderProductAttachmentDownload> getAttachmentDownload(int idOrder, int idProd);
+		
 		void insertOrderShippingAddress(OrderShippingAddress orderShippingAddress);
 		void updateOrderShippingAddress(OrderShippingAddress orderShippingAddress);
 		void deleteOrderShippingAddress(OrderShippingAddress orderShippingAddress);

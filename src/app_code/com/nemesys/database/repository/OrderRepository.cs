@@ -385,17 +385,44 @@ namespace com.nemesys.database.repository
 			
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			{	
-				IQuery q = session.CreateQuery("from OrderProductField where idOrder=:idOrder and idProduct=:idProduct and productCounter=:prodCounter order by description asc");
-				q.SetInt32("idOrder",idOrder);
-				q.SetInt32("idProduct",idProd);			
-				q.SetInt32("prodCounter",prodCounter);	
-				results = q.List<OrderProductField>();				
+					IQuery q = session.CreateQuery("from OrderProductField where idOrder=:idOrder and idProduct=:idProduct and productCounter=:prodCounter order by description asc");
+					q.SetInt32("idOrder",idOrder);
+					q.SetInt32("idProduct",idProd);			
+					q.SetInt32("prodCounter",prodCounter);	
+					results = q.List<OrderProductField>();					
 				
 				NHibernateHelper.closeSession();					
 			}
 			
 			return results;
-		}		
+		}	
+		
+		public IList<OrderProductAttachmentDownload> getAttachmentDownload(int idOrder, int idProd)
+		{
+			IList<OrderProductAttachmentDownload> results = null;
+			
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			using (ITransaction tx = session.BeginTransaction())
+			{	
+				try
+				{
+					results = session.CreateQuery("from OrderProductAttachmentDownload where idOrder=:orderId and idParentProduct=:productId")
+					.SetInt32("orderId",idOrder)
+					.SetInt32("productId",idProd)			
+					.List<OrderProductAttachmentDownload>();				
+				}
+				catch(Exception ex)
+				{
+					System.Web.HttpContext.Current.Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
+					// DO NOTHING: RETURN NULL
+				}			
+				
+				tx.Commit();	
+				NHibernateHelper.closeSession();					
+			}
+			
+			return results;			
+		}
 		
 		public void saveCompleteOrder(FOrder order, IList<OrderProduct> ops, IList<OrderProductField> opfs, IList<OrderProductAttachmentDownload> opads, IList<OrderFee> ofs, BillsAddress billsAddress, OrderBillsAddress orderBillsAddress, ShippingAddress shippingAddress, OrderShippingAddress orderShippingAddress, IList<OrderBusinessRule> obrs, IList<OrderVoucher> ovs, int voucherCodeId)
 		{

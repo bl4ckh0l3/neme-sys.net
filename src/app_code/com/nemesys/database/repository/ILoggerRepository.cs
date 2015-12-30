@@ -20,5 +20,7 @@ namespace com.nemesys.database.repository
 		void deleteBy(string type, string dta_from, string dta_to);
 
 		IDictionary<int, Logger> find(string type, string dta_from, string dta_to, int pageIndex, int pageSize, out long totalCount);
+		
+		IList<Logger> getAll();
 	}
 }

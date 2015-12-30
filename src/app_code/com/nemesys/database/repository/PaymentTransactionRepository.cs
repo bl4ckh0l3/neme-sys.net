@@ -131,6 +131,7 @@ namespace com.nemesys.database.repository
 			IList<PaymentTransaction> results = null;
 			
 			StringBuilder cacheKey = new StringBuilder("list-payment-transaction")
+			.Append("-").Append(idOrder)
 			.Append("-").Append(idModule)
 			.Append("-").Append(idTransaction)
 			.Append("-").Append(notified);
@@ -152,10 +153,13 @@ namespace com.nemesys.database.repository
 			}			
 			if (idModule > 0){			
 				strSQL += " and idModule=:idModule";
+			}			
+			if (!String.IsNullOrEmpty(idTransaction)){			
+				strSQL += " and idTransaction=:idTransaction";
 			}
 			if(!String.IsNullOrEmpty(notified)){
 				if(Convert.ToBoolean(notified)){
-					strSQL += " and notified=1 and status=:status";
+					strSQL += " and notified=1 and status="+CommonKeywords.getSuccessKey();
 				}else{
 					strSQL += " and notified=0";
 				}
@@ -175,10 +179,8 @@ namespace com.nemesys.database.repository
 					if (idModule > 0){
 						q.SetInt32("idModule", Convert.ToInt32(idModule));
 					}
-					if(!String.IsNullOrEmpty(notified)){
-						if(Convert.ToBoolean(notified)){
-							q.SetString("status", CommonKeywords.getSuccessKey());
-						}
+					if(!String.IsNullOrEmpty(idTransaction)){
+						q.SetString("idTransaction", idTransaction);
 					}
 					results = q.List<PaymentTransaction>();
 				}
@@ -204,7 +206,7 @@ namespace com.nemesys.database.repository
 		
 		public bool isPaymentTransactionNotified(PaymentTransaction paymentTransaction)
 		{
-			return paymentTransaction.idOrder>0 && !String.IsNullOrEmpty(paymentTransaction.idTransaction) && paymentTransaction.notified && "SUCCESS".Equals(paymentTransaction.status);
+			return paymentTransaction.idOrder>0 && !String.IsNullOrEmpty(paymentTransaction.idTransaction) && paymentTransaction.notified && CommonKeywords.getSuccessKey().Equals(paymentTransaction.status);
 		}
 		
 		public bool hasPaymentTransactionNotified(int idOrder)
@@ -217,7 +219,7 @@ namespace com.nemesys.database.repository
 			if (idOrder > 0){			
 				strSQL += " and idOrder=:idOrder";
 			}
-			strSQL += " and notified=1 and status=:status";
+			strSQL += " and notified=1 and status="+CommonKeywords.getSuccessKey();
 			
 			//System.Web.HttpContext.Current.Response.Write("strSQL: " + strSQL);					
 			
@@ -230,7 +232,6 @@ namespace com.nemesys.database.repository
 					if (idOrder > 0){
 						q.SetInt32("idOrder", Convert.ToInt32(idOrder));
 					}
-					q.SetString("status", CommonKeywords.getSuccessKey());
 					results = q.List<PaymentTransaction>();
 				}
 				catch(Exception ex)

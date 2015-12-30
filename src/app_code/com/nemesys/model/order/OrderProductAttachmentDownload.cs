@@ -16,6 +16,7 @@ namespace com.nemesys.model
 		private DateTime _expireDate;
 		private DateTime _downloadDate;
 		private int _downloadCounter;
+
 		
 		public OrderProductAttachmentDownload(){}
 

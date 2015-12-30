@@ -19,17 +19,25 @@
 <CommonCssJs:insert runat="server" />
 <script type="text/javascript" src="/common/js/highcharts.js"></script>
 <script language="JavaScript">
-/*
-function editCategoria(idCat){
-	location.href='/backoffice/categories/insertcategory.aspx?cssClass=LCE&id='+idCat;
+function viewOrder(idOrder){
+	location.href='/backoffice/orders/orderview.aspx?cssClass=LO&id='+idOrder;
 }
 
-function deleteCategoria(id_objref, row, refreshrows){
-	if(confirm("<%=lang.getTranslated("backend.categorie.lista.js.alert.delete_category")%>?")){		
-		ajaxDeleteItem(id_objref,"Category|ICategoryRepository",row, refreshrows);
+function editOrder(idOrder){
+	location.href='/backoffice/orders/insertorder.aspx?cssClass=LO&id='+idOrder;
+}
+
+function deleteOrder(id_objref, row, refreshrows, status){
+	if(status == 4 || status == 3){
+		if(confirm("<%=lang.getTranslated("backend.ordini.detail.js.alert.confirm_del_order_status_sca_ese")%>")){
+			ajaxDeleteItem(id_objref,"FOrder|IOrderRepository",row, refreshrows);
+		}
+	}else{		
+		if(confirm("<%=lang.getTranslated("backend.ordini.detail.js.alert.confirm_del_order_change_qta_disp")%>")){
+			ajaxDeleteItem(id_objref,"FOrder|IOrderRepository",row, refreshrows);
+		}
 	}
 }
-*/
 
 /**
  * DHTML date validation script. Courtesy of SmartWebby.com (http://www.smartwebby.com/dhtml/)
@@ -248,7 +256,7 @@ $(function() {
 				</tr>
 			  <tr><td colspan="3">			  
 				  <input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.ordini.lista.button.search.label")%>" onclick="javascript:sendSearchOrder();" />&nbsp;
-				  <input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.ordini.lista.button.label.download_excel")%>" onclick="javascript:openWinExcel('<%//=Application("baseroot")&"/editor/report/CreateOrderExcel.asp?search_ordini="&request("search_ordini")&"&id_utente_search="&id_user_search&"&dta_ins_search_from="&dta_ins_search_from&"&dta_ins_search_to="&dta_ins_search_to&"&tipo_pagam_search="&tipo_pagam_search&"&pagam_done_search="&pagam_done_search&"&stato_ord_search="&stato_ord_search&"&ord_by_search="&ord_by_search&"&ord_guid_search="&ord_guid_search%>','crea_excel',400,400,100,100);" />
+				  <input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.ordini.lista.button.label.download_excel")%>" onclick="javascript:openWinExcel('/backoffice/report/create-order-catalog.aspx?<%=urlParamOrderFilter.ToString()%>','crea_excel',400,400,100,100);" />
 				<br/><br/>
 				</td></tr>	    
 			  </form>
@@ -265,8 +273,8 @@ $(function() {
 					<input type="hidden" value="<%=numPage%>" name="page">	
 					<input type="hidden" value="<%=cssClass%>" name="cssClass">		
 					  <select name="chart_filter" class="formFieldChangeStato" onChange="document.form_change_chart.submit();">
-						<option value="m" <%if ("m".Equals(Request["chart_filter"])){Response.Write("selected");}%>><%=lang.getTranslated("backend.ordini.lista.table.chart.month")%></option>
-						<option value="y" <%if ("y".Equals(Request["chart_filter"]) || String.IsNullOrEmpty(Request["chart_filter"])){Response.Write("selected");}%>><%=lang.getTranslated("backend.ordini.lista.table.chart.year")%></option>
+						<option value="m" <%if ("m".Equals(chart_filter)){Response.Write("selected");}%>><%=lang.getTranslated("backend.ordini.lista.table.chart.month")%></option>
+						<option value="y" <%if ("y".Equals(chart_filter) || String.IsNullOrEmpty(chart_filter)){Response.Write("selected");}%>><%=lang.getTranslated("backend.ordini.lista.table.chart.year")%></option>
 					  </select>			
 					</form>
 				</td>
@@ -285,7 +293,7 @@ $(function() {
 							height: 200					
 							},
 							title: {
-							text: '<%=lang.getTranslated("backend.ordini.lista.table.chart.sales_rep")%><%if ("m".Equals(Request["chart_filter"])){Response.Write(" "+lang.getTranslated("backend.ordini.lista.table.chart.month"));}else{Response.Write(" "+lang.getTranslated("backend.ordini.lista.table.chart.year"));}%><%=" ("+chartReference+")"%>',
+							text: '<%=lang.getTranslated("backend.ordini.lista.table.chart.sales_rep")%><%if ("m".Equals(chart_filter)){Response.Write(" "+lang.getTranslated("backend.ordini.lista.table.chart.month"));}else{Response.Write(" "+lang.getTranslated("backend.ordini.lista.table.chart.year"));}%><%=" ("+chartReference+")"%>',
 							x: -20 //center
 							},
 							subtitle: {
@@ -297,7 +305,7 @@ $(function() {
 							<%
 							string categories = "";
 							foreach(int q in dictChart.Keys){
-								if("m".Equals(Request["chart_filter"])){
+								if("m".Equals(chart_filter)){
 									categories+= "'"+ q.ToString() +"',";							
 								}else{
 									categories+= "'"+ dictMonths[q] +"',";						
@@ -392,9 +400,9 @@ $(function() {
 							FOrder k = orders[counter];
 							bool hasExtURL = false;%>	
 							<tr id="tr_delete_list_<%=counter%>" class="<%if(counter % 2 == 0){Response.Write("table-list-on");}else{Response.Write("table-list-off");}%>">
-							<td align="center" width="25"><a href="javascript:editCategoria(<%=k.id%>);"><img src="/backoffice/img/zoom.png" alt="<%=lang.getTranslated("backend.contenuti.lista.table.alt.view")%>" hspace="2" vspace="0" border="0"></a></td>
-							<td align="center" width="25"><a href="javascript:editCategoria(<%=k.id%>);"><img src="/backoffice/img/pencil.png" title="<%=lang.getTranslated("backend.categorie.lista.table.alt.modify_cat")%>" hspace="2" vspace="0" border="0"></a></td>
-							<td align="center" width="25"><a href="javascript:deleteCategoria(<%=k.id%>,'tr_delete_list_<%=counter%>','tr_delete_list_');"><img src="/backoffice/img/cancel.png" title="<%=lang.getTranslated("backend.categorie.lista.table.alt.delete_cat")%>" hspace="2" vspace="0" border="0"></a></td>
+							<td align="center" width="25"><a href="javascript:viewOrder(<%=k.id%>);"><img src="/backoffice/img/zoom.png" alt="<%=lang.getTranslated("backend.ordini.lista.table.alt.view_order")%>" hspace="2" vspace="0" border="0"></a></td>
+							<td align="center" width="25"><%if(k.status!=3 && k.status!=4){%><a href="javascript:editOrder(<%=k.id%>);"><img src="/backoffice/img/pencil.png" title="<%=lang.getTranslated("backend.ordini.lista.table.alt.modify_order")%>" hspace="2" vspace="0" border="0"></a><%}else{Response.Write("&nbsp;");}%></td>
+							<td align="center" width="25"><a href="javascript:deleteOrder(<%=k.id%>,'tr_delete_list_<%=counter%>','tr_delete_list_',<%=k.status%>);"><img src="/backoffice/img/cancel.png" title="<%=lang.getTranslated("backend.ordini.detail.button.elimina.label")%>" hspace="2" vspace="0" border="0"></a></td>
 							<td><%=k.id%></td>
 							<td><%=usrrep.getById(k.userId).username%></td>
 							<td><%=k.insertDate.ToString("dd/MM/yyyy HH:mm")%></td>
@@ -421,7 +429,7 @@ $(function() {
 								if(payNotified || !hasExtURL){%>
 									&nbsp;&nbsp;<img src="/backoffice/img/sema_no.png" title="<%=lang.getTranslated("backend.ordini.lista.table.alt.order_paied_notified")%>" alt="<%=lang.getTranslated("backend.ordini.lista.table.alt.order_paied_notified")%>" hspace="2" vspace="0" border="0" align="absmiddle">
 								<%}else{%>
-									&nbsp;&nbsp;<a href="javascript:confirmNotify('<%=k.id%>');"><img src="/backoffice/img/sema_adup.png" title="<%=lang.getTranslated("backend.ordini.lista.table.alt.order_paied_no_notified")%>" alt="<%=lang.getTranslated("backend.ordini.lista.table.alt.order_paied_no_notified")%>" hspace="2" vspace="0" border="0" align="absmiddle"></a>
+									&nbsp;&nbsp;<img src="/backoffice/img/sema_adup.png" title="<%=lang.getTranslated("backend.ordini.lista.table.alt.order_paied_no_notified")%>" alt="<%=lang.getTranslated("backend.ordini.lista.table.alt.order_paied_no_notified")%>" hspace="2" vspace="0" border="0" align="absmiddle">
 								<%}							
 								Response.Write(lang.getTranslated("backend.commons.yes"));							
 							}else{%>
@@ -500,11 +508,11 @@ $(function() {
 			</table>
 			<br/>
 			
-			<form action="/backoffice/categories/insertcategory.aspx" method="post" name="form_crea">
-			<input type="hidden" value="<%=cssClass%>" name="cssClass">	
-			<input type="hidden" value="" name="id">
-			<input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.categorie.lista.button.label.inserisci")%>" onclick="javascript:document.form_crea.submit();" />
-			</form>
+			<form action="/backoffice/orders/insertorder.aspx" method="post" name="form_crea">
+				<input type="hidden" value="<%=cssClass%>" name="cssClass">	
+				<input type="hidden" value="-1" name="id">
+				<input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.ordini.lista.button.inserisci.label")%>" onclick="javascript:document.form_crea.submit();" />
+			</form>		
 		</div>
 	</div>
 	<CommonFooter:insert runat="server" />

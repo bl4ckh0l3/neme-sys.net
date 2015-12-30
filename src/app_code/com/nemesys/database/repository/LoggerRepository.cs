@@ -105,6 +105,16 @@ namespace com.nemesys.database.repository
 			}
 		}		
 		
+		public IList<Logger> getAll()
+		{
+			IList<Logger> elements = null;					
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			{				
+				elements = session.CreateQuery("from Logger order by date desc").List<Logger>();
+				NHibernateHelper.closeSession();
+			}
+			return elements;				
+		}
 		
 		public IDictionary<int, Logger> find(string type, string dta_from, string dta_to, int pageIndex, int pageSize,out long totalCount)
 		{		

@@ -43,6 +43,7 @@ protected void Page_Load(object sender, EventArgs e)
 
 	IUserRepository usrrep = RepositoryFactory.getInstance<IUserRepository>("IUserRepository");	
 	IPaymentRepository payrep = RepositoryFactory.getInstance<IPaymentRepository>("IPaymentRepository");
+	IPaymentTransactionRepository paytransrep = RepositoryFactory.getInstance<IPaymentTransactionRepository>("IPaymentTransactionRepository");
 	IOrderRepository orderep = RepositoryFactory.getInstance<IOrderRepository>("IOrderRepository");
 	ILoggerRepository lrep = RepositoryFactory.getInstance<ILoggerRepository>("ILoggerRepository");
 	IShippingAddressRepository shiprep = RepositoryFactory.getInstance<IShippingAddressRepository>("IShippingAddressRepository");
@@ -336,22 +337,16 @@ protected void Page_Load(object sender, EventArgs e)
 
 			//****** MANAGE PAYMENT TRANSACTION (ONLY FOR ADMIN EMAIL)
 			string paymentTrans = "";
-			/*
-			Dim objPaymentTrans, objTmpPaymentTransList
-			Set objPaymentTrans = new PaymentTransactionClass
-			Set objTmpPaymentTransList = objPaymentTrans.getListaOrderPaymentTransaction(id_order)
-			for each q in objTmpPaymentTransList
-				paymentTrans+="<strong>ID:</strong> "&objTmpPaymentTransList(q).getIdTransaction()&";&nbsp;";
-				paymentTrans+="<strong>STATUS:</strong> "&objTmpPaymentTransList(q).getPaymentStatus()&";&nbsp;";
-				Select Case objTmpPaymentTransList(q).isNotified()
-				Case 0
-					paymentTrans+="<strong>NOTIFIED:</strong> "&langEditor.getTranslated("backend.commons.no")&";<br/>";
-				Case 1
-					paymentTrans+="<strong>NOTIFIED:</strong> "&langEditor.getTranslated("backend.commons.yes")&";<br/>";
-				Case Else
-				End Select
-			next	
-			*/
+			IList<PaymentTransaction> transactions = paytransrep.find(order.id, -1, null, null, false);
+			foreach(PaymentTransaction q in transactions){
+				paymentTrans+="<strong>ID:</strong> "+q.idTransaction+";&nbsp;";
+				paymentTrans+="<strong>STATUS:</strong> "+q.status+";&nbsp;";
+				if(q.notified){
+					paymentTrans+="<strong>NOTIFIED:</strong> "+lang.getTranslated("backend.commons.no")+";<br/>";
+				}else{
+					paymentTrans+="<strong>NOTIFIED:</strong> "+lang.getTranslated("backend.commons.yes")+";<br/>";
+				}
+			}
 			
 			adminMessage.Append(lang.getTranslated("backend.ordini.view.table.label.tipo_pagam_order")).Append(":&nbsp;<b>").Append(paymentType).Append("</b><br/><br/>")
 			.Append(lang.getTranslated("backend.ordini.view.table.label.pagam_order_done")).Append(":&nbsp;<b>").Append(pdone).Append("</b><br/><br/>")

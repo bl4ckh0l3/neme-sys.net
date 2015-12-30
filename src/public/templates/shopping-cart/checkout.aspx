@@ -1,4 +1,4 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeFile="checkout.aspx.cs" Inherits="_Checkout" Debug="true"%>
+<%@ Page Language="C#" AutoEventWireup="true" CodeFile="checkout.aspx.cs" Inherits="_Checkout" Debug="false"%>
 <%@ import Namespace="System" %>
 <%@ import Namespace="System.Collections" %>
 <%@ import Namespace="System.Collections.Generic" %>

@@ -59,7 +59,7 @@ protected void Page_Load(Object sender, EventArgs e)
 	}
 	
 	try{
-		products = productrep.find(null,null,null,-1,-1,null,null,-1,null,null,false,true,true,false,false);
+		products = productrep.find(null,null,null,-1,null,null,null,null,-1,null,null,false,true,true,false,false,false);
 		if(products == null){				
 			products = new List<Product>();						
 		}
@@ -142,7 +142,7 @@ protected void Page_Load(Object sender, EventArgs e)
 				.Append("\"").Append(p.name).Append("\",")
 				.Append("\"").Append(type).Append("\",")
 				.Append("\"").Append(status).Append("\",")
-				.Append("\"").Append("EUR ").Append(p.price.ToString("###0.00")).Append("\",")
+				.Append("\"").Append("EUR ").Append(p.price.ToString("#,###0.00")).Append("\",")
 				.Append("\"").Append(p.discount.ToString("###0.00")).Append(" %").Append("\",")
 				.Append("\"").Append(quantity).Append("\",")
 				.Append("\"").Append(supplement).Append("\",")

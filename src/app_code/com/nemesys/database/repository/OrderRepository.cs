@@ -55,6 +55,7 @@ namespace com.nemesys.database.repository
 				session.CreateQuery("delete from OrderBillsAddress where idOrder=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
 				session.CreateQuery("delete from OrderShippingAddress where idOrder=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
 				session.CreateQuery("delete from OrderBusinessRule where orderId=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
+				session.CreateQuery("delete from OrderVoucher where orderId=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
 				session.Delete(order);
 				
 				tx.Commit();

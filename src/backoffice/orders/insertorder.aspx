@@ -1,4 +1,4 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeFile="orderview.aspx.cs" Inherits="_OrderView" Debug="false" ValidateRequest="false"%>
+<%@ Page Language="C#" AutoEventWireup="true" CodeFile="insertorder.aspx.cs" Inherits="_InsertOrder" Debug="false" ValidateRequest="false"%>
 <%@ import Namespace="System" %>
 <%@ import Namespace="System.Collections" %>
 <%@ import Namespace="System.Collections.Generic" %>
@@ -25,41 +25,34 @@
 <CommonMeta:insert runat="server" />
 <CommonCssJs:insert runat="server" />
 <script>
-function downloadStatus(orderid, productid){
-	var query_string = "id_element="+productid+"&id_order="+orderid;	
-	//alert(query_string);
+function chooseOrderUser(idOrder, userId){
+	if(confirm("<%=lang.getTranslated("backend.ordini.detail.js.alert.confirm_choose_new_order_user")%>")){
+		location.href='/backoffice/orders/insertorder.aspx?cssClass=LO&id='+idOrder+'&userid='+userId;
+	}
+}
 
-	$('#downloadContainer').empty();
-	$('#downloadContainer').append('<div align="center" style="padding-top:150px;" id="loading-menu"><img src="/common/img/loading_icon.gif" hspace="0" vspace="0" border="0" align="center" alt="" style="vertical-align:middle;text-align:center;padding-top:0px;padding-bottom:0px;"></div>');	
-	$('#downloadContainer').show();
+function addItemToOrder(idProduct, counter){
+	var fields = "";
+	var quantity = $("#quantity_"+counter).val();
+
+	if(isNaN(quantity)){
+		alert("<%=lang.getTranslated("backend.ordini.detail.js.alert.isnan_value")%>");
+		$("#quantity_"+counter).val('');
+		return;
+	}else if(quantity.length == 0 || quantity==0){
+		alert("<%=lang.getTranslated("backend.ordini.detail.js.alert.select_qta_prod")%>");
+		$("#quantity_"+counter).val('');
+		return;
+	}	
 	
-	$.ajax({
-		async: true,
-		type: "GET",
-		cache: false,
-		url: "/backoffice/orders/ajaxdownloadstatus.aspx",
-		data: query_string,
-		success: function(response) {
-			//alert(response);
-			$('#downloadContainer').empty();
-			$('#downloadContainer').append('<div align="right"><span style="cursor:pointer;text-decoration:underline;" onclick="javascript:hideCommentDiv();">x</span></div>');
-			$('#downloadContainer').append(response);
-		},
-		error: function(response) {
-			//alert(response.responseText);	
-			$('#downloadContainer').hide();
-			alert("<%=lang.getTranslated("portal.commons.js.label.loading_error")%>");
-		}
-	});	
+	// TODO: creare json con fields per prodotto selezionati
+	
+	
+	document.add_new_item.productid.value=idProduct;
+	document.add_new_item.productquantity.value=quantity;
+	document.add_new_item.productfields.value=fields;
+	document.add_new_item.submit();
 }
-
-function hideCommentDiv(){
-	$('#downloadContainer').hide();
-}
-
-$(function() {
-	$("#downloadContainer").draggable();
-});
 </script>
 </head>
 <body>
@@ -68,12 +61,125 @@ $(function() {
 	<div id="container">
 		<CommonMenu:insert runat="server" />
 		<div id="backend-content">
-			<%if(order!=null){%>
-				
-				<div id="downloadWrapper" style="position:relative;">
-					<div id="downloadContainer" style="z-index:10000;position:absolute;top:0px;top:200px;left:400px;width:500px;height:200px;border:1px solid #000;padding:5px;display:none; overflow:auto; background-color:#FFFFFF;"></div>
+			<table border="0" cellpadding="0" cellspacing="0" class="principal">
+				<tr>
+					<th align="center" width="25">&nbsp;</th>
+					<th width="200"><lang:getTranslated keyword="backend.utenti.lista.table.header.username" runat="server" /></th>
+					<th width="200"><lang:getTranslated keyword="backend.utenti.lista.table.header.mail" runat="server" /></th>
+					<th>&nbsp;</th>
+				</tr>
+			</table>
+			<%if(user!= null){%>
+				<table border="0" cellpadding="0" cellspacing="0" class="principal">	
+				<tr class="table-list-on">
+					<td align="center" width="25">&nbsp;</td>
+					<td width="200"><%=user.username%></td>
+					<td width="200"><%=user.email%></td>
+					<td>&nbsp;</td>
+				</tr>	
+				</table>			
+			<%}else{%>
+				<div class="order-user-select">
+				<table border="0" cellpadding="0" cellspacing="0" class="principal">
+				<%int selUserCounter = 0;
+				foreach(User u in users){%>
+					<tr class="<%if(selUserCounter % 2 == 0){Response.Write("table-list-on");}else{Response.Write("table-list-off");}%>">
+						<td align="center" width="25"><input type="radio" onclick="javascript:chooseOrderUser(<%=orderid%>,<%=u.id%>);" value="<%=u.id%>" name="order_user"></td>
+						<td width="200"><%=u.username%></td>
+						<td width="200"><%=u.email%></td>
+						<td>&nbsp;</td>
+					</tr>
+					<%selUserCounter++;
+				}%>
+				</table>
 				</div>
-				
+			<%}%>
+			
+			
+			<%if(orderid==-1 && user != null){%>
+				<div style="padding-top:30px;padding-bottom:20px;float:top;min-height:40px;border: 1px solid rgb(201, 201, 201);">		
+					<form action="<%=Request.Url.AbsolutePath%>" method="post" name="form_search" accept-charset="UTF-8">
+						<input type="hidden" value="<%=orderid%>" name="id">
+						<input type="hidden" value="<%=orderUserId%>" name="userid">
+						<input type="hidden" value="<%=cssClass%>" name="cssClass">
+						<div style="float:left;padding-right:10px;padding-top:15px;">
+						<input type="submit" value="<%=lang.getTranslated("backend.product.lista.label.search")%>" class="buttonForm" hspace="4">
+						</div>
+						<div style="float:left;padding-right:10px;">
+						<span class="labelForm"><%=lang.getTranslated("backend.product.lista.label.title_filter")%></span><br>
+						<input type="text" name="titlef" value="<%=titlef%>" class="formFieldTXT">	
+						</div>
+						<div style="float:left;padding-right:10px;">
+						<span class="labelForm"><%=lang.getTranslated("backend.product.lista.label.keyword_filter")%></span><br>
+						<input type="text" name="keywordf" value="<%=keywordf%>" class="formFieldTXT">	
+						</div>
+						<div style="float:left;padding-right:10px;">
+						<span class="labelForm"><%=lang.getTranslated("backend.product.lista.label.type_filter")%></span><br>
+						<select name="typef" class="formfieldSelect">
+						<option value=""></option>
+						<option value="0" <%if ("0".Equals(typef)) { Response.Write("selected");}%>><%=lang.getTranslated("backend.product.detail.table.label.type_portable")%></option>
+						<option value="1" <%if ("1".Equals(typef)) { Response.Write("selected");}%>><%=lang.getTranslated("backend.product.detail.table.label.type_download")%></option>
+						<option value="2" <%if ("2".Equals(typef)) { Response.Write("selected");}%>><%=lang.getTranslated("backend.product.detail.table.label.type_ads")%></option>
+						</SELECT>
+						</div>
+						<div style="float:top;padding-right:10px;">
+						<span class="labelForm"><%=lang.getTranslated("backend.product.lista.label.category_filter")%></span><br>
+						<select name="categoryf" class="formfieldSelect">
+						<option value=""></option>
+						<%
+						string catdesc;
+						foreach (Category c in categories){
+							if(CategoryService.checkUserCategory(login.userLogged, c)){
+								catdesc = "-&nbsp;"+c.description;
+								string[] level = c.hierarchy.Split('.');
+								if(level != null){
+									for(int l=1;l<level.Length;l++){
+										catdesc = "&nbsp;&nbsp;&nbsp;"+catdesc;
+									}
+								}%>
+								<OPTION VALUE="<%=c.id%>" <%if (c.id==categoryf) { Response.Write("selected");}%>><%=catdesc%></OPTION>
+							<%}
+						}%>
+						</SELECT>
+						</div>	
+				</form>
+				</div>
+			
+				<%if(products != null && products.Count>0){%>
+					<table border="0" cellpadding="0" cellspacing="0" class="principal">
+						<tr>
+							<th align="center" width="25">&nbsp;</th>
+							<th width="250"><%=lang.getTranslated("backend.ordini.detail.table.label.nome_prod")%></th>
+							<th width="200"><%=lang.getTranslated("backend.ordini.detail.table.label.prezzo_prod")%></th>
+							<th width="150"><%=lang.getTranslated("backend.ordini.detail.table.label.qta_prod")%></th>
+							<th><%=lang.getTranslated("backend.ordini.detail.table.label.fields_prod")%></th>
+						</tr>
+					</table>
+					<div class="order-product-select">
+					<table border="0" cellpadding="0" cellspacing="0" class="principal">
+					<%int selProdCounter = 0;
+					foreach(Product p in products){%>
+						<tr class="<%if(selProdCounter % 2 == 0){Response.Write("table-list-on");}else{Response.Write("table-list-off");}%>">
+							<td align="center" width="25"><a href="javascript:addItemToOrder(<%=p.id%>,<%=selProdCounter%>);"><img src="/backoffice/img/add.png" title="<%=lang.getTranslated("backend.ordini.detail.table.alt.add_prod_combination")%>" alt="<%=lang.getTranslated("backend.ordini.detail.table.alt.add_prod_combination")%>" hspace="2" vspace="0" border="0" align="top"></a></td>
+							<td width="250"><%=p.name%></td>
+							<td width="200">&euro;&nbsp;<%=p.price.ToString("#,###0.00")%></td>
+							<td width="150">
+							<input type="text" name="quantity" id="quantity_<%=selProdCounter%>" value="" class="formFieldTXTQtaProd" onKeyPress="javascript:return isInteger(event);">
+							<%
+							if(p.quantity>-1){%>
+								<br/><%=lang.getTranslated("backend.ordini.detail.table.label.product_disp")+"&nbsp;"+p.quantity%>
+							<%}%></td>
+							<td>&nbsp;</td>
+						</tr>
+						<%selProdCounter++;
+					}%>
+					</table>
+					</div>					
+				<%}
+			}%>
+			
+			
+			<%if(order!=null){%>
 				<table border="0" cellpadding="0" cellspacing="0" class="principal">
 				<tr>
 				<th><%=lang.getTranslated("backend.ordini.view.table.label.id_ordine")%></th>
@@ -348,6 +454,19 @@ $(function() {
 				<input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.commons.back")%>" onclick="javascript:location.href='/backoffice/orders/orderlist.aspx?cssClass=LO';" />
 				<br/><br/>
 			<%}%>
+			
+			<form action="<%=Request.Url.AbsolutePath%>" method="post" name="add_new_item">
+			<input type="hidden" value="<%=orderid%>" name="id">
+			<input type="hidden" value="<%=orderUserId%>" name="userid">
+			<input type="hidden" value="<%=cssClass%>" name="cssClass">	
+			<input type="hidden" value="<%=titlef%>" name="titlef">		
+			<input type="hidden" value="<%=keywordf%>" name="keywordf">		
+			<input type="hidden" value="<%=typef%>" name="typef">		
+			<input type="hidden" value="<%=categoryf%>" name="categoryf">	
+			<input type="hidden" value="" name="productid">
+			<input type="hidden" value="" name="productfields">
+			<input type="hidden" value="" name="productquantity">
+			</form>			
 		</div>
 	</div>
 	<CommonFooter:insert runat="server" />

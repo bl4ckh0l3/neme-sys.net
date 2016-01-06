@@ -108,7 +108,7 @@ protected void Page_Load(Object sender, EventArgs e)
       <li><a href="/backoffice/products/productlist.aspx?cssClass=LP&resetMenu=1" class="<%if(String.Compare(cssClass, "LP") == 0) { Response.Write("active");}%>" title="<%=lang.getTranslated("backend.menu.item.prodotti.lista")%>"><%=lang.getTranslated("backend.menu.item.prodotti")%></a></li>
     </ul>		
     <ul>
-      <li><a href="/backoffice/orders/insertorder1.aspx?id=-1&cssClass=LO"><img src="/backoffice/img/brick_add.png" border="0" title="<%=lang.getTranslated("backend.menu.item.ordini.inserisci")%>"/></a></li>
+      <li><a href="/backoffice/orders/insertorder.aspx?id=-1&cssClass=LO"><img src="/backoffice/img/brick_add.png" border="0" title="<%=lang.getTranslated("backend.menu.item.ordini.inserisci")%>"/></a></li>
       <li><a href="/backoffice/orders/orderlist.aspx?cssClass=LO&resetMenu=1" class="<%if(String.Compare(cssClass, "LO") == 0) { Response.Write("active");}%>" title="<%=lang.getTranslated("backend.menu.item.ordini.lista")%>"><%=lang.getTranslated("backend.menu.item.ordini")%></a></li>
     </ul>		
     <ul>

@@ -290,8 +290,8 @@ jQuery(document).ready(function(){
 								</td>
 								<td width="100">
 								<div style="float:left">&euro;&nbsp;</div>	
-								<div class="ajax" id="view_price_prod_<%=intCount%>" onmouseover="javascript:showHide('view_price_prod_<%=intCount%>','edit_price_prod_<%=intCount%>','price_<%=intCount%>',500, false);"><%=k.price.ToString("###0.00")%></div>
-								<div class="ajax" id="edit_price_prod_<%=intCount%>"><input type="text" class="formfieldAjaxMedium" id="price_<%=intCount%>" name="price" onmouseout="javascript:restoreField('edit_price_prod_<%=intCount%>','view_price_prod_<%=intCount%>','price_<%=intCount%>','Product|IProductRepository|decimal',<%=k.id%>,1,<%=intCount%>);" value="<%=k.price.ToString("###0.00")%>" onkeypress="javascript:return isDouble(event);"></div>
+								<div class="ajax" id="view_price_prod_<%=intCount%>" onmouseover="javascript:showHide('view_price_prod_<%=intCount%>','edit_price_prod_<%=intCount%>','price_<%=intCount%>',500, false);"><%=k.price.ToString("#,###0.00")%></div>
+								<div class="ajax" id="edit_price_prod_<%=intCount%>"><input type="text" class="formfieldAjaxMedium" id="price_<%=intCount%>" name="price" onmouseout="javascript:restoreField('edit_price_prod_<%=intCount%>','view_price_prod_<%=intCount%>','price_<%=intCount%>','Product|IProductRepository|decimal',<%=k.id%>,1,<%=intCount%>);" value="<%=k.price.ToString("#,###0.00")%>" onkeypress="javascript:return isDouble(event);"></div>
 								<script>
 								$("#edit_price_prod_<%=intCount%>").hide();
 								</script>

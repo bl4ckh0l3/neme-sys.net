@@ -73,12 +73,17 @@ namespace com.nemesys.services
 			return carryOn;
 		}	
 		
-		public static bool addItem(User user, int sessionID, string acceptDate, IDictionary<int,IList<string>> requestFields, HttpFileCollection MyFileCollection, int idProduct, int quantity, int maxProdQty, string resetQtyByCart, int idAds, string langcode, string defLangCode)
+		public static bool addItem(User user, int cartId, int sessionID, string acceptDate, IDictionary<int,IList<string>> requestFields, HttpFileCollection MyFileCollection, int idProduct, int quantity, int maxProdQty, string resetQtyByCart, int idAds, string langcode, string defLangCode)
 		{
 			bool carryOn = false;
 			ShoppingCart shoppingCart = null;
-				
-			if(user != null){
+			
+			if(cartId>-1){
+				shoppingCart = shoprep.getByIdExtended(cartId, true);
+				if(shoppingCart != null){		
+					carryOn = true;
+				}
+			}else if(user != null){
 				shoppingCart = shoprep.getByIdUser(sessionID, acceptDate, true);
 				if(shoppingCart != null){
 					shoppingCart.idUser=user.id;

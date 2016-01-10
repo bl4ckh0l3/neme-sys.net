@@ -29,6 +29,18 @@ namespace com.nemesys.database.repository
 			}
 		}
 		
+		public void insert4Order(ShoppingCart shoppingCart)
+		{
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			using (ITransaction tx = session.BeginTransaction())
+			{						
+				session.Save(shoppingCart);	
+				
+				tx.Commit();
+				NHibernateHelper.closeSession();
+			}
+		}
+		
 		public void update(ShoppingCart shoppingCart)
 		{
 			using (ISession session = NHibernateHelper.getCurrentSession())

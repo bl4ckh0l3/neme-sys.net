@@ -385,7 +385,7 @@ public partial class _Checkout : Page
 					}
 				}
 				
-				executed = ShoppingCartService.addItem(userItem, Math.Abs(Session.SessionID.GetHashCode()), acceptDate, requestFields, MyFileCollection, idProduct, quantity, maxProdQty, resetQtyByCart, idAds, lang.currentLangCode, lang.defaultLangCode);
+				executed = ShoppingCartService.addItem(userItem, -1, Math.Abs(Session.SessionID.GetHashCode()), acceptDate, requestFields, MyFileCollection, idProduct, quantity, maxProdQty, resetQtyByCart, idAds, lang.currentLangCode, lang.defaultLangCode);
 			}
 			catch(Exception ex)
 			{
@@ -892,6 +892,10 @@ public partial class _Checkout : Page
 							} 
 						}					
 												
+						//*** se dopo l'applicazione degli sconti e delle business rule per prodotto l'imponibile e' inferiore a 0, elimino la componente negativa
+						if(price<0){
+							price=0.00M;;
+						}
 						
 						// gestione supplements
 						if(c.idSupplement != null && c.idSupplement >0){

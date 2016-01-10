@@ -1004,7 +1004,7 @@ function selectPayAndBills4Form(applyBills){
 											if(f.required){required=1;}
 										}
 										
-										if(!oldGroupDesc.Equals(f.feeGroup)){
+										if(!oldGroupDesc.Equals(f.feeGroup) && !String.IsNullOrEmpty(f.feeGroup)){
 											bills2Charge.Add(f.feeGroup,false);
 											Response.Write("<strong id="+f.feeGroup+">"+billGdesc+"</strong><br/>");
 										}
@@ -1014,11 +1014,11 @@ function selectPayAndBills4Form(applyBills){
 											hasBills2charge = true;
 										}else{
 											if(f.multiply && ((billImp+billSup)>0 || f.typeView==1)){%>
-												<input type="checkbox" onclick="javascript:ajaxSetSessionPayAndBills(this),calculateBills4Order('<%=totalCartAmount+totalAutomaticBillsAmount%>','<%=defCurrency.rate%>','<%=userCurrency.rate%>');" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/> 
-												<%=billDesc+"&nbsp;&nbsp;&nbsp;"+currency+"&nbsp;"+billAmount.ToString("#,###0.00")+"&nbsp;&nbsp;<br/>"%>	
+												<input style="margin-left:10px;" type="checkbox" onclick="javascript:ajaxSetSessionPayAndBills(this),calculateBills4Order('<%=totalCartAmount+totalAutomaticBillsAmount%>','<%=defCurrency.rate%>','<%=userCurrency.rate%>');" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/> 
+												<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>"+currency+"&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>&nbsp;&nbsp;<br/>"%>	
 											<%}else if(!f.multiply && (billImp+billSup)>0){%>
-												<input type="radio"  onclick="javascript:ajaxSetSessionPayAndBills(this),calculateBills4Order('<%=totalCartAmount+totalAutomaticBillsAmount%>','<%=defCurrency.rate%>','<%=userCurrency.rate%>');" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/> 
-												<%=billDesc+"&nbsp;&nbsp;&nbsp;"+currency+"&nbsp;"+billAmount.ToString("#,###0.00")+"&nbsp;&nbsp;<br/>"%>				
+												<input style="margin-left:10px;" type="radio"  onclick="javascript:ajaxSetSessionPayAndBills(this),calculateBills4Order('<%=totalCartAmount+totalAutomaticBillsAmount%>','<%=defCurrency.rate%>','<%=userCurrency.rate%>');" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/> 
+												<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>"+currency+"&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>&nbsp;&nbsp;<br/>"%>				
 											<%}%>										
 										
 

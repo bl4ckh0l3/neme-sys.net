@@ -9,6 +9,8 @@ namespace com.nemesys.database.repository
 	{		
 		void insert(ShoppingCart shoppingCart);
 		
+		void insert4Order(ShoppingCart shoppingCart);
+		
 		void update(ShoppingCart shoppingCart);
 		
 		void delete(ShoppingCart shoppingCart);

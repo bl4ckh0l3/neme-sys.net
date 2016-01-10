@@ -404,7 +404,7 @@ public partial class _FeAds : Page
 							WebResponse response = request.GetResponse ();
 							*/
 							
-							ShoppingCartService.addItem(login.userLogged, Math.Abs(Session.SessionID.GetHashCode()), acceptDate, null, null, k.elementId, 1, -1, "1", ads.id, lang.currentLangCode, lang.defaultLangCode);
+							ShoppingCartService.addItem(login.userLogged, -1, Math.Abs(Session.SessionID.GetHashCode()), acceptDate, null, null, k.elementId, 1, -1, "1", ads.id, lang.currentLangCode, lang.defaultLangCode);
 						}
 						redirectURL = shoppingcardURL;
 					}

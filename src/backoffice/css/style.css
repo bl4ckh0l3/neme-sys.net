@@ -144,8 +144,10 @@ body {
 #backend-content table.prod-list-table th{text-align:left;font-weight: bold;color: #FFFFFF; background-color: #bc9e9e;vertical-align: middle;padding:3px;margin:0px;}
 #order_prod_list{width:100%;padding:0px;max-height:400px;overflow:auto;}
 
-.order-user-select{width:100%;padding:0px;height:90px;overflow:auto;}
-.order-product-select{width:100%;padding:0px;height:300px;overflow:auto;}
+.order-user-select{width:100%;padding:0px;height:98px;overflow:auto;}
+.order-product-select{width:100%;padding:0px;height:305px;overflow:auto;}
+
+span.rules{color:#FF0000;}
 
 /*#payment_commission{color:#FF0000;}*/
 

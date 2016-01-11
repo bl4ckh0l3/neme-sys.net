@@ -6,10 +6,12 @@ using System.Text;
 using System.IO;
 using System.Text.RegularExpressions;
 using com.nemesys.model;
+using com.nemesys.exception;
 using com.nemesys.database.repository;
 using com.nemesys.services;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 public partial class _InsertOrder : Page 
 {
@@ -19,7 +21,6 @@ public partial class _InsertOrder : Page
 	protected int orderUserId;
 	protected string paymentTypeDesc;
 	protected bool paymentDone;
-	protected decimal billsAmount;
 	protected decimal paymentCommissions;
 	protected decimal orderAmount;
 	protected IList<OrderBusinessRule> orderRules;
@@ -145,7 +146,6 @@ public partial class _InsertOrder : Page
 		orderUserId = -1;
 		paymentTypeDesc = "";
 		paymentDone = false;
-		billsAmount = 0.00M;
 		paymentCommissions = 0.00M;
 		orderAmount = 0.00M;
 		hasShipAddress = false;
@@ -302,31 +302,6 @@ public partial class _InsertOrder : Page
 				user = usrrep.getById(order.userId);	
 				ug = usrrep.getUserGroup(user);
 				
-				if(user.discount != null && user.discount >0){
-					usrdiscountperc = user.discount;
-				}			
-							
-				//*** verifico se esiste una rule primo ordine e se l'utente ne possiede i requisiti
-				if(user != null){
-					if (!hasOrderRule){ 
-						if(orderep.countByIdUser(user.id)==0){
-							businessRules = brulerep.find("4,5", 1);
-							if(businessRules != null && businessRules.Count>0){
-								hasOrderRule = true;
-							}
-						}
-					}
-				}
-				
-				//********** SE NON ESISTE GIA' UNA RULE PRIMO ORDINE, CERCO TUTTE LE RULE PER ORDINE ATTIVE
-				if (!hasOrderRule){
-					businessRules = brulerep.find("1,2", 1);
-					if(businessRules != null && businessRules.Count>0){
-						hasOrderRule = true;
-					}
-				}
-			
-				
 				paymentDone = order.paymentDone;
 				paymentCommissions = order.paymentCommission;
 				orderAmount = order.amount;
@@ -352,17 +327,6 @@ public partial class _InsertOrder : Page
 	
 				//****** MANAGE ORDER FEES			
 				ofees = orderep.findFeesByOrderId(orderid);
-				if(ofees != null && ofees.Count>0){
-					foreach(OrderFee f in ofees){
-						billsAmount+=f.amount;
-						
-						string label = f.feeDesc;
-						if(!String.IsNullOrEmpty(lang.getTranslated("backend.fee.description.label."+f.feeDesc))){
-							label = lang.getTranslated("backend.fee.description.label."+f.feeDesc);
-						}
-						orderFees+=label+"&nbsp;&nbsp;&nbsp;&euro;&nbsp;"+f.amount.ToString("#,###0.00")+"<br/>";
-					}
-				}
 				
 				oshipaddr = orderep.getOrderShippingAddressCached(orderid, true);
 				if(oshipaddr != null){
@@ -403,18 +367,6 @@ public partial class _InsertOrder : Page
 					}else{
 						paymentTrans+="<strong>NOTIFIED:</strong> "+lang.getTranslated("backend.commons.yes")+";<br/>";
 					}
-				}						
-			
-				//****** MANAGE ORDER RULES
-				if(hasOrderRule){
-					foreach(OrderBusinessRule x in orderRules){
-						if(!String.IsNullOrEmpty(lang.getTranslated("backend.businessrule.label.label."+x.label))){ 
-							orderRulesDesc+=lang.getTranslated("backend.businessrule.label.label."+x.label);
-						}else{
-							orderRulesDesc+=x.label;
-						}
-						orderRulesDesc+="&nbsp;&nbsp;&nbsp;<b>&euro;&nbsp;"+x.value.ToString("#,###0.00")+"</b><br/>";
-					}
 				}
 				
 				if(order.products != null && order.products.Count>0){
@@ -438,7 +390,7 @@ public partial class _InsertOrder : Page
 							vo.productId = op.idProduct;
 							vo.productCounter = op.productCounter;
 							vo.quantity = op.productQuantity;
-							vo.price = c.price;
+							vo.price = op.taxable;
 							productsVO[op.idProduct] = vo;
 						}else{
 							productsVO[op.idProduct].quantity+=op.productQuantity;
@@ -456,16 +408,9 @@ public partial class _InsertOrder : Page
 					
 					foreach(OrderProduct op in order.products.Values){
 						Product c = uniqueProducts[op.idProduct];
-
-						decimal proddiscountperc = 0;
-						if(c.discount != null && c.discount >0){
-							proddiscountperc = c.discount;
-						}						
 						
-						if(ug != null){
-							totalMarginAmount+=ProductService.getMarginAmount(c.price*op.productQuantity, ug.margin);
-							totalDiscountAmount+=ProductService.getDiscountAmount(c.price*op.productQuantity, ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
-						}
+						totalMarginAmount+=op.margin;
+						totalDiscountAmount+=op.discount;
 						
 						IList<OrderProductField> opfs = orderep.findItemFields(order.id, op.idProduct, op.productCounter);
 						if(opfs != null && opfs.Count>0){
@@ -499,7 +444,7 @@ public partial class _InsertOrder : Page
 						//************ se il prodotto non e' di tipo scaricabile e non ci sono regole di esclusione bills, 
 						//************ aggiorno l'imponibile su cui verranno calcolate le spese di spedizione
 						if (op.productType==0 && !productsVO[op.idProduct].excludeBills){
-							totalAmount4Bills+=c.price;
+							totalAmount4Bills+=op.taxable;
 							totalCartQuantity+=op.productQuantity;
 							applyBills = true;
 						}					
@@ -508,6 +453,19 @@ public partial class _InsertOrder : Page
 					}
 					
 					totalProductAmount=totalCartAmount;
+				}						
+			
+				//****** MANAGE ORDER RULES
+				if(hasOrderRule){
+					foreach(OrderBusinessRule x in orderRules){
+						totalCartAmount+=x.value;
+								
+						IList<object> ordElements = new List<object>();
+						ordElements.Add(x.value);
+						ordElements.Add(x.label);	
+						
+						orderRulesData.Add(x.ruleId, ordElements); 
+					}
 				}
 				
 				orderNotes = order.notes;
@@ -659,6 +617,7 @@ public partial class _InsertOrder : Page
 							
 							price = price*scp.productQuantity;
 							discount = ProductService.getDiscountedValue(price, discountperc);
+							totalDiscountAmount+=discount;
 							price-= discount;
 						}
 
@@ -1291,5 +1250,357 @@ public partial class _InsertOrder : Page
 				}
 			}
 		}
+		
+		
+		//*************************** PROCESS ORDER  ***************************
+		
+		if(bolFoundLista && "process".Equals(Request["operation"])){
+			bool orderCompleted = true;
+			int finalOrderId=-1;
+			bool externalGateway = false;
+			string error_msg ="";
+			IList<OrderProduct> ops = new List<OrderProduct>();
+			
+			try{
+				decimal finalOderAmount=0.00M;
+				decimal orderTaxable=0.00M;
+				decimal orderSupplements=0.00M;
+				int selectedPayment=-1;
+				decimal orderPaymentCommission=0.00M;
+				
+				IList<OrderProductField> opfs =  new List<OrderProductField>();
+				IList<OrderProductAttachmentDownload> opads =  new List<OrderProductAttachmentDownload>();
+				IList<OrderFee> ofs =  new List<OrderFee>();
+				IList<OrderBusinessRule> obrs =  new List<OrderBusinessRule>();
+				IList<OrderVoucher> ovs =  new List<OrderVoucher>();
+				int voucherCodeId = -1;
+				
+				
+				//******************* CREO LA LISTA DI PRODOTTI E FIELDS PER ORDINE
+				foreach(string key in prodsData.Keys){
+					IList<object> pelements = null;
+					bool foundpel = prodsData.TryGetValue(key, out pelements);
+					decimal price = 0.00M;
+					decimal supplement = 0.00M;
+					decimal discPerc = 0.00M;
+					decimal discount = 0.00M;
+					decimal margin = 0.00M;
+					string suppdesc = "";
+					Product product = null;
+					ShoppingCartProduct scp = null;
+					IList<ShoppingCartProductField> fscpf = null;
+					
+					if(foundpel){
+						price = Convert.ToDecimal(pelements[0]);
+						supplement = Convert.ToDecimal(pelements[2]);
+						discPerc = Convert.ToDecimal(pelements[4]);
+						product = (Product)pelements[6];
+						scp = (ShoppingCartProduct)pelements[7];
+						if(pelements[11] != null){
+							fscpf = (IList<ShoppingCartProductField>)pelements[11];
+						}
+						suppdesc = Convert.ToString(pelements[12]);
+						discount = Convert.ToDecimal(pelements[14]);
+						margin = Convert.ToDecimal(pelements[15]);
+					}
+				
+					OrderProduct op = new OrderProduct();
+					op.idOrder=-1;
+					op.idProduct=scp.idProduct;
+					op.productCounter=scp.productCounter;
+					op.productQuantity=scp.productQuantity;
+					op.productType=scp.productType;
+					op.productName=scp.productName;
+					op.amount=price+supplement;
+					op.taxable=price;
+					op.supplement=supplement;
+					op.discountPerc=discPerc;
+					op.discount=discount;
+					op.margin=margin;
+					op.supplementDesc=suppdesc;	
+					op.idAds = scp.idAds;
+					ops.Add(op);
+					
+					if(op.productType==1){
+						IList<ProductAttachmentDownload> prodDownFiles = productrep.getProductAttachmentDownloads(op.idProduct);
+						if(prodDownFiles != null && prodDownFiles.Count>0){
+							foreach(ProductAttachmentDownload pad in prodDownFiles){
+								OrderProductAttachmentDownload opad = new OrderProductAttachmentDownload();
+								opad.id=-1;
+								opad.idOrder=-1;
+								opad.idParentProduct=op.idProduct;
+								opad.idDownFile=pad.id;
+								opad.userId=user.id;
+								opad.active=false;
+								opad.maxDownload=product.maxDownload;
+								opad.downloadCounter=0;
+								if(product.maxDownloadTime>-1){
+									opad.expireDate=DateTime.Now.AddMinutes(Convert.ToDouble(product.maxDownloadTime));
+								}
+								opads.Add(opad);
+							}
+						}
+					}
+					
+					if(fscpf != null && fscpf.Count>0){
+						foreach(ShoppingCartProductField scpf in fscpf){
+							OrderProductField opf = new OrderProductField();
+							opf.idOrder=-1;
+							opf.idProduct=scpf.idProduct;
+							opf.productCounter=scpf.productCounter;
+							opf.idField=scpf.idField;
+							opf.fieldType=scpf.fieldType;
+							opf.value=scpf.value;
+							opf.productQuantity=scpf.productQuantity;
+							opf.description=scpf.description;
+							opfs.Add(opf);
+						}
+					}
+					
+					orderTaxable+=op.taxable;
+					orderSupplements+=op.supplement;
+					finalOderAmount+=op.amount;
+				}
+		
+					
+				//*******************  SE ESISTONO DELLE RULES PER ORDINE LE APLICO AL TOTALE CARRELLO PRIMA DI PROSEGUIRE CON GLI ALTRI CALCOLI
+				if(hasOrderRule){
+					decimal orderRuleAmount = 0.00M;
+					foreach(BusinessRule or in businessRules){
+						decimal foundAmount = BusinessRuleService.getOrderAmountByStrategy(or, finalOderAmount, voucherCampaign);
+						if(foundAmount!=0){
+							orderRuleAmount+=foundAmount;
+
+							OrderBusinessRule obr = new OrderBusinessRule();
+							obr.ruleId = or.id;
+							obr.ruleType = or.ruleType;
+							obr.label = or.label;
+							obr.value = foundAmount;
+							obrs.Add(obr); 
+							
+							if(or.ruleType==3 && voucherCode != null){					
+								OrderVoucher ov = new OrderVoucher();
+								ov.voucherId = voucherCode.campaign;
+								ov.voucherCode = voucherCode.code;
+								ov.voucherAmount = foundAmount;
+								ovs.Add(ov);
+								
+								voucherCodeId = voucherCode.id;
+							}
+						}
+					}
+					finalOderAmount+=orderRuleAmount;
+				}
+				
+				if(bolHasProdRule){
+					foreach(BusinessRuleProductVO brvo in productsVO.Values){
+						foreach(int brid in brvo.rulesInfo.Keys){
+							IList<object> brval = brvo.rulesInfo[brid];
+							int brtype = -1;
+							foreach(BusinessRule b in productBusinessRules){
+								if(b.id==brid){
+									brtype=b.ruleType;
+									break;
+								}
+							}
+							
+							OrderBusinessRule obr = new OrderBusinessRule();
+							obr.ruleId = brid;
+							obr.ruleType = brtype;
+							obr.value = Convert.ToDecimal(brval[0]);
+							obr.label = Convert.ToString(brval[1]);
+							obr.productId = brvo.productId;
+							obr.productCounter = brvo.productCounter;
+							obrs.Add(obr);	
+						}
+					}
+				}					
+				
+				
+				//******************* CREO LA LISTA DI SPESE PER ORDINE
+				foreach(int key in billsData.Keys){
+					IList<object> belements = null;
+					bool foundbel = billsData.TryGetValue(key, out belements);
+					decimal billImp = 0.00M;
+					decimal billSup = 0.00M;
+					Fee f = null;
+					bool isChecked = false;
+					
+					if(foundbel){
+						billImp = Convert.ToDecimal(belements[0]);
+						billSup = Convert.ToDecimal(belements[1]);
+						f = (Fee)belements[3];
+						isChecked = Convert.ToBoolean(belements[6]);
+					}
+					
+					if(f.autoactive || isChecked){
+						OrderFee of = new OrderFee();
+						of.idOrder=-1;
+						of.idFee=f.id;	
+						of.amount=billImp+billSup;
+						of.taxable=billImp;
+						of.supplement=billSup;	
+						of.feeDesc=f.description;
+						ofs.Add(of);
+						
+						orderTaxable+=of.taxable;
+						orderSupplements+=of.supplement;
+						finalOderAmount+=of.amount;							
+					}
+				}
+					
+				
+				//******************* CREO IL METODO DI PAGAMENTO PER ORDINE
+				foreach(int key in paysData.Keys){
+					IList<object> pelements = null;
+					bool foundpel = paysData.TryGetValue(key, out pelements);
+					Payment p = null;
+					bool isChecked = false;	
+					string pdesc = "";
+					
+					if(foundpel){
+						p = (Payment)pelements[0];
+						isChecked = Convert.ToBoolean(pelements[2]);	
+						pdesc = p.description;
+					}
+					
+					if(isChecked){
+						selectedPayment=p.id;
+						orderPaymentCommission=PaymentService.getCommissionAmount(finalOderAmount, p.commission, p.paymentType);
+						finalOderAmount+=orderPaymentCommission;
+						if(p.hasExternalUrl){
+							externalGateway = true;
+						}
+						break;
+					}
+				}
+		
+				
+				//******************* CREO LO SHIP E BILLS ADDRESS PER ORDINE
+				ShippingAddress userShipaddr = null;	
+				OrderShippingAddress orderShipaddr = null;	
+				BillsAddress userBillsaddr = null;	
+				OrderBillsAddress orderBillsaddr = null;					
+				
+				if(hasShipAddress){
+					userShipaddr = shipaddr;
+					orderShipaddr = new OrderShippingAddress();
+					orderShipaddr.idOrder=-1;
+					orderShipaddr.idShipping=userShipaddr.id;
+					orderShipaddr.address=userShipaddr.address;
+					orderShipaddr.city=userShipaddr.city;
+					orderShipaddr.zipCode=userShipaddr.zipCode;
+					orderShipaddr.country=userShipaddr.country;
+					orderShipaddr.stateRegion=userShipaddr.stateRegion;
+					orderShipaddr.isCompanyClient=userShipaddr.isCompanyClient;
+				}
+				
+				if(hasBillsAddress){
+					userBillsaddr = billsaddr;
+					orderBillsaddr = new OrderBillsAddress();
+					orderBillsaddr.idOrder=-1;
+					orderBillsaddr.idBills=userBillsaddr.id;
+					orderBillsaddr.address=userBillsaddr.address;
+					orderBillsaddr.city=userBillsaddr.city;
+					orderBillsaddr.zipCode=userBillsaddr.zipCode;
+					orderBillsaddr.country=userBillsaddr.country;
+					orderBillsaddr.stateRegion=userBillsaddr.stateRegion;
+				}
+				
+				
+				//******************* CREO IL NUOVO ORDINE
+				FOrder newOrder = new FOrder();
+				newOrder.id = -1;
+				newOrder.userId = user.id;
+				newOrder.guid=Guids.createOrderGuid();
+				newOrder.notes=Request["order_notes"];
+				newOrder.status=Convert.ToInt32(Request["status"]);
+				newOrder.amount=finalOderAmount;
+				newOrder.taxable=orderTaxable;
+				newOrder.supplement=orderSupplements;
+				newOrder.paymentId=selectedPayment;
+				newOrder.paymentCommission=orderPaymentCommission;
+				newOrder.paymentDone=Convert.ToBoolean(Convert.ToInt32(Request["payment_done"]));
+				newOrder.downloadNotified=false;
+				newOrder.noRegistration=false;
+				
+				
+				//******************* SALVO ORDINE COMPLETO (VERIFICO SE LE QUANTITA DEI PRODOTTI E FIELDS CORRISPONDONO E AGGIORNO LE QUANTITA DI OGNI PRODOTTO E FIELDS)
+				orderep.saveCompleteOrder(newOrder, ops, opfs, opads, ofs, userBillsaddr, orderBillsaddr, userShipaddr, orderShipaddr, obrs, ovs, voucherCodeId);
+				finalOrderId=newOrder.id;
+			}catch(QuantityException ex){
+				orderCompleted = false;
+				//Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
+				error_msg=HttpUtility.UrlEncode(lang.getTranslated("frontend.carrello.table.label.error_wrong_qta")+"&nbsp;"+Regex.Replace(ex.Message, @"\t|\n|\r", " "));
+			}catch(Exception ex){
+				orderCompleted = false;
+				//Response.Write("Generic error: " + ex.Message+"<br><br><br>"+ex.StackTrace);
+				error_msg=lang.getTranslated("frontend.carrello.table.label.error_generic");
+			}
+			
+			
+			if(orderCompleted){			
+				//******************* COPIO I FILE UPLOADATI DAGLI UTENTI CON IL CARRELLO NELL ORDINE
+				OrderService.directoryCopy(HttpContext.Current.Server.MapPath("~/public/upload/files/shoppingcarts/"+shoppingCart.id), HttpContext.Current.Server.MapPath("~/public/upload/files/orders/"+finalOrderId), true, false);
+				OrderService.deleteDirectory(HttpContext.Current.Server.MapPath("~/public/upload/files/shoppingcarts/"+shoppingCart.id));
+				
+				//******************* INVIO MAIL DI PRODOTTO ESAURITO SE NECESSARIO
+				foreach(OrderProduct op in ops){
+					Product p = productrep.getByIdCached(op.idProduct, true);
+					if(p.quantity==0 && p.status==0){
+						try{
+							UriBuilder mbuilder = new UriBuilder(Request.Url);
+							mbuilder.Scheme = "http";
+							mbuilder.Port = -1;
+							mbuilder.Path="";
+							ListDictionary replacements = new ListDictionary();
+							StringBuilder message = new StringBuilder();
+							
+							//start message
+							message.Append(lang.getTranslated("backend.prodotti.view.table.label.product_inactive")).Append(":<br/><br/>")
+							.Append(lang.getTranslated("backend.prodotti.view.table.label.cod_prod")).Append(":&nbsp;<b>").Append(p.keyword).Append("</b><br/><br/>")
+							.Append(lang.getTranslated("backend.prodotti.view.table.label.nome_prod")).Append(":&nbsp;<b>").Append(p.name).Append("</b><br/><br/>")
+							.Append(lang.getTranslated("backend.prodotti.detail.table.label.stato_prodotto")).Append(":&nbsp;<b>").Append(lang.getTranslated("backend.product.lista.label.status_inactive")).Append("</b><br/><br/>")
+							.Append(lang.getTranslated("backend.prodotti.view.table.label.qta_prod")).Append(":&nbsp;<b>").Append(p.quantity).Append("</b><br/><br/>");									
+							
+							replacements.Add("<%content%>",Server.HtmlDecode(message.ToString()));
+							
+							MailService.prepareAndSend("product-unavailable", lang.currentLangCode, lang.defaultLangCode, "backend.mails.detail.table.label.subject_", replacements, null, mbuilder.ToString());								
+						}catch(Exception ex){
+							Logger log = new Logger();
+							log.usr= "system";
+							log.msg = "Error send mail for unavailable product : "+p.name+"<br><br>"+ex.Message+"<br><br>"+ex.StackTrace;
+							log.type = "error";
+							log.date = DateTime.Now;
+							lrep.write(log);								
+						}
+					}
+				}
+				
+				//******************* CANCELLO IL CARRELLO
+				shoprep.delete(shoppingCart);
+				
+				//******************* GESTIONE CHECKOUT SU GATEWAY ESTERNI IN BASE AL METODO DI PAGAMENTO SELEZIONATO
+				if(externalGateway){
+					// TODO implementare checkout si gateway esterno
+				}else{
+					Response.Redirect("/backoffice/orders/orderconfirmed.aspx?orderid="+finalOrderId);
+				}
+			}else{
+				string redirectUrl = Request.Url.AbsolutePath+"?";
+				redirectUrl+=Request.Url.Query;
+				redirectUrl+="&id="+orderid+"&cartid="+cartid+"&voucher_code="+Request["voucher_code"]+"&userid="+orderUserId+"&cssClass="+cssClass+"&titlef="+titlef+"&keywordf="+keywordf+"&typef="+typef+"&categoryf="+categoryf+"&error=1&error_msg="+error_msg;				
+				redirectUrl+="&payment_method="+Request["payment_method"];
+				if(fees != null && fees.Count>0){
+					foreach(Fee f in fees){
+						string billsReq = Request[f.feeGroup];
+						if(!String.IsNullOrEmpty(billsReq)){
+							redirectUrl+="&"+f.feeGroup+"="+billsReq;
+						}							
+					}
+				}
+				Response.Redirect(redirectUrl);				
+			}
+		}		
 	}
 }

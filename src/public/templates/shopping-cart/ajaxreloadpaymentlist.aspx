@@ -106,7 +106,7 @@ protected void Page_Load(Object sender, EventArgs e)
 		if(!String.IsNullOrEmpty(lang.getTranslated("backend.payment.description.label."+p.description))){
 			pdesc = lang.getTranslated("backend.payment.description.label."+p.description);
 		}%>
-		<li><input type="radio" name="payment_method" value="<%=p.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%> onclick="javascript:ajaxSetSessionPayAndBills(this),calculatePaymentCommission('<%=totale_carrello%>',<%=p.id%>,'<%=defCurrency.rate%>','<%=userCurrency.rate%>');"><%=pdesc%>&nbsp;<%=logo%></li>
+		<li><input type="radio" name="payment_method" value="<%=p.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%> onclick="javascript:ajaxSetSessionPayAndBills(this),calculatePaymentCommission('<%=totale_carrello%>',<%=p.id%>,'<%=defCurrency.rate%>','<%=userCurrency.rate%>');">&nbsp;<%=pdesc%>&nbsp;<%=logo%></li>
 		<script language="Javascript">
 		listPaymentMethods.put("<%=p.id%>","<%=p.commission+"|"+p.commissionType%>");	
 		</script>

@@ -146,6 +146,7 @@ body {
 
 .order-user-select{width:100%;padding:0px;height:98px;overflow:auto;}
 .order-product-select{width:100%;padding:0px;height:305px;overflow:auto;}
+.cart-error { font-size:12px; text-align:left;color:#ff0000;}
 
 span.rules{color:#FF0000;}
 

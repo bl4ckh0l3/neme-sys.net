@@ -78,6 +78,129 @@ function delFromOrder(strAction, cartid, numIdProd, counterProd, hierarchy, appl
 	}
 }
 
+var isSentCard = false;
+function sendForm(applyBills){
+	var id_carrello = document.form_insert_carrello.cartid.value;
+	if(id_carrello == ""){
+		alert("<%=lang.getTranslated("frontend.carrello.js.alert.no_carrello_found")%>");
+		return;
+	}
+	
+	// CONTROLLO SCELTA TIPO PAGAMENTO PRIMA DI INIVIARE FORM
+	var paymentSelected = false;
+	$('#form_insert_carrello input[name*="payment_method"]').each( function(){
+		if($(this).is(':checked')){
+			paymentSelected = true;
+			return;
+		}
+	});	
+	
+	if(!paymentSelected){
+		alert("<%=lang.getTranslated("frontend.carrello.js.alert.select_payment_mode")%>");
+		return;	
+	}	
+
+
+	// CONTROLLO SCELTA SPESE ACCESSORIE PRIMA DI INIVIARE FORM
+	if(applyBills==1){
+		var group_name = "";
+		var arrKeys = listBills4Order.keys();	
+		
+		for(var k=0; k<arrKeys.length; k++){
+			tmpKey = arrKeys[k];
+			gn = tmpKey.substring(0, tmpKey.indexOf("-"));
+			rq = tmpKey.substring(tmpKey.lastIndexOf("-")+1, tmpKey.length);
+			
+			if(group_name != gn){
+				if(rq==1){
+					var billSelected = false;
+					var elem = eval("document.form_insert_carrello."+gn);
+					if(elem){
+						if(!elem.length || elem.length<=1){
+							if(elem.checked == true){		
+								billSelected = true;
+							}	      
+						}else{
+							for(var i=0; i<elem.length; i++){		
+								if(elem[i].checked == true){		
+									billSelected = true;
+									break;
+								}		
+							}      
+						}
+					}
+
+					if(!billSelected){
+						alert("<%=lang.getTranslated("frontend.carrello.js.alert.select_bills")%> "+gn);
+						return;		
+					}
+				}
+				
+				group_name = gn;
+			}
+		}		
+	}
+
+    <%if("1".Equals(confservice.get("show_ship_box").value) || "1".Equals(confservice.get("enable_international_tax_option").value)) {%>  
+	if(applyBills==1 <%if("1".Equals(confservice.get("enable_international_tax_option").value)){Response.Write(" || true");}%>){
+		if(
+			document.getElementById("ship_name") && 
+			document.getElementById("ship_surname") && 
+			document.getElementById("ship_cfiscvat") && 
+			document.getElementById("ship_address") && 
+			document.getElementById("ship_zip_code") && 
+			document.getElementById("ship_city") && 
+			document.getElementById("ship_country")
+		){
+			if(
+				$("#ship_name").val()=="" || 
+				$("#ship_surname").val()=="" || 
+				$("#ship_cfiscvat").val()=="" || 
+				$("#ship_address").val()=="" || 
+				$("#ship_zip_code").val()=="" || 
+				$("#ship_city").val()=="" || 
+				$("#ship_country").val()==""
+			){
+				alert("<%=lang.getTranslated("frontend.carrello.js.alert.insert_shipping_address")%>");
+				return;		
+			}
+		}
+	}
+	<%}	
+
+	if("1".Equals(confservice.get("show_bills_box").value)	) {%>
+		if(
+			document.getElementById("bills_name") && 
+			document.getElementById("bills_surname") && 
+			document.getElementById("bills_cfiscvat") && 
+			document.getElementById("bills_address") && 
+			document.getElementById("bills_zip_code") && 
+			document.getElementById("bills_city") && 
+			document.getElementById("bills_country")
+		){
+			if(
+				$("#bills_name").val()=="" || 
+				$("#bills_surname").val()=="" || 
+				$("#bills_cfiscvat").val()=="" || 
+				$("#bills_address").val()=="" || 
+				$("#bills_zip_code").val()=="" || 
+				$("#bills_city").val()=="" || 
+				$("#bills_country").val()==""
+			){
+				alert("<%=lang.getTranslated("frontend.carrello.js.alert.insert_bills_address")%>");
+				return;		
+			}
+		}
+	<%}%>
+      
+	if(!isSentCard && confirm("******  <%=lang.getTranslated("frontend.carrello.js.alert.confirm_ordina_prod")%>  ******")){
+		isSentCard = true;
+		//$("#sendtocardloading").hide();
+		//$("#sendtocardloadingimg").show();
+		document.form_insert_carrello.submit();
+	}
+}
+
 var formSent = false;
 function addItemToOrder(idProduct, counter, theFrom){
 	var quantity = $("#quantity_"+counter).val();
@@ -389,6 +512,10 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 	<div id="container">
 		<CommonMenu:insert runat="server" />
 		<div id="backend-content">
+			<%if(!String.IsNullOrEmpty(Request["error"]) && "1".Equals(Request["error"])) {%>
+					<br><span class="cart-error"><%=Request["error_msg"]%></span><br><br>
+			<%}%>
+				
 			<table border="0" cellpadding="0" cellspacing="0" class="principal">
 				<tr>
 					<th align="center" width="25">&nbsp;</th>
@@ -605,6 +732,11 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 										bool hasAmount = false;
 										if(tmpAmountRule!=0){
 											hasAmount = true;
+											if(tmpAmountRule>0){
+												totalMarginAmount+=tmpAmountRule;										
+											}else if(tmpAmountRule<0){
+												totalDiscountAmount+=Math.Abs(tmpAmountRule);	
+											}
 										}
 										if(!String.IsNullOrEmpty(lang.getTranslated("backend.businessrule.label.label."+tmpLabel))){
 											tmpLabel = lang.getTranslated("backend.businessrule.label.label."+tmpLabel);
@@ -692,6 +824,11 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 										orderProdRules+=tmpLabel;
 									}
 									if(tmpAmountRule!=0){
+										if(tmpAmountRule>0){
+											totalMarginAmount+=tmpAmountRule;										
+										}else if(tmpAmountRule<0){
+											totalDiscountAmount+=Math.Abs(tmpAmountRule);	
+										}
 										orderProdRules+=":&nbsp;&euro;&nbsp;"+tmpAmountRule.ToString("#,###0.00");
 									}
 									orderProdRules+="</li>";
@@ -736,11 +873,22 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 			
 			if(bolFoundLista || order!=null){%>
 				<div style="padding-top:20px;">         
-				<%if (ug != null){%>
+				<%//if (ug != null){%>
 					<%if(totalMarginAmount>0){%><%=lang.getTranslated("frontend.carrello.table.label.totale_commissioni")%>:&nbsp;<strong>&euro;&nbsp;<%=totalMarginAmount.ToString("#,###0.00")%></strong><br/><%}%>
-					<%if(totalDiscountAmount>0){%><%=lang.getTranslated("frontend.carrello.table.label.totale_sconti")%>:&nbsp;<strong>&euro;&nbsp;<%=totalDiscountAmount.ToString("#,###0.00")%></strong><br/><%}%>
+					<%if(totalDiscountAmount>0){decimal signedTotalDiscountAmount = 0-totalDiscountAmount;%><%=lang.getTranslated("frontend.carrello.table.label.totale_sconti")%>:&nbsp;<strong>&euro;&nbsp;<%=signedTotalDiscountAmount.ToString("#,###0.00")%></strong><br/><%}%>
+					<%/*
+					*** momentaneamente commentato, lo sconto applicato viene gia indicato nel totalDiscountAmount e nei singoli prodotti
+					
+					if(user != null && user.discount != null && user.discount >0){
+						Response.Write(lang.getTranslated("frontend.carrello.table.label.sconto_cliente")+": "+user.discount.ToString("#,###0.##")+"%");
+					}
+					
+					if(user != null && user.discount != null && user.discount >0 && "2".Equals(confservice.get("manage_sconti").value)){
+						Response.Write("<br/>"+lang.getTranslated("frontend.carrello.table.label.if_client_has_sconto")+"<br/><br/>");
+					}*/
+					%> 
 					<br/>
-				<%}%>
+				<%//}%>
 	
 				<%=lang.getTranslated("frontend.carrello.table.label.totale_prodotti")%>:&nbsp;<strong>&euro;&nbsp;<%=totalProductAmount.ToString("#,###0.00")%></strong>
 				<br/>
@@ -765,18 +913,7 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 						}%>
 						<span class="rules"><%=olabel%></span>:&nbsp;&euro;&nbsp;<%=oamount.ToString("#,###0.00")%><br/>
 					<%}
-				}%>  
-				
-				<%
-				if(ug != null){
-					if(user != null && user.discount != null && user.discount >0){
-						Response.Write("<br/>"+lang.getTranslated("frontend.carrello.table.label.sconto_cliente")+": "+user.discount.ToString("#,###0.##")+"%");
-					}
-					
-					if(user != null && user.discount != null && user.discount >0 && "2".Equals(confservice.get("manage_sconti").value)){
-						Response.Write("<br/>"+lang.getTranslated("frontend.carrello.table.label.if_client_has_sconto")+"<br/><br/>");
-					}
-				}%>              
+				}%>             
 				</div>
 				
 				<%if(activeVoucherCampaign){%>        

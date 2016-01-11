@@ -873,6 +873,11 @@ function selectPayAndBills4Form(applyBills){
 											bool hasAmount = false;
 											if(tmpAmountRule!=0){
 												hasAmount = true;
+												if(tmpAmountRule>0){
+													totalMarginAmount+=tmpAmountRule;										
+												}else if(tmpAmountRule<0){
+													totalDiscountAmount+=Math.Abs(tmpAmountRule);	
+												}
 											}
 											if(defCurrency != null && userCurrency != null){
 												tmpAmountRule = currrep.convertCurrency(tmpAmountRule, defCurrency.currency, userCurrency.currency);
@@ -903,11 +908,23 @@ function selectPayAndBills4Form(applyBills){
 					
 					<div id="prodotto-conto">
 						<div class="spese-div">         
-						<%if (ug != null){%>
+						<%//if (ug != null){%>
 							<%if(totalMarginAmount>0){%><%=lang.getTranslated("frontend.carrello.table.label.totale_commissioni")%>:&nbsp;<strong><%=currency%>&nbsp;<%=totalMarginAmount.ToString("#,###0.00")%></strong><br/><%}%>
-							<%if(totalDiscountAmount>0){%><%=lang.getTranslated("frontend.carrello.table.label.totale_sconti")%>:&nbsp;<strong><%=currency%>&nbsp;<%=totalDiscountAmount.ToString("#,###0.00")%></strong><br/><%}%>
+							<%if(totalDiscountAmount>0){decimal signedTotalDiscountAmount = 0-totalDiscountAmount;%><%=lang.getTranslated("frontend.carrello.table.label.totale_sconti")%>:&nbsp;<strong><%=currency%>&nbsp;<%=signedTotalDiscountAmount.ToString("#,###0.00")%></strong><br/><%}%>
+							
+							<%
+							/*
+							*** momentaneamente commentato, lo sconto applicato viene gia indicato nel totalDiscountAmount e nei singoli prodotti
+							if(logged && login.userLogged.discount != null && login.userLogged.discount >0){
+								Response.Write(lang.getTranslated("frontend.carrello.table.label.sconto_cliente")+": "+login.userLogged.discount.ToString("#,###0.##")+"%");
+							}
+							if(logged && login.userLogged.discount != null && login.userLogged.discount >0 && "0".Equals(confservice.get("manage_sconti").value)){
+								Response.Write("<br/>"+lang.getTranslated("frontend.carrello.table.label.if_client_has_sconto")+"<br/>");
+							}
+							*/
+							%>
 							<br/>
-						<%}%>
+						<%//}%>
 
 						<%=lang.getTranslated("frontend.carrello.table.label.totale_prodotti")%>:&nbsp;<strong><%=currency%>&nbsp;<%=totalProductAmount.ToString("#,###0.00")%></strong>
 						<br/>
@@ -932,18 +949,7 @@ function selectPayAndBills4Form(applyBills){
 								}%>
 								<span class="rules"><%=olabel%></span>:&nbsp;<%=currency%>&nbsp;<%=oamount.ToString("#,###0.00")%><br/>
 							<%}
-						}%>  
-						
-						<%
-						if(ug != null){
-							if(logged && login.userLogged.discount != null && login.userLogged.discount >0){
-								Response.Write("<br/>"+lang.getTranslated("frontend.carrello.table.label.sconto_cliente")+": "+login.userLogged.discount.ToString("#,###0.##")+"%");
-							}
-							
-							if(logged && login.userLogged.discount != null && login.userLogged.discount >0 && "2".Equals(confservice.get("manage_sconti").value)){
-								Response.Write("<br/>"+lang.getTranslated("frontend.carrello.table.label.if_client_has_sconto")+"<br/><br/>");
-							}
-						}%>              
+						}%>             
 						</div>
 						
 						<%if(activeVoucherCampaign){%>        

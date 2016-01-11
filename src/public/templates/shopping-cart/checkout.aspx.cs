@@ -862,6 +862,7 @@ public partial class _Checkout : Page
 							
 							price = price*scp.productQuantity;
 							discount = ProductService.getDiscountedValue(price, discountperc);
+							totalDiscountAmount+=discount;
 							price-= discount;
 						}
 
@@ -1644,7 +1645,7 @@ public partial class _Checkout : Page
 					error_msg=HttpUtility.UrlEncode(lang.getTranslated("frontend.carrello.table.label.error_wrong_qta")+"&nbsp;"+Regex.Replace(ex.Message, @"\t|\n|\r", " "));
 				}catch(Exception ex){
 					orderCompleted = false;
-					Response.Write("Generic error: " + ex.Message+"<br><br><br>"+ex.StackTrace);
+					//Response.Write("Generic error: " + ex.Message+"<br><br><br>"+ex.StackTrace);
 					error_msg=lang.getTranslated("frontend.carrello.table.label.error_generic");
 				}
 				
@@ -1710,7 +1711,7 @@ public partial class _Checkout : Page
 						redirectUrl+="?";
 					}
 					redirectUrl+="&hierarchy="+Request["hierarchy"]+"&id_ads="+Request["id_ads"]+"&voucher_code="+Request["voucher_code"]+"&error=1&error_msg="+error_msg;
-					//Response.Redirect(redirectUrl);
+					Response.Redirect(redirectUrl);
 				}
 			}			
 			

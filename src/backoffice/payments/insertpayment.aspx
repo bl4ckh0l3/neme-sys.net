@@ -25,12 +25,14 @@ function insertPayment(){
 		return;
 	}
 	
+	/*
 	if(document.form_inserisci.paymentData.value == ""){
 		alert("<%=lang.getTranslated("backend.payment.detail.js.alert.insert_dati_pagamento_value")%>");
 		document.form_inserisci.paymentData.focus();
 		return;
 	}
-
+	*/
+	
 	var commission = document.form_inserisci.commission.value;
 	if(commission == ""){
 		alert("<%=lang.getTranslated("backend.currency.detail.js.alert.insert_valore_value")%>");

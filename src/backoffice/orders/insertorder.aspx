@@ -356,7 +356,7 @@ function calculatePaymentCommission(amount,payment_method, currFrom, currTo){
 			total_amount = Number(total_amount)+Number(bill_amount);
 		}
 	}	
-	total_order = Number(total_amount).toFixed(2);	
+	total_order = Number(total_amount);	
 	/****** fine ricalcolo spese accessorie *******/
 
 	payment = listPaymentMethods.get(payment_method);
@@ -368,25 +368,25 @@ function calculatePaymentCommission(amount,payment_method, currFrom, currTo){
 	currTo = Number(currTo.replace(',','.'));
 
 	if(type == 1){
-		commission_amount = (total_order * (commission / 100)).toFixed(2);
-		total_order = (Number(total_order)+Number(commission_amount)).toFixed(2);
+		commission_amount = (total_order * (commission / 100));
+		total_order = (Number(total_order)+Number(commission_amount));
 	}else{
-		commission_amount = Number(commission).toFixed(2);
-		total_order = (Number(total_order)+Number(commission_amount)).toFixed(2);
+		commission_amount = Number(commission);
+		total_order = (Number(total_order)+Number(commission_amount));
 	}
-
-	// imposto il totale di carrello in euro
-	$(".ord_total_def_curr").empty();
-	$(".ord_total_def_curr").append(addSeparatorsNF(total_order,'.',',','.'));
   
 	// converto in base alla currency selezionata dall'utente
-	commission_amount = (commission_amount * (Number(currTo)/Number(currFrom))).toFixed(2);
-	total_order = (total_order * (Number(currTo)/Number(currFrom))).toFixed(2);
-  
+	commission_amount = (commission_amount * (Number(currTo)/Number(currFrom)));
+	total_order = (total_order * (Number(currTo)/Number(currFrom)));
+
+	var converted_total_order = round(total_order,4);
+	if(converted_total_order<0){
+		converted_total_order=0;
+	}
 	$(".payment_commission").empty();
 	$(".ord_total").empty();
-	$(".payment_commission").append(addSeparatorsNF(commission_amount,'.',',','.'));
-	$(".ord_total").append(addSeparatorsNF(total_order,'.',',','.'));
+	$(".payment_commission").append(addSeparatorsNF(round(commission_amount,4).toFixed(2),'.',',','.'));
+	$(".ord_total").append(addSeparatorsNF(converted_total_order.toFixed(2),'.',',','.'));
 }
 
 function calculateBills4Order(amount, currFrom, currTo){
@@ -408,7 +408,7 @@ function calculateBills4Order(amount, currFrom, currTo){
 		}
 	}
 
-	total_order = Number(total_amount).toFixed(2);
+	total_order = Number(total_amount);
 
 	/****** ricarico la lista dei metodi di pagamento disponibili *******/
 	var payment_method_tmp="";
@@ -444,27 +444,31 @@ function calculateBills4Order(amount, currFrom, currTo){
 		commission = Number(commission.replace(',','.'));
 	
 		if(type == 1){
-			commission_amount = (total_order * (commission / 100)).toFixed(2);
-			total_order = (Number(total_order)+Number(commission_amount)).toFixed(2);
+			commission_amount = (total_order * (commission / 100));
+			total_order = (Number(total_order)+Number(commission_amount));
 		}else{
-			commission_amount = Number(commission).toFixed(2);
-			total_order = (Number(total_order)+Number(commission_amount)).toFixed(2);
+			commission_amount = Number(commission);
+			total_order = (Number(total_order)+Number(commission_amount));
 		}	
 	
 		// converto in base alla currency selezionata dall'utente
-		commission_amount = (commission_amount * (Number(currTo)/Number(currFrom))).toFixed(2);
+		commission_amount = (commission_amount * (Number(currTo)/Number(currFrom)));
 		
 		$(".payment_commission").empty();
-		$(".payment_commission").append(addSeparatorsNF(commission_amount,'.',',','.'));
+		$(".payment_commission").append(addSeparatorsNF(round(commission_amount,4).toFixed(2),'.',',','.'));
 	}
 	
 	/****** fine ricalcolo commissioni pagamento *******/
 
 	// converto in base alla currency selezionata dall'utente
-	total_order = (total_order * (Number(currTo)/Number(currFrom))).toFixed(2);
+	total_order = (total_order * (Number(currTo)/Number(currFrom)));
 	
+	var converted_total_order = round(total_order,4);
+	if(converted_total_order<0){
+		converted_total_order=0;
+	}	
 	$(".ord_total").empty();
-	$(".ord_total").append(addSeparatorsNF(total_order,'.',',','.'));
+	$(".ord_total").append(addSeparatorsNF(converted_total_order.toFixed(2),'.',',','.'));
 }
 
 function addSeparatorsNF(nStr, inD, outD, sep){
@@ -775,14 +779,14 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 					}
 				}else if(order.products != null && order.products.Count>0){
 					foreach(OrderProduct op in order.products.Values){
-						Product prod = productrep.getByIdCached(op.idProduct, true);
+						Product prod = productrep.getByIdCached(op.idProduct, false);
 						IList<OrderProductField> opfs = orderep.findItemFields(order.id, op.idProduct, op.productCounter);
 					
 						string adsRefTitle = "";
 						if(op.idAds != null && op.idAds>-1){
 							Ads a = adsrep.getById(op.idAds);
 							if(a != null){
-								FContent f = contrep.getByIdCached(a.elementId, true);
+								FContent f = contrep.getByIdCached(a.elementId, false);
 								if(f != null){
 									adsRefTitle = "<br/><b>"+lang.getTranslated("frontend.carrello.table.label.ads_title")+"</b>&nbsp;"+f.title;
 								}
@@ -916,7 +920,7 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 				}%>             
 				</div>
 				
-				<%if(activeVoucherCampaign){%>        
+				<%if(activeVoucherCampaign && (orderid==-1 || (orderid>-1 && !bolHasProdRule))){%>        
 					<div style="padding-top:10px;">
 						<form action="<%=Request.Url.AbsolutePath%>" method="post" name="form_carrello_voucher" id="form_carrello_voucher">
 							<input type="hidden" value="0" name="voucher_delete">
@@ -997,10 +1001,10 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 									hasBills2charge = true;
 								}else{
 									if(f.multiply && ((billImp+billSup)>0 || f.typeView==1)){%>
-										<input style="margin-left:10px;" onclick="javascript:calculateBills4Order('<%=totalCartAmount+totalAutomaticBillsAmount%>','1','1');" type="checkbox" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/> 
+										<input style="margin-left:10px;" onclick="javascript:calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','1','1');" type="checkbox" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/> 
 										<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>&euro;&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>&nbsp;&nbsp;<br/>"%>	
 									<%}else if(!f.multiply && (billImp+billSup)>0){%>
-										<input style="margin-left:10px;" onclick="javascript:calculateBills4Order('<%=totalCartAmount+totalAutomaticBillsAmount%>','1','1');" type="radio" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/> 
+										<input style="margin-left:10px;" onclick="javascript:calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','1','1');" type="radio" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/> 
 										<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>&euro;&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>&nbsp;&nbsp;<br/>"%>				
 									<%}%>										
 								
@@ -1009,7 +1013,7 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 									<script language="Javascript">
 									<%if(isChecked){%>
 										jQuery(document).ready(function(){
-											calculateBills4Order('<%=totalCartAmount+totalAutomaticBillsAmount%>','1','1');
+											calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','1','1');
 										});
 									<%}
 									
@@ -1064,13 +1068,13 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 										pdesc = lang.getTranslated("backend.payment.description.label."+p.description);
 									}
 								}%>
-								<li><input type="radio" id="payment_method" name="payment_method" value="<%=key%>" <%if(isChecked){Response.Write(" checked='checked'");}%> onclick="javascript:calculatePaymentCommission('<%=totalCartAmount+totalAutomaticBillsAmount%>',<%=key%>,'1','1');">&nbsp;<%=pdesc%>&nbsp;<%=logo%></li>
+								<li><input type="radio" id="payment_method" name="payment_method" value="<%=key%>" <%if(isChecked){Response.Write(" checked='checked'");}%> onclick="javascript:calculatePaymentCommission('<%=totalCartAmountAndAutoBillsAmount%>',<%=key%>,'1','1');">&nbsp;<%=pdesc%>&nbsp;<%=logo%></li>
 								<script language="Javascript">
 								listPaymentMethods.put("<%=key%>","<%=p.commission+"|"+p.commissionType%>");
 								
 								<%if(isChecked){%>
 								jQuery(document).ready(function(){
-									calculatePaymentCommission('<%=totalCartAmount+totalAutomaticBillsAmount%>',<%=key%>,'1','1');
+									calculatePaymentCommission('<%=totalCartAmountAndAutoBillsAmount%>',<%=key%>,'1','1');
 								});											
 								<%}%>
 								</script>
@@ -1280,7 +1284,7 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 					
 					<div id="spese-totale" style="padding-top:20px;">
 						<span class="labelForm"><%=lang.getTranslated("frontend.carrello.table.label.payment_commission")%>:</span> <strong>&euro;&nbsp;<span class="payment_commission"><%=totalPaymentAmount.ToString("#,###0.00")%></span></strong><br/><br/> 
-						<span class="labelForm"><%=lang.getTranslated("frontend.carrello.table.label.totale_ordine")%>:</span> <strong>&euro;&nbsp;<span class="ord_total"><%=(totalCartAmount+totalBillsAmount).ToString("#,###0.00")%></span></strong>
+						<span class="labelForm"><%=lang.getTranslated("frontend.carrello.table.label.totale_ordine")%>:</span> <strong>&euro;&nbsp;<span class="ord_total"><%=(totalCartAmountAndBillsAmount).ToString("#,###0.00")%></span></strong>
 					</div>
 
 					  <div align="left" style="float:left;padding-top:20px;"><span class="labelForm"><%=lang.getTranslated("backend.ordini.detail.table.label.stato_order")%>&nbsp;&nbsp;&nbsp;</span><br>

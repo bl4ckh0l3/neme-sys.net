@@ -467,9 +467,67 @@ namespace com.nemesys.database.repository
 			{					
 				try{
 					if(order.id != -1){
+						session.CreateQuery("delete from OrderFee where idOrder=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
+						session.CreateQuery("delete from OrderBillsAddress where idOrder=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
+						session.CreateQuery("delete from OrderShippingAddress where idOrder=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
+						session.CreateQuery("delete from OrderBusinessRule where orderId=:idOrder and productId<=0").SetInt32("idOrder",order.id).ExecuteUpdate();
 						
-						// TODO implementare update order
+						if(ovs != null && ovs.Count>0){
+							session.CreateQuery("delete from OrderVoucher where orderId=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
+						}
 						
+						order.lastUpdate=DateTime.Now;
+						session.Update(order);	
+						
+						foreach(OrderFee of in ofs){
+							of.idOrder=order.id;
+							session.Save(of);
+						}
+						
+						billsAddress.idUser=order.userId;
+						if(billsAddress.id!=-1){
+							session.Update(billsAddress);
+						}else{
+							session.Save(billsAddress);
+						}
+						
+						shippingAddress.idUser=order.userId;
+						if(shippingAddress.id!=-1){
+							session.Update(shippingAddress);
+						}else{
+							session.Save(shippingAddress);
+						}
+						orderBillsAddress.idBills=billsAddress.id;
+						orderBillsAddress.idOrder=order.id;
+						orderShippingAddress.idShipping=shippingAddress.id;
+						orderShippingAddress.idOrder=order.id;
+						
+						session.Save(orderBillsAddress);
+						session.Save(orderShippingAddress);	
+						
+						//*** save modified order business rule
+						foreach(OrderBusinessRule obr in obrs){
+							if(obr.productId<=0){
+								obr.orderId=order.id;
+								session.Save(obr);
+							}
+						}
+
+						if(ovs != null && ovs.Count>0){
+							foreach(OrderVoucher ov in ovs){
+								ov.orderId=order.id;
+								ov.insertDate=DateTime.Now;
+								session.Save(ov);
+							}	
+						}
+						
+						if(voucherCodeId>0){
+							VoucherCode savedVC = session.Get<VoucherCode>(voucherCodeId);
+							session.CreateQuery("update VoucherCode set usageCounter=:usageCounter where id=:id")
+							.SetInt32("usageCounter",savedVC.usageCounter+1)
+							.SetInt32("id",savedVC.id)
+							.ExecuteUpdate();
+						}						
 					}else{
 						foreach(KeyValuePair<int, int> pqc in productQtyCheck)
 						{
@@ -968,6 +1026,8 @@ namespace com.nemesys.database.repository
 			string strSQL = "from OrderBusinessRule where orderId=:idOrder";
 			if(!withItems){
 				strSQL+=" and productId<=0";
+			}else{
+				strSQL+=" and productId>0";
 			}
 			strSQL+=" order by label asc";
 			

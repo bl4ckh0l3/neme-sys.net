@@ -102,6 +102,9 @@ protected void Page_Load(object sender, EventArgs e)
 				if(!String.IsNullOrEmpty(lang.getTranslated("backend.payment.description.label."+payment.description))){
 					paymentType = lang.getTranslated("backend.payment.description.label."+payment.description);
 				}
+				if(!String.IsNullOrEmpty(payment.paymentData)){
+				paymentType+="<br/>"+payment.paymentData+"<br/><br/>";
+				}
 			}
 			
 			IList<OrderFee> fees = orderep.findFeesByOrderId(orderid);

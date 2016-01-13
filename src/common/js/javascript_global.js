@@ -35,24 +35,29 @@ function isNumerico(inputStr) {
 	return true;
 }
 
-//consente di digitare numeri e il punto
+//consente di digitare numeri positivi e negativi, e il punto
 function isDecimal(e){
 	var key = window.event ? e.keyCode : e.which;	
 	var keychar = String.fromCharCode(key);		
-	if (isNumerico(keychar) || key==8 || key==9 || key==0 || key==46){					
+	if (isNumerico(keychar) || key==8 || key==9 || key==0 || key==46 || key==109 || key==189 || key==45 || key==173){					
 		return true;
 	}
 	return false;
 }
 
-//consente di digitare numeri e il punto
+//consente di digitare numeri positivi e negativi, e il punto
 function isDouble(e){
 	var key = window.event ? e.keyCode : e.which;	
 	var keychar = String.fromCharCode(key);		
-	if (isNumerico(keychar) || key==8 || key==9 || key==0 || key==46 || key==44){					
+	if (isNumerico(keychar) || key==8 || key==9 || key==0 || key==46 || key==44 || key==109 || key==189 || key==45 || key==173){					
 		return true;
 	}
 	return false;
+}
+
+//consente di arrotondare un numero decimale specificando i decimali
+function round(value, decimals) {
+    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
 }
 
 //consente di digitare numeri fino a tre cifre intere e due punti decimali
@@ -118,7 +123,7 @@ function isInteger(e){
 function isIntegerUnsigned(e){
 	var key = window.event ? e.keyCode : e.which;	
 	var keychar = String.fromCharCode(key);		
-	if (isNumerico(keychar) || key==8 || key==9 || key==0 || key==109 || key==189 || key==45){					
+	if (isNumerico(keychar) || key==8 || key==9 || key==0 || key==109 || key==189 || key==45 || key==173){					
 		return true;
 	}
 	return false;

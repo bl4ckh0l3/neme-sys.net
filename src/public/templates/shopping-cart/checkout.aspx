@@ -486,7 +486,7 @@ function calculatePaymentCommission(amount,payment_method, currFrom, currTo){
 			total_amount = Number(total_amount)+Number(bill_amount);
 		}
 	}	
-	total_order = Number(total_amount).toFixed(2);	
+	total_order = Number(total_amount);	
 	/****** fine ricalcolo spese accessorie *******/
 
 	payment = listPaymentMethods.get(payment_method);
@@ -498,25 +498,33 @@ function calculatePaymentCommission(amount,payment_method, currFrom, currTo){
 	currTo = Number(currTo.replace(',','.'));
 
 	if(type == 1){
-		commission_amount = (total_order * (commission / 100)).toFixed(2);
-		total_order = (Number(total_order)+Number(commission_amount)).toFixed(2);
+		commission_amount = (total_order * (commission / 100));
+		total_order = (Number(total_order)+Number(commission_amount));
 	}else{
-		commission_amount = Number(commission).toFixed(2);
-		total_order = (Number(total_order)+Number(commission_amount)).toFixed(2);
+		commission_amount = Number(commission);
+		total_order = (Number(total_order)+Number(commission_amount));
 	}
 
 	// imposto il totale di carrello in euro
+	var euro_total_order = round(total_order,4);
+	if(euro_total_order<0){
+		euro_total_order=0;
+	}
 	$(".ord_total_def_curr").empty();
-	$(".ord_total_def_curr").append(addSeparatorsNF(total_order,'.',',','.'));
+	$(".ord_total_def_curr").append(addSeparatorsNF(euro_total_order.toFixed(2),'.',',','.'));
   
 	// converto in base alla currency selezionata dall'utente
-	commission_amount = (commission_amount * (Number(currTo)/Number(currFrom))).toFixed(2);
-	total_order = (total_order * (Number(currTo)/Number(currFrom))).toFixed(2);
-  
+	commission_amount = (commission_amount * (Number(currTo)/Number(currFrom)));
+	total_order = (total_order * (Number(currTo)/Number(currFrom)));
+	
+	var converted_total_order = round(total_order,4);
+	if(converted_total_order<0){
+		converted_total_order=0;
+	}
 	$(".payment_commission").empty();
 	$(".ord_total").empty();
-	$(".payment_commission").append(addSeparatorsNF(commission_amount,'.',',','.'));
-	$(".ord_total").append(addSeparatorsNF(total_order,'.',',','.'));
+	$(".payment_commission").append(addSeparatorsNF(round(commission_amount,4).toFixed(2),'.',',','.'));
+	$(".ord_total").append(addSeparatorsNF(converted_total_order.toFixed(2),'.',',','.'));
 }
 
 function calculateBills4Order(amount, currFrom, currTo){
@@ -538,7 +546,7 @@ function calculateBills4Order(amount, currFrom, currTo){
 		}
 	}
 
-	total_order = Number(total_amount).toFixed(2);
+	total_order = Number(total_amount);
 
 	/****** ricarico la lista dei metodi di pagamento disponibili *******/
 	var payment_method_tmp="";
@@ -574,31 +582,39 @@ function calculateBills4Order(amount, currFrom, currTo){
 		commission = Number(commission.replace(',','.'));
 	
 		if(type == 1){
-			commission_amount = (total_order * (commission / 100)).toFixed(2);
-			total_order = (Number(total_order)+Number(commission_amount)).toFixed(2);
+			commission_amount = (total_order * (commission / 100));
+			total_order = (Number(total_order)+Number(commission_amount));
 		}else{
-			commission_amount = Number(commission).toFixed(2);
-			total_order = (Number(total_order)+Number(commission_amount)).toFixed(2);
+			commission_amount = Number(commission);
+			total_order = (Number(total_order)+Number(commission_amount));
 		}	
 	
 		// converto in base alla currency selezionata dall'utente
-		commission_amount = (commission_amount * (Number(currTo)/Number(currFrom))).toFixed(2);
+		commission_amount = (commission_amount * (Number(currTo)/Number(currFrom)));
 		
 		$(".payment_commission").empty();
-		$(".payment_commission").append(addSeparatorsNF(commission_amount,'.',',','.'));
+		$(".payment_commission").append(addSeparatorsNF(round(commission_amount,4).toFixed(2),'.',',','.'));
 	}
 	
 	/****** fine ricalcolo commissioni pagamento *******/
 
 	// imposto il totale di carrello in euro
+	var euro_total_order = round(total_order,4);
+	if(euro_total_order<0){
+		euro_total_order=0;
+	}
 	$(".ord_total_def_curr").empty();
-	$(".ord_total_def_curr").append(addSeparatorsNF(total_order,'.',',','.'));
+	$(".ord_total_def_curr").append(addSeparatorsNF(euro_total_order.toFixed(2),'.',',','.'));
 
 	// converto in base alla currency selezionata dall'utente
-	total_order = (total_order * (Number(currTo)/Number(currFrom))).toFixed(2);
-	
+	total_order = (total_order * (Number(currTo)/Number(currFrom)));
+
+	var converted_total_order = round(total_order,4);
+	if(converted_total_order<0){
+		converted_total_order=0;
+	}
 	$(".ord_total").empty();
-	$(".ord_total").append(addSeparatorsNF(total_order,'.',',','.'));
+	$(".ord_total").append(addSeparatorsNF(converted_total_order.toFixed(2),'.',',','.'));
 }
 
 function addSeparatorsNF(nStr, inD, outD, sep){
@@ -1020,10 +1036,10 @@ function selectPayAndBills4Form(applyBills){
 											hasBills2charge = true;
 										}else{
 											if(f.multiply && ((billImp+billSup)>0 || f.typeView==1)){%>
-												<input style="margin-left:10px;" type="checkbox" onclick="javascript:ajaxSetSessionPayAndBills(this),calculateBills4Order('<%=totalCartAmount+totalAutomaticBillsAmount%>','<%=defCurrency.rate%>','<%=userCurrency.rate%>');" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/> 
+												<input style="margin-left:10px;" type="checkbox" onclick="javascript:ajaxSetSessionPayAndBills(this),calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','<%=defCurrency.rate%>','<%=userCurrency.rate%>');" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/> 
 												<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>"+currency+"&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>&nbsp;&nbsp;<br/>"%>	
 											<%}else if(!f.multiply && (billImp+billSup)>0){%>
-												<input style="margin-left:10px;" type="radio"  onclick="javascript:ajaxSetSessionPayAndBills(this),calculateBills4Order('<%=totalCartAmount+totalAutomaticBillsAmount%>','<%=defCurrency.rate%>','<%=userCurrency.rate%>');" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/> 
+												<input style="margin-left:10px;" type="radio"  onclick="javascript:ajaxSetSessionPayAndBills(this),calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','<%=defCurrency.rate%>','<%=userCurrency.rate%>');" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/> 
 												<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>"+currency+"&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>&nbsp;&nbsp;<br/>"%>				
 											<%}%>										
 										
@@ -1032,7 +1048,7 @@ function selectPayAndBills4Form(applyBills){
 											<script language="Javascript">
 											<%if(isChecked){%>
 												jQuery(document).ready(function(){
-													calculateBills4Order('<%=totalCartAmount+totalAutomaticBillsAmount%>','<%=defCurrency.rate%>','<%=userCurrency.rate%>');
+													calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','<%=defCurrency.rate%>','<%=userCurrency.rate%>');
 												});
 											<%}
 											
@@ -1087,13 +1103,13 @@ function selectPayAndBills4Form(applyBills){
 												pdesc = lang.getTranslated("backend.payment.description.label."+p.description);
 											}
 										}%>
-										<li><input type="radio" name="payment_method" value="<%=key%>" <%if(isChecked){Response.Write(" checked='checked'");}%> onclick="javascript:ajaxSetSessionPayAndBills(this),calculatePaymentCommission('<%=totalCartAmount+totalAutomaticBillsAmount%>',<%=key%>,'<%=defCurrency.rate%>','<%=userCurrency.rate%>');">&nbsp;<%=pdesc%>&nbsp;<%=logo%></li>
+										<li><input type="radio" name="payment_method" value="<%=key%>" <%if(isChecked){Response.Write(" checked='checked'");}%> onclick="javascript:ajaxSetSessionPayAndBills(this),calculatePaymentCommission('<%=totalCartAmountAndAutoBillsAmount%>',<%=key%>,'<%=defCurrency.rate%>','<%=userCurrency.rate%>');">&nbsp;<%=pdesc%>&nbsp;<%=logo%></li>
 										<script language="Javascript">
 										listPaymentMethods.put("<%=key%>","<%=p.commission+"|"+p.commissionType%>");
 										
 										<%if(isChecked){%>
 										jQuery(document).ready(function(){
-											calculatePaymentCommission('<%=totalCartAmount+totalAutomaticBillsAmount%>',<%=key%>,'<%=defCurrency.rate%>','<%=userCurrency.rate%>');
+											calculatePaymentCommission('<%=totalCartAmountAndAutoBillsAmount%>',<%=key%>,'<%=defCurrency.rate%>','<%=userCurrency.rate%>');
 										});											
 										<%}%>
 										</script>
@@ -1392,8 +1408,8 @@ function selectPayAndBills4Form(applyBills){
 							
 							<div id="spese-totale">
 								<%=lang.getTranslated("frontend.carrello.table.label.payment_commission")%>: <strong><%=currency%>&nbsp;<span class="payment_commission"><%=totalPaymentAmount.ToString("#,###0.00")%></span></strong><br/><br/> 
-								<%=lang.getTranslated("frontend.carrello.table.label.totale_ordine")%>: <strong><%=currency%>&nbsp;<span class="ord_total"><%=currrep.convertCurrency(totalCartAmount+totalBillsAmount, defCurrency.currency, userCurrency.currency).ToString("#,###0.00")%></span></strong>
-								<br/><span id="currency"><%=lang.getTranslated("frontend.carrello.table.label.totale_ordine.currency_transaction1")%>&nbsp;<%=lang.getTranslated("backend.currency.keyword.label."+defCurrency.currency)%>&nbsp;<%=lang.getTranslated("frontend.carrello.table.label.totale_ordine.currency_transaction2")%>:&nbsp;<%=lang.getTranslated("backend.currency.symbol.label."+defCurrency.currency)%>&nbsp;<span class="ord_total_def_curr"><%=(totalCartAmount+totalBillsAmount).ToString("#,###0.00")%></span></span>
+								<%=lang.getTranslated("frontend.carrello.table.label.totale_ordine")%>: <strong><%=currency%>&nbsp;<span class="ord_total"><%=currrep.convertCurrency(totalCartAmountAndBillsAmount, defCurrency.currency, userCurrency.currency).ToString("#,###0.00")%></span></strong>
+								<br/><span id="currency"><%=lang.getTranslated("frontend.carrello.table.label.totale_ordine.currency_transaction1")%>&nbsp;<%=lang.getTranslated("backend.currency.keyword.label."+defCurrency.currency)%>&nbsp;<%=lang.getTranslated("frontend.carrello.table.label.totale_ordine.currency_transaction2")%>:&nbsp;<%=lang.getTranslated("backend.currency.symbol.label."+defCurrency.currency)%>&nbsp;<span class="ord_total_def_curr"><%=(totalCartAmountAndBillsAmount).ToString("#,###0.00")%></span></span>
 							</div>
 							
 							<div class="spese-div">

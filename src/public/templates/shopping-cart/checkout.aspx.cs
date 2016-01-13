@@ -60,6 +60,8 @@ public partial class _Checkout : Page
 	protected decimal totalAutomaticBillsAmount;
 	protected decimal totalProductAmount;
 	protected decimal totalCartAmount;
+	protected decimal totalCartAmountAndBillsAmount;
+	protected decimal totalCartAmountAndAutoBillsAmount;
 	protected decimal totalMarginAmount;
 	protected decimal totalDiscountAmount;
 	protected decimal totalPaymentAmount;
@@ -197,6 +199,8 @@ public partial class _Checkout : Page
 		totalAutomaticBillsAmount=0.00M;
 		totalProductAmount=0.00M;
 		totalCartAmount=0.00M;
+		totalCartAmountAndBillsAmount=0.00M;
+		totalCartAmountAndAutoBillsAmount=0.00M;
 		totalCartQuantity=0;
 		totalMarginAmount=0.00M;
 		totalDiscountAmount=0.00M;
@@ -1075,8 +1079,7 @@ public partial class _Checkout : Page
 								orderRulesData.Add(or.id, ordElements);  
 							}
 						}
-					}					
-
+					}
 					
 					//******************** GESTIONE SPESE ACCESSORIE
 					
@@ -1291,17 +1294,24 @@ public partial class _Checkout : Page
 							paysData.Add(p.id, payElements); 
 							
 							if(isChecked){
-								totalPaymentAmount = PaymentService.getCommissionAmount(totalCartAmount+totalBillsAmount, p.commission, p.paymentType);
+								totalPaymentAmount = PaymentService.getCommissionAmount(totalCartAmount+totalBillsAmount, p.commission, p.commissionType);
 							}
 						}
 					}		
 					
+
+					totalCartAmountAndBillsAmount=totalCartAmount+totalBillsAmount;
+					totalCartAmountAndAutoBillsAmount=totalCartAmount+totalAutomaticBillsAmount;	
+					
+					//*** se dopo l'applicazione degli sconti e delle business rule per ordine il totale e' inferiore a 0, elimino la componente negativa
+					if(totalCartAmount<0){
+						totalCartAmount=0.00M;
+					}					
 					
 					if(defCurrency != null && userCurrency != null){
 						totalMarginAmount = currrep.convertCurrency(totalMarginAmount, defCurrency.currency, userCurrency.currency);
 						totalDiscountAmount = currrep.convertCurrency(totalDiscountAmount, defCurrency.currency, userCurrency.currency);
 						totalProductAmount = currrep.convertCurrency(totalProductAmount, defCurrency.currency, userCurrency.currency);
-						totalCartAmount = currrep.convertCurrency(totalCartAmount, defCurrency.currency, userCurrency.currency);
 						totalPaymentAmount = currrep.convertCurrency(totalPaymentAmount, defCurrency.currency, userCurrency.currency);
 					}	
 				}
@@ -1577,7 +1587,7 @@ public partial class _Checkout : Page
 						
 						if(isChecked){
 							selectedPayment=p.id;
-							orderPaymentCommission=PaymentService.getCommissionAmount(orderAmount, p.commission, p.paymentType);
+							orderPaymentCommission=PaymentService.getCommissionAmount(orderAmount, p.commission, p.commissionType);
 							orderAmount+=orderPaymentCommission;
 							if(p.hasExternalUrl){
 								externalGateway = true;
@@ -1618,6 +1628,13 @@ public partial class _Checkout : Page
 						orderBillsaddr.stateRegion=userBillsaddr.stateRegion;
 					}
 					
+									
+					//*** se il totale e' inferiore a 0, elimino la componente negativa
+					if(orderAmount<0){
+						orderAmount=0.00M;
+						orderTaxable=0.00M;
+						orderSupplements=0.00M;
+					}
 					
 					//******************* CREO IL NUOVO ORDINE
 					FOrder newOrder = new FOrder();

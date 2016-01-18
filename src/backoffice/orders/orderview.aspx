@@ -169,14 +169,14 @@ $(function() {
 						userLabelIsCompanyClient = lang.getTranslated("frontend.utenti.detail.table.label.is_private");
 					}								
 					
-					shipInfo = shipaddr.name + " " + shipaddr.surname + " ("+userLabelIsCompanyClient+") - " + shipaddr.cfiscvat + " - " +oshipaddr.address +" - "+oshipaddr.city+" ("+oshipaddr.zipCode+") - "+lang.getTranslated("portal.commons.select.option.country."+oshipaddr.country)+" - "+lang.getTranslated("portal.commons.select.option.country."+oshipaddr.stateRegion);
+					shipInfo = oshipaddr.name + " " + oshipaddr.surname + " ("+userLabelIsCompanyClient+") - " + oshipaddr.cfiscvat + " - " +oshipaddr.address +" - "+oshipaddr.city+" ("+oshipaddr.zipCode+") - "+lang.getTranslated("portal.commons.select.option.country."+oshipaddr.country)+" - "+lang.getTranslated("portal.commons.select.option.country."+oshipaddr.stateRegion);
 						
 					Response.Write("<b>"+lang.getTranslated("backend.ordini.view.table.label.shipping_address")+":</b>&nbsp;"+shipInfo+"<br/>");	
 				}	
 				
 				//****** MANAGE BILLS ADDRESS
 				if(hasBillsAddress){
-					string billsInfo = billsaddr.name + " " + billsaddr.surname + " - " + billsaddr.cfiscvat + " - " +obillsaddr.address +" - "+obillsaddr.city+" ("+obillsaddr.zipCode+") - "+lang.getTranslated("portal.commons.select.option.country."+obillsaddr.country)+" - "+lang.getTranslated("portal.commons.select.option.country."+obillsaddr.stateRegion);
+					string billsInfo = obillsaddr.name + " " + obillsaddr.surname + " - " + obillsaddr.cfiscvat + " - " +obillsaddr.address +" - "+obillsaddr.city+" ("+obillsaddr.zipCode+") - "+lang.getTranslated("portal.commons.select.option.country."+obillsaddr.country)+" - "+lang.getTranslated("portal.commons.select.option.country."+obillsaddr.stateRegion);
 									
 					Response.Write("<b>"+lang.getTranslated("backend.ordini.view.table.label.bills_address")+":</b>&nbsp;"+billsInfo+"<br/>");					
 				}%></td>

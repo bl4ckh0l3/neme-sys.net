@@ -216,6 +216,12 @@ public partial class _InsertOrder : Page
 		
 		StringBuilder errorUrl = new StringBuilder("/backoffice/include/error.aspx?error_code=");
 
+		UriBuilder orderMailBuilder = new UriBuilder(Request.Url);
+		orderMailBuilder.Scheme = "http";
+		orderMailBuilder.Port = -1;
+		orderMailBuilder.Path="";
+		orderMailBuilder.Query="";
+		
 		if (!String.IsNullOrEmpty(Request["titlef"])) {
 			titlef = Request["titlef"];
 		}
@@ -337,20 +343,17 @@ public partial class _InsertOrder : Page
 				oshipaddr = orderep.getOrderShippingAddressCached(orderid, true);
 				if(oshipaddr != null){
 					hasShipAddress = true;
-					shipaddr = shiprep.getByIdCached(oshipaddr.idShipping, false);
-		
-					if(shipaddr != null){
-						//Response.Write("shipaddr:<br>"+shipaddr.ToString());
-						internationalCountryCode = shipaddr.country;
-						internationalStateRegionCode = shipaddr.stateRegion;
-						userIsCompanyClient = shipaddr.isCompanyClient;	
-					}
+					shipaddr = OrderService.OrderShipAddress2ShippingAddress(oshipaddr);
+					
+					internationalCountryCode = oshipaddr.country;
+					internationalStateRegionCode = oshipaddr.stateRegion;
+					userIsCompanyClient = oshipaddr.isCompanyClient;
 				}
 				
 				obillsaddr = orderep.getOrderBillsAddressCached(orderid, true);
 				if(obillsaddr != null){
 					hasBillsAddress = true;
-					billsaddr = billsrep.getByIdCached(obillsaddr.idBills, false);
+					billsaddr = OrderService.OrderBillsAddress2BillsAddress(obillsaddr);
 				}
 				
 				orderRules = orderep.findOrderBusinessRule(orderid, false);
@@ -1346,17 +1349,19 @@ public partial class _InsertOrder : Page
 		//*************************** PROCESS ORDER  ***************************
 		
 		if("process".Equals(Request["operation"])){
+			FOrder newOrder = new FOrder();
 			bool isNewOrder = true;
 			bool orderCompleted = true;
 			int finalOrderId=-1;
 			bool externalGateway = false;
+			bool orderPagamDone = Convert.ToBoolean(Convert.ToInt32(Request["payment_done"]));
 			string error_msg ="";
 			IList<OrderProduct> ops = new List<OrderProduct>();
 			
 			try{
 				if(order != null && order.id>-1){
 					isNewOrder = false;
-					finalOrderId = order.id;
+					finalOrderId = order.id;;
 				}
 				
 				decimal finalOrderAmount=0.00M;
@@ -1633,27 +1638,29 @@ public partial class _InsertOrder : Page
 				
 				if(hasShipAddress){
 					userShipaddr = shipaddr;
-					orderShipaddr = new OrderShippingAddress();
-					orderShipaddr.idOrder=finalOrderId;
-					orderShipaddr.idShipping=userShipaddr.id;
-					orderShipaddr.address=userShipaddr.address;
-					orderShipaddr.city=userShipaddr.city;
-					orderShipaddr.zipCode=userShipaddr.zipCode;
-					orderShipaddr.country=userShipaddr.country;
-					orderShipaddr.stateRegion=userShipaddr.stateRegion;
-					orderShipaddr.isCompanyClient=userShipaddr.isCompanyClient;
+					userShipaddr.name=Request["ship_name"];
+					userShipaddr.surname=Request["ship_surname"];
+					userShipaddr.cfiscvat=Request["ship_cfiscvat"];
+					userShipaddr.address=Request["ship_address"];
+					userShipaddr.city=Request["ship_city"];
+					userShipaddr.zipCode=Request["ship_zip_code"];
+					userShipaddr.country=Request["ship_country"];
+					userShipaddr.stateRegion=Request["ship_state_region"];
+					userShipaddr.isCompanyClient=Convert.ToBoolean(Convert.ToInt32(Request["ship_is_company_client"]));
+					orderShipaddr = OrderService.shipAddress2OrderShippingAddress(userShipaddr);
 				}
 				
 				if(hasBillsAddress){
 					userBillsaddr = billsaddr;
-					orderBillsaddr = new OrderBillsAddress();
-					orderBillsaddr.idOrder=finalOrderId;
-					orderBillsaddr.idBills=userBillsaddr.id;
-					orderBillsaddr.address=userBillsaddr.address;
-					orderBillsaddr.city=userBillsaddr.city;
-					orderBillsaddr.zipCode=userBillsaddr.zipCode;
-					orderBillsaddr.country=userBillsaddr.country;
-					orderBillsaddr.stateRegion=userBillsaddr.stateRegion;
+					userBillsaddr.name=Request["bills_name"];							
+					userBillsaddr.surname=Request["bills_surname"];			
+					userBillsaddr.cfiscvat=Request["bills_cfiscvat"];		
+					userBillsaddr.address=Request["bills_address"];			
+					userBillsaddr.city=Request["bills_city"];				
+					userBillsaddr.zipCode=Request["bills_zip_code"];		
+					userBillsaddr.country=Request["bills_country"];			
+					userBillsaddr.stateRegion=Request["bills_state_region"];
+					orderBillsaddr = OrderService.billsAddress2OrderBillsAddress(userBillsaddr);
 				}
 				
 				//*** se il totale e' inferiore a 0, elimino la componente negativa
@@ -1664,7 +1671,6 @@ public partial class _InsertOrder : Page
 				}
 					
 				//******************* CREO IL NUOVO ORDINE
-				FOrder newOrder = new FOrder();
 				if(isNewOrder){
 					newOrder.id = -1;
 					newOrder.userId = user.id;
@@ -1676,9 +1682,10 @@ public partial class _InsertOrder : Page
 					newOrder.supplement=orderSupplements;
 					newOrder.paymentId=selectedPayment;
 					newOrder.paymentCommission=orderPaymentCommission;
-					newOrder.paymentDone=Convert.ToBoolean(Convert.ToInt32(Request["payment_done"]));
+					newOrder.paymentDone=orderPagamDone;
 					newOrder.downloadNotified=false;
 					newOrder.noRegistration=false;
+					newOrder.mailSent=false;
 				}else{
 					newOrder = order;
 					newOrder.notes=Request["order_notes"];
@@ -1688,7 +1695,7 @@ public partial class _InsertOrder : Page
 					newOrder.supplement=orderSupplements;
 					newOrder.paymentId=selectedPayment;
 					newOrder.paymentCommission=orderPaymentCommission;
-					newOrder.paymentDone=Convert.ToBoolean(Convert.ToInt32(Request["payment_done"]));
+					newOrder.paymentDone=orderPagamDone;
 					newOrder.downloadNotified=false;
 					newOrder.noRegistration=false;					
 				}
@@ -1757,6 +1764,22 @@ public partial class _InsertOrder : Page
 				if(externalGateway){
 					// TODO implementare checkout si gateway esterno
 				}else{
+					if(orderPagamDone){
+						//***** send confirm order email
+						if(!newOrder.mailSent){
+							bool mailSent = OrderService.sendConfirmOrderMail(finalOrderId, lang.currentLangCode, lang.defaultLangCode, orderMailBuilder.ToString());
+						}
+						
+						//***** send confirm order email
+						if(!newOrder.downloadNotified){
+							//***** send download order email
+							bool mailDownSent = OrderService.sendDownloadOrderMail(finalOrderId, lang.currentLangCode, lang.defaultLangCode, orderMailBuilder.ToString());
+						}
+						
+						//***** enable ads
+						
+					}
+						
 					Response.Redirect("/backoffice/orders/orderconfirmed.aspx?cssClass=LO&orderid="+finalOrderId);
 				}
 			}else{

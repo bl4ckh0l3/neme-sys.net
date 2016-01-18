@@ -18,6 +18,7 @@
 		<property name="paymentDone" column="payment_done" not-null="true"  type="Boolean" />
 		<property name="downloadNotified" column="download_notified" not-null="true"  type="Boolean" />
 		<property name="noRegistration" column="no_registration" not-null="true"  type="Boolean" />
+		<property name="mailSent" column="mail_sent" not-null="true"  type="Boolean" />
 		<property name="lastUpdate">
 		    <column name="last_update" sql-type="timestamp" />
 		</property>
@@ -98,6 +99,9 @@
 			<key-property name="idOrder" column="id_order" type="Int32" />
 			<key-property name="idBills" column="id_bills" type="Int32" />
 		</composite-id>
+		<property name="name" column="name" />
+		<property name="surname" column="surname" />
+		<property name="cfiscvat" column="cfiscvat" />
 		<property name="address" column="address" />
 		<property name="city" column="city" />		
 		<property name="zipCode" column="zip_code" />
@@ -110,6 +114,9 @@
 			<key-property name="idOrder" column="id_order" type="Int32" />
 			<key-property name="idShipping" column="id_shipping" type="Int32" />
 		</composite-id>
+		<property name="name" column="name" />
+		<property name="surname" column="surname" />
+		<property name="cfiscvat" column="cfiscvat" />
 		<property name="address" column="address" />
 		<property name="city" column="city" />		
 		<property name="zipCode" column="zip_code" />

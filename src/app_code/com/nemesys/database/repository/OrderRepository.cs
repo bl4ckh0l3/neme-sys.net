@@ -827,7 +827,15 @@ namespace com.nemesys.database.repository
 						else if(cacheKey.Contains("list-field-name-values-"))
 						{
 							HttpContext.Current.Cache.Remove(cacheKey);
+						} 
+						else if(cacheKey.Contains("order-shipping-address-"))
+						{
+							HttpContext.Current.Cache.Remove(cacheKey);
 						}  
+						else if(cacheKey.Contains("order-bills-address-"))
+						{
+							HttpContext.Current.Cache.Remove(cacheKey);
+						}   
 					}	
 				}catch(Exception exx){
 					//HttpContext.Current.Response.Write("An inner error occured: " + exx.Message);

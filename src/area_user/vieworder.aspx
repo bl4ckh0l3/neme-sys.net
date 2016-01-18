@@ -32,9 +32,7 @@ protected string pdone;
 protected FOrder order;
 protected IList<OrderFee> fees;
 protected OrderShippingAddress oshipaddr;
-protected ShippingAddress shipaddr;
 protected OrderBillsAddress obillsaddr;
-protected BillsAddress billsaddr;
 protected UriBuilder builder;
 protected bool hasShipAddress;
 protected bool hasBillsAddress;
@@ -84,9 +82,7 @@ protected void Page_Load(object sender, EventArgs e)
 	hasShipAddress = false;
 	hasBillsAddress = false;
 	oshipaddr = null;
-	shipaddr = null;
 	obillsaddr = null;
-	billsaddr = null;
 	orderStatus = "";
 	orderFees = "";
 	shipInfo = "";
@@ -117,6 +113,9 @@ protected void Page_Load(object sender, EventArgs e)
 				paymentType = payment.description;
 				if(!String.IsNullOrEmpty(lang.getTranslated("backend.payment.description.label."+payment.description))){
 					paymentType = lang.getTranslated("backend.payment.description.label."+payment.description);
+				}
+				if(!String.IsNullOrEmpty(payment.paymentData)){
+				paymentType+="<br/>"+payment.paymentData+"<br/>";
 				}
 			}
 
@@ -159,7 +158,6 @@ protected void Page_Load(object sender, EventArgs e)
 			oshipaddr = orderep.getOrderShippingAddressCached(orderid, true);
 			if(oshipaddr != null){
 				hasShipAddress = true;
-				shipaddr = shiprep.getByIdCached(oshipaddr.idShipping, true);
 			}
 			
 			if(hasShipAddress){
@@ -170,18 +168,17 @@ protected void Page_Load(object sender, EventArgs e)
 					userLabelIsCompanyClient = lang.getTranslated("frontend.utenti.detail.table.label.is_private");
 				}								
 				
-				shipInfo = shipaddr.name + " " + shipaddr.surname + " ("+userLabelIsCompanyClient+") - " + shipaddr.cfiscvat + " - " +oshipaddr.address +" - "+oshipaddr.city+" ("+oshipaddr.zipCode+") - "+lang.getTranslated("portal.commons.select.option.country."+oshipaddr.country)+" - "+lang.getTranslated("portal.commons.select.option.country."+oshipaddr.stateRegion);
+				shipInfo = oshipaddr.name + " " + oshipaddr.surname + " ("+userLabelIsCompanyClient+") - " + oshipaddr.cfiscvat + " - " +oshipaddr.address +" - "+oshipaddr.city+" ("+oshipaddr.zipCode+") - "+lang.getTranslated("portal.commons.select.option.country."+oshipaddr.country)+" - "+lang.getTranslated("portal.commons.select.option.country."+oshipaddr.stateRegion);
 			}	
 			
 			//****** MANAGE BILLS ADDRESS
 			obillsaddr = orderep.getOrderBillsAddressCached(orderid, true);
 			if(obillsaddr != null){
 				hasBillsAddress = true;
-				billsaddr = billsrep.getByIdCached(obillsaddr.idBills, true);
 			}
 			
 			if(hasBillsAddress){
-				billsInfo = billsaddr.name + " " + billsaddr.surname + " - " + billsaddr.cfiscvat + " - " +obillsaddr.address +" - "+obillsaddr.city+" ("+obillsaddr.zipCode+") - "+lang.getTranslated("portal.commons.select.option.country."+obillsaddr.country)+" - "+lang.getTranslated("portal.commons.select.option.country."+obillsaddr.stateRegion);
+				billsInfo = obillsaddr.name + " " + obillsaddr.surname + " - " + obillsaddr.cfiscvat + " - " +obillsaddr.address +" - "+obillsaddr.city+" ("+obillsaddr.zipCode+") - "+lang.getTranslated("portal.commons.select.option.country."+obillsaddr.country)+" - "+lang.getTranslated("portal.commons.select.option.country."+obillsaddr.stateRegion);
 			}
 
 			//****** MANAGE ORDER RULES		

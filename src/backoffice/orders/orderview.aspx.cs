@@ -33,9 +33,7 @@ public partial class _OrderView : Page
 	protected bool hasShipAddress;
 	protected bool hasBillsAddress;
 	protected OrderShippingAddress oshipaddr;
-	protected ShippingAddress shipaddr;
 	protected OrderBillsAddress obillsaddr;
-	protected BillsAddress billsaddr;
 	protected string paymentTrans;
 	protected UriBuilder builder;
 	protected string orderFees;
@@ -87,9 +85,7 @@ public partial class _OrderView : Page
 		hasShipAddress = false;
 		hasBillsAddress = false;
 		oshipaddr = null;
-		shipaddr = null;
 		obillsaddr = null;
-		billsaddr = null;
 		hasOrderRule = false;
 		hasProductRule = false;
 		pdone = "";
@@ -145,6 +141,9 @@ public partial class _OrderView : Page
 					if(!String.IsNullOrEmpty(lang.getTranslated("backend.payment.description.label."+payment.description))){
 						paymentType = lang.getTranslated("backend.payment.description.label."+payment.description);
 					}
+					if(!String.IsNullOrEmpty(payment.paymentData)){
+					paymentType+="<br/>"+payment.paymentData+"<br/>";
+					}
 				}
 	
 				//****** MANAGE ORDER FEES			
@@ -164,13 +163,11 @@ public partial class _OrderView : Page
 				oshipaddr = orderep.getOrderShippingAddressCached(orderid, true);
 				if(oshipaddr != null){
 					hasShipAddress = true;
-					shipaddr = shiprep.getByIdCached(oshipaddr.idShipping, true);
 				}
 				
 				obillsaddr = orderep.getOrderBillsAddressCached(orderid, true);
 				if(obillsaddr != null){
 					hasBillsAddress = true;
-					billsaddr = billsrep.getByIdCached(obillsaddr.idBills, true);
 				}
 				
 				orderRules = orderep.findOrderBusinessRule(orderid, false);

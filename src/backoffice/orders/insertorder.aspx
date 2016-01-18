@@ -920,7 +920,7 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 				}%>             
 				</div>
 				
-				<%if(activeVoucherCampaign && (orderid==-1 || (orderid>-1 && !bolHasProdRule))){%>        
+				<%if(activeVoucherCampaign && !paymentDone && (orderid==-1 || (orderid>-1 && !bolHasProdRule))){%>        
 					<div style="padding-top:10px;">
 						<form action="<%=Request.Url.AbsolutePath%>" method="post" name="form_carrello_voucher" id="form_carrello_voucher">
 							<input type="hidden" value="0" name="voucher_delete">
@@ -1120,32 +1120,50 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 							
 							<div style="float:left;padding-right:3px;">
 								<strong><%=lang.getTranslated("frontend.carrello.table.label.country")%></strong><br>
-								<select id="ship_country" name="ship_country">
-								<option value=""></option>
-								<%foreach(Country x in countries){%>
-								  <option value="<%=x.countryCode%>" <%if(x.countryCode.Equals(shipaddr.country)){Response.Write("selected");}%>><%=lang.getTranslated("portal.commons.select.option.country."+x.countryCode)%></option>     
+								<%if("0".Equals(confservice.get("enable_international_tax_option").value) || ("1".Equals(confservice.get("enable_international_tax_option").value) && orderid==-1)){%>
+									<select id="ship_country" name="ship_country">
+									<option value=""></option>
+									<%foreach(Country x in countries){%>
+									  <option value="<%=x.countryCode%>" <%if(x.countryCode.Equals(shipaddr.country)){Response.Write("selected");}%>><%=lang.getTranslated("portal.commons.select.option.country."+x.countryCode)%></option>     
+									<%}%>
+									</select> 
+								<%}else if("1".Equals(confservice.get("enable_international_tax_option").value) &&  orderid>-1){%>
+									<input type="hidden" value="<%=shipaddr.country%>" name="ship_country" id="ship_country">
+									<%=lang.getTranslated("portal.commons.select.option.country."+shipaddr.country)%>
 								<%}%>
-								</select> 
 							</div>
-							<div style="padding-bottom:10px;"><strong><%=lang.getTranslated("frontend.carrello.table.label.state_region")%></strong><br>	 
-								<select name="ship_state_region" id="ship_state_region">
-								<option value=""></option>
-								<%if(!String.IsNullOrEmpty(shipaddr.country)){
-									foreach(Country x in stateRegions){%>
-									  <option value="<%=x.stateRegionCode%>" <%if(x.stateRegionCode.Equals(shipaddr.stateRegion)){Response.Write("selected");}%>><%=lang.getTranslated("portal.commons.select.option.country."+x.stateRegionCode)%></option>     
-									<%}
-								}%>
-								</select>	
+							<div style="padding-bottom:10px;">
+								<strong><%=lang.getTranslated("frontend.carrello.table.label.state_region")%></strong><br>
+								<%if("0".Equals(confservice.get("enable_international_tax_option").value) || ("1".Equals(confservice.get("enable_international_tax_option").value) && orderid==-1)){%>
+									<select name="ship_state_region" id="ship_state_region">
+									<option value=""></option>
+									<%if(!String.IsNullOrEmpty(shipaddr.country)){
+										foreach(Country x in stateRegions){%>
+										  <option value="<%=x.stateRegionCode%>" <%if(x.stateRegionCode.Equals(shipaddr.stateRegion)){Response.Write("selected");}%>><%=lang.getTranslated("portal.commons.select.option.country."+x.stateRegionCode)%></option>     
+										<%}
+									}%>
+									</select>	
+								<%}else if("1".Equals(confservice.get("enable_international_tax_option").value) &&  orderid>-1){%>
+									<input type="hidden" value="<%=shipaddr.stateRegion%>" name="ship_state_region" id="ship_state_region">
+									<%=lang.getTranslated("portal.commons.select.option.country."+shipaddr.stateRegion)%>
+								<%}%>
 							</div>
 							
 							<div><strong><%=lang.getTranslated("frontend.utenti.detail.table.label.is_company_client")%></strong><br>
-							<select name="ship_is_company_client" id="ship_is_company_client">
-							<option value="0" <%if(!shipaddr.isCompanyClient){Response.Write("selected");}%>><%=lang.getTranslated("frontend.utenti.detail.table.label.is_private")%></option>
-							<option value="1" <%if(shipaddr.isCompanyClient){Response.Write("selected");}%>><%=lang.getTranslated("frontend.utenti.detail.table.label.is_company")%></option>
-							</select></div>	
+							<%if("0".Equals(confservice.get("enable_international_tax_option").value) || ("1".Equals(confservice.get("enable_international_tax_option").value) && orderid==-1)){%>
+								<select name="ship_is_company_client" id="ship_is_company_client">
+								<option value="0" <%if(!shipaddr.isCompanyClient){Response.Write("selected");}%>><%=lang.getTranslated("frontend.utenti.detail.table.label.is_private")%></option>
+								<option value="1" <%if(shipaddr.isCompanyClient){Response.Write("selected");}%>><%=lang.getTranslated("frontend.utenti.detail.table.label.is_company")%></option>
+								</select>
+							<%}else if("1".Equals(confservice.get("enable_international_tax_option").value) &&  orderid>-1){%>
+								<input type="hidden" value="<%if(shipaddr.isCompanyClient){Response.Write("1");}else{Response.Write("0");}%>" name="ship_is_company_client" id="ship_is_company_client">
+								<%if(shipaddr.isCompanyClient){Response.Write(lang.getTranslated("frontend.utenti.detail.table.label.is_company"));}else{Response.Write(lang.getTranslated("frontend.utenti.detail.table.label.is_private"));}
+							}%>
+							</div>	
 							
 							<script>
-							<%if("1".Equals(confservice.get("enable_international_tax_option").value)){%>
+							<%if("1".Equals(confservice.get("enable_international_tax_option").value)){
+								if(orderid==-1){%>
 								$('#ship_country').change(function() {
 									$('#prodotto-totale').hide();	
 									document.form_insert_carrello.operation.value="";
@@ -1163,7 +1181,8 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 									document.form_insert_carrello.operation.value="";
 									document.form_insert_carrello.submit();
 								});		
-							<%}else{%>
+								<%}
+							}else{%>
 								$('#ship_country').change(function() {
 									var type_val_ch = $('#ship_country').val();
 									var query_string = "field_val="+encodeURIComponent(type_val_ch);

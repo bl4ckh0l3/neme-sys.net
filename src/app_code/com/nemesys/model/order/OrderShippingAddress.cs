@@ -7,6 +7,9 @@ namespace com.nemesys.model
 	{	
 		private int _idOrder;
 		private int _idShipping;
+		private string _name;
+		private string _surname;
+		private string _cfiscvat;
 		private string _address;
 		private string _city;
 		private string _zipCode;
@@ -27,6 +30,21 @@ namespace com.nemesys.model
 			set { _idShipping = value; }
 		}
 
+		public virtual string name {
+			get { return _name; }
+			set { _name = value; }
+		}
+
+		public virtual string surname {
+			get { return _surname; }
+			set { _surname = value; }
+		}
+
+		public virtual string cfiscvat {
+			get { return _cfiscvat; }
+			set { _cfiscvat = value; }
+		}
+		
 		public virtual string address {
 			get { return _address; }
 			set { _address = value; }
@@ -65,6 +83,9 @@ namespace com.nemesys.model
 
 			return other.idOrder == this._idOrder &&
 				other.idShipping == this._idShipping &&
+				other.name == this._name &&
+				other.surname == this._surname &&
+				other.cfiscvat == this._cfiscvat &&
 				other.address == this._address &&
 				other.city == this._city &&
 				other.zipCode == this._zipCode &&
@@ -80,6 +101,9 @@ namespace com.nemesys.model
 				int result = 0;
 				result = (result * 397) ^ _idOrder;
 				result = (result * 397) ^ _idShipping;
+				result = (result * 397) ^ (_name == null ? 0 : _name.GetHashCode());
+				result = (result * 397) ^ (_surname == null ? 0 : _surname.GetHashCode());
+				result = (result * 397) ^ (_cfiscvat == null ? 0 : _cfiscvat.GetHashCode());
 				result = (result * 397) ^ (_address == null ? 0 : _address.GetHashCode());
 				result = (result * 397) ^ (_city == null ? 0 : _city.GetHashCode());
 				result = (result * 397) ^ (_zipCode == null ? 0 : _zipCode.GetHashCode());
@@ -94,6 +118,9 @@ namespace com.nemesys.model
 			StringBuilder builder = new StringBuilder("OrderShippingAddress idOrder: ")
 			.Append(this._idOrder)
 			.Append(" - idShipping: ").Append(this._idShipping)
+			.Append(" - name: ").Append(this._name)
+			.Append(" - surname: ").Append(this._surname)
+			.Append(" - cfiscvat: ").Append(this._cfiscvat)
 			.Append(" - address: ").Append(this._address)
 			.Append(" - city: ").Append(this._city)
 			.Append(" - zipCode: ").Append(this._zipCode)

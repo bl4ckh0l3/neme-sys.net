@@ -178,7 +178,13 @@ public partial class _Checkout : Page
 		shoppingcardURL = shoppingcardBuilder.ToString();
 
 		currentBaseURL = new StringBuilder().Append(basePath.Substring(0,basePath.LastIndexOf("/")+1)).ToString();
-
+	
+		UriBuilder orderMailBuilder = new UriBuilder(Request.Url);
+		orderMailBuilder.Scheme = "http";
+		orderMailBuilder.Port = -1;
+		orderMailBuilder.Path="";
+		orderMailBuilder.Query="";		
+		
 		currencyList = new List<Currency>();
 		currency = "";
 		ug = null;
@@ -1322,6 +1328,7 @@ public partial class _Checkout : Page
 			}
 
 			if(bolFoundLista && "process".Equals(Request["operation"])){
+				FOrder newOrder = new FOrder();
 				bool orderCompleted = true;
 				int finalOrderId=-1;
 				bool externalGateway = false;
@@ -1595,7 +1602,7 @@ public partial class _Checkout : Page
 							break;
 						}
 					}
-			
+
 					
 					//******************* CREO LO SHIP E BILLS ADDRESS PER ORDINE
 					ShippingAddress userShipaddr = null;	
@@ -1605,27 +1612,29 @@ public partial class _Checkout : Page
 					
 					if(hasShipAddress){
 						userShipaddr = shipaddr;
-						orderShipaddr = new OrderShippingAddress();
-						orderShipaddr.idOrder=-1;
-						orderShipaddr.idShipping=userShipaddr.id;
-						orderShipaddr.address=userShipaddr.address;
-						orderShipaddr.city=userShipaddr.city;
-						orderShipaddr.zipCode=userShipaddr.zipCode;
-						orderShipaddr.country=userShipaddr.country;
-						orderShipaddr.stateRegion=userShipaddr.stateRegion;
-						orderShipaddr.isCompanyClient=userShipaddr.isCompanyClient;
+						userShipaddr.name=Request["ship_name"];
+						userShipaddr.surname=Request["ship_surname"];
+						userShipaddr.cfiscvat=Request["ship_cfiscvat"];
+						userShipaddr.address=Request["ship_address"];
+						userShipaddr.city=Request["ship_city"];
+						userShipaddr.zipCode=Request["ship_zip_code"];
+						userShipaddr.country=Request["ship_country"];
+						userShipaddr.stateRegion=Request["ship_state_region"];
+						userShipaddr.isCompanyClient=Convert.ToBoolean(Convert.ToInt32(Request["ship_is_company_client"]));
+						orderShipaddr = OrderService.shipAddress2OrderShippingAddress(userShipaddr);
 					}
 					
 					if(hasBillsAddress){
 						userBillsaddr = billsaddr;
-						orderBillsaddr = new OrderBillsAddress();
-						orderBillsaddr.idOrder=-1;
-						orderBillsaddr.idBills=userBillsaddr.id;
-						orderBillsaddr.address=userBillsaddr.address;
-						orderBillsaddr.city=userBillsaddr.city;
-						orderBillsaddr.zipCode=userBillsaddr.zipCode;
-						orderBillsaddr.country=userBillsaddr.country;
-						orderBillsaddr.stateRegion=userBillsaddr.stateRegion;
+						userBillsaddr.name=Request["bills_name"];							
+						userBillsaddr.surname=Request["bills_surname"];			
+						userBillsaddr.cfiscvat=Request["bills_cfiscvat"];		
+						userBillsaddr.address=Request["bills_address"];			
+						userBillsaddr.city=Request["bills_city"];				
+						userBillsaddr.zipCode=Request["bills_zip_code"];		
+						userBillsaddr.country=Request["bills_country"];			
+						userBillsaddr.stateRegion=Request["bills_state_region"];
+						orderBillsaddr = OrderService.billsAddress2OrderBillsAddress(userBillsaddr);
 					}
 					
 									
@@ -1637,7 +1646,6 @@ public partial class _Checkout : Page
 					}
 					
 					//******************* CREO IL NUOVO ORDINE
-					FOrder newOrder = new FOrder();
 					newOrder.id = -1;
 					newOrder.userId = userId;
 					newOrder.guid=Guids.createOrderGuid();
@@ -1707,11 +1715,17 @@ public partial class _Checkout : Page
 					
 					//******************* CANCELLO IL CARRELLO
 					shoprep.delete(shoppingCart);
-					
+
+					//***** ripulisco la sessione dal voucher
+					Session["voucher_code"] = "";
+						
 					//******************* GESTIONE CHECKOUT SU GATEWAY ESTERNI IN BASE AL METODO DI PAGAMENTO SELEZIONATO
 					if(externalGateway){
 						// TODO implementare checkout si gateway esterno
 					}else{
+						//***** send confirm order email
+						bool mailSent = OrderService.sendConfirmOrderMail(finalOrderId, lang.currentLangCode, lang.defaultLangCode, orderMailBuilder.ToString());
+						
 						Response.Redirect(currentBaseURL+"orderconfirmed.aspx?orderid="+finalOrderId);
 					}
 				}else{

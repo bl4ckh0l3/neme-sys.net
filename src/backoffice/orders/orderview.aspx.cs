@@ -26,6 +26,8 @@ public partial class _OrderView : Page
 	protected IList<OrderBusinessRule> productRules;
 	protected string pdone;
 	protected string downNotified;
+	protected string mailSent;
+	protected string adsEnabled;
 	protected FOrder order;
 	protected IDictionary<int,string> orderStatus;
 	protected User user;
@@ -90,6 +92,8 @@ public partial class _OrderView : Page
 		hasProductRule = false;
 		pdone = "";
 		downNotified = "";
+		mailSent = "";
+		adsEnabled = "";
 		orderRules = null;
 		productRules = null;
 		orderStatus = OrderService.getOrderStatus();
@@ -132,6 +136,16 @@ public partial class _OrderView : Page
 				downNotified = lang.getTranslated("portal.commons.no");
 				if(order.downloadNotified){
 					downNotified = lang.getTranslated("portal.commons.yes");
+				}	
+	
+				mailSent = lang.getTranslated("portal.commons.no");
+				if(order.mailSent){
+					mailSent = lang.getTranslated("portal.commons.yes");
+				}	
+	
+				adsEnabled = lang.getTranslated("portal.commons.no");
+				if(order.adsEnabled){
+					adsEnabled = lang.getTranslated("portal.commons.yes");
 				}		
 				
 				int paymentId = order.paymentId;

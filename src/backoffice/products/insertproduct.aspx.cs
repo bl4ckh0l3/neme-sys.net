@@ -491,7 +491,7 @@ public partial class _Product : Page
 					reloadQuantity = Convert.ToInt32(Request["rotation_quantity"]);
 				}
 				string listProdFieldsValuesQty = Request["list_prod_fields_values_qty"];
-				Response.Write("listProdFieldsValuesQty:"+listProdFieldsValuesQty+"<br>");
+				//Response.Write("listProdFieldsValuesQty:"+listProdFieldsValuesQty+"<br>");
 				
 				//Response.Write("publishDate by request:"+publishDate+"<br>");
 				//Response.Write("deleteDate by request:"+publishDate+"<br>");				
@@ -658,7 +658,7 @@ public partial class _Product : Page
 						string name = Path.GetFileName(tmp.FileName);
 						if(!String.IsNullOrEmpty(name) && name==fileName)
 						{
-							//Response.Write("found: fileName: "+name+" - productType: "+tmp.contentType+" - label: "+label+" - dida: "+dida+"<br>");
+							//Response.Write("found: fileName: "+name+" - productType: "+tmp.ContentType+" - label: "+label+" - dida: "+dida+"<br>");
 							ProductAttachment ca = new ProductAttachment();
 							ca.fileName=name;
 							ca.contentType=tmp.ContentType;
@@ -678,13 +678,14 @@ public partial class _Product : Page
 					string fileName = Path.GetFileName(Request["fileupload_name"+ac+"d"]);
 					int label = Convert.ToInt32(Request["fileupload_label"+ac+"d"]);
 					string dida = Request["fileupload_dida"+ac+"d"];
+					//Response.Write("down: fileName:"+fileName+" - label:"+label+" - dida:"+dida+"<br>");
 					for(int k = 0; k<MyFileCollection.Keys.Count;k++)
 					{	
 						HttpPostedFile tmp = MyFileCollection[k];
 						string name = Path.GetFileName(tmp.FileName);
 						if(!String.IsNullOrEmpty(name) && name==fileName)
 						{
-							//Response.Write("found: fileName: "+name+" - productType: "+tmp.contentType+" - label: "+label+" - dida: "+dida+"<br>");
+							//Response.Write("found: fileName: "+name+" - productType: "+tmp.ContentType+" - label: "+label+" - dida: "+dida+"<br>");
 							ProductAttachmentDownload ca = new ProductAttachmentDownload();
 							ca.fileName=name;
 							ca.contentType=tmp.ContentType;

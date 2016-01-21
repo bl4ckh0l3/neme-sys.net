@@ -19,6 +19,7 @@
 		<property name="downloadNotified" column="download_notified" not-null="true"  type="Boolean" />
 		<property name="noRegistration" column="no_registration" not-null="true"  type="Boolean" />
 		<property name="mailSent" column="mail_sent" not-null="true"  type="Boolean" />
+		<property name="adsEnabled" column="ads_enabled" not-null="true"  type="Boolean" />
 		<property name="lastUpdate">
 		    <column name="last_update" sql-type="timestamp" />
 		</property>
@@ -95,10 +96,9 @@
     </class>
 	
 	<class name="OrderBillsAddress" table="ORDER_BILLS_ADDRESS">
-		<composite-id>
-			<key-property name="idOrder" column="id_order" type="Int32" />
-			<key-property name="idBills" column="id_bills" type="Int32" />
-		</composite-id>
+		<id name="idOrder">
+		    <column name="id_order" sql-type="int(11)" not-null="true"/>
+		</id>
 		<property name="name" column="name" />
 		<property name="surname" column="surname" />
 		<property name="cfiscvat" column="cfiscvat" />
@@ -110,10 +110,9 @@
 	</class>
 	
 	<class name="OrderShippingAddress" table="ORDER_SHIPPING_ADDRESS">
-		<composite-id>
-			<key-property name="idOrder" column="id_order" type="Int32" />
-			<key-property name="idShipping" column="id_shipping" type="Int32" />
-		</composite-id>
+		<id name="idOrder">
+		    <column name="id_order" sql-type="int(11)" not-null="true"/>
+		</id>
 		<property name="name" column="name" />
 		<property name="surname" column="surname" />
 		<property name="cfiscvat" column="cfiscvat" />

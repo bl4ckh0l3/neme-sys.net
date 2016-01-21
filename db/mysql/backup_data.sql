@@ -6992,4 +6992,8 @@ INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.lista.table.select.option.ord_by_amount_ordine_desc', 'EN', 'order amount desc');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.lista.table.select.option.ord_by_amount_ordine_desc', 'IT', 'importo ordine desc');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.detail.js.alert.confirm_choose_new_order_user', 'EN', 'Confirm selected user?');
-INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.detail.js.alert.confirm_choose_new_order_user', 'IT', 'Confermi l''utente selezionato?');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.detail.js.alert.confirm_choose_new_order_user', 'IT', 'Confermi l''utente selezionato?');                
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.mail_sent', 'EN', 'Confirmation mail sent');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.mail_sent', 'IT', 'Mail di conferma inviata');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.ads_enabled', 'EN', 'Ads promotions enabled');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.ads_enabled', 'IT', 'Promozioni annunci attivate');

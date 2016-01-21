@@ -464,6 +464,18 @@ function controllaCampiInput(){
 	}	
 	document.form_inserisci.list_prod_relations.value = strProdRels;	
 	
+	
+	//set file attached and filed to download
+	var numMaxImgs = $("#numMaxImgs").val();
+	for(n=1; n<numMaxImgs; n++){
+		$('#fileupload_name'+n).val($('#fileupload'+n).val());
+	}	
+	
+	var numMaxImgsd = $("#numMaxImgsd").val();
+	for(n=1; n<numMaxImgsd; n++){
+		$('#fileupload_name'+n+'d').val($('#fileupload'+n+'d').val());
+	}
+
 	return true;
 }
 
@@ -3516,13 +3528,7 @@ function fieldValueSlideToggle(idsuffix){
 						  <tr class="attach_table_rowsd">
 							<td>
 							<input type="file" name="fileupload<%=i%>d" id="fileupload<%=i%>d" class="formFieldTXT">
-							<input type="hidden" value="" name="fileupload_name<%=i%>d" id="fileupload_name<%=i%>d">
-							<script>
-							$('#fileupload<%=i%>d').blur(function() {
-								$('#fileupload_name<%=i%>d').val($('#fileupload<%=i%>d').val());
-								//alert($('#fileupload_name<%=i%>d').val());
-							});					
-							</script>						
+							<input type="hidden" value="" name="fileupload_name<%=i%>d" id="fileupload_name<%=i%>d">						
 							</td>
 							<td>
 							<%if(i==1){%><div id="text_label_new<%=i%>d" style="display:none;"><input type="text" name="fileupload_label_new<%=i%>d" id="fileupload_label_new<%=i%>d" onblur="javascript:prepareInsertAttachLabel(this,'<%=i%>d');" class="formFieldSelectTypeFile"></div><%}%>
@@ -4902,13 +4908,7 @@ function fieldValueSlideToggle(idsuffix){
 					  <tr class="attach_table_rows">
 						<td>
 						<input type="file" name="fileupload<%=i%>" id="fileupload<%=i%>" class="formFieldTXT">
-						<input type="hidden" value="" name="fileupload_name<%=i%>" id="fileupload_name<%=i%>">
-						<script>
-						$('#fileupload<%=i%>').blur(function() {
-							$('#fileupload_name<%=i%>').val($('#fileupload<%=i%>').val());
-							//alert($('#fileupload_name<%=i%>').val());
-						});					
-						</script>						
+						<input type="hidden" value="" name="fileupload_name<%=i%>" id="fileupload_name<%=i%>">					
 						</td>
 						<td>
 						<%if(i==1){%><div id="text_label_new<%=i%>" style="display:none;"><input type="text" name="fileupload_label_new<%=i%>" id="fileupload_label_new<%=i%>" onblur="javascript:prepareInsertAttachLabel(this,'<%=i%>');" class="formFieldSelectTypeFile"></div><%}%>

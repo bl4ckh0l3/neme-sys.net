@@ -1124,6 +1124,7 @@ CREATE TABLE IF NOT EXISTS `ORDERS` (
   `download_notified` smallint(1) unsigned NOT NULL DEFAULT '0',
   `no_registration` smallint(1) unsigned NOT NULL DEFAULT '0',
   `mail_sent` smallint(1) unsigned NOT NULL DEFAULT '0',
+  `ads_enabled` smallint(1) unsigned NOT NULL DEFAULT '0',
   `last_update` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `insert_date` timestamp NOT NULL,
   PRIMARY KEY  (`id`),
@@ -1239,7 +1240,6 @@ CREATE TABLE IF NOT EXISTS `SHIPPING_ADDRESS` (
 DROP TABLE IF EXISTS `ORDER_SHIPPING_ADDRESS`;
 CREATE TABLE IF NOT EXISTS `ORDER_SHIPPING_ADDRESS` (
   `id_order` int(11) NOT NULL,
-  `id_shipping` int(11) NOT NULL,
   `name` varchar(100) default NULL,
   `surname` varchar(100) default NULL,
   `cfiscvat` varchar(30) default NULL,
@@ -1249,7 +1249,7 @@ CREATE TABLE IF NOT EXISTS `ORDER_SHIPPING_ADDRESS` (
   `country` varchar(100) default NULL,
   `state_region` varchar(100) default NULL,
   `is_company_client` SMALLINT(1) UNSIGNED NOT NULL default '0',
-  PRIMARY KEY (`id_order`, `id_shipping`)
+  PRIMARY KEY (`id_order`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -1280,7 +1280,6 @@ CREATE TABLE IF NOT EXISTS `BILLS_ADDRESS` (
 DROP TABLE IF EXISTS `ORDER_BILLS_ADDRESS`;
 CREATE TABLE IF NOT EXISTS `ORDER_BILLS_ADDRESS` (
   `id_order` int(11) NOT NULL,
-  `id_bills` int(11) NOT NULL,
   `name` varchar(100) default NULL,
   `surname` varchar(100) default NULL,
   `cfiscvat` varchar(30) default NULL,
@@ -1289,7 +1288,7 @@ CREATE TABLE IF NOT EXISTS `ORDER_BILLS_ADDRESS` (
   `zip_code` varchar(20) default NULL,
   `country` varchar(100) default NULL,
   `state_region` varchar(100) default NULL,
-  PRIMARY KEY (`id_order`, `id_bills`)
+  PRIMARY KEY (`id_order`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

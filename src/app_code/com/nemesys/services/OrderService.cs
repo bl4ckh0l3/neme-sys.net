@@ -111,7 +111,7 @@ namespace com.nemesys.services
 		public static ShippingAddress OrderShipAddress2ShippingAddress(OrderShippingAddress orderShippingAddress)
 		{
 			ShippingAddress ship = new ShippingAddress();
-			ship.id=-orderShippingAddress.idShipping;
+			ship.id=-1;
 			ship.idUser=-1;
 			ship.name=orderShippingAddress.name;
 			ship.surname=orderShippingAddress.surname;
@@ -130,7 +130,6 @@ namespace com.nemesys.services
 		{
 			OrderShippingAddress oship = new OrderShippingAddress();
 			oship.idOrder=-1;
-			oship.idShipping=shippingAddress.id;
 			oship.name=shippingAddress.name;
 			oship.surname=shippingAddress.surname;
 			oship.cfiscvat=shippingAddress.cfiscvat;
@@ -147,7 +146,7 @@ namespace com.nemesys.services
 		public static BillsAddress OrderBillsAddress2BillsAddress(OrderBillsAddress orderBillsAddress)
 		{
 			BillsAddress bills = new BillsAddress();
-			bills.id=-orderBillsAddress.idBills;
+			bills.id=-1;
 			bills.idUser=-1;
 			bills.name=orderBillsAddress.name;
 			bills.surname=orderBillsAddress.surname;
@@ -165,7 +164,6 @@ namespace com.nemesys.services
 		{
 			OrderBillsAddress obills = new OrderBillsAddress();
 			obills.idOrder=-1;
-			obills.idBills=billsAddress.id;
 			obills.name=billsAddress.name;
 			obills.surname=billsAddress.surname;
 			obills.cfiscvat=billsAddress.cfiscvat;
@@ -176,6 +174,16 @@ namespace com.nemesys.services
 			obills.stateRegion=billsAddress.stateRegion;
 			
 			return obills;
+		}
+		
+		public static bool canDownloadAttachment(OrderProductAttachmentDownload opad){
+			bool download = false;
+			
+			download = 	opad.active &&
+						("9999-12-31".Equals(opad.expireDate.ToString("dd/MM/yyyy")) || DateTime.Compare(opad.expireDate, DateTime.Now)>=0) &&
+						(opad.maxDownload == -1 || opad.downloadCounter <= opad.maxDownload);
+			
+			return download;
 		}
 		
 		public static bool sendConfirmOrderMail(int orderId, string langcode, string defLangCode, string url)
@@ -543,10 +551,10 @@ namespace com.nemesys.services
 				MailService.prepareAndSend("order-confirmed", langcode, defLangCode, "backend.mails.detail.table.label.subject_", replacementsUser, null, url);
 				MailService.prepareAndSend("order-confirmed", langcode, defLangCode, "backend.mails.detail.table.label.subject_", replacementsAdmin, null, url);	
 				
-				mailSent = true;
-				
 				order.mailSent=true;
 				orderep.update(order);
+				
+				mailSent = true;
 			}catch(Exception ex){
 				StringBuilder builder = new StringBuilder("Exception: ")
 				.Append("An error occured: ").Append(ex.Message).Append("<br><br><br>").Append(ex.StackTrace);
@@ -560,12 +568,133 @@ namespace com.nemesys.services
 		}
 
 		
-		public static bool sendConfirmOrderMail(int orderId, string langcode, string defLangCode, string url)
+		public static bool sendDownloadOrderMail(int orderId, string langcode, string defLangCode, string url)
 		{
 			bool mailDownSent = false;
-			
+
+			try{
+				FOrder order = orderep.getByIdExtended(orderId, true);
+				
+				User user = usrrep.getById(order.userId);
+				
+				bool hasDownAttach = false;
+				
+				if(order.products != null && order.products.Count>0){			
+					ListDictionary replacementsUser = new ListDictionary();
+					ListDictionary replacementsAdmin = new ListDictionary();
+					StringBuilder userMessage = new StringBuilder();
+					StringBuilder adminMessage = new StringBuilder();	
+					replacementsUser.Add("mail_receiver",user.email);	
+					
+					//start user message
+					userMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.id_ordine", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.id).Append("</b><br/><br/>")
+					.Append(MultiLanguageService.translate("backend.ordini.view.table.label.guid_ordine", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.guid).Append("</b><br/><br/>")
+					.Append(MultiLanguageService.translate("backend.ordini.view.table.label.order_client", langcode, defLangCode)).Append("&nbsp;-&nbsp;ID:&nbsp;<b>").Append(user.username).Append("</b>&nbsp;-&nbsp;")
+					.Append(MultiLanguageService.translate("frontend.registration.manage.label.email", langcode, defLangCode)).Append(":&nbsp;<b>").Append(user.email).Append("</b><br/><br/>");		
+					
+					//start admin message
+					adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.id_ordine", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.id).Append("</b><br/><br/>")
+					.Append(MultiLanguageService.translate("backend.ordini.view.table.label.guid_ordine", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.guid).Append("</b><br/><br/>")
+					.Append(MultiLanguageService.translate("backend.ordini.view.table.label.order_client", langcode, defLangCode)).Append("&nbsp;-&nbsp;ID:&nbsp;<b>").Append(user.username).Append("</b>&nbsp;-&nbsp;")
+					.Append(MultiLanguageService.translate("frontend.registration.manage.label.email", langcode, defLangCode)).Append(":&nbsp;<b>").Append(user.email).Append("</b><br/><br/>");					
+						
+					userMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.dta_insert_order", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.insertDate.ToString("dd/MM/yyyy HH:mm")).Append("</b><br/><br/>");
+					adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.dta_insert_order", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.insertDate.ToString("dd/MM/yyyy HH:mm")).Append("</b><br/><br/>");				
+		
+					userMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.attached_prods", langcode, defLangCode)).Append("<br/>");		
+					adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.attached_prods", langcode, defLangCode)).Append("<br/>");					
+					
+					
+					userMessage.Append("<table border=0 align=top cellpadding=3 cellspacing=0 style=\"border:1px solid #C9C9C9;\">");
+					adminMessage.Append("<table border=0 align=top cellpadding=3 cellspacing=0 style=\"border:1px solid #C9C9C9;\">");
+	
+					foreach(OrderProduct op in order.products.Values){
+						if(op.productType==1){
+							IList<OrderProductAttachmentDownload> attachments = orderep.getAttachmentDownload(order.id, op.idProduct);
+							if(attachments != null && attachments.Count>0){
+								userMessage.Append("<tr>").Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">").Append(productrep.getMainFieldTranslationCached(op.idProduct, 1 , langcode, true,  op.productName, true).value).Append("</td>").Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">");
+								adminMessage.Append("<tr>").Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">").Append(productrep.getMainFieldTranslationCached(op.idProduct, 1 , langcode, true,  op.productName, true).value).Append("</td>").Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">");
+									
+								foreach(OrderProductAttachmentDownload d in attachments){
+									// check if is still valid download
+									if(d.active){
+										ProductAttachmentDownload down =  productrep.getProductAttachmentDownloadById(d.idDownFile);
+										if(down != null){
+											//orderProducts.Append(productFields)
+											userMessage.Append("&nbsp;&nbsp;<a href='").Append(url).Append("common/include/download-order-attach.aspx?orderid="+order.id+"&attachid="+d.id+"'>").Append(down.fileName).Append("</a><br/>");
+											adminMessage.Append("&nbsp;&nbsp;").Append(down.fileName).Append("<br/>");
+											hasDownAttach = true;
+										}
+									}
+								}
+								
+								userMessage.Append("</td>").Append("</tr>");
+								adminMessage.Append("</td>").Append("</tr>");
+							}
+						}
+					}
+					userMessage.Append("</table>");
+					adminMessage.Append("</table>");						
+					
+					if(hasDownAttach){
+						replacementsUser.Add("<%content%>",HttpUtility.HtmlDecode(userMessage.ToString()));
+						replacementsAdmin.Add("<%content%>",HttpUtility.HtmlDecode(adminMessage.ToString()));
+						
+						MailService.prepareAndSend("order-down-confirmed", langcode, defLangCode, "backend.mails.detail.table.label.subject_", replacementsUser, null, url);
+						MailService.prepareAndSend("order-down-confirmed", langcode, defLangCode, "backend.mails.detail.table.label.subject_", replacementsAdmin, null, url);	
+					
+						order.downloadNotified=true;
+						orderep.update(order);	
+					
+						mailDownSent = true;				
+					}			
+				}
+			}catch(Exception ex){
+				StringBuilder builder = new StringBuilder("Exception: ")
+				.Append("An error occured: ").Append(ex.Message).Append("<br><br><br>").Append(ex.StackTrace);
+				Logger log = new Logger(builder.ToString(),"system","error",DateTime.Now);		
+				lrep.write(log);
+				
+				mailDownSent = false;
+			}
 			
 			return mailDownSent;
+		}
+		
+		public static bool activateAds(int orderId, string langcode, string defLangCode)
+		{
+			bool adsActivated = false;
+
+			try{
+				FOrder order = orderep.getByIdExtended(orderId, true);		
+				
+				if(order.products != null && order.products.Count>0){	
+					bool hasAds = false;
+					
+					foreach(OrderProduct op in order.products.Values){
+						if(op.productType==2 && op.idAds>-1){	
+							adsrep.activatePromotion(op.idAds, op.idProduct);
+							hasAds = true;
+						}
+					}				
+					
+					if(hasAds){
+						order.adsEnabled=true;
+						orderep.update(order);
+						
+						adsActivated = true;
+					}
+				}
+			}catch(Exception ex){
+				StringBuilder builder = new StringBuilder("Exception: ")
+				.Append("An error occured: ").Append(ex.Message).Append("<br><br><br>").Append(ex.StackTrace);
+				Logger log = new Logger(builder.ToString(),"system","error",DateTime.Now);		
+				lrep.write(log);
+				
+				adsActivated = false;
+			}
+			
+			return adsActivated;			
 		}
 	}
 }

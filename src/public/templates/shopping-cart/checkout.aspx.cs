@@ -1462,9 +1462,11 @@ public partial class _Checkout : Page
 									opad.active=false;
 									opad.maxDownload=product.maxDownload;
 									opad.downloadCounter=0;
-									if(product.maxDownloadTime>-1){
-										opad.expireDate=DateTime.Now.AddMinutes(Convert.ToDouble(product.maxDownloadTime));
-									}
+									//if(product.maxDownloadTime>-1){
+									//	opad.expireDate=DateTime.Now.AddMinutes(Convert.ToDouble(product.maxDownloadTime));
+									//}
+									opad.expireDate=Convert.ToDateTime("9999-12-31 23:59:59");
+									opad.downloadDate = Convert.ToDateTime("9999-12-31 23:59:59");
 									opads.Add(opad);
 								}
 							}
@@ -1658,6 +1660,7 @@ public partial class _Checkout : Page
 					newOrder.paymentCommission=orderPaymentCommission;
 					newOrder.paymentDone=false;
 					newOrder.downloadNotified=false;
+					newOrder.adsEnabled=false;
 					newOrder.noRegistration=noRegistration;
 					
 					

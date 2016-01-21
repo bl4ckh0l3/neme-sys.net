@@ -310,11 +310,11 @@ public partial class _Detail : Page
 							if(ap.active){
 								string expire = ap.elementCode.Substring(ap.elementCode.LastIndexOf('#')+1);
 								if(ap.elementCode.StartsWith("ad-1")){
-									if (DateTime.Compare(DateTime.Now.AddDays(Convert.ToInt32(expire)), ap.insertDate)>=0) {
+									if (DateTime.Compare(ap.insertDate.AddDays(Convert.ToInt32(expire)), DateTime.Now)>=0) {
 										hasHighlight = true;
 									}
 								}else if(ap.elementCode.StartsWith("ad-2")){
-									if (DateTime.Compare(DateTime.Now.AddDays(Convert.ToInt32(expire)), ap.insertDate)>=0) {
+									if (DateTime.Compare(ap.insertDate.AddDays(Convert.ToInt32(expire)), DateTime.Now)>=0) {
 										hasUrgent = true;
 									}
 								}

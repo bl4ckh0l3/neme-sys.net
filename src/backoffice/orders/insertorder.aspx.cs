@@ -1434,12 +1434,19 @@ public partial class _InsertOrder : Page
 									opad.idParentProduct=op.idProduct;
 									opad.idDownFile=pad.id;
 									opad.userId=user.id;
-									opad.active=false;
 									opad.maxDownload=product.maxDownload;
 									opad.downloadCounter=0;
-									if(product.maxDownloadTime>-1){
-										opad.expireDate=DateTime.Now.AddMinutes(Convert.ToDouble(product.maxDownloadTime));
+									if(orderPagamDone){
+										opad.active=true;
+									}else{
+										opad.active=false;
 									}
+									if(orderPagamDone && product.maxDownloadTime>-1){
+										opad.expireDate=DateTime.Now.AddMinutes(Convert.ToDouble(product.maxDownloadTime));
+									}else{
+										opad.expireDate=Convert.ToDateTime("9999-12-31 23:59:59");
+									}
+									opad.downloadDate = Convert.ToDateTime("9999-12-31 23:59:59");
 									opads.Add(opad);
 								}
 							}
@@ -1468,7 +1475,24 @@ public partial class _InsertOrder : Page
 					foreach(OrderProduct op in order.products.Values){
 						orderTaxable+=op.taxable;
 						orderSupplements+=op.supplement;
-						finalOrderAmount+=op.amount;						
+						
+						if(!order.downloadNotified && op.productType==1){
+							
+							IList<OrderProductAttachmentDownload> attachments = orderep.getAttachmentDownload(order.id, op.idProduct);
+							if(attachments != null && attachments.Count>0){
+								Product c = productrep.getByIdCached(op.idProduct, false);
+								
+								foreach(OrderProductAttachmentDownload d in attachments){	
+									if(orderPagamDone){
+										d.active=true;
+									}
+									if(orderPagamDone && c.maxDownloadTime>-1){
+										d.expireDate=DateTime.Now.AddMinutes(Convert.ToDouble(c.maxDownloadTime));
+									}
+									opads.Add(d);
+								}
+							}
+						}						
 					}
 				}
 		
@@ -1686,6 +1710,7 @@ public partial class _InsertOrder : Page
 					newOrder.downloadNotified=false;
 					newOrder.noRegistration=false;
 					newOrder.mailSent=false;
+					newOrder.adsEnabled=false;
 				}else{
 					newOrder = order;
 					newOrder.notes=Request["order_notes"];
@@ -1695,9 +1720,7 @@ public partial class _InsertOrder : Page
 					newOrder.supplement=orderSupplements;
 					newOrder.paymentId=selectedPayment;
 					newOrder.paymentCommission=orderPaymentCommission;
-					newOrder.paymentDone=orderPagamDone;
-					newOrder.downloadNotified=false;
-					newOrder.noRegistration=false;					
+					newOrder.paymentDone=orderPagamDone;				
 				}
 				
 				
@@ -1777,7 +1800,9 @@ public partial class _InsertOrder : Page
 						}
 						
 						//***** enable ads
-						
+						if(!newOrder.adsEnabled){
+							bool adsEnabled = OrderService.activateAds(finalOrderId, lang.currentLangCode, lang.defaultLangCode);
+						}
 					}
 						
 					Response.Redirect("/backoffice/orders/orderconfirmed.aspx?cssClass=LO&orderid="+finalOrderId);

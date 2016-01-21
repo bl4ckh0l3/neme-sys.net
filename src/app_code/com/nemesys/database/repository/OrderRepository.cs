@@ -425,6 +425,18 @@ namespace com.nemesys.database.repository
 			return results;			
 		}
 		
+		public void updateAttachmentDownload(OrderProductAttachmentDownload opad)
+		{
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			using (ITransaction tx = session.BeginTransaction())
+			{			
+				session.Update(opad);			
+				
+				tx.Commit();
+				NHibernateHelper.closeSession();
+			}			
+		}
+		
 		public void saveCompleteOrder(FOrder order, IList<OrderProduct> ops, IList<OrderProductField> opfs, IList<OrderProductAttachmentDownload> opads, IList<OrderFee> ofs, BillsAddress billsAddress, OrderBillsAddress orderBillsAddress, ShippingAddress shippingAddress, OrderShippingAddress orderShippingAddress, IList<OrderBusinessRule> obrs, IList<OrderVoucher> ovs, int voucherCodeId)
 		{
 			IDictionary<int,int> productQtyCheck = new Dictionary<int,int>();
@@ -471,6 +483,8 @@ namespace com.nemesys.database.repository
 						session.CreateQuery("delete from OrderBillsAddress where idOrder=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
 						session.CreateQuery("delete from OrderShippingAddress where idOrder=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
 						session.CreateQuery("delete from OrderBusinessRule where orderId=:idOrder and productId<=0").SetInt32("idOrder",order.id).ExecuteUpdate();
+						session.CreateQuery("delete from BillsAddress where idUser=:idUser").SetInt32("idUser",order.userId).ExecuteUpdate();
+						session.CreateQuery("delete from ShippingAddress where idUser=:idUser").SetInt32("idUser",order.userId).ExecuteUpdate();
 						
 						if(ovs != null && ovs.Count>0){
 							session.CreateQuery("delete from OrderVoucher where orderId=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
@@ -479,27 +493,22 @@ namespace com.nemesys.database.repository
 						order.lastUpdate=DateTime.Now;
 						session.Update(order);	
 						
+						foreach(OrderProductAttachmentDownload opad in opads){
+							session.Update(opad);
+						}
+						
 						foreach(OrderFee of in ofs){
 							of.idOrder=order.id;
 							session.Save(of);
 						}
 						
 						billsAddress.idUser=order.userId;
-						if(billsAddress.id!=-1){
-							session.Update(billsAddress);
-						}else{
-							session.Save(billsAddress);
-						}
+						session.Save(billsAddress);
 						
 						shippingAddress.idUser=order.userId;
-						if(shippingAddress.id!=-1){
-							session.Update(shippingAddress);
-						}else{
-							session.Save(shippingAddress);
-						}
-						orderBillsAddress.idBills=billsAddress.id;
+						session.Save(shippingAddress);
+						
 						orderBillsAddress.idOrder=order.id;
-						orderShippingAddress.idShipping=shippingAddress.id;
 						orderShippingAddress.idOrder=order.id;
 						
 						session.Save(orderBillsAddress);
@@ -663,7 +672,10 @@ namespace com.nemesys.database.repository
 								}
 							}
 							
-						}				
+						}
+						
+						session.CreateQuery("delete from BillsAddress where idUser=:idUser").SetInt32("idUser",order.userId).ExecuteUpdate();
+						session.CreateQuery("delete from ShippingAddress where idUser=:idUser").SetInt32("idUser",order.userId).ExecuteUpdate();				
 						
 						order.insertDate=DateTime.Now;
 						order.lastUpdate=DateTime.Now;
@@ -691,21 +703,12 @@ namespace com.nemesys.database.repository
 						}
 						
 						billsAddress.idUser=order.userId;
-						if(billsAddress.id!=-1){
-							session.Update(billsAddress);
-						}else{
-							session.Save(billsAddress);
-						}
+						session.Save(billsAddress);
 						
 						shippingAddress.idUser=order.userId;
-						if(shippingAddress.id!=-1){
-							session.Update(shippingAddress);
-						}else{
-							session.Save(shippingAddress);
-						}
-						orderBillsAddress.idBills=billsAddress.id;
+						session.Save(shippingAddress);
+						
 						orderBillsAddress.idOrder=order.id;
-						orderShippingAddress.idShipping=shippingAddress.id;
 						orderShippingAddress.idOrder=order.id;
 						
 						session.Save(orderBillsAddress);

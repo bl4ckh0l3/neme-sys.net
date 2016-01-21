@@ -180,9 +180,12 @@ public partial class _FeAds : Page
 					if(ads.promotions != null && ads.promotions.Count>0){
 						foreach(AdsPromotion k in ads.promotions){
 							if(c.id==k.elementId && k.active){
-								bolSkipPromotion = "1";
-								dateBuyPromotion = k.insertDate.ToString("dd/MM/yyyy HH:mm");
-								break;
+								string expire = k.elementCode.Substring(k.elementCode.LastIndexOf('#')+1);
+								if (DateTime.Compare(k.insertDate.AddDays(Convert.ToInt32(expire)), DateTime.Now)>=0) {							
+									bolSkipPromotion = "1";
+									dateBuyPromotion = k.insertDate.ToString("dd/MM/yyyy HH:mm");
+									break;
+								}	
 							}
 						}
 					}

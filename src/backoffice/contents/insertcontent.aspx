@@ -404,6 +404,12 @@ function controllaCampiInput(){
 		$(this).attr('value', replaceChars2($(this).val()));
 	});
 	*/
+	
+	//set file attached
+	var numMaxImgs = $("#numMaxImgs").val();
+	for(n=1; n<numMaxImgs; n++){
+		$('#fileupload_name'+n).val($('#fileupload'+n).val());
+	}	
 
 	return true;
 }

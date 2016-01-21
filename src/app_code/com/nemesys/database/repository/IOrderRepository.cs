@@ -31,6 +31,8 @@ namespace com.nemesys.database.repository
 		
 		IList<OrderProductAttachmentDownload> getAttachmentDownload(int idOrder, int idProd);
 		
+		void updateAttachmentDownload(OrderProductAttachmentDownload opad);
+		
 		void insertOrderShippingAddress(OrderShippingAddress orderShippingAddress);
 		void updateOrderShippingAddress(OrderShippingAddress orderShippingAddress);
 		void deleteOrderShippingAddress(OrderShippingAddress orderShippingAddress);

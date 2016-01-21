@@ -196,10 +196,18 @@ $(function() {
 				<td><%=downNotified%></td>
 				</tr>
 				<tr>
-				<th colspan="5"><%=lang.getTranslated("backend.ordini.view.table.label.list_transaction_order")%></th>
+				<th><%=lang.getTranslated("backend.ordini.view.table.label.list_transaction_order")%></th>
+				<td class="separator">&nbsp;</td>
+				<th><%=lang.getTranslated("backend.ordini.view.table.label.mail_sent")%></th>
+				<td class="separator">&nbsp;</td>
+				<th><%=lang.getTranslated("backend.ordini.view.table.label.ads_enabled")%></th>					
 				</tr>
 				<tr>
-				<td colspan="5"><%=paymentTrans%>&nbsp;</td>
+				<td><%=paymentTrans%>&nbsp;</td>
+				<td class="separator">&nbsp;</td>
+				<td><%=mailSent%></td>
+				<td class="separator">&nbsp;</td>
+				<td><%=adsEnabled%></td>
 				</tr>
 				<tr>
 				<th colspan="5"><%=lang.getTranslated("backend.ordini.view.table.label.attached_prods")%></th>

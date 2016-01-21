@@ -6,7 +6,6 @@ namespace com.nemesys.model
 	public class OrderShippingAddress
 	{	
 		private int _idOrder;
-		private int _idShipping;
 		private string _name;
 		private string _surname;
 		private string _cfiscvat;
@@ -23,11 +22,6 @@ namespace com.nemesys.model
 		public virtual int idOrder {
 			get { return _idOrder; }
 			set { _idOrder = value; }
-		}
-
-		public virtual int idShipping {
-			get { return _idShipping; }
-			set { _idShipping = value; }
 		}
 
 		public virtual string name {
@@ -82,7 +76,6 @@ namespace com.nemesys.model
 				return false;
 
 			return other.idOrder == this._idOrder &&
-				other.idShipping == this._idShipping &&
 				other.name == this._name &&
 				other.surname == this._surname &&
 				other.cfiscvat == this._cfiscvat &&
@@ -100,7 +93,6 @@ namespace com.nemesys.model
 			{
 				int result = 0;
 				result = (result * 397) ^ _idOrder;
-				result = (result * 397) ^ _idShipping;
 				result = (result * 397) ^ (_name == null ? 0 : _name.GetHashCode());
 				result = (result * 397) ^ (_surname == null ? 0 : _surname.GetHashCode());
 				result = (result * 397) ^ (_cfiscvat == null ? 0 : _cfiscvat.GetHashCode());
@@ -117,7 +109,6 @@ namespace com.nemesys.model
 		public virtual string ToString() {
 			StringBuilder builder = new StringBuilder("OrderShippingAddress idOrder: ")
 			.Append(this._idOrder)
-			.Append(" - idShipping: ").Append(this._idShipping)
 			.Append(" - name: ").Append(this._name)
 			.Append(" - surname: ").Append(this._surname)
 			.Append(" - cfiscvat: ").Append(this._cfiscvat)

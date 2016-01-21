@@ -73,7 +73,7 @@ protected void Page_Load(Object sender, EventArgs e)
 				<th><%=lang.getTranslated("backend.popup.label.expire_date")%>:</th>
 				<td><%if(c.expireDate.Year == 9999){Response.Write(lang.getTranslated("backend.popup.label.unlimited_download"));}else{Response.Write(c.expireDate.ToString("dd/MM/yyyy HH:mm:ss"));}%></td>
 				<th><%=lang.getTranslated("backend.popup.label.download_date")%>:</th>
-				<td><%if(c.downloadDate.Year == 9999){Response.Write(lang.getTranslated("backend.popup.label.unlimited_download"));}else{Response.Write(c.downloadDate.ToString("dd/MM/yyyy HH:mm:ss"));}%></td>
+				<td><%if(c.downloadDate.Year == 9999){Response.Write("");}else{Response.Write(c.downloadDate.ToString("dd/MM/yyyy HH:mm:ss"));}%></td>
 				</tr>
 			<%}
 		}%>

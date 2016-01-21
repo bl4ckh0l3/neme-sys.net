@@ -22,6 +22,7 @@ namespace com.nemesys.model
 		private bool _downloadNotified;
 		private bool _noRegistration;
 		private bool _mailSent;
+		private bool _adsEnabled;
 		private DateTime _insertDate;
 		private DateTime _lastUpdate;
 		IDictionary<string,OrderProduct> _products;
@@ -103,10 +104,15 @@ namespace com.nemesys.model
 			get { return _noRegistration; }
 			set { _noRegistration = value; }
 		}
-
+			
 		public virtual bool mailSent {
 			get { return _mailSent; }
 			set { _mailSent = value; }
+		}
+			
+		public virtual bool adsEnabled {
+			get { return _adsEnabled; }
+			set { _adsEnabled = value; }
 		}
 	
 		public virtual IDictionary<string,OrderProduct> products {
@@ -131,7 +137,8 @@ namespace com.nemesys.model
 			.Append(" - paymentDone: ").Append(this._paymentDone)
 			.Append(" - downloadNotified: ").Append(this._downloadNotified)
 			.Append(" - noRegistration: ").Append(this._noRegistration)
-			.Append(" - mailSent: ").Append(this._mailSent);
+			.Append(" - mailSent: ").Append(this._mailSent)
+			.Append(" - adsEnabled: ").Append(this._adsEnabled);
 			
 			return builder.ToString();			
 		}

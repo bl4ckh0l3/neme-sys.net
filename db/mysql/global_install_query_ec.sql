@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `USER_GROUP` (  `id` int(11) unsigned NOT NULL auto_i
 DROP TABLE IF EXISTS `USER_NEWSLETTERS`;
 CREATE TABLE `USER_NEWSLETTERS` (  `newsletterid` int(10) NOT NULL,  `id_parent_user` int(10) NOT NULL,  PRIMARY KEY  (`id_parent_user`,`newsletterid`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `USER_FIELDS`;
-CREATE TABLE `USER_FIELDS` (  `id` int(11) unsigned NOT NULL auto_increment,  `description` varchar(150) NOT NULL,  `group_description` varchar(150) DEFAULT NULL,  `type` int(11) unsigned NOT NULL,  `type_content` int(11) unsigned NOT NULL,  `sorting` int(3) unsigned NOT NULL DEFAULT 0,  `required` smallint(1) UNSIGNED NOT NULL DEFAULT 0,  `enabled` smallint(1) UNSIGNED NOT NULL DEFAULT 0,  `max_lenght` int(3) UNSIGNED DEFAULT NULL,  `use_for` smallint(1) UNSIGNED NOT NULL DEFAULT 1,  PRIMARY KEY  (`id`),  KEY `Index_4` (`type`),  KEY `Index_5` (`description`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `USER_FIELDS` (  `id` int(11) unsigned NOT NULL auto_increment,  `description` varchar(150) NOT NULL,  `group_description` varchar(150) DEFAULT NULL,  `type` int(11) unsigned NOT NULL,  `type_content` int(11) unsigned NOT NULL,  `sorting` int(3) unsigned NOT NULL DEFAULT 0,  `required` smallint(1) UNSIGNED NOT NULL DEFAULT 0,  `enabled` smallint(1) UNSIGNED NOT NULL DEFAULT 0,  `max_lenght` int(3) UNSIGNED DEFAULT NULL,  `use_for` smallint(1) UNSIGNED NOT NULL DEFAULT 1,  `apply_to`SMALLINT(1) UNSIGNED NOT NULL DEFAULT 0,  PRIMARY KEY  (`id`),  KEY `Index_4` (`type`),  KEY `Index_5` (`description`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `USER_FIELDS_MATCH`;
 CREATE TABLE `USER_FIELDS_MATCH` (  `id_field` INTEGER NOT NULL,  `id_parent_user` INTEGER NOT NULL,  `value` text,  PRIMARY KEY (`id_field`, `id_parent_user`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `USER_FIELDS_VALUES`;
@@ -6994,8 +6994,6 @@ INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.payment.description.label.sella', 'IT', 'sella');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.supplement.description.label.FC iva', 'EN', 'NO VAT');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.supplement.description.label.FC iva', 'IT', 'FC iva');
-INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('portal.commons.select.option.country.IT-65', 'EN', '(Abruzzo)');
-INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('portal.commons.select.option.country.IT-65', 'IT', '(Abruzzo)');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.fees.lista.table.applyto_back', 'EN', 'Apply to backend');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.fees.lista.table.applyto_back', 'IT', 'Applica a backend');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.fees.lista.table.applyto_both', 'EN', 'Apply to both');
@@ -7174,3 +7172,15 @@ INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.mail_sent', 'IT', 'Mail di conferma inviata');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.ads_enabled', 'EN', 'Ads promotions enabled');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.ads_enabled', 'IT', 'Promozioni annunci attivate');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.detail.js.alert.del_order_change_qta_disp_confirmation', 'EN', 'The availability of the products will be recalculated with the cancellation of the order! Confirm?');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.detail.js.alert.del_order_change_qta_disp_confirmation', 'IT', 'Le disponibilità dei prodotti verranno ricalcolate con la cancellazione dell''ordine! Confermi?');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.detail.table.label.apply_to', 'EN', 'Apply to');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.detail.table.label.apply_to', 'IT', 'Applica a');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.field.applyto_back', 'EN', 'Apply to backend');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.field.applyto_back', 'IT', 'Applica a backend');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.field.applyto_both', 'EN', 'Apply to both');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.field.applyto_both', 'IT', 'Applica a entrambi');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.field.applyto_front', 'EN', 'Apply to frontend');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.field.applyto_front', 'IT', 'Applica a frontend');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.lista.table.header.apply_to', 'EN', 'APPLY TO');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.lista.table.header.apply_to', 'IT', 'APPLICA A');

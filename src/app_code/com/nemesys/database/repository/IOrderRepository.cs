@@ -13,6 +13,8 @@ namespace com.nemesys.database.repository
 		
 		void delete(FOrder order);
 		
+		void deleteWithUpdate(FOrder order);
+		
 		void saveCompleteOrder(FOrder order, IList<OrderProduct> ops, IList<OrderProductField> opfs, IList<OrderProductAttachmentDownload> opads, IList<OrderFee> ofs, BillsAddress billsAddress, OrderBillsAddress orderBillsAddress, ShippingAddress shippingAddress, OrderShippingAddress orderShippingAddress, IList<OrderBusinessRule> obrs, IList<OrderVoucher> ovs, int voucherCodeId);
 		
 		FOrder getById(int id);

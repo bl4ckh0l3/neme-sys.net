@@ -16,10 +16,12 @@ public partial class _NewsletterList : Page
 	public ASP.UserLoginControl login;
 	protected INewsletterRepository newslrep;
 	protected bool bolFoundLista = false;	
+	protected bool hasVoucherCampaign = false;
 	protected int itemsXpage, numPage;
 	protected string cssClass;		
 	protected IList<Newsletter> newsletters;
 	protected IList<MailMsg> templates;
+	protected IList<VoucherCampaign> voucherCampaigns;
 	protected string mailTemlateName;	
 	
 	private int _totalPages;	
@@ -46,7 +48,9 @@ public partial class _NewsletterList : Page
 	
 		newslrep = RepositoryFactory.getInstance<INewsletterRepository>("INewsletterRepository");	
 		IMailRepository mailrep = RepositoryFactory.getInstance<IMailRepository>("IMailRepository");
+		IVoucherRepository voucherep = RepositoryFactory.getInstance<IVoucherRepository>("IVoucherRepository");
 		mailTemlateName = "";
+		voucherCampaigns = null;
 
 		if (!String.IsNullOrEmpty(Request["items"])) {
 			Session["newsletterItems"] = Convert.ToInt32(Request["items"]);
@@ -80,6 +84,19 @@ public partial class _NewsletterList : Page
 		{
 			templates = new List<MailMsg>();
 		}
+
+		try
+		{
+			voucherCampaigns = voucherep.find("4", 1);	
+			if(voucherCampaigns != null && voucherCampaigns.Count>0){
+				hasVoucherCampaign = true;
+			}
+		}
+		catch (Exception ex)
+		{
+			voucherCampaigns = new List<VoucherCampaign>();
+			hasVoucherCampaign = false;
+		}		
 		
 		long totalcount=0L;
 		try

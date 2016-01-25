@@ -15,6 +15,7 @@ namespace com.nemesys.model
 		private bool _enabled;
 		private int _maxLenght;
 		private int _useFor;
+		private int _applyTo;
 		
 		public UserField(){}
 
@@ -68,6 +69,11 @@ namespace com.nemesys.model
 			set { _useFor = value; }
 		}
 
+		public virtual int applyTo {
+			get { return _applyTo; }
+			set { _applyTo = value; }
+		}
+
 		public virtual int CompareTo(UserField other)
 		{
 			int val = this._sorting.CompareTo(other.sorting);
@@ -85,7 +91,8 @@ namespace com.nemesys.model
 			.Append(" - required: ").Append(this._required)
 			.Append(" - enabled: ").Append(this._enabled)
 			.Append(" - maxLenght: ").Append(this._maxLenght)
-			.Append(" - usefor: ").Append(this._useFor);
+			.Append(" - usefor: ").Append(this._useFor)
+			.Append(" - applyTo: ").Append(this._applyTo);
 			
 			return builder.ToString();			
 		}

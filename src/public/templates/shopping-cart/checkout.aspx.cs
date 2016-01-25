@@ -480,8 +480,8 @@ public partial class _Checkout : Page
 			try{
 				List<string> usesFor = new List<string>();
 				usesFor.Add("2");
-				usesFor.Add("3");				
-				usrfields = usrrep.getUserFields("true",usesFor);
+				usesFor.Add("3");		
+				usrfields = usrrep.getUserFields("true",usesFor,null);
 				if(usrfields != null && usrfields.Count>0){
 					bolFoundFields = true;
 				}else{				

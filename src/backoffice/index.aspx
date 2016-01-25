@@ -63,7 +63,7 @@ $(function() {
 				<a href="/backoffice/categories/categorylist.aspx?cssClass=LCE" title="<%=lang.getTranslated("backend.menu.item.categorie.lista")%>"><IMG height="120" alt="<%=lang.getTranslated("backend.menu.item.categorie")%>" src="/backoffice/img/home/ico-struttura.jpg" data-hover="/backoffice/img/home/ico-active-struttura.jpg" width="100" border="0" vspace="3" hspace="2"></a><br/>
 				<a href="/backoffice/templates/templatelist.aspx?cssClass=LTP" title="<%=lang.getTranslated("backend.menu.item.templates.lista")%>"><IMG height="120" alt="<%=lang.getTranslated("backend.menu.item.templates")%>" src="/backoffice/img/home/ico-grafica.jpg" data-hover="/backoffice/img/home/ico-active-grafica.jpg" width="100" border="0" hspace="2"></a>
 				<%}
-    			if(login.userLogged.role.isAdmin() || login.userLogged.role.isEditor()) {%>
+    			if(login.userLogged.role.isAdmin()) {%>
 				<a href="/backoffice/multilanguages/multilanguagelist.aspx?cssClass=IML&resetMenu=1" title="<%=lang.getTranslated("backend.menu.item.multi_language.lista")%>"><IMG height="120" alt="<%=lang.getTranslated("backend.menu.item.multi_language")%>" src="/backoffice/img/home/ico-multilingua.jpg" data-hover="/backoffice/img/home/ico-active-multilingua.jpg" width="100" border="0"></a><br/><br/>
 				<%}%>
 				<div><strong><lang:getTranslated keyword="backend.index.detail.table.label.download_guide" runat="server" /></strong>&nbsp;<!--nsys-bohome1--><a class="link-down-guide" target="_blank" href="http://www.neme-sys.it/public/utils/econeme-sys_guide.pdf"><!---nsys-bohome1--><lang:getTranslated keyword="backend.index.detail.table.label.download_guide_click" runat="server" /></a></div>

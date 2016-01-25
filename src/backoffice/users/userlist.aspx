@@ -466,7 +466,7 @@ jQuery(document).ready(function(){
 		<div id="usrfield" style="visibility:hidden;">
 			<table class="principal" border="0" cellpadding="0" cellspacing="0" align="top">
 			<tr> 
-			<th colspan="10" align="left">
+			<th colspan="11" align="left">
 			<div style="float:left;padding-right:3px;height:15px;">
 			<form action="<%=Request.Url.AbsolutePath%>" method="post" name="item_x_page_field">
 			<input type="hidden" value="<%=cssClass%>" name="cssClass">	
@@ -489,6 +489,7 @@ jQuery(document).ready(function(){
 				<th><lang:getTranslated keyword="backend.utenti.lista.table.header.required" runat="server" /></th>
 				<th><lang:getTranslated keyword="backend.utenti.lista.table.header.enabled" runat="server" /></th>
 				<th><lang:getTranslated keyword="backend.utenti.lista.table.header.use_for" runat="server" /></th>
+				<th><lang:getTranslated keyword="backend.utenti.lista.table.header.apply_to" runat="server" /></th>
 			</tr>
 				<%						
 				int fcounter = 0;				
@@ -625,12 +626,41 @@ jQuery(document).ready(function(){
 							<script>
 							$("#edit_use_for_<%=fcounter%>").hide();
 							</script>
+							</td>
+							<td width="12%">
+							<div class="ajax" id="view_apply_to_<%=fcounter%>" onmouseover="javascript:showHide('view_apply_to_<%=fcounter%>','edit_apply_to_<%=fcounter%>','apply_to_<%=fcounter%>',500, true);">
+							<%
+							switch (k.applyTo)
+							{
+								case 0:
+									Response.Write(lang.getTranslated("backend.utenti.field.applyto_front"));
+									break;
+								case 1:
+									Response.Write(lang.getTranslated("backend.utenti.field.applyto_back"));
+									break;
+								case 2:
+									Response.Write(lang.getTranslated("backend.utenti.field.applyto_both"));
+									break;
+								default:
+									break;
+							}%>
+							</div>
+							<div class="ajax" id="edit_apply_to_<%=fcounter%>">
+							<select name="applyTo" class="formfieldAjaxSelect" id="apply_to_<%=fcounter%>" onblur="javascript:updateField('edit_apply_to_<%=fcounter%>','view_apply_to_<%=fcounter%>','apply_to_<%=fcounter%>','UserField|IUserRepository|int|getUserFieldById|updateUserField',<%=k.id%>,2,<%=fcounter%>);">
+							<option value="0"<%if (0==k.applyTo) { Response.Write("selected");}%>><%=lang.getTranslated("backend.utenti.field.applyto_front")%></option>	
+							<option value="1"<%if (1==k.applyTo) { Response.Write("selected");}%>><%=lang.getTranslated("backend.utenti.field.applyto_back")%></option>	
+							<option value="2"<%if (2==k.applyTo) { Response.Write("selected");}%>><%=lang.getTranslated("backend.utenti.field.applyto_both")%></option>	
+							</SELECT>	
+							</div>
+							<script>
+							$("#edit_apply_to_<%=fcounter%>").hide();
+							</script>
 							</td>			
 						</tr>				
 					<%}
 				}%>
 			<tr> 
-			<th colspan="10" align="left">
+			<th colspan="11" align="left">
 			<div style="float:left;padding-right:3px;height:15px;">
 			<form action="<%=Request.Url.AbsolutePath%>" method="post" name="item_x_page_field">
 			<input type="hidden" value="<%=cssClass%>" name="cssClass">	

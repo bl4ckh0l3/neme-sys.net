@@ -27,6 +27,7 @@ function editOrder(idOrder){
 	location.href='/backoffice/orders/insertorder.aspx?cssClass=LO&id='+idOrder;
 }
 
+/*
 function deleteOrder(id_objref, row, refreshrows, status){
 	if(status == 4 || status == 3){
 		if(confirm("<%=lang.getTranslated("backend.ordini.detail.js.alert.confirm_del_order_status_sca_ese")%>")){
@@ -36,6 +37,18 @@ function deleteOrder(id_objref, row, refreshrows, status){
 		if(confirm("<%=lang.getTranslated("backend.ordini.detail.js.alert.confirm_del_order_change_qta_disp")%>")){
 			ajaxDeleteItem(id_objref,"FOrder|IOrderRepository",row, refreshrows);
 		}
+	}
+}
+*/
+
+function deleteOrder(idOrder){
+	var change_qty = 0;
+	
+	if(confirm("<%=lang.getTranslated("backend.ordini.detail.js.alert.del_order_change_qta_disp_confirmation")%>")){
+		change_qty = 1;
+	}
+	if(confirm("<%=lang.getTranslated("backend.ordini.detail.js.alert.confirm_del_order")%>")){
+		location.href='/backoffice/orders/deleteorder.aspx?cssClass=LO&id='+idOrder+"&changeqty="+change_qty;
 	}
 }
 
@@ -423,7 +436,7 @@ $(function() {
 							<tr id="tr_delete_list_<%=counter%>" class="<%if(counter % 2 == 0){Response.Write("table-list-on");}else{Response.Write("table-list-off");}%>">
 							<td align="center" width="25"><a href="javascript:viewOrder(<%=k.id%>);"><img src="/backoffice/img/zoom.png" alt="<%=lang.getTranslated("backend.ordini.lista.table.alt.view_order")%>" hspace="2" vspace="0" border="0"></a></td>
 							<td align="center" width="25" id="edit_order_<%=counter%>"><%if(k.status!=3 && k.status!=4){%><a href="javascript:editOrder(<%=k.id%>);"><img src="/backoffice/img/pencil.png" title="<%=lang.getTranslated("backend.ordini.lista.table.alt.modify_order")%>" hspace="2" vspace="0" border="0"></a><%}else{Response.Write("&nbsp;");}%></td>
-							<td align="center" width="25"><a href="javascript:deleteOrder(<%=k.id%>,'tr_delete_list_<%=counter%>','tr_delete_list_',<%=k.status%>);"><img src="/backoffice/img/cancel.png" title="<%=lang.getTranslated("backend.ordini.detail.button.elimina.label")%>" hspace="2" vspace="0" border="0"></a></td>
+							<td align="center" width="25"><a href="javascript:deleteOrder(<%=k.id%>,'tr_delete_list_<%=counter%>','tr_delete_list_',$('#status_<%=counter%>').val());"><img src="/backoffice/img/cancel.png" title="<%=lang.getTranslated("backend.ordini.detail.button.elimina.label")%>" hspace="2" vspace="0" border="0"></a></td>
 							<td id="order_id_<%=counter%>"><%=k.id%></td>
 							<td><%=usrrep.getById(k.userId).username%></td>
 							<td><%=k.insertDate.ToString("dd/MM/yyyy HH:mm")%></td>

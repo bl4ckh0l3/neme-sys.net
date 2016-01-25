@@ -75,7 +75,7 @@ namespace com.nemesys.database.repository
 		
 		IDictionary<string,int> getUniqueFieldsMatch(int idField);
 		
-		IList<UserField> getUserFields(string active, List<string> userFor);
+		IList<UserField> getUserFields(string active, List<string> userFor, List<string> applyTo);
 		
 		IList<UserFieldsValue> getUserFieldValues(int idField);		
 

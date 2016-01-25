@@ -134,6 +134,7 @@
 		<property name="enabled" column="enabled" not-null="true"  type="Boolean" />
 		<property name="maxLenght" column="max_lenght" type="Int32" />
 		<property name="useFor" column="use_for" type="Int32" not-null="true" />
+		<property name="applyTo" column="apply_to" type="Int32" not-null="true" />
     </class>
 
 	<class name="UserFieldsValue" table="USER_FIELDS_VALUES">

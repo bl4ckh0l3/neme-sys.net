@@ -106,7 +106,7 @@ protected void Page_Load(Object sender, EventArgs e)
 			List<string> usesFor = new List<string>();
 			usesFor.Add("1");
 			usesFor.Add("3");
-			usrfields = usrrep.getUserFields("true",usesFor);
+			usrfields = usrrep.getUserFields("true",usesFor, null);
 			if(usrfields != null)
 			{				
 				bolFoundField = true;

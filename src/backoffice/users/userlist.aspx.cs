@@ -294,7 +294,7 @@ public partial class _UserList : Page
 			List<string> usesFor = new List<string>();
 			usesFor.Add("1");
 			usesFor.Add("3");
-			usrfields = usrrep.getUserFields(null,usesFor);
+			usrfields = usrrep.getUserFields(null,usesFor, null);
 			if(usrfields != null)
 			{				
 				bolFoundField = true;
@@ -365,7 +365,7 @@ public partial class _UserList : Page
 			}
 		}		
 
-		//***************** SE È STATO IMPOSTATO UN ORDINAMENTO SUI FILTRI RIORDINO LA LISTA UTENTI IN BASE AL FILTRO SELEZIONATO					
+		//***************** SE ï¿½ STATO IMPOSTATO UN ORDINAMENTO SUI FILTRI RIORDINO LA LISTA UTENTI IN BASE AL FILTRO SELEZIONATO					
 		if(!String.IsNullOrEmpty(Request["order_by_fields"])) {
 			string order_by_fields = Request["order_by_fields"];	
 			users = UserService.sortUserByField(users, Convert.ToInt32(order_by_fields));

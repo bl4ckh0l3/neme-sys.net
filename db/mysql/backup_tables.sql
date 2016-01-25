@@ -541,6 +541,7 @@ CREATE TABLE `USER_FIELDS` (
   `enabled` smallint(1) UNSIGNED NOT NULL DEFAULT 0,
   `max_lenght` int(3) UNSIGNED DEFAULT NULL,
   `use_for` smallint(1) UNSIGNED NOT NULL DEFAULT 1,
+  `apply_to`SMALLINT(1) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY  (`id`),
   KEY `Index_4` (`type`),
   KEY `Index_5` (`description`)

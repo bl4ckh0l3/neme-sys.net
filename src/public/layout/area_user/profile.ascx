@@ -78,7 +78,10 @@
 			List<string> usesFor = new List<string>();
 			usesFor.Add("1");
 			usesFor.Add("3");
-			usrfields = usrrep.getUserFields("true",usesFor);
+			List<string> applyTo = new List<string>();
+			applyTo.Add("0");
+			applyTo.Add("2");
+			usrfields = usrrep.getUserFields("true",usesFor,applyTo);
 			if(usrfields != null)
 			{				
 				bolFoundField = true;				

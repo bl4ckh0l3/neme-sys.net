@@ -1143,8 +1143,20 @@ public partial class _InsertOrder : Page
 		}					
 					
 		//******************** GESTIONE SPESE ACCESSORIE
-		
-		if(applyBills && fees != null && fees.Count>0){
+		if(orderid>0 && paymentDone){
+			/*
+			TODO: da completare 
+			
+			if(ofees != null && ofees.Count>0){
+				isChecked = false;
+				foreach(OrderFee of in ofees){
+					if(of.idFee==f.id){
+						isChecked = true;
+						break;
+					}
+				}
+			}*/			
+		}else if((orderid<0 || !paymentDone) && applyBills && fees != null && fees.Count>0){
 			foreach(Fee f in fees){
 				decimal billImp = 0.00M;
 				decimal billSup = 0.00M;
@@ -1784,7 +1796,7 @@ public partial class _InsertOrder : Page
 				}
 				
 				//******************* GESTIONE CHECKOUT SU GATEWAY ESTERNI IN BASE AL METODO DI PAGAMENTO SELEZIONATO
-				if(externalGateway){
+				if(externalGateway && !orderPagamDone){
 					// TODO implementare checkout si gateway esterno
 				}else{
 					if(orderPagamDone){

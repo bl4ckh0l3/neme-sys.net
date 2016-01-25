@@ -19,6 +19,8 @@ public partial class _Newsletter : Page
 	protected string cssClass;	
 	protected Newsletter newsletter;
 	protected IList<MailMsg> templates;
+	protected bool hasVoucherCampaign = false;
+	protected IList<VoucherCampaign> voucherCampaigns;
 	
 	protected void Page_Init(Object sender, EventArgs e)
 	{
@@ -39,10 +41,12 @@ public partial class _Newsletter : Page
 		INewsletterRepository newslrep = RepositoryFactory.getInstance<INewsletterRepository>("INewsletterRepository");
 		ILoggerRepository lrep = RepositoryFactory.getInstance<ILoggerRepository>("ILoggerRepository");
 		IMailRepository mailrep = RepositoryFactory.getInstance<IMailRepository>("IMailRepository");
+		IVoucherRepository voucherep = RepositoryFactory.getInstance<IVoucherRepository>("IVoucherRepository");
 		newsletter = new Newsletter();		
 		newsletter.id = -1;		
 		StringBuilder url = new StringBuilder("/error.aspx?error_code=");		
 		Logger log = new Logger();
+		voucherCampaigns = null;
 
 		if(!String.IsNullOrEmpty(Request["id"]) && Request["id"]!= "-1")
 		{
@@ -63,6 +67,19 @@ public partial class _Newsletter : Page
 			templates = new List<MailMsg>();
 		}	
 
+		try
+		{
+			voucherCampaigns = voucherep.find("4", 1);	
+			if(voucherCampaigns != null && voucherCampaigns.Count>0){
+				hasVoucherCampaign = true;
+			}
+		}
+		catch (Exception ex)
+		{
+			voucherCampaigns = new List<VoucherCampaign>();
+			hasVoucherCampaign = false;
+		}
+		
 		//******** INSERISCO NUOVA CATEGORIA / MODIFICO ESISTENTE						
 		if("insert".Equals(Request["operation"]))
 		{				

@@ -103,8 +103,11 @@ public partial class _User : Page
 		try{	
 			List<string> usesFor = new List<string>();
 			usesFor.Add("1");
-			usesFor.Add("3");			
-			usrfields = usrrep.getUserFields("true",usesFor);
+			usesFor.Add("3");
+			List<string> applyTo = new List<string>();
+			applyTo.Add("1");
+			applyTo.Add("2");			
+			usrfields = usrrep.getUserFields("true",usesFor, applyTo);
 			if(usrfields != null && usrfields.Count>0){
 				bolFoundFields = true;
 			}else{				

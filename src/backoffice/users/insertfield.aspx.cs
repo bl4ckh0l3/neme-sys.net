@@ -150,6 +150,9 @@ public partial class _UserField : Page
 					int tmpufor = 1;
 					if(!String.IsNullOrEmpty(Request["use_for"])){tmpufor = Convert.ToInt32(Request["use_for"]);}
 					field.useFor = tmpufor;	
+					int tmpato = 1;
+					if(!String.IsNullOrEmpty(Request["apply_to"])){tmpato = Convert.ToInt32(Request["apply_to"]);}
+					field.applyTo = tmpato;	
 					
 					// PREPARO LE LISTE DI CHIAVI MULTILINGUA DA INSERIRE/AGGIORNARE IN TRANSAZIONE
 					IList<MultiLanguage> newtranslactions = new List<MultiLanguage>();

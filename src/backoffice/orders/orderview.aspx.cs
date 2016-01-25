@@ -107,7 +107,7 @@ public partial class _OrderView : Page
 				List<string> usesFor = new List<string>();
 				usesFor.Add("2");
 				usesFor.Add("3");			
-				usrfields = usrrep.getUserFields("true",usesFor);
+				usrfields = usrrep.getUserFields("true",usesFor, null);
 			}catch (Exception ex){
 				usrfields = new List<UserField>();
 			}	

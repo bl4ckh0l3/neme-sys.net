@@ -63,6 +63,181 @@ namespace com.nemesys.database.repository
 			}				
 		}
 		
+		public void deleteWithUpdate(FOrder order)
+		{		
+			IDictionary<int,int> productQtyCheck = new Dictionary<int,int>();
+			IDictionary<string,int> productFieldsQtyCheck = new Dictionary<string,int>();
+			
+			IDictionary<int,int> productQtyToUpdate = new Dictionary<int,int>();
+			IDictionary<string,int> productFieldsQtyToUpdate = new Dictionary<string,int>();
+			IDictionary<string,int> productFieldsRelQtyToUpdate = new Dictionary<string,int>();
+			
+			if(order.products != null && order.products.Count>0){
+				foreach(OrderProduct op in order.products.Values){
+					int pqty = 0;
+					bool foundpqty = productQtyCheck.TryGetValue(op.idProduct, out pqty);
+					if(foundpqty){
+						pqty+=op.productQuantity;
+						productQtyCheck[op.idProduct]=pqty;
+					}else{
+						productQtyCheck.Add(op.idProduct, op.productQuantity);
+					}
+				}
+			}
+			
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			using (ITransaction tx = session.BeginTransaction())
+			{
+				try
+				{		
+					IList<OrderProductField> productFields = session.CreateQuery("from OrderProductField where idOrder=:idOrder")
+					.SetInt32("idOrder",order.id)					
+					.List<OrderProductField>();	
+				
+					if(productFields != null && productFields.Count>0){
+						foreach(OrderProductField opf in productFields){
+							if(opf.fieldType==3 || opf.fieldType==4 || opf.fieldType==5 || opf.fieldType==6){
+								int pfqty = 0;
+								//HttpContext.Current.Response.Write("OrderProductField: " + opf.ToString()+"<br>");
+								string key = new StringBuilder().Append(opf.idProduct).Append("|").Append(opf.idField).Append("|").Append(opf.value).ToString();
+								//HttpContext.Current.Response.Write("key: " + key+"<br>");
+								bool foundpfqty = productFieldsQtyCheck.TryGetValue(key, out pfqty);
+								if(foundpfqty){
+									pfqty+=opf.productQuantity;
+									productFieldsQtyCheck[key]=pfqty;
+								}else{
+									productFieldsQtyCheck.Add(key, opf.productQuantity);
+								}
+							}
+						}
+					}
+					
+
+					foreach(KeyValuePair<int, int> pqc in productQtyCheck)
+					{
+						int result = session.CreateSQLQuery("select quantity from PRODUCT where id=:idProd")
+						.AddScalar("quantity", NHibernateUtil.Int32)
+						.SetInt32("idProd",pqc.Key)
+						.UniqueResult<int>();							
+						productQtyToUpdate.Add(pqc.Key, result+pqc.Value);
+					}
+					
+					foreach(KeyValuePair<string, int> pfqc in productFieldsQtyCheck)
+					{
+						string[] keyEl = pfqc.Key.Split('|');
+						int idp = Convert.ToInt32(keyEl[0]);
+						int idf = Convert.ToInt32(keyEl[1]);
+						string vf = keyEl[2];
+						//HttpContext.Current.Response.Write("idp: " + idp);
+						//HttpContext.Current.Response.Write(" - idf: " + idf);
+						//HttpContext.Current.Response.Write(" - vf: " + vf+"<br>");
+
+						int result = session.CreateSQLQuery("select quantity from PRODUCT_FIELDS_VALUES where id_parent_field=:idField and value=:value")
+						.AddScalar("quantity", NHibernateUtil.Int32)
+						.SetInt32("idField",idf)
+						.SetString("value",vf)
+						.UniqueResult<int>();	
+						productFieldsQtyToUpdate.Add(pfqc.Key, result+pfqc.Value);
+						
+						// check on prod rel fields
+						foreach(KeyValuePair<string, int> pfrqc in productFieldsQtyCheck)
+						{
+							string[] keyREl = pfrqc.Key.Split('|');
+							int idfr = Convert.ToInt32(keyREl[1]);
+							string vfr = keyREl[2];
+							//HttpContext.Current.Response.Write("idfr: " + idfr);
+							//HttpContext.Current.Response.Write(" - vfr: " + vfr+"<br>");
+						
+							if(!(idf+vf).Equals(idfr+vfr))
+							{
+								int resultRel = session.CreateSQLQuery("select quantity from PRODUCT_FIELDS_REL_VALUES where id_product=:idProduct and id_field=:idField and field_val=:value and id_field_rel=:idRelField and field_rel_val=:relValue")
+								.AddScalar("quantity", NHibernateUtil.Int32)
+								.SetInt32("idProduct",idp)
+								.SetInt32("idField",idf)
+								.SetString("value",vf)
+								.SetInt32("idRelField",idfr)
+								.SetString("relValue",vfr)
+								.UniqueResult<int>();	
+								productFieldsRelQtyToUpdate.Add(pfqc.Key+"|"+idfr+"|"+vfr, resultRel+pfrqc.Value);
+							}
+						}	
+					}
+					
+					foreach(KeyValuePair<int, int> pqc in productQtyCheck)
+					{			
+						int pqty = 0;
+						bool foundp = productQtyToUpdate.TryGetValue(pqc.Key, out pqty);
+						if(foundp){
+							string sqlquery = "update Product set quantity=:quantity where id=:id and quantity >-1";	
+							session.CreateQuery(sqlquery)
+							.SetInt32("quantity",pqty)
+							.SetInt32("id",pqc.Key)
+							.ExecuteUpdate();
+						}
+					}
+					
+					foreach(KeyValuePair<string, int> pfqc in productFieldsQtyCheck)
+					{	
+						string[] keyEl = pfqc.Key.Split('|');
+						int idp = Convert.ToInt32(keyEl[0]);
+						int idf = Convert.ToInt32(keyEl[1]);
+						string vf = keyEl[2];
+						
+						int pfqty = 0;
+						bool foundpf = productFieldsQtyToUpdate.TryGetValue(pfqc.Key, out pfqty);
+						if(foundpf){
+							session.CreateQuery("update ProductFieldsValue set quantity=:quantity where idParentField=:idField and value=:value")
+							.SetInt32("quantity",pfqty)
+							.SetInt32("idField",idf)
+							.SetString("value",vf)
+							.ExecuteUpdate();
+						}
+						
+						foreach(KeyValuePair<string, int> pfrqc in productFieldsQtyCheck)
+						{
+							string[] keyREl = pfrqc.Key.Split('|');
+							int idfr = Convert.ToInt32(keyREl[1]);
+							string vfr = keyREl[2];
+						
+							if(!(idf+vf).Equals(idfr+vfr))
+							{
+								int pfrqty = 0;
+								bool foundpfr = productFieldsRelQtyToUpdate.TryGetValue(pfqc.Key+"|"+idfr+"|"+vfr, out pfrqty);
+								if(foundpfr){
+									session.CreateQuery("update ProductFieldsRelValue set quantity=:quantity where idProduct=:idProduct and idParentField=:idField and fieldValue=:value and idParentRelField=:idRelField and fieldRelValue=:relValue")
+									.SetInt32("quantity",pfrqty)
+									.SetInt32("idProduct",idp)
+									.SetInt32("idField",idf)
+									.SetString("value",vf)
+									.SetInt32("idRelField",idfr)
+									.SetString("relValue",vfr)
+									.ExecuteUpdate();	
+								}
+							}
+						}							
+					}					
+				
+					session.CreateQuery("delete from OrderProduct where idOrder=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
+					session.CreateQuery("delete from OrderProductField where idOrder=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
+					session.CreateQuery("delete from OrderProductAttachmentDownload where idOrder=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
+					session.CreateQuery("delete from OrderFee where idOrder=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
+					session.CreateQuery("delete from OrderBillsAddress where idOrder=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
+					session.CreateQuery("delete from OrderShippingAddress where idOrder=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
+					session.CreateQuery("delete from OrderBusinessRule where orderId=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
+					session.CreateQuery("delete from OrderVoucher where orderId=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
+					session.Delete(order);
+					
+					tx.Commit();
+					NHibernateHelper.closeSession();
+				}catch(Exception exx){
+					//HttpContext.Current.Response.Write("An inner error occured: " + exx.Message);
+					tx.Rollback();
+					NHibernateHelper.closeSession();
+					throw;					
+				}				
+			}
+		}
+		
 		public FOrder getById(int id)
 		{
 			FOrder order = null;
@@ -386,11 +561,25 @@ namespace com.nemesys.database.repository
 			
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			{	
-					IQuery q = session.CreateQuery("from OrderProductField where idOrder=:idOrder and idProduct=:idProduct and productCounter=:prodCounter order by description asc");
-					q.SetInt32("idOrder",idOrder);
-					q.SetInt32("idProduct",idProd);			
-					q.SetInt32("prodCounter",prodCounter);	
-					results = q.List<OrderProductField>();					
+				string strSQL = "from OrderProductField where idOrder=:idOrder";	
+
+				if (idProd > -1){			
+					strSQL += " and idProduct=:idProduct";
+				}			
+				if (prodCounter > -1){			
+					strSQL += " and productCounter=:prodCounter";
+				}		
+				strSQL+= " order by description asc";
+				
+				IQuery q = session.CreateQuery(strSQL);
+				q.SetInt32("idOrder",idOrder);
+				if (idProd > -1){
+					q.SetInt32("idProduct",idProd);
+				}		
+				if (prodCounter > -1){
+					q.SetInt32("prodCounter",prodCounter);
+				}						
+				results = q.List<OrderProductField>();					
 				
 				NHibernateHelper.closeSession();					
 			}

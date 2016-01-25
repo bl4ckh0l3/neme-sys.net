@@ -311,7 +311,7 @@ namespace com.nemesys.services
 											renderField+="format:'d/m/Y H.i',";
 											renderField+="closeOnDateSelect:true";
 										renderField+="});";
-										//renderField+="$('#ui-datepicker-div').hide();";											
+										renderField+="$('#ui-datepicker-div').hide();";											
 									renderField+="});";										
 									renderField+="</script>";
 								}	
@@ -644,7 +644,7 @@ namespace com.nemesys.services
 							case 6:
 								if(cf.required){
 									renderFieldJs.Append("var hasElem = false;")
-									.Append("$('input:checkbox[id*=\"ruser_field_").Append(cf.id).Append("\"]').each( function(){")
+									.Append("$('input:radio[id*=\"ruser_field_").Append(cf.id).Append("\"]').each( function(){")
 										.Append("if($(this).val() != ''){")
 											.Append("hasElem = true;")											 
 										.Append("}")									

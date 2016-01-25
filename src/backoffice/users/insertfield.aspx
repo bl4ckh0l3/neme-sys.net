@@ -219,13 +219,14 @@ function onChangeFyeldTypeContent(){
 			<option value="1"<%if (field.required) { Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.yes")%></option>	
 			</SELECT>
 		  </div>	 	
-		  <div align="left" style="float:left;padding-right:20px;"><span class="labelForm"><%=lang.getTranslated("backend.utenti.detail.table.label.enabled")%></span><br>
+		  <div align="left" style="float:top;"><span class="labelForm"><%=lang.getTranslated("backend.utenti.detail.table.label.enabled")%></span><br>
 			<select name="enabled" class="formFieldTXTShort">
 			<option value="0"<%if (!field.enabled) { Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.no")%></option>	
 			<option value="1"<%if (field.enabled) { Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.yes")%></option>	
 			</SELECT>
-		  </div>	 	
-		  <div align="left"><span class="labelForm"><%=lang.getTranslated("backend.utenti.detail.table.label.use_for")%></span><br>
+		  </div>	
+		  <br><br>
+		  <div align="left" style="float:left;padding-right:20px;"><span class="labelForm"><%=lang.getTranslated("backend.utenti.detail.table.label.use_for")%></span><br>
 			<select name="use_for" class="formFieldTXT">
 			<option value="1"<%if (1==field.useFor) { Response.Write("selected");}%>><%=lang.getTranslated("backend.utenti.field.use_for.registration")%></option>	
 <!--nsys-usrfld1-->
@@ -233,6 +234,13 @@ function onChangeFyeldTypeContent(){
 			<option value="3"<%if (3==field.useFor) { Response.Write("selected");}%>><%=lang.getTranslated("backend.utenti.field.use_for.all")%></option>	
 <!---nsys-usrfld1-->
 			</SELECT>
+		  </div>	 	
+		  <div align="left" style="float:top;"><span class="labelForm"><%=lang.getTranslated("backend.utenti.detail.table.label.apply_to")%></span><br>
+			<select name="apply_to" class="formFieldTXT">
+				<OPTION VALUE="0" <%if (field.applyTo==0) { Response.Write("selected");}%>><%=lang.getTranslated("backend.utenti.field.applyto_front")%></OPTION>
+				<OPTION VALUE="1" <%if (field.applyTo==1) { Response.Write("selected");}%>><%=lang.getTranslated("backend.utenti.field.applyto_back")%></OPTION>
+				<OPTION VALUE="2" <%if (field.applyTo==2) { Response.Write("selected");}%>><%=lang.getTranslated("backend.utenti.field.applyto_both")%></OPTION>	
+			</SELECT>	
 		  </div>
 		  <br><br>
 		  <div align="left" style="float:left;padding-right:20px;">

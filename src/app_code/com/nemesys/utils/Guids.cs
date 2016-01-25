@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Globalization;
 
 namespace com.nemesys.model
 {
@@ -17,6 +18,19 @@ namespace com.nemesys.model
 				result += strValid.Substring(start,1);
 			}
 			return Convert.ToInt32(result);
+		}	
+		
+		public static long createGuid13Digits(Random random)
+		{		
+			string result="";
+			for(int i = 1; i<= 13; i++){
+				int start = random.Next(0,10000);
+				if(i==1 && start==0){
+					start=1;
+				}
+				result += start.ToString().Substring(0,1);
+			}
+			return Convert.ToInt64(result);
 		}	
 		
 		public static long createGuidMax18Len(int tmpLength)

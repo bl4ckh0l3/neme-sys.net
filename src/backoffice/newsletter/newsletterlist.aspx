@@ -61,23 +61,6 @@ function deleteNewsletter(id_objref,row,refreshrows){
 <!---nsys-nwsletlist2-->
 				  <th><lang:getTranslated keyword="backend.newsletter.lista.table.header.newsletter_subscribed" runat="server" /></th>
               </tr> 
-<!--nsys-nwsletlist3-->
-				<%
-				/*				
-				Set objVoucherClass =  new VoucherClass				
-				On Error Resume Next
-				hasVoucherCampaign = false
-				Set objListVoucherCampaign = objVoucherClass.getCampaignList(4, 1)
-				if(objListVoucherCampaign.count>0)then
-					hasVoucherCampaign = true
-				end if
-				if(Err.number <> 0)then
-					hasVoucherCampaign = false
-				end if
-				Set objVoucherClass = nothing
-				*/
-				%>
-<!---nsys-nwsletlist3-->
 				<%	
 				int intCount = 0;				
 				if(bolFoundLista){
@@ -140,17 +123,27 @@ function deleteNewsletter(id_objref,row,refreshrows){
 <!--nsys-nwsletlist4-->
 				<td>
 					<div class="ajax" id="view_voucher_<%=intCount%>" onmouseover="javascript:showHide('view_voucher_<%=intCount%>','edit_voucher_<%=intCount%>','voucher_<%=intCount%>',500, true);">
-					<%//=objListVoucherCampaign(objTmpNewsletter0.getVoucher()).getLabel()%>
+					<%
+					string klabel = "";
+					if(hasVoucherCampaign){
+						foreach(VoucherCampaign g in voucherCampaigns){
+							if(g.id==k.idVoucherCampaign){
+								klabel = g.label;
+								break;
+							}
+						}
+					}
+					Response.Write(klabel);
+					%>
 					</div>
 					<div class="ajax" id="edit_voucher_<%=intCount%>">
 					<select name="idVoucherCampaign" class="formfieldAjaxSelect" id="voucher_<%=intCount%>" onblur="javascript:updateField('edit_voucher_<%=intCount%>','view_voucher_<%=intCount%>','voucher_<%=intCount%>','Newsletter|INewsletterRepository|int',<%=k.id%>,2,<%=intCount%>);">		  
 					  <option value=""></option>
-					  <%
-					  //if(hasVoucherCampaign){
-						//foreach(VoucherCampaign g in voucherCampaigns){%>
-						<option value="<%//=g%>" <%//if(g=objTmpNewsletter0.getVoucher())then response.write(" selected") end if%>><%//=objListVoucherCampaign(g).getLabel()%></option>
-						<%//}
-					  //}%>
+					  <%if(hasVoucherCampaign){
+						foreach(VoucherCampaign g in voucherCampaigns){%>
+						<option value="<%=g.id%>" <%if(g.id==k.idVoucherCampaign){Response.Write(" selected");}%>><%=g.label%></option>
+						<%}
+					  }%>
 					</SELECT>	
 					</div>
 					<script>

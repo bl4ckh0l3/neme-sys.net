@@ -64,31 +64,16 @@ function insertNewsletter(){
 				<%}%>
 				</SELECT>		  
 			 </div>
-<!--nsys-nwsletins3-->			 
-			 <%
-			/*Set objVoucherClass =  new VoucherClass				
-			On Error Resume Next
-			hasVoucherCampaign = false
-			Set objListVoucherCampaign = objVoucherClass.getCampaignList(4, 1)
-			if(objListVoucherCampaign.count>0)then
-				hasVoucherCampaign = true
-			end if
-			if(Err.number <> 0)then
-				hasVoucherCampaign = false
-			end if
-			Set objVoucherClass = nothing			 
-			 */%>
+<!--nsys-nwsletins3-->
 			<div style="display:block; text-align:left;margin-top:20px;margin-bottom:20px;"> 
 			  <span class="labelForm"><%=lang.getTranslated("backend.newsletter.detail.table.header.voucher_campaign")%></span><br>
 				<select name="voucherid" class="formFieldTXT">		  
 				  <option value=""></option>
-				  <%
-				  //if(hasVoucherCampaign)then
-					//for each g in objListVoucherCampaign%>
-					<option value="<%//=g%>" <%//if(g=id_voucher_campaign)then response.write(" selected") end if%>><%//=objListVoucherCampaign(g).getLabel()%></option>
-					<%//next
-				  //end if
-				  %>
+				  <%if(hasVoucherCampaign){
+					foreach(VoucherCampaign g in voucherCampaigns){%>
+					<option value="<%=g.id%>" <%if(g.id==newsletter.idVoucherCampaign){Response.Write(" selected");}%>><%=g.label%></option>
+					<%}
+				  }%>
 				</SELECT>	  
 			 </div>
 <!---nsys-nwsletins3-->

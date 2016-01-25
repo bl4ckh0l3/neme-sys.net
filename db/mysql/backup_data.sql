@@ -6817,8 +6817,6 @@ INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.payment.description.label.sella', 'IT', 'sella');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.supplement.description.label.FC iva', 'EN', 'NO VAT');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.supplement.description.label.FC iva', 'IT', 'FC iva');
-INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('portal.commons.select.option.country.IT-65', 'EN', '(Abruzzo)');
-INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('portal.commons.select.option.country.IT-65', 'IT', '(Abruzzo)');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.fees.lista.table.applyto_back', 'EN', 'Apply to backend');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.fees.lista.table.applyto_back', 'IT', 'Applica a backend');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.fees.lista.table.applyto_both', 'EN', 'Apply to both');
@@ -6997,3 +6995,15 @@ INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.mail_sent', 'IT', 'Mail di conferma inviata');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.ads_enabled', 'EN', 'Ads promotions enabled');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.ads_enabled', 'IT', 'Promozioni annunci attivate');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.detail.js.alert.del_order_change_qta_disp_confirmation', 'EN', 'The availability of the products will be recalculated with the cancellation of the order! Confirm?');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.detail.js.alert.del_order_change_qta_disp_confirmation', 'IT', 'Le disponibilità dei prodotti verranno ricalcolate con la cancellazione dell''ordine! Confermi?');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.detail.table.label.apply_to', 'EN', 'Apply to');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.detail.table.label.apply_to', 'IT', 'Applica a');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.field.applyto_back', 'EN', 'Apply to backend');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.field.applyto_back', 'IT', 'Applica a backend');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.field.applyto_both', 'EN', 'Apply to both');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.field.applyto_both', 'IT', 'Applica a entrambi');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.field.applyto_front', 'EN', 'Apply to frontend');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.field.applyto_front', 'IT', 'Applica a frontend');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.lista.table.header.apply_to', 'EN', 'APPLY TO');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.lista.table.header.apply_to', 'IT', 'APPLICA A');

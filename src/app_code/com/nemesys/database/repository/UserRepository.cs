@@ -1580,7 +1580,7 @@ namespace com.nemesys.database.repository
 			return exist;		
 		}
 	
-		public IList<UserField> getUserFields(string active, List<string> userFor)
+		public IList<UserField> getUserFields(string active, List<string> userFor, List<string> applyTo)
 		{
 			IList<UserField> results = null;
 			
@@ -1592,8 +1592,12 @@ namespace com.nemesys.database.repository
 				}
 				if(userFor != null && userFor.Count>0){
 					sql+=string.Format(" and useFor in({0})",string.Join(",",userFor.ToArray()));
+				}	
+				if(applyTo != null && applyTo.Count>0){
+					sql+=string.Format(" and applyTo in({0})",string.Join(",",applyTo.ToArray()));
 				}
 				sql += " order by sorting, groupDescription, description asc";
+				
 				IQuery q = session.CreateQuery(sql);
 				if(!String.IsNullOrEmpty(active)){
 				q.SetBoolean("enabled",Convert.ToBoolean(active));	

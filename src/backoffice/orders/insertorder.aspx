@@ -1318,7 +1318,7 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 					  </select>&nbsp;&nbsp;</div>	
 					  <div align="left" style="float:top;padding-top:20px;"><span class="labelForm"><%=lang.getTranslated("backend.ordini.detail.table.label.pagam_order_done")%></span><br>		  
 					  <select name="payment_done" class="formFieldChangeStato">
-					  <option value="0" <%if (!paymentDone){Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.no")%></option>
+					  <%if (!paymentDone){%><option value="0" selected><%=lang.getTranslated("backend.commons.no")%></option><%}%>
 					  <option value="1" <%if (paymentDone){Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.yes")%></option>
 					  </select>
 					  </div><br>	

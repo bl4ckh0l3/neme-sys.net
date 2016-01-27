@@ -410,6 +410,7 @@ function calculateBills4Order(amount, currFrom, currTo){
 
 	total_order = Number(total_amount);
 
+	<%if(orderid<0 || !paymentDone){%>
 	/****** ricarico la lista dei metodi di pagamento disponibili *******/
 	var payment_method_tmp="";
 	
@@ -418,7 +419,7 @@ function calculateBills4Order(amount, currFrom, currTo){
 			payment_method_tmp = $(this).val();
 			return;
 		}
-	});	
+	});
 	ajaxReloadPaymentList(total_amount_4_payment.replace('.',','), String(total_amount).replace('.',','), payment_method_tmp);
 	
 	/****** ricalcolo le commissioni pagamento *******/
@@ -459,6 +460,9 @@ function calculateBills4Order(amount, currFrom, currTo){
 	}
 	
 	/****** fine ricalcolo commissioni pagamento *******/
+	<%}else if(orderid>0 && paymentDone){%>
+		total_order = (Number(total_order)+Number(<%=totalPaymentAmount%>));
+	<%}%>
 
 	// converto in base alla currency selezionata dall'utente
 	total_order = (total_order * (Number(currTo)/Number(currFrom)));
@@ -1001,10 +1005,10 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 									hasBills2charge = true;
 								}else{
 									if(f.multiply && ((billImp+billSup)>0 || f.typeView==1)){%>
-										<input style="margin-left:10px;" onclick="javascript:calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','1','1');" type="checkbox" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/> 
+										<input style="margin-left:10px;" <%if(orderid>0 && paymentDone){%>onclick="return false;" onkeydown="return false;"<%}else{%>onclick="javascript:calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','1','1');"<%}%> type="checkbox" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/> 
 										<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>&euro;&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>&nbsp;&nbsp;<br/>"%>	
-									<%}else if(!f.multiply && (billImp+billSup)>0){%>
-										<input style="margin-left:10px;" onclick="javascript:calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','1','1');" type="radio" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/> 
+									<%}else if(!f.multiply && (billImp+billSup)>0){%>	
+										<input style="margin-left:10px;" onclick="return false;" <%if(orderid>0 && paymentDone){%>onkeydown="return false;"<%}else{%>onclick="javascript:calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','1','1');"<%}%> type="radio" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/>
 										<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>&euro;&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>&nbsp;&nbsp;<br/>"%>				
 									<%}%>										
 								
@@ -1068,11 +1072,11 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 										pdesc = lang.getTranslated("backend.payment.description.label."+p.description);
 									}
 								}%>
-								<li><input type="radio" id="payment_method" name="payment_method" value="<%=key%>" <%if(isChecked){Response.Write(" checked='checked'");}%> onclick="javascript:calculatePaymentCommission('<%=totalCartAmountAndAutoBillsAmount%>',<%=key%>,'1','1');">&nbsp;<%=pdesc%>&nbsp;<%=logo%></li>
+								<li><input type="radio" id="payment_method" name="payment_method" value="<%=key%>" <%if(isChecked){Response.Write(" checked='checked'");}%> <%if(orderid>0 && paymentDone){%>onclick="return false;" onkeydown="return false;"<%}else{%>onclick="javascript:calculatePaymentCommission('<%=totalCartAmountAndAutoBillsAmount%>',<%=key%>,'1','1');"<%}%>>&nbsp;<%=pdesc%>&nbsp;<%=logo%></li>
 								<script language="Javascript">
 								listPaymentMethods.put("<%=key%>","<%=p.commission+"|"+p.commissionType%>");
 								
-								<%if(isChecked){%>
+								<%if((orderid<0 || !paymentDone) && isChecked){%>
 								jQuery(document).ready(function(){
 									calculatePaymentCommission('<%=totalCartAmountAndAutoBillsAmount%>',<%=key%>,'1','1');
 								});											

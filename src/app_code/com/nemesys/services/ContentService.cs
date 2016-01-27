@@ -264,7 +264,8 @@ namespace com.nemesys.services
 												renderField+="changeMonth: true,";
 												renderField+="changeYear: true";
 												//renderField+=",yearRange: '1900:"+DateTime.Now.GetYear()+"'";
-											renderField+="});";											
+											renderField+="});";	
+											renderField+="$('#ui-datepicker-div').hide();";
 										renderField+="});";										
 										renderField+="</script>";
 									}
@@ -279,7 +280,7 @@ namespace com.nemesys.services
 												renderField+="format:'d/m/Y H.i',";
 												renderField+="closeOnDateSelect:true";
 											renderField+="});";
-											//renderField+="$('#ui-datepicker-div').hide();";											
+											renderField+="$('#ui-datepicker-div').hide();";											
 										renderField+="});";										
 										renderField+="</script>";
 									}									

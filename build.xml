@@ -184,14 +184,19 @@
 
 		<copy file="${src.dir}/backoffice/newsletter/newsletterlist.aspx" todir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx" flags="gis" byline="false" match="(&lt;!--nsys-nwsletlist2--&gt;)(.*?)(&lt;!---nsys-nwsletlist2--&gt;)" replace="\1${nsys-nwsletlist2}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx" flags="gis" byline="false" match="(&lt;!--nsys-nwsletlist3--&gt;)(.*?)(&lt;!---nsys-nwsletlist3--&gt;)" replace="\1${nsys-nwsletlist3}\3" />
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx" flags="gis" byline="false" match="(&lt;!--nsys-nwsletlist4--&gt;)(.*?)(&lt;!---nsys-nwsletlist4--&gt;)" replace="\1${nsys-nwsletlist4}\3" />
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx" flags="gis" byline="false" match="(&lt;!--nsys-nwsletlist5--&gt;)(.*?)(&lt;!---nsys-nwsletlist5--&gt;)" replace="\1${nsys-nwsletlist5}\3" />
 
+		<copy file="${src.dir}/backoffice/newsletter/newsletterlist.aspx.cs" todir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-nwsletlist3--&gt;\*/)(.*?)(/\*&lt;!---nsys-nwsletlist3--&gt;\*/)" replace="\1${nsys-nwsletlist3}\3" />		
+		
 		<copy file="${src.dir}/backoffice/newsletter/insertnewsletter.aspx" todir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/insertnewsletter.aspx" flags="gis" byline="false" match="(&lt;!--nsys-nwsletins2--&gt;)(.*?)(&lt;!---nsys-nwsletins2--&gt;)" replace="\1${nsys-nwsletins2}\3" />
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/insertnewsletter.aspx" flags="gis" byline="false" match="(&lt;!--nsys-nwsletins3--&gt;)(.*?)(&lt;!---nsys-nwsletins3--&gt;)" replace="\1${nsys-nwsletins3}\3" />
-
+		
+		<copy file="${src.dir}/backoffice/newsletter/insertnewsletter.aspx.cs" todir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/insertnewsletter.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-nwsletins3--&gt;\*/)(.*?)(/\*&lt;!---nsys-nwsletins3--&gt;\*/)" replace="\1${nsys-nwsletins3}\3" />
+		
 		<copy file="${src.dir}/backoffice/include/menu.ascx" todir="${dist.dir}/${buildVers}/tmp/backoffice/include"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/include/menu.ascx" flags="gis" byline="false" match="(&lt;!--nsys-editinc1--&gt;)(.*?)(&lt;!---nsys-editinc1--&gt;)" replace="\1${nsys-editinc1}\3" />
 
@@ -268,10 +273,12 @@
 				<exclude name="backoffice/users/insertuser.aspx"/>
 				<exclude name="backoffice/users/insertfield.aspx"/>
 				<exclude name="backoffice/templates/ajaxviewtemplate.aspx"/>
-				<exclude name="backoffice/newsletter/insertnewsletter.aspx"/>
 				<exclude name="backoffice/newsletter/newsletterlist.aspx"/>
+				<exclude name="backoffice/newsletter/newsletterlist.aspx.cs"/>
+				<exclude name="backoffice/newsletter/insertnewsletter.aspx"/>
+				<exclude name="backoffice/newsletter/insertnewsletter.aspx.cs"/>
 				<exclude name="backoffice/img/logo.png"/>				
-				<exclude name="**/backoffice/shoppingcard/**"/>
+				<exclude name="**/backoffice/shoppingcart/**"/>
 				<exclude name="**/backoffice/orders/**"/>
 				<exclude name="**/backoffice/payments/**"/>
 				<exclude name="**/backoffice/products/**"/>
@@ -322,8 +329,10 @@
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/include" includes="menu.ascx" prefix="backoffice/include"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/countries" includes="countrylist.aspx" prefix="backoffice/countries"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/templates" includes="ajaxviewtemplate.aspx" prefix="backoffice/templates"/>
-			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="insertnewsletter.aspx" prefix="backoffice/newsletter"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="newsletterlist.aspx" prefix="backoffice/newsletter"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="newsletterlist.aspx.cs" prefix="backoffice/newsletter"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="insertnewsletter.aspx" prefix="backoffice/newsletter"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="insertnewsletter.aspx.cs" prefix="backoffice/newsletter"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/app_data/conf" includes="nemesys-config.xml" fullpath="app_data/conf/nemesys-config.xml"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/area_user" includes="account.ascx" prefix="public/layout/area_user"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/css" includes="stile.css" prefix="public/layout/css"/>

@@ -1144,18 +1144,48 @@ public partial class _InsertOrder : Page
 					
 		//******************** GESTIONE SPESE ACCESSORIE
 		if(orderid>0 && paymentDone){
-			/*
-			TODO: da completare 
-			
-			if(ofees != null && ofees.Count>0){
-				isChecked = false;
+			if(ofees != null && ofees.Count>0){				
 				foreach(OrderFee of in ofees){
-					if(of.idFee==f.id){
-						isChecked = true;
-						break;
+					Fee founded = null;
+					
+					foreach(Fee f in fees){
+						if(of.idFee==f.id){
+							founded = f;
+							break;
+						}
 					}
+					
+					if(founded != null && founded.autoactive){
+						totalBillsAmount+=of.amount;
+						totalAutomaticBillsAmount+=of.amount;	
+					}					
+					
+					string billGdesc = "";
+					if(founded != null){
+						billGdesc = founded.feeGroup;
+						if(!String.IsNullOrEmpty(lang.getTranslated("backend.fee.group.label."+founded.feeGroup))){
+							billGdesc = lang.getTranslated("backend.fee.group.label."+founded.feeGroup);
+						}
+					}
+					
+					string billDesc = of.feeDesc;
+					if(!String.IsNullOrEmpty(lang.getTranslated("backend.fee.description.label."+billDesc))){
+						billDesc = lang.getTranslated("backend.fee.description.label."+billDesc);
+					}
+					
+					
+					IList<object> billElements = new List<object>();
+					billElements.Add(of.taxable);
+					billElements.Add(of.supplement);	
+					billElements.Add(of.amount);
+					billElements.Add(founded);
+					billElements.Add(billGdesc);
+					billElements.Add(billDesc);
+					billElements.Add(true);
+					
+					billsData.Add(of.idFee, billElements);									
 				}
-			}*/			
+			}
 		}else if((orderid<0 || !paymentDone) && applyBills && fees != null && fees.Count>0){
 			foreach(Fee f in fees){
 				decimal billImp = 0.00M;
@@ -1347,6 +1377,10 @@ public partial class _InsertOrder : Page
 				}
 			}
 		}
+		
+		if(orderid>0 && paymentDone){
+			totalPaymentAmount = order.paymentCommission;
+		}
 
 
 		totalCartAmountAndBillsAmount=totalCartAmount+totalBillsAmount;
@@ -1487,6 +1521,7 @@ public partial class _InsertOrder : Page
 					foreach(OrderProduct op in order.products.Values){
 						orderTaxable+=op.taxable;
 						orderSupplements+=op.supplement;
+						finalOrderAmount+=op.amount;
 						
 						if(!order.downloadNotified && op.productType==1){
 							
@@ -1641,27 +1676,33 @@ public partial class _InsertOrder : Page
 					
 				
 				//******************* CREO IL METODO DI PAGAMENTO PER ORDINE
-				foreach(int key in paysData.Keys){
-					IList<object> pelements = null;
-					bool foundpel = paysData.TryGetValue(key, out pelements);
-					Payment p = null;
-					bool isChecked = false;	
-					string pdesc = "";
-					
-					if(foundpel){
-						p = (Payment)pelements[0];
-						isChecked = Convert.ToBoolean(pelements[2]);	
-						pdesc = p.description;
-					}
-					
-					if(isChecked){
-						selectedPayment=p.id;
-						orderPaymentCommission=PaymentService.getCommissionAmount(finalOrderAmount, p.commission, p.commissionType);
-						finalOrderAmount+=orderPaymentCommission;
-						if(p.hasExternalUrl){
-							externalGateway = true;
+				if(orderid>0 && paymentDone){
+					selectedPayment=order.paymentId;
+					orderPaymentCommission=order.paymentCommission;
+					finalOrderAmount+=orderPaymentCommission;
+				}else{
+					foreach(int key in paysData.Keys){
+						IList<object> pelements = null;
+						bool foundpel = paysData.TryGetValue(key, out pelements);
+						Payment p = null;
+						bool isChecked = false;	
+						string pdesc = "";
+						
+						if(foundpel){
+							p = (Payment)pelements[0];
+							isChecked = Convert.ToBoolean(pelements[2]);	
+							pdesc = p.description;
 						}
-						break;
+						
+						if(isChecked){
+							selectedPayment=p.id;
+							orderPaymentCommission=PaymentService.getCommissionAmount(finalOrderAmount, p.commission, p.commissionType);
+							finalOrderAmount+=orderPaymentCommission;
+							if(p.hasExternalUrl){
+								externalGateway = true;
+							}
+							break;
+						}
 					}
 				}
 		

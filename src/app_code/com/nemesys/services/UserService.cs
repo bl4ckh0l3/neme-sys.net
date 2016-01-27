@@ -296,7 +296,8 @@ namespace com.nemesys.services
 											renderField+="changeMonth: true,";
 											renderField+="changeYear: true";
 											//renderField+=",yearRange: '1900:"+DateTime.Now.GetYear()+"'";
-										renderField+="});";											
+										renderField+="});";	
+										renderField+="$('#ui-datepicker-div').hide();";
 									renderField+="});";										
 									renderField+="</script>";
 								}

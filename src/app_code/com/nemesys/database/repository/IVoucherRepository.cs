@@ -25,5 +25,9 @@ namespace com.nemesys.database.repository
 		VoucherCode getVoucherCodeByCode(string code);
 		
 		IList<VoucherCode> findVoucherCode(int voucherCampaign);
+		
+		int countVoucherCodeByCampaign(int voucherCampaign, int userId);
+		
+		IList<string> getAllVoucherCodes();
 	}
 }

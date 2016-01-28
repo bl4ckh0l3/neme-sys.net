@@ -407,6 +407,13 @@ jQuery(document).ready(function(){
 												break;
 											}
 										}
+										if(!String.IsNullOrEmpty(fieldMatchValue)){
+											if(uf.type==3){
+												if(uf.typeContent==7 || uf.typeContent==8){
+													fieldMatchValue = lang.getTranslated("portal.commons.select.option.country."+fieldMatchValue);
+												}
+											}
+										}
 										Response.Write(fieldMatchValue);
 									}%>
 								</td>

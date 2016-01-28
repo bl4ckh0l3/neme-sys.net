@@ -215,6 +215,50 @@ namespace com.nemesys.database.repository
 			}
 						
 			return results;		
-		}			
+		}
+		
+		public int countVoucherCodeByCampaign(int voucherCampaign, int userId)
+		{
+			int result = 0;		
+			
+			string strSQL = "select count(*) as counter from VOUCHER_CODE  where voucher_campaign=:campaign";
+			if (userId>0){
+				strSQL += " and id_user=:userId";
+			}			
+			
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			{
+				try
+				{	
+					IQuery q = session.CreateSQLQuery(strSQL).AddScalar("counter", NHibernateUtil.Int32);
+					q.SetInt32("campaign",voucherCampaign);
+					if (userId>0){
+						q.SetInt32("userId",userId);
+					}
+					result = q.UniqueResult<int>();
+				}
+				catch(Exception ex)
+				{
+					//System.Web.HttpContext.Current.Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
+					// DO NOTHING: RETURN NULL
+				}
+				NHibernateHelper.closeSession();
+			}			
+			
+			return result;
+		}
+		
+		public IList<string> getAllVoucherCodes()
+		{
+			IList<string> results = null;	
+			
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			{	
+				results = session.CreateSQLQuery("SELECT code FROM VOUCHER_CODE").AddScalar("code", NHibernateUtil.String).List<string>();					
+				NHibernateHelper.closeSession();
+			}	
+				
+			return results;				
+		}
 	}
 }

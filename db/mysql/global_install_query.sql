@@ -7067,3 +7067,7 @@ INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.field.applyto_front', 'IT', 'Applica a frontend');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.lista.table.header.apply_to', 'EN', 'APPLY TO');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.utenti.lista.table.header.apply_to', 'IT', 'APPLICA A');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.voucher.label.error_generate_max_code', 'EN', 'Generated maximum number of allowed voucher codes');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.voucher.label.error_generate_max_code', 'IT', 'Generato il numero massimo di codici voucher consentito');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.voucher.label.error_delete_code', 'EN', 'Voucher code delete error');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.voucher.label.error_delete_code', 'IT', 'Errore nella cancellazione del codice voucher');

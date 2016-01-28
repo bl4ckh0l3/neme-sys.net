@@ -37,7 +37,7 @@ body {
 #backend-content {display:block;width:auto;overflow:auto;text-align: left; vertical-align: top;font-family: Verdana, Arial, Helvetica, sans-serif;font-size: 11px;color: #000000;text-decoration: none;background-color: #ffffff;padding: 0px 3px 0px 0px;}
 #backend-content table{border:1px solid #C9C9C9;}
 #backend-content table.principal{width:100%;font-size: 11px;}
-#backend-content table.principal th.upper{text-transform:uppercase;white-space:nowrap;}
+#backend-content table.principal th.upper{text-transform:uppercase;/*white-space:nowrap;*/}
 #backend-content table.principal th.filterrowfields{text-transform:uppercase;white-space:nowrap;}
 #backend-content table.principal td.filterrowfields{}
 #backend-content table.principal td div.ajax{display:inline;}
@@ -202,6 +202,7 @@ span.rules{color:#FF0000;}
 .formfieldAjaxShort{ height:15px;padding:0px;border: 1px solid #FF0000;font-family: Verdana, Arial, Helvetica, sans-serif;	font-size: 11px;	color: #000000;	text-decoration: none;	background-color: #FFFFFF;width:30px;}
 .formfieldAjaxShort2{ height:15px;padding:0px;border: 1px solid #FF0000;font-family: Verdana, Arial, Helvetica, sans-serif;	font-size: 11px;	color: #000000;	text-decoration: none;	background-color: #FFFFFF;width:40px;}
 .formfieldAjaxMedium{ height:15px;padding:0px;border: 1px solid #FF0000;font-family: Verdana, Arial, Helvetica, sans-serif;	font-size: 11px;	color: #000000;	text-decoration: none;	background-color: #FFFFFF;width:70px;}
+.formfieldAjaxMedium3{ height:15px;padding:0px;border: 1px solid #FF0000;font-family: Verdana, Arial, Helvetica, sans-serif;	font-size: 11px;	color: #000000;	text-decoration: none;	background-color: #FFFFFF;width:60px;}
 .formfieldAjaxMedium2{ height:15px;padding:0px;border: 1px solid #FF0000;font-family: Verdana, Arial, Helvetica, sans-serif;	font-size: 11px;	color: #000000;	text-decoration: none;	background-color: #FFFFFF;width:130px;}
 .formfieldAjaxLong{ height:15px;padding:0px;border: 1px solid #FF0000;font-family: Verdana, Arial, Helvetica, sans-serif;	font-size: 11px;	color: #000000;	text-decoration: none;	background-color: #FFFFFF;width:200px;}
 .formfieldAjaxBig{ height:15px;padding:0px;border: 1px solid #FF0000;font-family: Verdana, Arial, Helvetica, sans-serif;	font-size: 11px;	color: #000000;	text-decoration: none;	background-color: #FFFFFF;width:300px;}

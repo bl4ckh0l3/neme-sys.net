@@ -133,7 +133,15 @@ namespace com.nemesys.model
 		
 		public static string createVoucherCodeGuid()
 		{
-		  return generateComb();
+			string result="";
+			string strValid = "0123456789";
+			Random random = new Random();
+			for(int i = 1; i<= 20; i++){
+				int start = (int)(random.NextDouble() * strValid.Length);
+				if(start>strValid.Length){start=strValid.Length;}
+				result += strValid.Substring(start,1);
+			}
+			return result;
 		}
 				
 		/*

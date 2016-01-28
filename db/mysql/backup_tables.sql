@@ -1400,8 +1400,8 @@ CREATE TABLE IF NOT EXISTS `VOUCHER_CAMPAIGN` (
   `active` smallint(1) unsigned NOT NULL default '0',
   `max_generation` int(10) NOT NULL default '-1',
   `max_usage` int(10) NOT NULL default '-1',
-  `enable_date` timestamp NULL default NULL,
-  `expire_date` timestamp NULL default NULL,
+  `enable_date` datetime NOT NULL default '9999-12-31 23:59:59',
+  `expire_date` datetime NOT NULL default '9999-12-31 23:59:59',
   `exclude_prod_rule` smallint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `Index_label` (`label`)

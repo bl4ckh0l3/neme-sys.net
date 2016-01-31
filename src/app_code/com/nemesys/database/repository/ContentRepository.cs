@@ -98,12 +98,12 @@ namespace com.nemesys.database.repository
 				}
 
 				ids = new List<string>();
-				if(newContentField != null && newContentField.Count>0){
+				/*if(newContentField != null && newContentField.Count>0){
 					foreach(ContentField pcid in newContentField){
 						ids.Add(pcid.idParentContent.ToString());
 					}
 					session.CreateQuery(string.Format("delete from ContentField where idParentContent in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();		
-				}
+				}*/
 
 				if(newContentAttachment != null && newContentAttachment.Count>0)
 				{							
@@ -136,7 +136,11 @@ namespace com.nemesys.database.repository
 						k.idParentContent = content.id;
 						IList<ContentFieldsValue> fnvalues = null;		
 						newContentFieldsValues.TryGetValue(k.id, out fnvalues);
-						session.Save(k);
+						if(k.id>0){
+							session.Update(k);
+						}else{
+							session.Save(k);
+						}
 				
 						// add field values
 						if(fnvalues != null){
@@ -193,7 +197,8 @@ namespace com.nemesys.database.repository
 				if(content.attachments != null && content.attachments.Count>0)
 				{
 					foreach(ContentAttachment k in content.attachments){					
-						ContentAttachment nca = new ContentAttachment();	
+						ContentAttachment nca = new ContentAttachment();		
+						nca.id=k.id;
 						nca.fileName=k.fileName;
 						nca.filePath=k.filePath;
 						nca.contentType=k.contentType;
@@ -252,7 +257,7 @@ namespace com.nemesys.database.repository
 				
 				session.Update(content);	
 				
-				session.CreateQuery("delete from ContentAttachment where idParentContent=:idParentContent").SetInt32("idParentContent",content.id).ExecuteUpdate();
+				//session.CreateQuery("delete from ContentAttachment where idParentContent=:idParentContent").SetInt32("idParentContent",content.id).ExecuteUpdate();
 				session.CreateQuery("delete from ContentLanguage where idParentContent=:idParentContent").SetInt32("idParentContent",content.id).ExecuteUpdate();
 				session.CreateQuery("delete from ContentCategory where idParent=:idParent").SetInt32("idParent",content.id).ExecuteUpdate();
 				List<string> ids = new List<string>();
@@ -262,7 +267,7 @@ namespace com.nemesys.database.repository
 					}
 					session.CreateQuery(string.Format("delete from ContentFieldsValue where idParentField in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();	
 				}				
-				session.CreateQuery("delete from ContentField where idParentContent=:idParentContent").SetInt32("idParentContent",content.id).ExecuteUpdate();	
+				//session.CreateQuery("delete from ContentField where idParentContent=:idParentContent").SetInt32("idParentContent",content.id).ExecuteUpdate();	
 				
 				if(newContentAttachment != null && newContentAttachment.Count>0)
 				{							
@@ -272,7 +277,11 @@ namespace com.nemesys.database.repository
 						}	
 						k.idParentContent = content.id;
 						k.insertDate=DateTime.Now;
-						session.Save(k);
+						if(k.id>0){
+							session.Update(k);
+						}else{
+							session.Save(k);
+						}
 					}
 				}
 				if(newContentLanguage != null && newContentLanguage.Count>0)
@@ -295,7 +304,11 @@ namespace com.nemesys.database.repository
 						k.idParentContent = content.id;
 						IList<ContentFieldsValue> fnvalues = null;		
 						newContentFieldsValues.TryGetValue(k.id, out fnvalues);
-						session.Save(k);
+						if(k.id>0){
+							session.Update(k);
+						}else{
+							session.Save(k);
+						}
 				
 						// add field values
 						if(fnvalues != null){
@@ -436,6 +449,7 @@ namespace com.nemesys.database.repository
 						{
 							foreach(ContentAttachment k in content.attachments){					
 								ContentAttachment nca = new ContentAttachment();	
+								nca.id=k.id;	
 								nca.fileName=k.fileName;
 								nca.contentType=k.contentType;
 								nca.fileDida=k.fileDida;
@@ -496,7 +510,7 @@ namespace com.nemesys.database.repository
 						session.Update(content);	
 						//HttpContext.Current.Response.Write("<br>content after update: " + content.ToString());
 						
-						session.CreateQuery("delete from ContentAttachment where idParentContent=:idParentContent").SetInt32("idParentContent",content.id).ExecuteUpdate();
+						//session.CreateQuery("delete from ContentAttachment where idParentContent=:idParentContent").SetInt32("idParentContent",content.id).ExecuteUpdate();
 						session.CreateQuery("delete from ContentLanguage where idParentContent=:idParentContent").SetInt32("idParentContent",content.id).ExecuteUpdate();
 						session.CreateQuery("delete from ContentCategory where idParent=:idParent").SetInt32("idParent",content.id).ExecuteUpdate();			
 						List<string> ids = new List<string>();
@@ -506,7 +520,7 @@ namespace com.nemesys.database.repository
 							}
 							session.CreateQuery(string.Format("delete from ContentFieldsValue where idParentField in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();
 						}
-						session.CreateQuery("delete from ContentField where idParentContent=:idParentContent").SetInt32("idParentContent",content.id).ExecuteUpdate();		
+						//session.CreateQuery("delete from ContentField where idParentContent=:idParentContent").SetInt32("idParentContent",content.id).ExecuteUpdate();		
 						
 						if(newContentAttachment != null && newContentAttachment.Count>0)
 						{							
@@ -516,7 +530,11 @@ namespace com.nemesys.database.repository
 								}	
 								k.idParentContent = content.id;
 								k.insertDate=DateTime.Now;
-								session.Save(k);
+								if(k.id>0){
+									session.Update(k);
+								}else{
+									session.Save(k);
+								}
 							}
 						}
 						if(newContentLanguage != null && newContentLanguage.Count>0)
@@ -539,7 +557,11 @@ namespace com.nemesys.database.repository
 								k.idParentContent = content.id;
 								IList<ContentFieldsValue> fnvalues = null;		
 								newContentFieldsValues.TryGetValue(k.id, out fnvalues);
-								session.Save(k);
+								if(k.id>0){
+									session.Update(k);
+								}else{
+									session.Save(k);
+								}
 						
 								// add field values
 								if(fnvalues != null){
@@ -630,12 +652,12 @@ namespace com.nemesys.database.repository
 						session.Save(content);	
 
 						List<string> ids = new List<string>();
-						if(newContentField != null && newContentField.Count>0){
+						/*if(newContentField != null && newContentField.Count>0){
 							foreach(ContentField pcid in newContentField){
 								ids.Add(pcid.idParentContent.ToString());
 							}
 							session.CreateQuery(string.Format("delete from ContentField where idParentContent in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();
-						}						
+						}*/						
 						
 						ids = new List<string>();
 						if(newContentFieldsValues != null && newContentFieldsValues.Count>0){
@@ -677,7 +699,11 @@ namespace com.nemesys.database.repository
 								IList<ContentFieldsValue> fnvalues = null;		
 								newContentFieldsValues.TryGetValue(k.id, out fnvalues);
 								//HttpContext.Current.Response.Write("ContentField before save:"+k.ToString()+"<br>");
-								session.Save(k);
+								if(k.id>0){
+									session.Update(k);
+								}else{
+									session.Save(k);
+								}
 						
 								// add field values
 								if(fnvalues != null){

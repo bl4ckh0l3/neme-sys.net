@@ -141,7 +141,7 @@ function renderNumImgsTable(counter){
 			render=render+'<td><input type="text" name="fileupload_dida'+i+'" class="formFieldTXT"></td>';
 			render=render+'<td>';
 			if(i==1){
-			render=render+'<input type="text" value="'+counter+'" name="numMaxImgs" class="formFieldTXTShort" onkeypress="javascript:return isInteger(event);"><a href="javascript:changeNumMaxImgs();"><img src="/common/img/refresh.gif" vspace="0" hspace="4" border="0" align="top" alt="<%=lang.getTranslated("backend.commons.detail.table.label.change_num_imgs")%>"></a>';
+			render=render+'<input type="text" value="'+counter+'" id="numMaxImgs" name="numMaxImgs" class="formFieldTXTShort" onkeypress="javascript:return isInteger(event);"><a href="javascript:changeNumMaxImgs();"><img src="/common/img/refresh.gif" vspace="0" hspace="4" border="0" align="top" alt="<%=lang.getTranslated("backend.commons.detail.table.label.change_num_imgs")%>"></a>';
 			}
 			render=render+'</td>';
 		render=render+'</tr>';
@@ -407,7 +407,7 @@ function controllaCampiInput(){
 	
 	//set file attached
 	var numMaxImgs = $("#numMaxImgs").val();
-	for(n=1; n<numMaxImgs; n++){
+	for(n=1; n<=numMaxImgs; n++){
 		$('#fileupload_name'+n).val($('#fileupload'+n).val());
 	}	
 
@@ -2365,13 +2365,7 @@ $(document).ready(function(){
 					  <tr class="attach_table_rows">
 						<td>
 						<input type="file" name="fileupload<%=i%>" id="fileupload<%=i%>" class="formFieldTXT">
-						<input type="hidden" value="" name="fileupload_name<%=i%>" id="fileupload_name<%=i%>">
-						<script>
-						$('#fileupload<%=i%>').blur(function() {
-							$('#fileupload_name<%=i%>').val($('#fileupload<%=i%>').val());
-							//alert($('#fileupload_name<%=i%>').val());
-						});					
-						</script>						
+						<input type="hidden" value="" name="fileupload_name<%=i%>" id="fileupload_name<%=i%>">						
 						</td>
 						<td>
 						<%if(i==1){%><div id="text_label_new<%=i%>" style="display:none;"><input type="text" name="fileupload_label_new<%=i%>" id="fileupload_label_new<%=i%>" onblur="javascript:prepareInsertAttachLabel(this,<%=i%>);" class="formFieldSelectTypeFile"></div><%}%>
@@ -2382,7 +2376,7 @@ $(document).ready(function(){
 						</select><%if(i==1){%><a href="javascript:addAttachLabel(<%=i%>);"><img vspace="0" hspace="4" border="0" align="top" title="<%=lang.getTranslated("backend.contenuti.detail.table.label.add_type")%>" alt="<%=lang.getTranslated("backend.contenuti.detail.table.label.add_type")%>" src="/backoffice/img/add.png"></a><a href="javascript:delAttachLabel('#fileupload_label<%=i%>');"><img vspace="0" hspace="4" border="0" align="top" title="<%=lang.getTranslated("backend.contenuti.detail.table.label.del_type")%>" alt="<%=lang.getTranslated("backend.contenuti.detail.table.label.del_type")%>" src="/backoffice/img/delete.png"></a><%}%>
 						</div></td>
 						<td><input type="text" name="fileupload_dida<%=i%>" class="formFieldTXT"></td>
-						<td><%if(i==1){%><input type="text" value="<%=numMaxAttachs%>" name="numMaxImgs" class="formFieldTXTShort" onkeypress="javascript:return isInteger(event);"><a href="javascript:changeNumMaxImgs();"><img src=<%="/common/img/refresh.gif"%> vspace="0" hspace="4" border="0" align="top" alt="<%=lang.getTranslated("backend.commons.detail.table.label.change_num_imgs")%>"></a><%}%>&nbsp;</td>
+						<td><%if(i==1){%><input type="text" value="<%=numMaxAttachs%>" id="numMaxImgs" name="numMaxImgs" class="formFieldTXTShort" onkeypress="javascript:return isInteger(event);"><a href="javascript:changeNumMaxImgs();"><img src=<%="/common/img/refresh.gif"%> vspace="0" hspace="4" border="0" align="top" alt="<%=lang.getTranslated("backend.commons.detail.table.label.change_num_imgs")%>"></a><%}%>&nbsp;</td>
 					  </tr>
 					 <%}%>	 
 					</table>			

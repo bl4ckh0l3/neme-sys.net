@@ -455,6 +455,7 @@ public partial class _Content : Page
 						{
 							//Response.Write("found: fileName: "+name+" - contentType: "+tmp.ContentType+" - label: "+label+" - dida: "+dida+"<br>");
 							ContentAttachment ca = new ContentAttachment();
+							ca.id=-1;
 							ca.fileName=name;
 							ca.contentType=tmp.ContentType;
 							ca.fileLabel=label;

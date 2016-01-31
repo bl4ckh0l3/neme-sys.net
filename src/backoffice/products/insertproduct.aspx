@@ -467,12 +467,12 @@ function controllaCampiInput(){
 	
 	//set file attached and filed to download
 	var numMaxImgs = $("#numMaxImgs").val();
-	for(n=1; n<numMaxImgs; n++){
+	for(n=1; n<=numMaxImgs; n++){
 		$('#fileupload_name'+n).val($('#fileupload'+n).val());
 	}	
 	
 	var numMaxImgsd = $("#numMaxImgsd").val();
-	for(n=1; n<numMaxImgsd; n++){
+	for(n=1; n<=numMaxImgsd; n++){
 		$('#fileupload_name'+n+'d').val($('#fileupload'+n+'d').val());
 	}
 

@@ -660,6 +660,7 @@ public partial class _Product : Page
 						{
 							//Response.Write("found: fileName: "+name+" - productType: "+tmp.ContentType+" - label: "+label+" - dida: "+dida+"<br>");
 							ProductAttachment ca = new ProductAttachment();
+							ca.id=-1;
 							ca.fileName=name;
 							ca.contentType=tmp.ContentType;
 							ca.fileLabel=label;
@@ -687,6 +688,7 @@ public partial class _Product : Page
 						{
 							//Response.Write("found: fileName: "+name+" - productType: "+tmp.ContentType+" - label: "+label+" - dida: "+dida+"<br>");
 							ProductAttachmentDownload ca = new ProductAttachmentDownload();
+							ca.id=-1;
 							ca.fileName=name;
 							ca.contentType=tmp.ContentType;
 							ca.fileLabel=label;

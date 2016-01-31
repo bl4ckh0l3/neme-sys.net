@@ -132,12 +132,12 @@ namespace com.nemesys.database.repository
 				}
 
 				ids = new List<string>();
-				if(newProductField != null && newProductField.Count>0){
+				/*if(newProductField != null && newProductField.Count>0){
 					foreach(ProductField pcid in newProductField){
 						ids.Add(pcid.idParentProduct.ToString());
 					}
 					session.CreateQuery(string.Format("delete from ProductField where idParentProduct in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();		
-				}
+				}*/
 
 				if(newProductAttachment != null && newProductAttachment.Count>0)
 				{							
@@ -188,7 +188,11 @@ namespace com.nemesys.database.repository
 						newProductFieldsRelValues.TryGetValue(k.id, out frnvalues);
 						int oldid=k.id;
 						fieldIds.Add(oldid,k.id);
-						session.Save(k);
+						if(k.id>0){
+							session.Update(k);
+						}else{
+							session.Save(k);
+						}
 						fieldIds[oldid]=k.id;
 				
 						// add field values
@@ -285,7 +289,8 @@ namespace com.nemesys.database.repository
 				if(product.attachments != null && product.attachments.Count>0)
 				{
 					foreach(ProductAttachment k in product.attachments){					
-						ProductAttachment nca = new ProductAttachment();	
+						ProductAttachment nca = new ProductAttachment();
+						nca.id=k.id;	
 						nca.fileName=k.fileName;
 						nca.filePath=k.filePath;
 						nca.contentType=k.contentType;
@@ -300,6 +305,7 @@ namespace com.nemesys.database.repository
 				{
 					foreach(ProductAttachmentDownload k in product.dattachments){					
 						ProductAttachmentDownload nca = new ProductAttachmentDownload();	
+						nca.id=k.id;
 						nca.fileName=k.fileName;
 						nca.filePath=k.filePath;
 						nca.contentType=k.contentType;
@@ -374,9 +380,11 @@ namespace com.nemesys.database.repository
 				
 				session.Update(product);	
 				
-				session.CreateQuery("delete from ProductAttachment where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
+				//session.CreateQuery("delete from ProductAttachment where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
+				//session.CreateQuery("delete from ProductAttachmentDownload where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
 				session.CreateQuery("delete from ProductLanguage where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
 				session.CreateQuery("delete from ProductCategory where idParent=:idParent").SetInt32("idParent",product.id).ExecuteUpdate();
+				session.CreateQuery("delete from ProductRelation where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
 				List<string> ids = new List<string>();
 				if(newProductFieldsValues != null && newProductFieldsValues.Count>0){
 					foreach(int fvpid in newProductFieldsValues.Keys){
@@ -385,8 +393,7 @@ namespace com.nemesys.database.repository
 					session.CreateQuery(string.Format("delete from ProductFieldsRelValue where idParentField in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();
 					session.CreateQuery(string.Format("delete from ProductFieldsValue where idParentField in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();	
 				}				
-				session.CreateQuery("delete from ProductField where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();	
-				session.CreateQuery("delete from ProductRelation where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
+				//session.CreateQuery("delete from ProductField where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();	
 				
 				if(newProductAttachment != null && newProductAttachment.Count>0)
 				{							
@@ -396,7 +403,11 @@ namespace com.nemesys.database.repository
 						}	
 						k.idParentProduct = product.id;
 						k.insertDate=DateTime.Now;
-						session.Save(k);
+						if(k.id>0){
+							session.Update(k);
+						}else{
+							session.Save(k);
+						}
 					}
 				}
 				if(newProductAttachmentDownload != null && newProductAttachmentDownload.Count>0)
@@ -407,7 +418,11 @@ namespace com.nemesys.database.repository
 						}	
 						k.idParentProduct = product.id;
 						k.insertDate=DateTime.Now;
-						session.Save(k);
+						if(k.id>0){
+							session.Update(k);
+						}else{
+							session.Save(k);
+						}
 					}
 				}
 				if(newProductLanguage != null && newProductLanguage.Count>0)
@@ -436,7 +451,11 @@ namespace com.nemesys.database.repository
 						newProductFieldsRelValues.TryGetValue(k.id, out frnvalues);
 						int oldid=k.id;
 						fieldIds.Add(oldid,k.id);
-						session.Save(k);
+						if(k.id>0){
+							session.Update(k);
+						}else{
+							session.Save(k);
+						}
 						fieldIds[oldid]=k.id;
 				
 						// add field values
@@ -636,6 +655,7 @@ namespace com.nemesys.database.repository
 						{
 							foreach(ProductAttachment k in product.attachments){					
 								ProductAttachment nca = new ProductAttachment();	
+								nca.id=k.id;
 								nca.fileName=k.fileName;
 								nca.contentType=k.contentType;
 								nca.fileDida=k.fileDida;
@@ -650,7 +670,8 @@ namespace com.nemesys.database.repository
 						if(product.dattachments != null && product.dattachments.Count>0)
 						{
 							foreach(ProductAttachmentDownload k in product.dattachments){					
-								ProductAttachmentDownload nca = new ProductAttachmentDownload();	
+								ProductAttachmentDownload nca = new ProductAttachmentDownload();
+								nca.id=k.id;
 								nca.fileName=k.fileName;
 								nca.contentType=k.contentType;
 								nca.fileDida=k.fileDida;
@@ -741,8 +762,8 @@ namespace com.nemesys.database.repository
 						
 						session.Update(product);	
 						
-						session.CreateQuery("delete from ProductAttachment where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
-						session.CreateQuery("delete from ProductAttachmentDownload where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
+						//session.CreateQuery("delete from ProductAttachment where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
+						//session.CreateQuery("delete from ProductAttachmentDownload where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
 						session.CreateQuery("delete from ProductLanguage where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
 						session.CreateQuery("delete from ProductCategory where idParent=:idParent").SetInt32("idParent",product.id).ExecuteUpdate();	
 						session.CreateQuery("delete from ProductRelation where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();		
@@ -754,7 +775,7 @@ namespace com.nemesys.database.repository
 							session.CreateQuery(string.Format("delete from ProductFieldsRelValue where idParentField in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();
 							session.CreateQuery(string.Format("delete from ProductFieldsValue where idParentField in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();
 						}
-						session.CreateQuery("delete from ProductField where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();		
+						//session.CreateQuery("delete from ProductField where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();		
 						
 						if(newProductAttachment != null && newProductAttachment.Count>0)
 						{							
@@ -764,7 +785,11 @@ namespace com.nemesys.database.repository
 								}	
 								k.idParentProduct = product.id;
 								k.insertDate=DateTime.Now;
-								session.Save(k);
+								if(k.id>0){
+									session.Update(k);
+								}else{
+									session.Save(k);
+								}
 							}
 						}
 						if(newProductAttachmentDownload != null && newProductAttachmentDownload.Count>0)
@@ -775,7 +800,11 @@ namespace com.nemesys.database.repository
 								}	
 								k.idParentProduct = product.id;
 								k.insertDate=DateTime.Now;
-								session.Save(k);
+								if(k.id>0){
+									session.Update(k);
+								}else{
+									session.Save(k);
+								}
 							}
 						}
 						if(newProductLanguage != null && newProductLanguage.Count>0)
@@ -804,7 +833,11 @@ namespace com.nemesys.database.repository
 								newProductFieldsRelValues.TryGetValue(k.id, out frnvalues);
 								int oldid=k.id;
 								fieldIds.Add(oldid,k.id);
-								session.Save(k);
+								if(k.id>0){
+									session.Update(k);
+								}else{
+									session.Save(k);
+								}
 								fieldIds[oldid]=k.id;
 						
 								// add field values
@@ -867,7 +900,7 @@ namespace com.nemesys.database.repository
 						if(product.attachments != null && product.attachments.Count>0)
 						{
 							foreach(ProductAttachment k in product.attachments){					
-								ProductAttachment nca = new ProductAttachment();	
+								ProductAttachment nca = new ProductAttachment();
 								nca.fileName=k.fileName;
 								nca.contentType=k.contentType;
 								nca.fileDida=k.fileDida;
@@ -881,7 +914,7 @@ namespace com.nemesys.database.repository
 						if(product.dattachments != null && product.dattachments.Count>0)
 						{
 							foreach(ProductAttachmentDownload k in product.dattachments){					
-								ProductAttachmentDownload nca = new ProductAttachmentDownload();	
+								ProductAttachmentDownload nca = new ProductAttachmentDownload();
 								nca.fileName=k.fileName;
 								nca.contentType=k.contentType;
 								nca.fileDida=k.fileDida;
@@ -974,12 +1007,12 @@ namespace com.nemesys.database.repository
 						session.Save(product);	
 
 						List<string> ids = new List<string>();
-						if(newProductField != null && newProductField.Count>0){
+						/*if(newProductField != null && newProductField.Count>0){
 							foreach(ProductField pcid in newProductField){
 								ids.Add(pcid.idParentProduct.ToString());
 							}
 							session.CreateQuery(string.Format("delete from ProductField where idParentProduct in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();
-						}						
+						}*/						
 						
 						ids = new List<string>();
 						if(newProductFieldsValues != null && newProductFieldsValues.Count>0){
@@ -1038,7 +1071,11 @@ namespace com.nemesys.database.repository
 								newProductFieldsRelValues.TryGetValue(k.id, out frnvalues);
 								int oldid=k.id;
 								fieldIds.Add(oldid,k.id);
-								session.Save(k);
+								if(k.id>0){
+									session.Update(k);
+								}else{
+									session.Save(k);
+								}
 								fieldIds[oldid]=k.id;
 						
 								// add field values

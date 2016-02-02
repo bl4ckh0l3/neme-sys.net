@@ -69,7 +69,8 @@ public partial class _BusinessRule : Page
 				bruleconfigs = new List<BusinessRuleConfig>();
 			}	
 		}
-		
+
+/*<!--nsys-voucher4-->*/	
 		try{
 			voucherCampaign = voucherrep.find("",1);
 			if(voucherCampaign != null && voucherCampaign.Count>0){
@@ -78,7 +79,8 @@ public partial class _BusinessRule : Page
 		}catch (Exception ex){
 			hasVoucherCampaign = false;
 		}
-		
+/*<!---nsys-voucher4-->*/
+
 		try{
 			products = prodrep.find("","","",-1,"","",null,null,-1,null,null,false,false,true,false,false,false);
 			if(products != null && products.Count>0){

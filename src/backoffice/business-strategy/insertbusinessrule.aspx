@@ -668,7 +668,8 @@ function checkFrom(counter, ref){
 			  </script>
 
 		  </div>	
-		  <div align="left" id="voucher_id">
+		  <div align="left" id="voucherid">
+<!--nsys-voucher3-->
 		  <span class="labelForm"><%=lang.getTranslated("backend.margini.detail.table.label.voucher_id")%></span><br>
 		  <select name="voucher_id" id="voucher_id">
 		  <option value=""></option>
@@ -679,6 +680,7 @@ function checkFrom(counter, ref){
 			<%}
 		  }%>
 		  </select>&nbsp;&nbsp;
+<!---nsys-voucher3-->
 		  </div>
 
 			<script>
@@ -692,7 +694,7 @@ function checkFrom(counter, ref){
 					addStrategyValues(rulesStrategyCounter,selectedType);
 					$('#complex_value').attr('style', "float:left;margin-right:5px;");
 					
-					$("#voucher_id").show();
+					$("#voucherid").show();
 					$(".id_prod_orig_elem").hide();
 					$(".id_prod_ref_elem").hide();
 					$(".rate_from_ref_elem").hide();
@@ -705,7 +707,7 @@ function checkFrom(counter, ref){
 					$("#addStrategyButton").hide();					
 				}else if(rule_type_val_ch==1 || rule_type_val_ch==2 || rule_type_val_ch==4 || rule_type_val_ch==5){
 					$('#complex_value').attr('style', "float:top;margin-right:0px;");
-					$("#voucher_id").hide();
+					$("#voucherid").hide();
 					$(".id_prod_orig_elem").hide();
 					$(".id_prod_ref_elem").hide();
 					$(".rate_from_ref_elem").hide();
@@ -718,7 +720,7 @@ function checkFrom(counter, ref){
 					$("#addStrategyButton").show();
 				}else if(rule_type_val_ch==6 || rule_type_val_ch==7){
 					$('#complex_value').attr('style', "float:top;margin-right:0px;");
-					$("#voucher_id").hide();
+					$("#voucherid").hide();
 					$(".id_prod_orig_elem").show();
 					$(".id_prod_ref_elem").hide();
 					$(".rate_from_ref_elem").hide();
@@ -735,7 +737,7 @@ function checkFrom(counter, ref){
 					addStrategyValues(rulesStrategyCounter,selectedType);
 					$('#complex_value').attr('style', "float:top;margin-right:0px;");
 				
-					$("#voucher_id").hide();
+					$("#voucherid").hide();
 					$(".id_prod_orig_elem").show();
 					$(".id_prod_ref_elem").hide();
 					$(".rate_from_ref_elem").hide();
@@ -748,7 +750,7 @@ function checkFrom(counter, ref){
 					$("#addStrategyButton").hide();					
 				}else{
 					$('#complex_value').attr('style', "float:top;margin-right:0px;");
-					$("#voucher_id").hide();
+					$("#voucherid").hide();
 					$(".id_prod_orig_elem").show();
 					$(".id_prod_ref_elem").show();
 					$(".rate_from_ref_elem").show();
@@ -765,7 +767,7 @@ function checkFrom(counter, ref){
 			var rule_type_val = $('#rule_type').val();
 			if(rule_type_val==3){
 				$('#complex_value').attr('style', "float:left;margin-right:5px;");
-				$("#voucher_id").show();
+				$("#voucherid").show();
 				$(".id_prod_orig_elem").hide();
 				$(".id_prod_ref_elem").hide();
 				$(".rate_from_ref_elem").hide();
@@ -778,7 +780,7 @@ function checkFrom(counter, ref){
 				$("#addStrategyButton").hide();
 			}else if(rule_type_val==1 || rule_type_val==2 || rule_type_val==4 || rule_type_val==5){
 				$('#complex_value').attr('style', "float:top;margin-right:0px;");
-				$("#voucher_id").hide();
+				$("#voucherid").hide();
 				$(".id_prod_orig_elem").hide();
 				$(".id_prod_ref_elem").hide();
 				$(".rate_from_ref_elem").hide();
@@ -791,7 +793,7 @@ function checkFrom(counter, ref){
 				$("#addStrategyButton").show();
 			}else if(rule_type_val==6 || rule_type_val==7){
 				$('#complex_value').attr('style', "float:top;margin-right:0px;");
-				$("#voucher_id").hide();
+				$("#voucherid").hide();
 				$(".id_prod_orig_elem").show();
 				$(".id_prod_ref_elem").hide();
 				$(".rate_from_ref_elem").hide();
@@ -804,7 +806,7 @@ function checkFrom(counter, ref){
 				$("#addStrategyButton").show();
 			}else if(rule_type_val==10){		
 				$('#complex_value').attr('style', "float:top;margin-right:0px;");		
-				$("#voucher_id").hide();
+				$("#voucherid").hide();
 				$(".id_prod_orig_elem").show();
 				$(".id_prod_ref_elem").hide();
 				$(".rate_from_ref_elem").hide();
@@ -817,7 +819,7 @@ function checkFrom(counter, ref){
 				$("#addStrategyButton").hide();					
 			}else{
 				$('#complex_value').attr('style', "float:top;margin-right:0px;");
-				$("#voucher_id").hide();
+				$("#voucherid").hide();
 				$(".id_prod_orig_elem").show();
 				$(".id_prod_ref_elem").show();
 				$(".rate_from_ref_elem").show();

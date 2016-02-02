@@ -19,10 +19,10 @@ public partial class _Newsletter : Page
 	protected string cssClass;	
 	protected Newsletter newsletter;
 	protected IList<MailMsg> templates;
-/*<!--nsys-nwsletins3-->*/	
+/*<!--nsys-nwsletins4-->*/	
 	protected bool hasVoucherCampaign = false;
 	protected IList<VoucherCampaign> voucherCampaigns;
-/*<!---nsys-nwsletins3-->*/	
+/*<!---nsys-nwsletins4-->*/	
 	
 	protected void Page_Init(Object sender, EventArgs e)
 	{
@@ -43,10 +43,10 @@ public partial class _Newsletter : Page
 		INewsletterRepository newslrep = RepositoryFactory.getInstance<INewsletterRepository>("INewsletterRepository");
 		ILoggerRepository lrep = RepositoryFactory.getInstance<ILoggerRepository>("ILoggerRepository");
 		IMailRepository mailrep = RepositoryFactory.getInstance<IMailRepository>("IMailRepository");
-/*<!--nsys-nwsletins3-->*/		
+/*<!--nsys-nwsletins5-->*/		
 		IVoucherRepository voucherep = RepositoryFactory.getInstance<IVoucherRepository>("IVoucherRepository");
 		voucherCampaigns = null;
-/*<!---nsys-nwsletins3-->*/	
+/*<!---nsys-nwsletins5-->*/	
 
 		newsletter = new Newsletter();		
 		newsletter.id = -1;		
@@ -72,7 +72,7 @@ public partial class _Newsletter : Page
 			templates = new List<MailMsg>();
 		}	
 
-/*<!--nsys-nwsletins3-->*/		
+/*<!--nsys-nwsletins6-->*/		
 		try
 		{
 			voucherCampaigns = voucherep.find("4", 1);	
@@ -85,7 +85,7 @@ public partial class _Newsletter : Page
 			voucherCampaigns = new List<VoucherCampaign>();
 			hasVoucherCampaign = false;
 		}
-/*<!---nsys-nwsletins3-->*/			
+/*<!---nsys-nwsletins6-->*/			
 		
 		//******** INSERISCO NUOVA CATEGORIA / MODIFICO ESISTENTE						
 		if("insert".Equals(Request["operation"]))

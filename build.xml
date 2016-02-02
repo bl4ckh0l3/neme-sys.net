@@ -132,9 +132,15 @@
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig9--&gt;)(.*?)(&lt;!---nsys-nemesiconfig9--&gt;)" replace="\1${nsys-nemesiconfig9}\3" />
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig10--&gt;)(.*?)(&lt;!---nsys-nemesiconfig10--&gt;)" replace="\1${nsys-nemesiconfig10}\3" />
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig11--&gt;)(.*?)(&lt;!---nsys-nemesiconfig11--&gt;)" replace="\1${nsys-nemesiconfig11}\3" />
+
+		<copy file="${src.dir}/app_data/conf/repository-mapping.xml" todir="${dist.dir}/${buildVers}/tmp/app_data/conf"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/repository-mapping.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesirepository1--&gt;)(.*?)(&lt;!---nsys-nemesirepository1--&gt;)" replace="\1${nsys-nemesirepository1}\3" />
 		
 		<copy file="${src.dir}/public/layout/area_user/account.ascx" todir="${dist.dir}/${buildVers}/tmp/public/layout/area_user"/>
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/area_user/account.ascx" flags="gis" byline="false" match="(&lt;!--nsys-modcommunity1--&gt;)(.*?)(&lt;!---nsys-modcommunity1--&gt;)" replace="\1${nsys-modcommunity1}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/area_user/account.ascx" flags="gis" byline="false" match="(&lt;!--nsys-modcommunity1--&gt;)(.*?)(&lt;!---nsys-modcommunity1--&gt;)" replace="\1${nsys-modcommunity1}\3" /> 
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/area_user/account.ascx" flags="gis" byline="false" match="(/\*&lt;!--nsys-userproc1--&gt;\*/)(.*?)(/\*&lt;!---nsys-userproc1--&gt;\*/)" replace="\1${nsys-userproc1}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/area_user/account.ascx" flags="gis" byline="false" match="(/\*&lt;!--nsys-userproc2--&gt;\*/)(.*?)(/\*&lt;!---nsys-userproc2--&gt;\*/)" replace="\1${nsys-userproc2}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/area_user/account.ascx" flags="gis" byline="false" match="(/\*&lt;!--nsys-userproc3--&gt;\*/)(.*?)(/\*&lt;!---nsys-userproc3--&gt;\*/)" replace="\1${nsys-userproc3}\3" />
 		
 		<copy file="${src.dir}/public/layout/css/stile.css" todir="${dist.dir}/${buildVers}/tmp/public/layout/css"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/css/stile.css" flags="gis" byline="false" match="(/\*&lt;!--nsys-css1--&gt;\*/)(.*?)(/\*&lt;!---nsys-css1--&gt;\*/)" replace="\1${nsys-css1}\3" />
@@ -183,11 +189,13 @@
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/templates/ajaxviewtemplate.aspx" flags="gis" byline="false" match="(&lt;!--nsys-tmpajx1--&gt;)(.*?)(&lt;!---nsys-tmpajx1--&gt;)" replace="\1${nsys-tmpajx1}\3" />
 
 		<copy file="${src.dir}/backoffice/newsletter/newsletterlist.aspx" todir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter"/>
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx" flags="gis" byline="false" match="(&lt;!--nsys-nwsletlist2--&gt;)(.*?)(&lt;!---nsys-nwsletlist2--&gt;)" replace="\1${nsys-nwsletlist2}\3" />
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx" flags="gis" byline="false" match="(&lt;!--nsys-nwsletlist4--&gt;)(.*?)(&lt;!---nsys-nwsletlist4--&gt;)" replace="\1${nsys-nwsletlist4}\3" />
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx" flags="gis" byline="false" match="(&lt;!--nsys-nwsletlist5--&gt;)(.*?)(&lt;!---nsys-nwsletlist5--&gt;)" replace="\1${nsys-nwsletlist5}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx" flags="gis" byline="false" match="(&lt;!--nsys-nwsletlist6--&gt;)(.*?)(&lt;!---nsys-nwsletlist6--&gt;)" replace="\1${nsys-nwsletlist6}\3" />
 
 		<copy file="${src.dir}/backoffice/newsletter/newsletterlist.aspx.cs" todir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-nwsletlist1--&gt;\*/)(.*?)(/\*&lt;!---nsys-nwsletlist1--&gt;\*/)" replace="\1${nsys-nwsletlist1}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-nwsletlist2--&gt;\*/)(.*?)(/\*&lt;!---nsys-nwsletlist2--&gt;\*/)" replace="\1${nsys-nwsletlist2}\3" />
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-nwsletlist3--&gt;\*/)(.*?)(/\*&lt;!---nsys-nwsletlist3--&gt;\*/)" replace="\1${nsys-nwsletlist3}\3" />		
 		
 		<copy file="${src.dir}/backoffice/newsletter/insertnewsletter.aspx" todir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter"/>
@@ -195,7 +203,9 @@
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/insertnewsletter.aspx" flags="gis" byline="false" match="(&lt;!--nsys-nwsletins3--&gt;)(.*?)(&lt;!---nsys-nwsletins3--&gt;)" replace="\1${nsys-nwsletins3}\3" />
 		
 		<copy file="${src.dir}/backoffice/newsletter/insertnewsletter.aspx.cs" todir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter"/>
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/insertnewsletter.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-nwsletins3--&gt;\*/)(.*?)(/\*&lt;!---nsys-nwsletins3--&gt;\*/)" replace="\1${nsys-nwsletins3}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/insertnewsletter.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-nwsletins4--&gt;\*/)(.*?)(/\*&lt;!---nsys-nwsletins4--&gt;\*/)" replace="\1${nsys-nwsletins4}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/insertnewsletter.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-nwsletins5--&gt;\*/)(.*?)(/\*&lt;!---nsys-nwsletins5--&gt;\*/)" replace="\1${nsys-nwsletins5}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/insertnewsletter.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-nwsletins6--&gt;\*/)(.*?)(/\*&lt;!---nsys-nwsletins6--&gt;\*/)" replace="\1${nsys-nwsletins6}\3" />
 		
 		<copy file="${src.dir}/backoffice/include/menu.ascx" todir="${dist.dir}/${buildVers}/tmp/backoffice/include"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/include/menu.ascx" flags="gis" byline="false" match="(&lt;!--nsys-editinc1--&gt;)(.*?)(&lt;!---nsys-editinc1--&gt;)" replace="\1${nsys-editinc1}\3" />
@@ -256,8 +266,9 @@
 				<exclude name="sitemap.xml"/>
 				<exclude name="web.config"/>
 				<exclude name="**/test/**"/>
-				<exclude name="area_user/visualizzaordine.asp"/>				
-				<exclude name="area_user/listaordini.asp"/>				
+				<exclude name="area_user/vieworder.aspx"/>				
+				<exclude name="area_user/userorders.aspx"/>				
+				<exclude name="area_user/userorders.aspx.cs"/>				
 				<exclude name="area_user/friends.aspx"/>				
 				<exclude name="area_user/photos.aspx"/>			
 				<exclude name="area_user/publicprofile.aspx"/>			
@@ -265,7 +276,7 @@
 				<exclude name="common/img/logo.png"/>					
 				<exclude name="common/include/checkin.asp"/>
 				<exclude name="common/include/checkin_fault.asp"/>
-				<exclude name="common/include/DownloadManager.asp"/>		
+				<exclude name="common/include/download-order-attach.aspx"/>		
 				<exclude name="backoffice/index.aspx"/>
 				<exclude name="backoffice/include/menu.ascx"/>
 				<exclude name="backoffice/countries/countrylist.aspx"/>
@@ -292,15 +303,13 @@
 				<exclude name="public/layout/area_user/account.ascx"/>
 				<exclude name="public/layout/area_user/friends.ascx"/>
 				<exclude name="public/layout/area_user/photos.ascx"/>
-				<exclude name="public/layout/area_user/publicprofile.ascx"/>
-				<exclude name="public/layout/area_user/visualizzaordine.asp"/>				
-				<exclude name="public/layout/area_user/listaordini.asp"/>		
+				<exclude name="public/layout/area_user/publicprofile.ascx"/>		
 				<exclude name="**/public/layout/css/stile.css"/>
 				<exclude name="**/public/layout/include/header.ascx"/>				
 				<exclude name="public/layout/addson/user/user-profile-widget.ascx"/>
 				<exclude name="public/layout/addson/user/user-mask-widget.ascx"/>
 				<exclude name="public/layout/addson/user/user-online-widget.ascx"/>
-				<exclude name="public/layout/addson/contents/comments-widget.ascx"/>		
+				<exclude name="public/layout/addson/contents/comments-widget.ascx"/>	
 				
 				<!-- *** escludo tutti i template eccetto il base *** -->
 				<exclude name="**/public/templates/**/*"/>								
@@ -318,10 +327,75 @@
 				<exclude name="**/public/utils/templates_econeme-sys.zip"/>
 				
 				<exclude name="**/app_data/conf/nemesys-config.xml"/>
+				<exclude name="**/app_data/conf/repository-mapping.xml"/>
+
+				<exclude name="**/app_code/hbm/ads.hbm.xml"/>
+				<exclude name="**/app_code/hbm/BillsAddress.hbm.xml"/>
+				<exclude name="**/app_code/hbm/BusinessRule.hbm.xml"/>
+				<exclude name="**/app_code/hbm/Currency.hbm.xml"/>
+				<exclude name="**/app_code/hbm/Fee.hbm.xml"/>
+				<exclude name="**/app_code/hbm/Order.hbm.xml"/>
+				<exclude name="**/app_code/hbm/Payment.hbm.xml"/>
+				<exclude name="**/app_code/hbm/Product.hbm.xml"/>
+				<exclude name="**/app_code/hbm/ShippingAddress.hbm.xml"/>
+				<exclude name="**/app_code/hbm/ShoppingCart.hbm.xml"/>
+				<exclude name="**/app_code/hbm/Supplement.hbm.xml"/>
+				<exclude name="**/app_code/hbm/Voucher.hbm.xml"/>			
 				
+				<exclude name="**/app_code/com/nemesys/model/ads/**/*"/>
+				<exclude name="**/app_code/com/nemesys/model/business-strategy/**/*"/>
+				<exclude name="**/app_code/com/nemesys/model/cart/**/*"/>
+				<exclude name="**/app_code/com/nemesys/model/currency/**/*"/>
+				<exclude name="**/app_code/com/nemesys/model/fees/**/*"/>
+				<exclude name="**/app_code/com/nemesys/model/order/**/*"/>
+				<exclude name="**/app_code/com/nemesys/model/payment/**/*"/>
+				<exclude name="**/app_code/com/nemesys/model/product/**/*"/>
+				<exclude name="**/app_code/com/nemesys/model/supplement/**/*"/>
+				<exclude name="**/app_code/com/nemesys/model/voucher/**/*"/>
+
+				<exclude name="**/app_code/com/nemesys/database/repository/AdsRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/BillsAddressRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/BusinessRuleRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/CurrencyRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/FeeRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/IAdsRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/IBillsAddressRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/IBusinessRuleRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/ICurrencyRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/IFeeRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/IOrderRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/IPaymentModuleRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/IPaymentRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/IPaymentTransactionRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/IProductRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/IShippingAddressRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/IShoppingCartRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/ISupplementGroupRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/ISupplementRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/IVoucherRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/OrderRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/PaymentModuleRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/PaymentRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/PaymentTransactionRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/ProductRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/ShippingAddressRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/ShoppingCartRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/SupplementGroupRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/SupplementRepository.cs"/>
+				<exclude name="**/app_code/com/nemesys/database/repository/VoucherRepository.cs"/>		
+				
+				<exclude name="**/app_code/com/nemesys/services/BusinessRuleService.cs"/>
+				<exclude name="**/app_code/com/nemesys/services/FeeService.cs"/>
+				<exclude name="**/app_code/com/nemesys/services/OrderService.cs"/>
+				<exclude name="**/app_code/com/nemesys/services/PaymentService.cs"/>
+				<exclude name="**/app_code/com/nemesys/services/ProductService.cs"/>
+				<exclude name="**/app_code/com/nemesys/services/ShoppingCartService.cs"/>
+				<exclude name="**/app_code/com/nemesys/services/VoucherService.cs"/>			
 			</zipfileset>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp" includes="global.asax"/>
-			<zipfileset dir="${dist.dir}/${buildVers}/tmp" includes="web.config"/>			
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp" includes="web.config"/>	
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/app_data/conf" includes="nemesys-config.xml" fullpath="app_data/conf/nemesys-config.xml"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/app_data/conf" includes="repository-mapping.xml" fullpath="app_data/conf/repository-mapping.xml"/>		
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice" includes="index.aspx" prefix="backoffice"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/users" includes="userlist.aspx" prefix="backoffice/users"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/users" includes="insertuser.aspx" prefix="backoffice/users"/>
@@ -333,7 +407,6 @@
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="newsletterlist.aspx.cs" prefix="backoffice/newsletter"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="insertnewsletter.aspx" prefix="backoffice/newsletter"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="insertnewsletter.aspx.cs" prefix="backoffice/newsletter"/>
-			<zipfileset dir="${dist.dir}/${buildVers}/tmp/app_data/conf" includes="nemesys-config.xml" fullpath="app_data/conf/nemesys-config.xml"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/area_user" includes="account.ascx" prefix="public/layout/area_user"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/css" includes="stile.css" prefix="public/layout/css"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/include" includes="header.ascx" prefix="public/layout/include"/>	
@@ -382,9 +455,6 @@
 	<target name="taskReplaceEco">
 		<loadproperties srcFile="${mod_install.dir}/replace-resource/econemesys_replace.properties"/>
 		
-		<copy file="${src.dir}/web.config" todir="${dist.dir}/${buildVers}/tmp"/>
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/web.config" flags="gis" byline="false" match="(&lt;!--nsys-web-config--&gt;)(.*?)(&lt;!---nsys-web-config--&gt;)" replace="\1${nsys-web-config}\3" />	
-
 		<copy file="${src.dir}/app_data/conf/nemesys-config.xml" todir="${dist.dir}/${buildVers}/tmp/app_data/conf"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig2--&gt;)(.*?)(&lt;!---nsys-nemesiconfig2--&gt;)" replace="\1${nsys-nemesiconfig2}\3" />
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig3--&gt;)(.*?)(&lt;!---nsys-nemesiconfig3--&gt;)" replace="\1${nsys-nemesiconfig3}\3" />
@@ -396,7 +466,7 @@
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig9--&gt;)(.*?)(&lt;!---nsys-nemesiconfig9--&gt;)" replace="\1${nsys-nemesiconfig9}\3" />
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig10--&gt;)(.*?)(&lt;!---nsys-nemesiconfig10--&gt;)" replace="\1${nsys-nemesiconfig10}\3" />
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig11--&gt;)(.*?)(&lt;!---nsys-nemesiconfig11--&gt;)" replace="\1${nsys-nemesiconfig11}\3" />
-
+		
 		<copy file="${src.dir}/public/layout/css/stile.css" todir="${dist.dir}/${buildVers}/tmp/public/layout/css"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/css/stile.css" flags="gis" byline="false" match="(/\*&lt;!--nsys-css1--&gt;\*/)(.*?)(/\*&lt;!---nsys-css1--&gt;\*/)" replace="\1${nsys-css1}\3" />
 		
@@ -404,7 +474,10 @@
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/include/header.ascx" flags="gis" byline="false" match="(&lt;!--nsys-head1--&gt;)(.*?)(&lt;!---nsys-head1--&gt;)" replace="\1${nsys-head1}\3" />		
 		
 		<copy file="${src.dir}/public/layout/area_user/account.ascx" todir="${dist.dir}/${buildVers}/tmp/public/layout/area_user"/>
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/area_user/account.ascx" flags="gis" byline="false" match="(&lt;!--nsys-modcommunity1--&gt;)(.*?)(&lt;!---nsys-modcommunity1--&gt;)" replace="\1${nsys-modcommunity1}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/area_user/account.ascx" flags="gis" byline="false" match="(&lt;!--nsys-modcommunity1--&gt;)(.*?)(&lt;!---nsys-modcommunity1--&gt;)" replace="\1${nsys-modcommunity1}\3" /> 
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/area_user/account.ascx" flags="gis" byline="false" match="(/\*&lt;!--nsys-userproc1--&gt;\*/)(.*?)(/\*&lt;!---nsys-userproc1--&gt;\*/)" replace="\1${nsys-userproc1}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/area_user/account.ascx" flags="gis" byline="false" match="(/\*&lt;!--nsys-userproc2--&gt;\*/)(.*?)(/\*&lt;!---nsys-userproc2--&gt;\*/)" replace="\1${nsys-userproc2}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/area_user/account.ascx" flags="gis" byline="false" match="(/\*&lt;!--nsys-userproc3--&gt;\*/)(.*?)(/\*&lt;!---nsys-userproc3--&gt;\*/)" replace="\1${nsys-userproc3}\3" />
 		
 		<copy file="${src.dir}/public/layout/addson/user/user-mask-widget.ascx" todir="${dist.dir}/${buildVers}/tmp/public/layout/addson/user"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/addson/user/user-mask-widget.ascx" flags="gis" byline="false" match="(&lt;!--nsys-modcommunity3--&gt;)(.*?)(&lt;!---nsys-modcommunity3--&gt;)" replace="\1${nsys-modcommunity3}\3" />
@@ -421,7 +494,33 @@
 		<copy file="${src.dir}/public/layout/addson/comments/comments-widget.ascx" todir="${dist.dir}/${buildVers}/tmp/public/layout/addson/comments"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/addson/comments/comments-widget.ascx" flags="gis" byline="false" match="(&lt;!--nsys-modcommunity6--&gt;)(.*?)(&lt;!---nsys-modcommunity6--&gt;)" replace="\1${nsys-modcommunity6}\3" />
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/addson/comments/comments-widget.ascx" flags="gis" byline="false" match="(&lt;!--nsys-modcommunity8--&gt;)(.*?)(&lt;!---nsys-modcommunity8--&gt;)" replace="\1${nsys-modcommunity8}\3" />
-				
+
+		<copy file="${src.dir}/backoffice/newsletter/newsletterlist.aspx" todir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx" flags="gis" byline="false" match="(&lt;!--nsys-nwsletlist4--&gt;)(.*?)(&lt;!---nsys-nwsletlist4--&gt;)" replace="\1${nsys-nwsletlist4}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx" flags="gis" byline="false" match="(&lt;!--nsys-nwsletlist5--&gt;)(.*?)(&lt;!---nsys-nwsletlist5--&gt;)" replace="\1${nsys-nwsletlist5}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx" flags="gis" byline="false" match="(&lt;!--nsys-nwsletlist6--&gt;)(.*?)(&lt;!---nsys-nwsletlist6--&gt;)" replace="\1${nsys-nwsletlist6}\3" />
+
+		<copy file="${src.dir}/backoffice/newsletter/newsletterlist.aspx.cs" todir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-nwsletlist1--&gt;\*/)(.*?)(/\*&lt;!---nsys-nwsletlist1--&gt;\*/)" replace="\1${nsys-nwsletlist1}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-nwsletlist2--&gt;\*/)(.*?)(/\*&lt;!---nsys-nwsletlist2--&gt;\*/)" replace="\1${nsys-nwsletlist2}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-nwsletlist3--&gt;\*/)(.*?)(/\*&lt;!---nsys-nwsletlist3--&gt;\*/)" replace="\1${nsys-nwsletlist3}\3" />		
+		
+		<copy file="${src.dir}/backoffice/newsletter/insertnewsletter.aspx" todir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/insertnewsletter.aspx" flags="gis" byline="false" match="(&lt;!--nsys-nwsletins2--&gt;)(.*?)(&lt;!---nsys-nwsletins2--&gt;)" replace="\1${nsys-nwsletins2}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/insertnewsletter.aspx" flags="gis" byline="false" match="(&lt;!--nsys-nwsletins3--&gt;)(.*?)(&lt;!---nsys-nwsletins3--&gt;)" replace="\1${nsys-nwsletins3}\3" />
+		
+		<copy file="${src.dir}/backoffice/newsletter/insertnewsletter.aspx.cs" todir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/insertnewsletter.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-nwsletins4--&gt;\*/)(.*?)(/\*&lt;!---nsys-nwsletins4--&gt;\*/)" replace="\1${nsys-nwsletins4}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/insertnewsletter.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-nwsletins5--&gt;\*/)(.*?)(/\*&lt;!---nsys-nwsletins5--&gt;\*/)" replace="\1${nsys-nwsletins5}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/insertnewsletter.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-nwsletins6--&gt;\*/)(.*?)(/\*&lt;!---nsys-nwsletins6--&gt;\*/)" replace="\1${nsys-nwsletins6}\3" />		
+		
+		<copy file="${src.dir}/backoffice/business-strategy/insertbusinessrule.aspx" todir="${dist.dir}/${buildVers}/tmp/backoffice/business-strategy"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/business-strategy/insertbusinessrule.aspx" flags="gis" byline="false" match="(&lt;!--nsys-voucher2--&gt;)(.*?)(&lt;!---nsys-voucher2--&gt;)" replace="\1${nsys-voucher2}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/business-strategy/insertbusinessrule.aspx" flags="gis" byline="false" match="(&lt;!--nsys-voucher3--&gt;)(.*?)(&lt;!---nsys-voucher3--&gt;)" replace="\1${nsys-voucher3}\3" />
+		
+		<copy file="${src.dir}/backoffice/business-strategy/insertbusinessrule.aspx.cs" todir="${dist.dir}/${buildVers}/tmp/backoffice/business-strategy"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/business-strategy/insertbusinessrule.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-voucher4--&gt;\*/)(.*?)(/\*&lt;!---nsys-voucher4--&gt;\*/)" replace="\1${nsys-voucher4}\3" />
+		
 		<copy file="${db.dir}/global_install_query_ec.sql" todir="${dist.dir}/${buildVers}/tmp"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/global_install_query_ec.sql" flags="gis" byline="false" match="buildVersSql" replace="${buildVers}" />		
 		
@@ -473,10 +572,8 @@
 				<include name="**/*"/>
 				
 				<!-- file esclusi -->
-				<exclude name="global.asax"/>
 				<exclude name="favicon.ico"/>	
 				<exclude name="sitemap.xml"/>
-				<exclude name="web.config"/>
 				<exclude name="**/test/**"/>			
 				<exclude name="area_user/friends.aspx"/>				
 				<exclude name="area_user/photos.aspx"/>			
@@ -484,6 +581,12 @@
 				<exclude name="**/area_user/ads/**"/>		
 				<exclude name="common/img/logo.png"/>	
 				<exclude name="backoffice/include/menu.ascx"/>
+				<exclude name="backoffice/newsletter/newsletterlist.aspx"/>
+				<exclude name="backoffice/newsletter/newsletterlist.aspx.cs"/>
+				<exclude name="backoffice/newsletter/insertnewsletter.aspx"/>
+				<exclude name="backoffice/newsletter/insertnewsletter.aspx.cs"/>
+				<exclude name="backoffice/business-strategy/insertbusinessrule.aspx"/>
+				<exclude name="backoffice/business-strategy/insertbusinessrule.aspx.cs"/>
 				<exclude name="public/layout/area_user/account.ascx"/>
 				<exclude name="public/layout/area_user/friends.ascx"/>
 				<exclude name="public/layout/area_user/photos.ascx"/>
@@ -519,9 +622,6 @@
 				
 			</zipfileset>
 			
-			<zipfileset dir="${dist.dir}/${buildVers}/tmp" includes="global.asax"/>
-			<zipfileset dir="${dist.dir}/${buildVers}/tmp" includes="web.config"/>
-			
 			<zipfileset dir="${mod_install.dir}" includes="portalinstall.aspx" prefix="public/install"/>			
 			<zipfileset dir="${mod_install.dir}/replace-resource" includes="nemesys_replace.properties" prefix="public/install"/>
 			<zipfileset dir="${mod_install.dir}/replace-resource" includes="econemesys_replace.properties" prefix="public/install"/>
@@ -543,6 +643,14 @@
 			<zipfileset dir="${src.dir}/public/templates" includes="search/**/*" prefix="public/templates"/>
 			<zipfileset dir="${src.dir}/public/templates" includes="contact/**/*" prefix="public/templates"/>	
 			<zipfileset dir="${src.dir}/public/templates" includes="shopping-card/**/*" prefix="public/templates"/>
+			
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="newsletterlist.aspx" prefix="backoffice/newsletter"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="newsletterlist.aspx.cs" prefix="backoffice/newsletter"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="insertnewsletter.aspx" prefix="backoffice/newsletter"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="insertnewsletter.aspx.cs" prefix="backoffice/newsletter"/>
+			
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/business-strategy" includes="insertbusinessrule.aspx" prefix="backoffice/business-strategy"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/business-strategy" includes="insertbusinessrule.aspx.cs" prefix="backoffice/business-strategy"/>
 					
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/app_data/conf" includes="nemesys-config.xml" fullpath="app_data/conf/nemesys-config.xml"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/area_user" includes="account.ascx" prefix="public/layout/area_user"/>
@@ -1049,18 +1157,12 @@
 			<zipfileset dir="${src.dir}">
 				
 				<!-- file inclusi -->								
-				<include name="area_user/account.aspx"/>			
 				<include name="area_user/friends.aspx"/>				
 				<include name="area_user/photos.aspx"/>	
 				<include name="area_user/publicprofile.aspx"/>
-				<include name="public/layout/area_user/account.ascx"/>
 				<include name="public/layout/area_user/friends.ascx"/>
 				<include name="public/layout/area_user/photos.ascx"/>
-				<include name="public/layout/area_user/publicprofile.ascx"/>
-				<include name="public/layout/addson/user/user-mask-widget.ascx"/>
-				<include name="public/layout/addson/user/user-online-widget.ascx"/>
-				<include name="public/layout/addson/user/user-profile-widget.ascx"/>
-				<include name="public/layout/addson/comments/comments-widget.ascx"/>				
+				<include name="public/layout/area_user/publicprofile.ascx"/>				
 			</zipfileset>
 			
 			<zipfileset dir="${mod_install.dir}" includes="mod-communityinstall.aspx" fullpath="public/install/moduleinstall.aspx"/>
@@ -1084,9 +1186,7 @@
 		
 		<copy file="${src.dir}/area_user/ads/contentlist.aspx" todir="${dist.dir}/${buildVers}/tmp/area_user/ads"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/area_user/ads/contentlist.aspx" flags="gis" byline="false" match="(/\*&lt;!--nsys-usr-lnews1--&gt;\*/)(.*?)(/\*&lt;!---nsys-usr-lnews1--&gt;\*/)" replace="\1${nsys-usr-lnews1}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/area_user/ads/contentlist.aspx" flags="gis" byline="false" match="(&lt;!--nsys-usr-lnews2--&gt;)(.*?)(&lt;!---nsys-usr-lnews2--&gt;)" replace="\1${nsys-usr-lnews2}\3" />
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/area_user/ads/contentlist.aspx" flags="gis" byline="false" match="(&lt;!--nsys-usr-lnews3--&gt;)(.*?)(&lt;!---nsys-usr-lnews3--&gt;)" replace="\1${nsys-usr-lnews3}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/area_user/ads/contentlist.aspx" flags="gis" byline="false" match="(&lt;!--nsys-usr-lnews4--&gt;)(.*?)(&lt;!---nsys-usr-lnews4--&gt;)" replace="\1${nsys-usr-lnews4}\3" />	
 		
 		<copy file="${mod_install.dir}/sql-resource/mod-blog_install_query.sql" todir="${dist.dir}/${buildVers}/tmp"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/mod-blog_install_query.sql" flags="gis" byline="false" match="buildVersSql" replace="${buildVers}" />
@@ -1131,11 +1231,9 @@
 				
 				<!-- file inclusi -->
 				<include name="**/area_user/ads/**/*"/>	
-				<exclude name="**/area_user/ads/contentlist.aspx"/>
-				<exclude name="**/area_user/ads/deleteads.asp"/>	
-				<exclude name="**/area_user/ads/inserisciads.asp"/>	
-				<exclude name="**/area_user/ads/processads.asp"/>	
-				<exclude name="**/area_user/ads/include/init4.inc"/>		
+				<exclude name="**/area_user/ads/contentlist.aspx"/>	
+				<exclude name="**/area_user/ads/insertads.aspx"/>		
+				<exclude name="**/area_user/ads/insertads.aspx.cs"/>		
 			</zipfileset>
 			
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/area_user/ads" includes="contentlist.aspx" prefix="area_user/ads"/>	
@@ -1158,13 +1256,7 @@
 	<!--  *****************		BUILD MODULE ADS		***************** -->
 	<target name="taskReplaceModAds">
 		<loadproperties srcFile="${mod_install.dir}/replace-resource/mod-ads_replace.properties"/>
-		
-		<copy file="${src.dir}/area_user/ads/listanews.asp" todir="${dist.dir}/${buildVers}/tmp/area_user/ads"/>
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/area_user/ads/listanews.asp" flags="gis" byline="false" match="(/\*&lt;!--nsys-usr-lnews1--&gt;\*/)(.*?)(/\*&lt;!---nsys-usr-lnews1--&gt;\*/)" replace="\1${nsys-usr-lnews1}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/area_user/ads/listanews.asp" flags="gis" byline="false" match="(&lt;!--nsys-usr-lnews2--&gt;)(.*?)(&lt;!---nsys-usr-lnews2--&gt;)" replace="\1${nsys-usr-lnews2}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/area_user/ads/listanews.asp" flags="gis" byline="false" match="(&lt;!--nsys-usr-lnews3--&gt;)(.*?)(&lt;!---nsys-usr-lnews3--&gt;)" replace="\1${nsys-usr-lnews3}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/area_user/ads/listanews.asp" flags="gis" byline="false" match="(&lt;!--nsys-usr-lnews4--&gt;)(.*?)(&lt;!---nsys-usr-lnews4--&gt;)" replace="\1${nsys-usr-lnews4}\3" />	
-		
+	
 		<copy file="${mod_install.dir}/sql-resource/mod-ads_install_query.sql" todir="${dist.dir}/${buildVers}/tmp"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/mod-ads_install_query.sql" flags="gis" byline="false" match="buildVersSql" replace="${buildVers}" />
 	</target>
@@ -1205,17 +1297,13 @@
 		
 		<zip destfile="${dist.dir}/${buildVers}/src/mod-ads_${build.date}_${buildVers}.zip"> 
 			<zipfileset dir="${src.dir}">
-				
 				<!-- file inclusi -->
 				<include name="**/area_user/ads/**/*"/>	
-				<exclude name="**/area_user/ads/listanews.asp"/>		
 			</zipfileset>
 			
-			<zipfileset dir="${dist.dir}/${buildVers}/tmp/area_user/ads" includes="listanews.asp" prefix="area_user/ads"/>	
-			
-			<zipfileset dir="${mod_install.dir}" includes="mod-adsinstall.asp" fullpath="public/install/moduleinstall.asp"/>
+			<zipfileset dir="${mod_install.dir}" includes="mod-adsinstall.aspx" fullpath="public/install/moduleinstall.aspx"/>
 			<zipfileset dir="${mod_install.dir}/replace-resource" includes="mod-ads_replace.properties" prefix="public/install"/>			
-			<zipfileset dir="${mod_install.dir}/file-resource" includes="installed.asp"/>
+			<zipfileset dir="${mod_install.dir}/file-resource" includes="installed.aspx"/>
 			<zipfileset dir="${mod_install.dir}/file-resource" includes="ReadMe.txt"/>
 			
 			<!-- includo il file global_install_query.sql di creazione/inserimento database -->
@@ -1230,6 +1318,8 @@
 	
 	<!--  *****************		BUILD MODULE VOUCHER		***************** -->
 	<target name="taskReplaceModVoucher">
+		<loadproperties srcFile="${mod_install.dir}/replace-resource/mod-voucher_replace.properties"/>
+	
 		<copy file="${mod_install.dir}/sql-resource/mod-voucher_install_query.sql" todir="${dist.dir}/${buildVers}/tmp"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/mod-voucher_install_query.sql" flags="gis" byline="false" match="buildVersSql" replace="${buildVers}" />
 	</target>
@@ -1270,16 +1360,20 @@
 		
 		<zip destfile="${dist.dir}/${buildVers}/src/mod-voucher_${build.date}_${buildVers}.zip"> 
 			<zipfileset dir="${src.dir}">
-				
 				<!-- file inclusi -->
-				<include name="backoffice/include/menu.inc"/>
-				<include name="backoffice/margini/inserisciRule.asp"/>
+				<include name="backoffice/include/menu.ascx"/>
 				<include name="**/backoffice/voucher/**"/>		
+				<include name="backoffice/newsletter/newsletterlist.aspx"/>
+				<include name="backoffice/newsletter/newsletterlist.aspx.cs"/>
+				<include name="backoffice/newsletter/insertnewsletter.aspx"/>
+				<include name="backoffice/newsletter/insertnewsletter.aspx.cs"/>
+				<include name="backoffice/business-strategy/insertbusinessrule.aspx"/>
+				<include name="backoffice/business-strategy/insertbusinessrule.aspx.cs"/>
 			</zipfileset>
-						
-			<zipfileset dir="${mod_install.dir}" includes="mod-voucherinstall.asp" fullpath="public/install/moduleinstall.asp"/>
+			
+			<zipfileset dir="${mod_install.dir}" includes="mod-voucherinstall.aspx" fullpath="public/install/moduleinstall.aspx"/>
 			<zipfileset dir="${mod_install.dir}/replace-resource" includes="mod-voucher_replace.properties" prefix="public/install"/>			
-			<zipfileset dir="${mod_install.dir}/file-resource" includes="installed.asp"/>
+			<zipfileset dir="${mod_install.dir}/file-resource" includes="installed.aspx"/>
 			<zipfileset dir="${mod_install.dir}/file-resource" includes="ReadMe.txt"/>
 			
 			<!-- includo il file global_install_query.sql di creazione/inserimento database -->
@@ -1290,6 +1384,8 @@
 			<fileset dir="${dist.dir}/${buildVers}/tmp" includes="**/*"/>
 		</delete>
 	</target>
+	
+	
 
 
 	<!--  *****************		TASK DI PROVA PER SPERIMENTARE FUNZIONALITA' ANT	***************** -->

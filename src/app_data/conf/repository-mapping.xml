@@ -79,6 +79,7 @@
     <description>nhibernate implementation of ISearchRepository</description>
   </ISearchRepository>
 
+<!--nsys-nemesirepository1-->  
 <!-- ecommerce repositories -->
   
   <IPaymentRepository>
@@ -150,5 +151,5 @@
     <value>com.nemesys.database.repository.VoucherRepository</value>
     <description>nhibernate implementation of IVoucherRepository</description>
   </IVoucherRepository>
-  
+<!---nsys-nemesirepository1-->  
 </repository>

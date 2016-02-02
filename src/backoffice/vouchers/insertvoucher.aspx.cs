@@ -78,7 +78,7 @@ public partial class _Voucher : Page
 				string label = Request["label"];
 				string description = Request["descrizione"];
 				int type = Convert.ToInt32(Request["voucher_type"]);
-				bool active = Convert.ToBoolean(Convert.ToInt32(Request["activate"]));
+				bool active = Convert.ToBoolean(Convert.ToInt32(Request["active"]));
 				decimal value = Convert.ToDecimal(Request["valore"]);
 				int operation = Convert.ToInt32(Request["calculation"]);
 				int maxGeneration = Convert.ToInt32(Request["max_generation"]);

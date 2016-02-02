@@ -7071,3 +7071,5 @@ INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.voucher.label.error_generate_max_code', 'IT', 'Generato il numero massimo di codici voucher consentito');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.voucher.label.error_delete_code', 'EN', 'Voucher code delete error');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.voucher.label.error_delete_code', 'IT', 'Errore nella cancellazione del codice voucher');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.mails.detail.table.label.subject_Conferma voucher generato!', 'EN', 'Confirm generated voucher!');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.mails.detail.table.label.subject_Conferma voucher generato!', 'IT', 'Conferma voucher generato!');

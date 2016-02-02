@@ -21,10 +21,10 @@ public partial class _NewsletterList : Page
 	protected IList<Newsletter> newsletters;
 	protected IList<MailMsg> templates;
 	protected string mailTemlateName;	
-/*<!--nsys-nwsletlist3-->*/	
+/*<!--nsys-nwsletlist1-->*/	
 	protected bool hasVoucherCampaign = false;
 	protected IList<VoucherCampaign> voucherCampaigns;
-/*<!---nsys-nwsletlist3-->*/
+/*<!---nsys-nwsletlist1-->*/
 
 	private int _totalPages;	
 	public int totalPages {
@@ -50,10 +50,10 @@ public partial class _NewsletterList : Page
 	
 		newslrep = RepositoryFactory.getInstance<INewsletterRepository>("INewsletterRepository");	
 		IMailRepository mailrep = RepositoryFactory.getInstance<IMailRepository>("IMailRepository");
-/*<!--nsys-nwsletlist3-->*/
+/*<!--nsys-nwsletlist2-->*/
 		IVoucherRepository voucherep = RepositoryFactory.getInstance<IVoucherRepository>("IVoucherRepository");
 		voucherCampaigns = null;
-/*<!---nsys-nwsletlist3-->*/
+/*<!---nsys-nwsletlist2-->*/
 		mailTemlateName = "";
 
 		if (!String.IsNullOrEmpty(Request["items"])) {

@@ -60,6 +60,11 @@
 		usrrep = RepositoryFactory.getInstance<IUserRepository>("IUserRepository");
 		confservice = new ConfigurationService();
 
+/*<!--nsys-userproc1-->*/
+		IVoucherRepository voucherep = RepositoryFactory.getInstance<IVoucherRepository>("IVoucherRepository");
+		IList<VoucherCampaign> vcampaignFounds = new List<VoucherCampaign>();
+/*<!---nsys-userproc1-->*/
+		
 		user = new User();	
 		user.id = -1;					
 		user.userGroup = -1;
@@ -217,6 +222,11 @@
 			bool carryOn = true;	
 			try
 			{
+				UriBuilder builder = new UriBuilder(Request.Url);
+				builder.Scheme = "http";
+				builder.Port = -1;
+				builder.Path="";			
+			
 				// resolve captcha code
 				UriBuilder errCaptcha = new UriBuilder(Request.Url);
 				errCaptcha.Port = -1;
@@ -319,6 +329,19 @@
 									un.idParentUser = user.id;
 									un.newsletterId = Convert.ToInt32(x);
 									user.newsletters.Add(un);
+									
+									
+/*<!--nsys-userproc2-->*/
+									Newsletter nl = newslrep.getById(un.newsletterId);
+									if(nl != null && nl.idVoucherCampaign>0){
+										VoucherCampaign campaign = voucherep.getById(nl.idVoucherCampaign);
+										if(campaign != null){											
+											vcampaignFounds.Add(campaign);
+										}
+									}
+/*<!---nsys-userproc2-->*/									
+									
+									
 								}
 							}
 						}
@@ -400,8 +423,44 @@
 							{
 								user.attachments = newUserAttachment;
 								usrrep.saveCompleteUser(user,confirmationCode);
-								user = usrrep.getById(user.id);							
+								user = usrrep.getById(user.id);	
 								
+/*<!--nsys-userproc3-->*/								
+								if(vcampaignFounds.Count>0){
+									foreach(VoucherCampaign vcampaign in vcampaignFounds){
+										int generatedCounter = voucherep.countVoucherCodeByCampaign(vcampaign.id, user.id);
+										
+										if(generatedCounter<vcampaign.maxGeneration || vcampaign.maxGeneration==-1){
+											IList<string> existsVoucherCodes = voucherep.getAllVoucherCodes();
+											
+											string code = "";
+											
+											bool ahead = true;
+											while(ahead) 
+											{ 
+												code = Guids.createVoucherCodeGuid();
+												if (!existsVoucherCodes.Contains(code)) 
+												{ 
+													ahead=false;
+												} 
+											} 								
+											
+											VoucherCode voucher = new VoucherCode();
+											voucher.id=-1;
+											voucher.code=code;
+											voucher.campaign=vcampaign.id;
+											voucher.usageCounter=0;
+											voucher.userId=user.id;
+											voucher.insertDate=DateTime.Now;
+							
+											voucherep.insertVoucherCode(voucher);
+											
+											VoucherService.sendVoucherMail(vcampaign, voucher, null, user.email, lang.currentLangCode, lang.defaultLangCode, builder.ToString());
+										}
+									}
+								}								
+/*<!---nsys-userproc3-->*/
+
 								log.usr= user.username;
 								log.msg = "area user: save user: "+user.ToString();
 								log.type = "info";
@@ -445,12 +504,7 @@
 								
 								//if new user send welcome mail
 								if(sendWelcomeMail)
-								{		
-									UriBuilder builder = new UriBuilder(Request.Url);
-									builder.Scheme = "http";
-									builder.Port = -1;
-									builder.Path="";
-									
+								{
 									ListDictionary replacementsUser = new ListDictionary();
 									ListDictionary replacementsAdmin = new ListDictionary();
 									StringBuilder userMessage = new StringBuilder();

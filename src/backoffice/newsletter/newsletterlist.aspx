@@ -36,9 +36,9 @@ function deleteNewsletter(id_objref,row,refreshrows){
 		<div id="ajaxresp" align="center" style="background-color:#FFFF00; border:1px solid #000000; color:#000000; display:none;"></div>
 		<table border="0" align="top" cellpadding="0" cellspacing="0" class="principal">
 			<tr> 
-<!--nsys-nwsletlist5-->
+<!--nsys-nwsletlist4-->
 			<th colspan="7" align="left">
-<!---nsys-nwsletlist5-->
+<!---nsys-nwsletlist4-->
 			<div style="float:left;padding-right:3px;height:15px;">
 			<form action="<%=Request.Url.AbsolutePath%>" method="post" name="item_x_page">
 			<input type="hidden" value="<%=cssClass%>" name="cssClass">	
@@ -56,9 +56,9 @@ function deleteNewsletter(id_objref,row,refreshrows){
 				  <th><lang:getTranslated keyword="backend.newsletter.lista.table.header.descrizione" runat="server" /></th>
 				  <th><lang:getTranslated keyword="backend.newsletter.lista.table.header.newsletter_stato" runat="server" /></th>
 				  <th><lang:getTranslated keyword="backend.newsletter.lista.table.header.newsletter_template" runat="server" /></th>
-<!--nsys-nwsletlist2-->
+<!--nsys-nwsletlist5-->
 				  <th><lang:getTranslated keyword="backend.newsletter.lista.table.header.voucher_campaign" runat="server" /></th>
-<!---nsys-nwsletlist2-->
+<!---nsys-nwsletlist5-->
 				  <th><lang:getTranslated keyword="backend.newsletter.lista.table.header.newsletter_subscribed" runat="server" /></th>
               </tr> 
 				<%	
@@ -120,7 +120,7 @@ function deleteNewsletter(id_objref,row,refreshrows){
 					$("#edit_template_<%=intCount%>").hide();
 					</script>
 				</td>
-<!--nsys-nwsletlist4-->
+<!--nsys-nwsletlist6-->
 				<td>
 					<div class="ajax" id="view_voucher_<%=intCount%>" onmouseover="javascript:showHide('view_voucher_<%=intCount%>','edit_voucher_<%=intCount%>','voucher_<%=intCount%>',500, true);">
 					<%
@@ -150,7 +150,7 @@ function deleteNewsletter(id_objref,row,refreshrows){
 					$("#edit_voucher_<%=intCount%>").hide();
 					</script>
 				</td>               
-<!---nsys-nwsletlist4-->
+<!---nsys-nwsletlist6-->
 				<td>
 					<%=subscribed%>
 				</td>     
@@ -160,9 +160,9 @@ function deleteNewsletter(id_objref,row,refreshrows){
 			}%>
 			  
 			<tr> 
-<!--nsys-nwsletlist5-->
+<!--nsys-nwsletlist4-->
 			<th colspan="7" align="left">
-<!---nsys-nwsletlist5-->
+<!---nsys-nwsletlist4-->
 			<div style="float:left;padding-right:3px;height:15px;">
 			<form action="<%=Request.Url.AbsolutePath%>" method="post" name="item_x_page">
 			<input type="hidden" value="<%=cssClass%>" name="cssClass">	

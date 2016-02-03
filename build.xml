@@ -600,7 +600,6 @@
 				
 				<!-- file esclusi per il modulo voucher -->
 				<exclude name="backoffice/include/menu.ascx"/>
-				<!-- exclude name="backoffice/margini/inserisciRule.asp"/ -->
 				<exclude name="**/backoffice/vouchers/**"/>	
 				
 				<!-- *** escludo tutti i template eccetto il base *** -->
@@ -640,6 +639,7 @@
 			
 			<!-- reintegro il template base, contact e search dentro la directory public/templates -->
 			<zipfileset dir="${src.dir}/public/templates" includes="base/**/*" prefix="public/templates"/>
+			<zipfileset dir="${src.dir}/public/templates" includes="base-product/**/*" prefix="public/templates"/>
 			<zipfileset dir="${src.dir}/public/templates" includes="search/**/*" prefix="public/templates"/>
 			<zipfileset dir="${src.dir}/public/templates" includes="contact/**/*" prefix="public/templates"/>	
 			<zipfileset dir="${src.dir}/public/templates" includes="shopping-card/**/*" prefix="public/templates"/>
@@ -684,32 +684,77 @@
 	<target name="taskReplaceUpEco">
 		<loadproperties srcFile="${mod_install.dir}/replace-resource/econemesys_replace.properties"/>
 		
-		<copy file="${src.dir}/global.asa" todir="${dist.dir}/${buildVers}/tmp"/>
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/global.asa" flags="gis" byline="false" match="('&lt;!--nsys-globalasa1--&gt;)(.*?)('&lt;!---nsys-globalasa1--&gt;)" replace="\1${nsys-globalasa1}\3" />	
+		<copy file="${src.dir}/app_data/conf/nemesys-config.xml" todir="${dist.dir}/${buildVers}/tmp/app_data/conf"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig2--&gt;)(.*?)(&lt;!---nsys-nemesiconfig2--&gt;)" replace="\1${nsys-nemesiconfig2}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig3--&gt;)(.*?)(&lt;!---nsys-nemesiconfig3--&gt;)" replace="\1${nsys-nemesiconfig3}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig4--&gt;)(.*?)(&lt;!---nsys-nemesiconfig4--&gt;)" replace="\1${nsys-nemesiconfig4}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig5--&gt;)(.*?)(&lt;!---nsys-nemesiconfig5--&gt;)" replace="\1${nsys-nemesiconfig5}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig6--&gt;)(.*?)(&lt;!---nsys-nemesiconfig6--&gt;)" replace="\1${nsys-nemesiconfig6}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig7--&gt;)(.*?)(&lt;!---nsys-nemesiconfig7--&gt;)" replace="\1${nsys-nemesiconfig7}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig8--&gt;)(.*?)(&lt;!---nsys-nemesiconfig8--&gt;)" replace="\1${nsys-nemesiconfig8}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig9--&gt;)(.*?)(&lt;!---nsys-nemesiconfig9--&gt;)" replace="\1${nsys-nemesiconfig9}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig10--&gt;)(.*?)(&lt;!---nsys-nemesiconfig10--&gt;)" replace="\1${nsys-nemesiconfig10}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig11--&gt;)(.*?)(&lt;!---nsys-nemesiconfig11--&gt;)" replace="\1${nsys-nemesiconfig11}\3" />
 		
+		<copy file="${src.dir}/public/layout/css/stile.css" todir="${dist.dir}/${buildVers}/tmp/public/layout/css"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/css/stile.css" flags="gis" byline="false" match="(/\*&lt;!--nsys-css1--&gt;\*/)(.*?)(/\*&lt;!---nsys-css1--&gt;\*/)" replace="\1${nsys-css1}\3" />
+		
+		<copy file="${src.dir}/public/layout/include/header.ascx" todir="${dist.dir}/${buildVers}/tmp/public/layout/include"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/include/header.ascx" flags="gis" byline="false" match="(&lt;!--nsys-head1--&gt;)(.*?)(&lt;!---nsys-head1--&gt;)" replace="\1${nsys-head1}\3" />		
+		
+		<copy file="${src.dir}/public/layout/area_user/account.ascx" todir="${dist.dir}/${buildVers}/tmp/public/layout/area_user"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/area_user/account.ascx" flags="gis" byline="false" match="(&lt;!--nsys-modcommunity1--&gt;)(.*?)(&lt;!---nsys-modcommunity1--&gt;)" replace="\1${nsys-modcommunity1}\3" /> 
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/area_user/account.ascx" flags="gis" byline="false" match="(/\*&lt;!--nsys-userproc1--&gt;\*/)(.*?)(/\*&lt;!---nsys-userproc1--&gt;\*/)" replace="\1${nsys-userproc1}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/area_user/account.ascx" flags="gis" byline="false" match="(/\*&lt;!--nsys-userproc2--&gt;\*/)(.*?)(/\*&lt;!---nsys-userproc2--&gt;\*/)" replace="\1${nsys-userproc2}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/area_user/account.ascx" flags="gis" byline="false" match="(/\*&lt;!--nsys-userproc3--&gt;\*/)(.*?)(/\*&lt;!---nsys-userproc3--&gt;\*/)" replace="\1${nsys-userproc3}\3" />
+		
+		<copy file="${src.dir}/public/layout/addson/user/user-mask-widget.ascx" todir="${dist.dir}/${buildVers}/tmp/public/layout/addson/user"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/addson/user/user-mask-widget.ascx" flags="gis" byline="false" match="(&lt;!--nsys-modcommunity3--&gt;)(.*?)(&lt;!---nsys-modcommunity3--&gt;)" replace="\1${nsys-modcommunity3}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/addson/user/user-mask-widget.ascx" flags="gis" byline="false" match="(&lt;!--nsys-modblog1--&gt;)(.*?)(&lt;!---nsys-modblog1--&gt;)" replace="\1${nsys-modblog1}\3" />
+
+		<copy file="${src.dir}/public/layout/addson/user/user-online-widget.ascx" todir="${dist.dir}/${buildVers}/tmp/public/layout/addson/user"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/addson/user/user-online-widget.ascx" flags="gis" byline="false" match="(&lt;!--nsys-modcommunity4--&gt;)(.*?)(&lt;!---nsys-modcommunity4--&gt;)" replace="\1${nsys-modcommunity4}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/addson/user/user-online-widget.ascx" flags="gis" byline="false" match="(&lt;!--nsys-modcommunity5--&gt;)(.*?)(&lt;!---nsys-modcommunity5--&gt;)" replace="\1${nsys-modcommunity5}\3" />
+		
+		<copy file="${src.dir}/public/layout/addson/user/user-profile-widget.ascx" todir="${dist.dir}/${buildVers}/tmp/public/layout/addson/user"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/addson/user/user-profile-widget.ascx" flags="gis" byline="false" match="(//&lt;!--nsys-addsuser1--&gt;)(.*?)(//&lt;!---nsys-addsuser1--&gt;)" replace="\1${nsys-addsuser1}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/addson/user/user-profile-widget.ascx" flags="gis" byline="false" match="(&lt;!--nsys-addsuser2--&gt;)(.*?)(&lt;!---nsys-addsuser2--&gt;)" replace="\1${nsys-addsuser2}\3" />
+
+		<copy file="${src.dir}/public/layout/addson/comments/comments-widget.ascx" todir="${dist.dir}/${buildVers}/tmp/public/layout/addson/comments"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/addson/comments/comments-widget.ascx" flags="gis" byline="false" match="(&lt;!--nsys-modcommunity6--&gt;)(.*?)(&lt;!---nsys-modcommunity6--&gt;)" replace="\1${nsys-modcommunity6}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/addson/comments/comments-widget.ascx" flags="gis" byline="false" match="(&lt;!--nsys-modcommunity8--&gt;)(.*?)(&lt;!---nsys-modcommunity8--&gt;)" replace="\1${nsys-modcommunity8}\3" />
+
+		<copy file="${src.dir}/backoffice/newsletter/newsletterlist.aspx" todir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx" flags="gis" byline="false" match="(&lt;!--nsys-nwsletlist4--&gt;)(.*?)(&lt;!---nsys-nwsletlist4--&gt;)" replace="\1${nsys-nwsletlist4}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx" flags="gis" byline="false" match="(&lt;!--nsys-nwsletlist5--&gt;)(.*?)(&lt;!---nsys-nwsletlist5--&gt;)" replace="\1${nsys-nwsletlist5}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx" flags="gis" byline="false" match="(&lt;!--nsys-nwsletlist6--&gt;)(.*?)(&lt;!---nsys-nwsletlist6--&gt;)" replace="\1${nsys-nwsletlist6}\3" />
+
+		<copy file="${src.dir}/backoffice/newsletter/newsletterlist.aspx.cs" todir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-nwsletlist1--&gt;\*/)(.*?)(/\*&lt;!---nsys-nwsletlist1--&gt;\*/)" replace="\1${nsys-nwsletlist1}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-nwsletlist2--&gt;\*/)(.*?)(/\*&lt;!---nsys-nwsletlist2--&gt;\*/)" replace="\1${nsys-nwsletlist2}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/newsletterlist.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-nwsletlist3--&gt;\*/)(.*?)(/\*&lt;!---nsys-nwsletlist3--&gt;\*/)" replace="\1${nsys-nwsletlist3}\3" />		
+		
+		<copy file="${src.dir}/backoffice/newsletter/insertnewsletter.aspx" todir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/insertnewsletter.aspx" flags="gis" byline="false" match="(&lt;!--nsys-nwsletins2--&gt;)(.*?)(&lt;!---nsys-nwsletins2--&gt;)" replace="\1${nsys-nwsletins2}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/insertnewsletter.aspx" flags="gis" byline="false" match="(&lt;!--nsys-nwsletins3--&gt;)(.*?)(&lt;!---nsys-nwsletins3--&gt;)" replace="\1${nsys-nwsletins3}\3" />
+		
+		<copy file="${src.dir}/backoffice/newsletter/insertnewsletter.aspx.cs" todir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/insertnewsletter.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-nwsletins4--&gt;\*/)(.*?)(/\*&lt;!---nsys-nwsletins4--&gt;\*/)" replace="\1${nsys-nwsletins4}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/insertnewsletter.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-nwsletins5--&gt;\*/)(.*?)(/\*&lt;!---nsys-nwsletins5--&gt;\*/)" replace="\1${nsys-nwsletins5}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/newsletter/insertnewsletter.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-nwsletins6--&gt;\*/)(.*?)(/\*&lt;!---nsys-nwsletins6--&gt;\*/)" replace="\1${nsys-nwsletins6}\3" />		
+		
+		<copy file="${src.dir}/backoffice/business-strategy/insertbusinessrule.aspx" todir="${dist.dir}/${buildVers}/tmp/backoffice/business-strategy"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/business-strategy/insertbusinessrule.aspx" flags="gis" byline="false" match="(&lt;!--nsys-voucher2--&gt;)(.*?)(&lt;!---nsys-voucher2--&gt;)" replace="\1${nsys-voucher2}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/business-strategy/insertbusinessrule.aspx" flags="gis" byline="false" match="(&lt;!--nsys-voucher3--&gt;)(.*?)(&lt;!---nsys-voucher3--&gt;)" replace="\1${nsys-voucher3}\3" />
+		
+		<copy file="${src.dir}/backoffice/business-strategy/insertbusinessrule.aspx.cs" todir="${dist.dir}/${buildVers}/tmp/backoffice/business-strategy"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/business-strategy/insertbusinessrule.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-voucher4--&gt;\*/)(.*?)(/\*&lt;!---nsys-voucher4--&gt;\*/)" replace="\1${nsys-voucher4}\3" />	
+		
+		<copy file="${src.dir}/backoffice/include/menu.ascx" todir="${dist.dir}/${buildVers}/tmp/backoffice/include"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/include/menu.ascx" flags="gis" byline="false" match="(&lt;!--nsys-voucher1--&gt;)(.*?)(&lt;!---nsys-voucher1--&gt;)" replace="\1${nsys-voucher1}\3" />	
+				
 		<copy file="${db.dir}/global_install_query_upto_ec.sql" todir="${dist.dir}/${buildVers}/tmp"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/global_install_query_upto_ec.sql" flags="gis" byline="false" match="buildVersSql" replace="${buildVers}" />
-
-		<copy file="${src.dir}/public/layout/addson/user/user_mask_widget.inc" todir="${dist.dir}/${buildVers}/tmp/public/layout/addson/user"/>
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/addson/user/user_mask_widget.inc" flags="gis" byline="false" match="(&lt;!--nsys-modcommunity2--&gt;)(.*?)(&lt;!---nsys-modcommunity2--&gt;)" replace="\1${nsys-modcommunity2}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/addson/user/user_mask_widget.inc" flags="gis" byline="false" match="(&lt;!--nsys-modcommunity3--&gt;)(.*?)(&lt;!---nsys-modcommunity3--&gt;)" replace="\1${nsys-modcommunity3}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/addson/user/user_mask_widget.inc" flags="gis" byline="false" match="(&lt;!--nsys-modblog1--&gt;)(.*?)(&lt;!---nsys-modblog1--&gt;)" replace="\1${nsys-modblog1}\3" />
-
-		<copy file="${src.dir}/public/layout/addson/user/user_online_widget.inc" todir="${dist.dir}/${buildVers}/tmp/public/layout/addson/user"/>
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/addson/user/user_online_widget.inc" flags="gis" byline="false" match="(&lt;!--nsys-modcommunity4--&gt;)(.*?)(&lt;!---nsys-modcommunity4--&gt;)" replace="\1${nsys-modcommunity4}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/addson/user/user_online_widget.inc" flags="gis" byline="false" match="(&lt;!--nsys-modcommunity5--&gt;)(.*?)(&lt;!---nsys-modcommunity5--&gt;)" replace="\1${nsys-modcommunity5}\3" />
-
-		<copy file="${src.dir}/public/layout/addson/contents/news_comments_widget.asp" todir="${dist.dir}/${buildVers}/tmp/public/layout/addson/contents"/>
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/addson/contents/news_comments_widget.asp" flags="gis" byline="false" match="(&lt;!--nsys-modcommunity6--&gt;)(.*?)(&lt;!---nsys-modcommunity6--&gt;)" replace="\1${nsys-modcommunity6}\3" />
-		
-		<copy file="${src.dir}/public/layout/area_user/manageuser.asp" todir="${dist.dir}/${buildVers}/tmp/public/layout/area_user"/>
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/area_user/manageuser.asp" flags="gis" byline="false" match="(&lt;!--nsys-modcommunity1--&gt;)(.*?)(&lt;!---nsys-modcommunity1--&gt;)" replace="\1${nsys-modcommunity1}\3" />	
-		
-		<copy file="${src.dir}/backoffice/include/menu.inc" todir="${dist.dir}/${buildVers}/tmp/backoffice/include"/>
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/include/menu.inc" flags="gis" byline="false" match="(&lt;!--nsys-voucher1--&gt;)(.*?)(&lt;!---nsys-voucher1--&gt;)" replace="\1${nsys-voucher1}\3" />
-		
-		<copy file="${src.dir}/backoffice/margini/inserisciRule.asp" todir="${dist.dir}/${buildVers}/tmp/backoffice/margini"/>
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/margini/inserisciRule.asp" flags="gis" byline="false" match="(&lt;!--nsys-voucher2--&gt;)(.*?)(&lt;!---nsys-voucher2--&gt;)" replace="\1${nsys-voucher2}\3" />
 	</target>
 	
 	<target name="delete_zip_upto_ec" if="zipToDeleteUpToEc"> 
@@ -755,115 +800,140 @@
 			<zipfileset dir="${src.dir}">
 				
 				<!-- file inclusi -->								
-				<include name="area_user/index.asp"/>
-				<include name="area_user/visualizzaordine.asp"/>				
-				<include name="area_user/listaordini.asp"/>				
-				<include name="area_user/manageuser.asp"/>		
-				<include name="area_user/processusersito.asp"/>		
-				<include name="area_user/userprofile.asp"/>			
-				<include name="area_user/include/*1.inc"/>			
-				<include name="area_user/include/init2.inc"/>
-				<include name="area_user/include/*3.inc"/>
-				<include name="area_user/include/*4.inc"/>
-				
+				<include name="global.asax"/>
+				<include name="web.config"/>
+				<include name="area_user/vieworder.aspx"/>				
+				<include name="area_user/userorders.aspx"/>				
+				<include name="area_user/userorders.aspx.cs"/>		
+				<include name="common/img/logo.png"/>					
 				<include name="common/include/checkin.asp"/>
 				<include name="common/include/checkin_fault.asp"/>
-				<include name="common/include/DownloadManager.asp"/>
-				
-				<include name="common/include/Objects/UserClass.asp"/>
-				<include name="common/include/Objects/Bills4OrderClass.asp"/>
-				<include name="common/include/Objects/BillsAddressClass.asp"/>
-				<include name="common/include/Objects/BillsClass.asp"/>
-				<include name="common/include/Objects/BusinessRulesClass.asp"/>
-				<include name="common/include/Objects/Cardclass.asp"/>
-				<include name="common/include/Objects/CurrencyClass.asp"/>
-				<include name="common/include/Objects/DownloadableProduct4OrderClass.asp"/>
-				<include name="common/include/Objects/DownloadableProductClass.asp"/>
-				<include name="common/include/Objects/File4ProductsClass.asp"/>
-				<include name="common/include/Objects/MarginDiscountClass.asp"/>
-				<include name="common/include/Objects/OrderClass.asp"/>
-				<include name="common/include/Objects/PaymentClass.asp"/>
-				<include name="common/include/Objects/PaymentFieldClass.asp"/>
-				<include name="common/include/Objects/PaymentModuleClass.asp"/>
-				<include name="common/include/Objects/PaymentTransactionClass.asp"/>
-				<include name="common/include/Objects/ProductFieldClass.asp"/>
-				<include name="common/include/Objects/ProductFieldGroupClass.asp"/>
-				<include name="common/include/Objects/Products4OrderClass.asp"/>
-				<include name="common/include/Objects/ProductsCardClass.asp"/>
-				<include name="common/include/Objects/ProductsClass.asp"/>
-				<include name="common/include/Objects/ShippingAddressClass.asp"/>
-				<include name="common/include/Objects/TaxsClass.asp"/>				
-				<include name="common/include/Objects/TaxsGroupClass.asp"/>
-				<include name="common/include/Objects/UserGroupClass.asp"/>
-				<include name="common/include/Objects/VoucherClass.asp"/>
-
-				<include name="backoffice/index.asp"/>
-				<include name="backoffice/img/logo.png"/>
-				<include name="backoffice/categories/inseriscicategoria.asp"/>
-				<include name="backoffice/categories/listacategorie.asp"/>	
-				<include name="backoffice/countries/listacountry.asp"/>	
-				<include name="backoffice/newsletter/inseriscinewsletter.asp"/>
-				<include name="backoffice/newsletter/listanewsletter.asp"/>
-				<include name="backoffice/report/create-user-csv.asp"/>
-				<include name="backoffice/report/create-user-excel.asp"/>		
-				<include name="backoffice/users/inserisciUtente.asp"/>				
-				<include name="backoffice/users/inseriscifield.asp"/>			
-				<include name="backoffice/users/listautenti.asp"/>
-				<include name="backoffice/users/include/init2.asp"/>			
-				<include name="backoffice/users/mail_notif/mail_utente_admin.asp"/>
-				<include name="backoffice/users/mail_notif/mail_utente_guest.asp"/>
-				<include name="backoffice/targets/inseriscitarget.asp"/>
-				<include name="backoffice/targets/listatarget.asp"/>
-				<include name="backoffice/templates/ajaxviewtemplate.asp"/>
-				<include name="backoffice/templates/inseriscitemplate.asp"/>				
-				<include name="**/backoffice/carrelli/**"/>
-				<include name="**/backoffice/currency/**"/>
-				<include name="**/backoffice/margini/**"/>
-				<exclude name="backoffice/margini/inserisciRule.asp"/>
-				<include name="**/backoffice/ordini/**"/>
+				<include name="common/include/download-order-attach.aspx"/>		
+				<include name="backoffice/index.aspx"/>
+				<include name="backoffice/countries/countrylist.aspx"/>
+				<include name="backoffice/users/userlist.aspx"/>
+				<include name="backoffice/users/insertuser.aspx"/>
+				<include name="backoffice/users/insertfield.aspx"/>
+				<include name="backoffice/templates/ajaxviewtemplate.aspx"/>
+				<include name="backoffice/newsletter/newsletterlist.aspx"/>
+				<include name="backoffice/newsletter/newsletterlist.aspx.cs"/>
+				<include name="backoffice/newsletter/insertnewsletter.aspx"/>
+				<include name="backoffice/newsletter/insertnewsletter.aspx.cs"/>
+				<include name="backoffice/img/logo.png"/>				
+				<include name="**/backoffice/shoppingcart/**"/>
+				<include name="**/backoffice/orders/**"/>
 				<include name="**/backoffice/payments/**"/>
-				<include name="**/backoffice/prodotti/**"/>
-				<include name="**/backoffice/spese/**"/>
-				<include name="**/backoffice/tax/**"/>
-				
-				<include name="public/layout/include/menu_vert_sx.inc"/>
-				<include name="public/layout/include/popup.asp"/>
-				<include name="public/layout/addson/user/user_profile_widget.inc"/>
-				
-				<include name="public/layout/area_user/publicprofile.asp"/>
-				<include name="public/layout/area_user/userprofile.asp"/>
-				
-				<!-- *** escludo tutti i template eccetto il base *** -->
-				<exclude name="**/public/templates/**/*"/>
-				
-				<exclude name="**/public/demo/**"/>
-				
+				<include name="**/backoffice/products/**"/>
+				<include name="**/backoffice/charges/**"/>
+				<include name="**/backoffice/fees/**"/>
+				<include name="**/backoffice/currency/**"/>
+				<include name="**/backoffice/business-strategy/**"/>
+				<include name="**/backoffice/supplements/**"/>
+				<include name="public/layout/include/menu-frontend.ascx"/>		
+
+				<include name="**/app_code/hbm/ads.hbm.xml"/>
+				<include name="**/app_code/hbm/BillsAddress.hbm.xml"/>
+				<include name="**/app_code/hbm/BusinessRule.hbm.xml"/>
+				<include name="**/app_code/hbm/Currency.hbm.xml"/>
+				<include name="**/app_code/hbm/Fee.hbm.xml"/>
+				<include name="**/app_code/hbm/Order.hbm.xml"/>
+				<include name="**/app_code/hbm/Payment.hbm.xml"/>
+				<include name="**/app_code/hbm/Product.hbm.xml"/>
+				<include name="**/app_code/hbm/ShippingAddress.hbm.xml"/>
+				<include name="**/app_code/hbm/ShoppingCart.hbm.xml"/>
+				<include name="**/app_code/hbm/Supplement.hbm.xml"/>
+				<include name="**/app_code/hbm/Voucher.hbm.xml"/>			
+
+				<include name="**/app_code/com/nemesys/model/ads/**/*"/>
+				<include name="**/app_code/com/nemesys/model/business-strategy/**/*"/>
+				<include name="**/app_code/com/nemesys/model/cart/**/*"/>
+				<include name="**/app_code/com/nemesys/model/currency/**/*"/>
+				<include name="**/app_code/com/nemesys/model/fees/**/*"/>
+				<include name="**/app_code/com/nemesys/model/order/**/*"/>
+				<include name="**/app_code/com/nemesys/model/payment/**/*"/>
+				<include name="**/app_code/com/nemesys/model/product/**/*"/>
+				<include name="**/app_code/com/nemesys/model/supplement/**/*"/>
+				<include name="**/app_code/com/nemesys/model/voucher/**/*"/>
+
+				<include name="**/app_code/com/nemesys/database/repository/AdsRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/BillsAddressRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/BusinessRuleRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/CurrencyRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/FeeRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/IAdsRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/IBillsAddressRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/IBusinessRuleRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/ICurrencyRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/IFeeRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/IOrderRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/IPaymentModuleRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/IPaymentRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/IPaymentTransactionRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/IProductRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/IShippingAddressRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/IShoppingCartRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/ISupplementGroupRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/ISupplementRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/IVoucherRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/OrderRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/PaymentModuleRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/PaymentRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/PaymentTransactionRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/ProductRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/ShippingAddressRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/ShoppingCartRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/SupplementGroupRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/SupplementRepository.cs"/>
+				<include name="**/app_code/com/nemesys/database/repository/VoucherRepository.cs"/>		
+
+				<include name="**/app_code/com/nemesys/services/BusinessRuleService.cs"/>
+				<include name="**/app_code/com/nemesys/services/FeeService.cs"/>
+				<include name="**/app_code/com/nemesys/services/OrderService.cs"/>
+				<include name="**/app_code/com/nemesys/services/PaymentService.cs"/>
+				<include name="**/app_code/com/nemesys/services/ProductService.cs"/>
+				<include name="**/app_code/com/nemesys/services/ShoppingCartService.cs"/>
+				<include name="**/app_code/com/nemesys/services/VoucherService.cs"/>			
 			</zipfileset>
-			<zipfileset dir="${dist.dir}/${buildVers}/tmp" includes="global.asa"/>
 			
-			<zipfileset dir="${mod_install.dir}" includes="portalinstall.asp" prefix="public/install"/>
+			<zipfileset dir="${mod_install.dir}" includes="portalinstall.aspx" prefix="public/install"/>			
+			<zipfileset dir="${mod_install.dir}/replace-resource" includes="nemesys_replace.properties" prefix="public/install"/>
 			<zipfileset dir="${mod_install.dir}/replace-resource" includes="econemesys_replace.properties" prefix="public/install"/>
 
-			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/include" includes="menu.inc" prefix="backoffice/include"/>
-			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/margini" includes="inserisciRule.asp" prefix="backoffice/margini"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/include" includes="menu.ascx" prefix="backoffice/include"/>
 			
-			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/area_user" includes="manageuser.asp" prefix="public/layout/area_user"/>
-			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/addson/user" includes="user_mask_widget.inc" prefix="public/layout/addson/user"/>
-			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/addson/user" includes="user_online_widget.inc" prefix="public/layout/addson/user"/>
-			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/addson/contents" includes="news_comments_widget.asp" prefix="public/layout/addson/contents"/>
-			
+			<!-- includo il logo di neme-sys al posto del logo econeme-sys -->
+			<zipfileset dir="${snippet.dir}/ecommerce/common/img" includes="logo.png" prefix="common/img"/>
+			<zipfileset dir="${snippet.dir}/ecommerce" includes="favicon.ico" prefix=""/>
+
 			<!-- includo il file global_install_query.sql di creazione/inserimento database -->
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp" includes="global_install_query_upto_ec.sql" fullpath="public/install/global_install_query.sql"/>
-			
-			<!-- includo la documentazione dentro la directory public/utils -->
-			<!--<zipfileset dir="${docs.dir}" includes="eco${docname}" fullpath="public/utils/${docname}"/>-->
 
 			<!-- includo i template di esempio di econeme-sys dentro la directory public/utils -->
 			<zipfileset dir="${src.dir}/public/utils" includes="templates_econeme-sys.zip" fullpath="public/utils/templates_neme-sys.zip"/>
 			
-			<!-- reintegro il template base e shopping-card dentro la directory public/templates -->
+			<!-- reintegro il template base, contact e search dentro la directory public/templates -->
 			<zipfileset dir="${src.dir}/public/templates" includes="base/**/*" prefix="public/templates"/>
+			<zipfileset dir="${src.dir}/public/templates" includes="base-product/**/*" prefix="public/templates"/>
+			<zipfileset dir="${src.dir}/public/templates" includes="search/**/*" prefix="public/templates"/>
+			<zipfileset dir="${src.dir}/public/templates" includes="contact/**/*" prefix="public/templates"/>	
 			<zipfileset dir="${src.dir}/public/templates" includes="shopping-card/**/*" prefix="public/templates"/>
+			
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="newsletterlist.aspx" prefix="backoffice/newsletter"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="newsletterlist.aspx.cs" prefix="backoffice/newsletter"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="insertnewsletter.aspx" prefix="backoffice/newsletter"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="insertnewsletter.aspx.cs" prefix="backoffice/newsletter"/>
+			
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/business-strategy" includes="insertbusinessrule.aspx" prefix="backoffice/business-strategy"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/business-strategy" includes="insertbusinessrule.aspx.cs" prefix="backoffice/business-strategy"/>
+					
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/app_data/conf" includes="nemesys-config.xml" fullpath="app_data/conf/nemesys-config.xml"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/area_user" includes="account.ascx" prefix="public/layout/area_user"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/css" includes="stile.css" prefix="public/layout/css"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/include" includes="header.ascx" prefix="public/layout/include"/>	
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/addson/user" includes="user-profile-widget.ascx" prefix="public/layout/addson/user"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/addson/user" includes="user-mask-widget.ascx" prefix="public/layout/addson/user"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/addson/user" includes="user-online-widget.ascx" prefix="public/layout/addson/user"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/addson/comments" includes="comments-widget.ascx" prefix="public/layout/addson/comments"/>			
 		</zip>
 
 		<delete includeemptydirs="true">

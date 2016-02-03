@@ -250,6 +250,7 @@ INSERT INTO `MAIL` (`id`, `name`, `description`, `lang_code`, `receiver`, `sende
 INSERT INTO `TEMPLATE` (`id`, `directory`, `lang_code`, `description`, `is_base`, `order_by`, `elem_x_page`, `modify_date`) VALUES (1, 'base', '', 'intro', 0, 1, 10, '2013-06-14 19:51:06');
 INSERT INTO `TEMPLATE` (`id`, `directory`, `lang_code`, `description`, `is_base`, `order_by`, `elem_x_page`, `modify_date`) VALUES (2, 'search', '', 'search', 1, 1, 10, '2013-06-14 19:51:06');
 INSERT INTO `TEMPLATE` (`id`, `directory`, `lang_code`, `description`, `is_base`, `order_by`, `elem_x_page`, `modify_date`) VALUES (3, 'contact', '', 'contact', 1, 1, 10, '2013-06-14 19:51:06');
+INSERT INTO `TEMPLATE` (`id`, `directory`, `lang_code`, `description`, `is_base`, `order_by`, `elem_x_page`, `modify_date`) VALUES (4, 'base-product', '', 'products', 0, 1, 10, '2013-06-14 19:51:06');
 INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `url_rewrite`, `priority`) VALUES (1, 1, 'base/', 'detail.aspx', 'intro.aspx', 1);
 INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `url_rewrite`, `priority`) VALUES (2, 1, 'base/', 'detail.aspx.cs', '', -1);
 INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `url_rewrite`, `priority`) VALUES (3, 2, 'search/', 'list.aspx', 'search/search_results.aspx', 1);
@@ -257,6 +258,13 @@ INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `url
 INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `url_rewrite`, `priority`) VALUES (5, 3, 'contact/', 'detail.aspx', 'contact/detail.aspx', 1);
 INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `url_rewrite`, `priority`) VALUES (6, 3, 'contact/', 'confirm.aspx', 'contact/confirm.aspx', 0);
 INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `url_rewrite`, `priority`) VALUES (7, 3, 'contact/', 'detail.aspx.cs', '', -1);
+INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `url_rewrite`, `priority`) VALUES (8, 4, 'product/', 'list.aspx', 'list.aspx', 1);
+INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `url_rewrite`, `priority`) VALUES (9, 4, 'product/', 'list.aspx.cs', '', -1);
+INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `url_rewrite`, `priority`) VALUES (10, 4, 'product/', 'detail.aspx', 'detail.aspx', 2);
+INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `url_rewrite`, `priority`) VALUES (11, 4, 'product/', 'detail.aspx.cs', '', -1);
+INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `url_rewrite`, `priority`) VALUES (12, 4, 'product/', 'ajaxcheckprodavailability.aspx', '', -1);
+INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `url_rewrite`, `priority`) VALUES (13, 4, 'product/', 'ajaxcheckprodfieldsqta.aspx', '', -1);
+INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `url_rewrite`, `priority`) VALUES (14, 4, 'product/', 'ajaxcheckprodqta.aspx', '', -1);
 INSERT INTO `CONTENT_ATTACHMENTS_LABEL` VALUES (1, 'img small');
 INSERT INTO `CONTENT_ATTACHMENTS_LABEL` VALUES (2, 'img big');
 INSERT INTO `CONTENT_ATTACHMENTS_LABEL` VALUES (3, 'img medium');

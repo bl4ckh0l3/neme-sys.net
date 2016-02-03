@@ -329,7 +329,7 @@
 				<exclude name="**/app_data/conf/nemesys-config.xml"/>
 				<exclude name="**/app_data/conf/repository-mapping.xml"/>
 
-				<exclude name="**/app_code/hbm/ads.hbm.xml"/>
+				<exclude name="**/app_code/hbm/Ads.hbm.xml"/>
 				<exclude name="**/app_code/hbm/BillsAddress.hbm.xml"/>
 				<exclude name="**/app_code/hbm/BusinessRule.hbm.xml"/>
 				<exclude name="**/app_code/hbm/Currency.hbm.xml"/>
@@ -831,7 +831,7 @@
 				<include name="**/backoffice/supplements/**"/>
 				<include name="public/layout/include/menu-frontend.ascx"/>		
 
-				<include name="**/app_code/hbm/ads.hbm.xml"/>
+				<include name="**/app_code/hbm/Ads.hbm.xml"/>
 				<include name="**/app_code/hbm/BillsAddress.hbm.xml"/>
 				<include name="**/app_code/hbm/BusinessRule.hbm.xml"/>
 				<include name="**/app_code/hbm/Currency.hbm.xml"/>

@@ -802,6 +802,7 @@
 				<!-- file inclusi -->								
 				<include name="global.asax"/>
 				<include name="web.config"/>
+				<include name="**/app_data/conf/repository-mapping.xml"/>
 				<include name="area_user/vieworder.aspx"/>				
 				<include name="area_user/userorders.aspx"/>				
 				<include name="area_user/userorders.aspx.cs"/>		

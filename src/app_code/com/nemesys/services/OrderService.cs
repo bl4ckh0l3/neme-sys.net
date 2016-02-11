@@ -108,6 +108,17 @@ namespace com.nemesys.services
 			return status;
 		}
 		
+		public static bool isOrderVerified(FOrder order, string refOrderId, string refOrderGuid, string refOrderAmount)
+		{
+			bool verified = true;
+			
+			verified =	verified && order.id.ToString().Equals(refOrderId) && 
+						order.guid.Equals(refOrderGuid) && 
+						order.amount.ToString("0.00").Replace(",",".").Equals(refOrderAmount);
+			
+			return verified;
+		}
+		
 		public static ShippingAddress OrderShipAddress2ShippingAddress(OrderShippingAddress orderShippingAddress)
 		{
 			ShippingAddress ship = new ShippingAddress();
@@ -191,6 +202,7 @@ namespace com.nemesys.services
 			bool mailSent = false;
 			
 			string paymentType = "";
+			string bopaymentType = "";
 			bool paymentDone = false;
 			decimal billsAmount = 0.00M;
 			decimal paymentCommissions = 0.00M;
@@ -200,10 +212,16 @@ namespace com.nemesys.services
 			bool hasOrderRule = false;
 			bool hasProductRule = false;
 			string pdone = "";
+			string bopdone = "";
 			IList<OrderBusinessRule> orderRules = null;
 			IList<OrderBusinessRule> productRules = null;
 			IDictionary<int,string> statusOrder = OrderService.getOrderStatus();
 			IList<UserField> usrfields;
+			
+			string boLangCode = confservice.get("bo_lang_code_default").value;
+			if(String.IsNullOrEmpty(boLangCode)){
+				boLangCode = defLangCode;
+			}
 				
 			try{	
 				List<string> usesFor = new List<string>();
@@ -224,19 +242,24 @@ namespace com.nemesys.services
 				orderAmount = order.amount;
 	
 				pdone = MultiLanguageService.translate("portal.commons.no", langcode, defLangCode);
+				bopdone = MultiLanguageService.translate("portal.commons.no", boLangCode, defLangCode);
 				if(paymentDone){
 					pdone = MultiLanguageService.translate("portal.commons.yes", langcode, defLangCode);
+					bopdone = MultiLanguageService.translate("portal.commons.yes", boLangCode, defLangCode);
 				}			
 				
 				int paymentId = order.paymentId;
 				Payment payment = payrep.getByIdCached(paymentId, true);
 				if(payment != null){
 					paymentType = payment.description;
+					bopaymentType = payment.description;
 					if(!String.IsNullOrEmpty(MultiLanguageService.translate("backend.payment.description.label."+payment.description, langcode, defLangCode))){
 						paymentType = MultiLanguageService.translate("backend.payment.description.label."+payment.description, langcode, defLangCode);
+						bopaymentType = MultiLanguageService.translate("backend.payment.description.label."+payment.description, boLangCode, defLangCode);
 					}
 					if(!String.IsNullOrEmpty(payment.paymentData)){
-					paymentType+="<br/>"+payment.paymentData+"<br/>";
+						paymentType+="<br/>"+payment.paymentData+"<br/>";
+						bopaymentType+="<br/>"+payment.paymentData+"<br/>";
 					}
 				}
 				
@@ -280,66 +303,79 @@ namespace com.nemesys.services
 				.Append(MultiLanguageService.translate("frontend.registration.manage.label.email", langcode, defLangCode)).Append(":&nbsp;<b>").Append(user.email).Append("</b><br/><br/>");		
 				
 				//start admin message
-				adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.id_ordine", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.id).Append("</b><br/><br/>")
-				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.guid_ordine", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.guid).Append("</b><br/><br/>")
-				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.order_client", langcode, defLangCode)).Append("&nbsp;-&nbsp;ID:&nbsp;<b>").Append(user.username).Append("</b>&nbsp;-&nbsp;")
-				.Append(MultiLanguageService.translate("frontend.registration.manage.label.email", langcode, defLangCode)).Append(":&nbsp;<b>").Append(user.email).Append("</b><br/><br/>");								
+				adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.id_ordine", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(order.id).Append("</b><br/><br/>")
+				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.guid_ordine", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(order.guid).Append("</b><br/><br/>")
+				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.order_client", boLangCode, defLangCode)).Append("&nbsp;-&nbsp;ID:&nbsp;<b>").Append(user.username).Append("</b>&nbsp;-&nbsp;")
+				.Append(MultiLanguageService.translate("frontend.registration.manage.label.email", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(user.email).Append("</b><br/><br/>");								
 					
 				if(order.noRegistration && "1".Equals(confservice.get("show_user_field_on_direct_buy").value) && user.fields != null && user.fields.Count>0 && usrfields != null && usrfields.Count>0){							
 					foreach(UserFieldsMatch f in user.fields){
 						string label = "";
+						string bolabel = "";
 						string value = "";
+						string bovalue = "";
 						foreach(UserField uf in usrfields){
 							if(uf.id==f.idParentField){
 								label = uf.description;
 								value = f.value;
+								bolabel = uf.description;
+								bovalue = f.value;
 								if(uf.typeContent==7 || uf.typeContent==8){
 									if(!String.IsNullOrEmpty(MultiLanguageService.translate("portal.commons.select.option.country."+f.value, langcode, defLangCode))){
 										value = MultiLanguageService.translate("portal.commons.select.option.country."+f.value, langcode, defLangCode);
+										bovalue = MultiLanguageService.translate("portal.commons.select.option.country."+f.value, boLangCode, defLangCode);
 									}
 								}
 								if(!String.IsNullOrEmpty(MultiLanguageService.translate("backend.utenti.detail.table.label.field_values_"+uf.description+"_"+f.value, langcode, defLangCode))){
 									label = MultiLanguageService.translate("backend.utenti.detail.table.label.field_values_"+uf.description+"_"+f.value, langcode, defLangCode);
+									bolabel = MultiLanguageService.translate("backend.utenti.detail.table.label.field_values_"+uf.description+"_"+f.value, boLangCode, defLangCode);
 								}
 								break;
 							}										
 						}
 						userMessage.Append(label).Append(":&nbsp;<b>").Append(value).Append("</b><br/><br/>");
-						adminMessage.Append(label).Append(":&nbsp;<b>").Append(value).Append("</b><br/><br/>");								
+						adminMessage.Append(bolabel).Append(":&nbsp;<b>").Append(bovalue).Append("</b><br/><br/>");								
 					}
 				}
 				
 				//****** MANAGE SHIPPING ADDRESS
 				if(hasShipAddress){
 					string shipInfo = "";
+					string boshipInfo = "";
 					string userLabelIsCompanyClient = "";
+					string bouserLabelIsCompanyClient = "";
 					if(oshipaddr.isCompanyClient){
 						userLabelIsCompanyClient = MultiLanguageService.translate("frontend.utenti.detail.table.label.is_company", langcode, defLangCode);
+						bouserLabelIsCompanyClient = MultiLanguageService.translate("frontend.utenti.detail.table.label.is_company", boLangCode, defLangCode);
 					}else{
 						userLabelIsCompanyClient = MultiLanguageService.translate("frontend.utenti.detail.table.label.is_private", langcode, defLangCode);
+						bouserLabelIsCompanyClient = MultiLanguageService.translate("frontend.utenti.detail.table.label.is_private", boLangCode, defLangCode);
 					}								
 					
 					shipInfo = oshipaddr.name + " " + oshipaddr.surname + " ("+userLabelIsCompanyClient+") - " + oshipaddr.cfiscvat + " - " +oshipaddr.address +" - "+oshipaddr.city+" ("+oshipaddr.zipCode+") - "+MultiLanguageService.translate("portal.commons.select.option.country."+oshipaddr.country, langcode, defLangCode)+" - "+MultiLanguageService.translate("portal.commons.select.option.country."+oshipaddr.stateRegion, langcode, defLangCode);
+					boshipInfo = oshipaddr.name + " " + oshipaddr.surname + " ("+bouserLabelIsCompanyClient+") - " + oshipaddr.cfiscvat + " - " +oshipaddr.address +" - "+oshipaddr.city+" ("+oshipaddr.zipCode+") - "+MultiLanguageService.translate("portal.commons.select.option.country."+oshipaddr.country, boLangCode, defLangCode)+" - "+MultiLanguageService.translate("portal.commons.select.option.country."+oshipaddr.stateRegion, boLangCode, defLangCode);
 						
 					userMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.shipping_address", langcode, defLangCode)).Append(":&nbsp;<b>").Append(shipInfo).Append("</b><br/><br/>");
-					adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.shipping_address", langcode, defLangCode)).Append(":&nbsp;<b>").Append(shipInfo).Append("</b><br/><br/>");	
+					adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.shipping_address", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(boshipInfo).Append("</b><br/><br/>");	
 				}	
 				
 				//****** MANAGE BILLS ADDRESS
 				if(hasBillsAddress){
 					string billsInfo = obillsaddr.name + " " + obillsaddr.surname + " - " + obillsaddr.cfiscvat + " - " +obillsaddr.address +" - "+obillsaddr.city+" ("+obillsaddr.zipCode+") - "+MultiLanguageService.translate("portal.commons.select.option.country."+obillsaddr.country, langcode, defLangCode)+" - "+MultiLanguageService.translate("portal.commons.select.option.country."+obillsaddr.stateRegion, langcode, defLangCode);
+					string bobillsInfo = obillsaddr.name + " " + obillsaddr.surname + " - " + obillsaddr.cfiscvat + " - " +obillsaddr.address +" - "+obillsaddr.city+" ("+obillsaddr.zipCode+") - "+MultiLanguageService.translate("portal.commons.select.option.country."+obillsaddr.country, boLangCode, defLangCode)+" - "+MultiLanguageService.translate("portal.commons.select.option.country."+obillsaddr.stateRegion, boLangCode, defLangCode);
 									
 					userMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.bills_address", langcode, defLangCode)).Append(":&nbsp;<b>").Append(billsInfo).Append("</b><br/><br/>");
-					adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.bills_address", langcode, defLangCode)).Append(":&nbsp;<b>").Append(billsInfo).Append("</b><br/><br/>");					
+					adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.bills_address", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(bobillsInfo).Append("</b><br/><br/>");					
 				}
 	
 				userMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.dta_insert_order", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.insertDate.ToString("dd/MM/yyyy HH:mm")).Append("</b><br/><br/>");
-				adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.dta_insert_order", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.insertDate.ToString("dd/MM/yyyy HH:mm")).Append("</b><br/><br/>");				
+				adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.dta_insert_order", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(order.insertDate.ToString("dd/MM/yyyy HH:mm")).Append("</b><br/><br/>");				
 	
 				userMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.attached_prods", langcode, defLangCode)).Append("<br/>");		
-				adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.attached_prods", langcode, defLangCode)).Append("<br/>");			
+				adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.attached_prods", boLangCode, defLangCode)).Append("<br/>");			
 				
 				StringBuilder orderProducts = new StringBuilder();
+				StringBuilder boorderProducts = new StringBuilder();
 				orderProducts.Append("<table border=0 align=top cellpadding=3 cellspacing=0 style=\"border:1px solid #C9C9C9;\">")						
 				.Append("<tr>")
 				.Append("<th style=\"border:1px solid #C9C9C9;\">").Append(MultiLanguageService.translate("backend.ordini.view.table.header.nome_prod", langcode, defLangCode)).Append("</th>")
@@ -349,6 +385,15 @@ namespace com.nemesys.services
 				.Append("<th style=\"border:1px solid #C9C9C9;\">").Append(MultiLanguageService.translate("backend.ordini.view.table.header.qta_prod", langcode, defLangCode)).Append("</th>")	
 				.Append("<th style=\"border:1px solid #C9C9C9;\">").Append(MultiLanguageService.translate("backend.ordini.detail.table.label.fields_prod", langcode, defLangCode)).Append("</th>")				
 				.Append("</tr>");
+				boorderProducts.Append("<table border=0 align=top cellpadding=3 cellspacing=0 style=\"border:1px solid #C9C9C9;\">")						
+				.Append("<tr>")
+				.Append("<th style=\"border:1px solid #C9C9C9;\">").Append(MultiLanguageService.translate("backend.ordini.view.table.header.nome_prod", boLangCode, defLangCode)).Append("</th>")
+				.Append("<th style=\"border:1px solid #C9C9C9;\">").Append(MultiLanguageService.translate("backend.ordini.view.table.header.sommario_prod", boLangCode, defLangCode)).Append("</th>")
+				.Append("<th style=\"border:1px solid #C9C9C9;\">").Append(MultiLanguageService.translate("backend.ordini.view.table.header.totale_prod", boLangCode, defLangCode)).Append("</th>")
+				.Append("<th style=\"border:1px solid #C9C9C9;\">").Append(MultiLanguageService.translate("backend.ordini.view.table.header.totale_tax", boLangCode, defLangCode)).Append("</th>")
+				.Append("<th style=\"border:1px solid #C9C9C9;\">").Append(MultiLanguageService.translate("backend.ordini.view.table.header.qta_prod", boLangCode, defLangCode)).Append("</th>")	
+				.Append("<th style=\"border:1px solid #C9C9C9;\">").Append(MultiLanguageService.translate("backend.ordini.detail.table.label.fields_prod", boLangCode, defLangCode)).Append("</th>")				
+				.Append("</tr>");
 				
 				if(order.products != null && order.products.Count>0){
 					foreach(OrderProduct op in order.products.Values){
@@ -356,37 +401,50 @@ namespace com.nemesys.services
 						IList<OrderProductField> opfs = orderep.findItemFields(order.id, op.idProduct, op.productCounter);
 					
 						string adsRefTitle = "";
+						string boadsRefTitle = "";
 						if(op.idAds != null && op.idAds>-1){
 							Ads a = adsrep.getById(op.idAds);
 							if(a != null){
 								FContent f = contrep.getByIdCached(a.elementId, true);
 								if(f != null){
 									adsRefTitle = "<br/><b>"+MultiLanguageService.translate("frontend.carrello.table.label.ads_title", langcode, defLangCode)+"</b>&nbsp;"+f.title;
+									boadsRefTitle = "<br/><b>"+MultiLanguageService.translate("frontend.carrello.table.label.ads_title", boLangCode, defLangCode)+"</b>&nbsp;"+f.title;
 								}
 							}
 						}
 						
 						//****** MANAGE SUPPLEMENT DESCRIPTION
 						string suppdesc = op.supplementDesc;
+						string bosuppdesc = op.supplementDesc;
 						string suppdesctrans = MultiLanguageService.translate("backend.supplement.description.label."+suppdesc, langcode, defLangCode);
+						string bosuppdesctrans = MultiLanguageService.translate("backend.supplement.description.label."+suppdesc, boLangCode, defLangCode);
 						if(!String.IsNullOrEmpty(suppdesctrans)){
 							suppdesc = suppdesctrans;
 						}
 						suppdesc = "&nbsp;("+suppdesc+")";	
+						if(!String.IsNullOrEmpty(bosuppdesctrans)){
+							bosuppdesc = bosuppdesctrans;
+						}
+						bosuppdesc = "&nbsp;("+bosuppdesc+")";	
 	
 						string opmargin = "";
+						string boopmargin = "";
 						if(op.margin > 0){
 							opmargin = "<li>"+MultiLanguageService.translate("frontend.carrello.table.label.commissioni", langcode, defLangCode)+":&nbsp;&euro;&nbsp;"+op.margin.ToString("#,###0.00")+"</li>";
+							boopmargin = "<li>"+MultiLanguageService.translate("frontend.carrello.table.label.commissioni", boLangCode, defLangCode)+":&nbsp;&euro;&nbsp;"+op.margin.ToString("#,###0.00")+"</li>";
 						}
 						
 						string opdiscPerc = "";
+						string boopdiscPerc = "";
 						if (op.discountPerc > 0) {
 							decimal discountValue = 0-op.discount;
 							opdiscPerc ="<li>"+MultiLanguageService.translate("frontend.carrello.table.label.sconto_applicato", langcode, defLangCode)+"&nbsp;"+op.discountPerc.ToString("#,###0.##")+"%:&nbsp;&euro;&nbsp;"+discountValue.ToString("#,###0.00")+"</li>";
+							boopdiscPerc ="<li>"+MultiLanguageService.translate("frontend.carrello.table.label.sconto_applicato", boLangCode, defLangCode)+"&nbsp;"+op.discountPerc.ToString("#,###0.##")+"%:&nbsp;&euro;&nbsp;"+discountValue.ToString("#,###0.00")+"</li>";
 						}					
 						
 						//****** MANAGE ORDER RULES FOR PRODUCT
 						string orderProdRules = "";
+						string boorderProdRules = "";
 						if (hasProductRule){
 							foreach(OrderBusinessRule w in productRules){
 								int tmpIdProd = w.productId;
@@ -395,32 +453,42 @@ namespace com.nemesys.services
 									string tmpLabel = w.label;                 
 									decimal tmpAmountRule = w.value;
 									orderProdRules+="<li>";
+									boorderProdRules+="<li>";
 									if(!String.IsNullOrEmpty(MultiLanguageService.translate("backend.businessrule.label.label."+tmpLabel, langcode, defLangCode))){
 										orderProdRules+=MultiLanguageService.translate("backend.businessrule.label.label."+tmpLabel, langcode, defLangCode);
+										boorderProdRules+=MultiLanguageService.translate("backend.businessrule.label.label."+tmpLabel, boLangCode, defLangCode);
 									}else{
 										orderProdRules+=tmpLabel;
+										boorderProdRules+=tmpLabel;
 									}
 									if(tmpAmountRule!=0){
 										orderProdRules+=":&nbsp;&euro;&nbsp;"+tmpAmountRule.ToString("#,###0.00");
+										boorderProdRules+=":&nbsp;&euro;&nbsp;"+tmpAmountRule.ToString("#,###0.00");
 									}
 									orderProdRules+="</li>";
+									boorderProdRules+="</li>";
 								}
 							}
 						}	
 						
 						//****** MANAGE FIELDS FOR PRODUCT
 						string productFields = "";
+						string boproductFields = "";
 						if(opfs != null && opfs.Count>0){
 							foreach(OrderProductField opf in opfs){
 								string flabel = MultiLanguageService.translate("backend.prodotti.detail.table.label.field_description_"+opf.description+"_"+prod.keyword, langcode, defLangCode);
+								string boflabel = MultiLanguageService.translate("backend.prodotti.detail.table.label.field_description_"+opf.description+"_"+prod.keyword, boLangCode, defLangCode);
 								if(String.IsNullOrEmpty(flabel)){
 									flabel = opf.description;
+									boflabel = opf.description;
 								}
 								
 								if(opf.fieldType==8){
 									productFields+=flabel+":&nbsp;<a target='_blank' href='"+url+"public/upload/files/orders/"+opf.idOrder+"/"+opf.value+"'>"+opf.value+"</a><br/>";
+									boproductFields+=boflabel+":&nbsp;<a target='_blank' href='"+url+"public/upload/files/orders/"+opf.idOrder+"/"+opf.value+"'>"+opf.value+"</a><br/>";
 								}else{
 									productFields+=flabel+":&nbsp;"+opf.value+"<br/>";
+									boproductFields+=flabel+":&nbsp;"+opf.value+"<br/>";
 								}
 							}
 						}				
@@ -430,7 +498,7 @@ namespace com.nemesys.services
 							.Append(productrep.getMainFieldTranslationCached(op.idProduct, 1 , langcode, true,  op.productName, true).value)
 							.Append(adsRefTitle)
 						.Append("</td>")
-						.Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">").Append(productrep.getMainFieldTranslationCached(op.idProduct, 2 , langcode, true,  prod.summary, true).value).Append("</td>")
+						.Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">").Append(productrep.getMainFieldTranslationCached(op.idProduct, 2 , boLangCode, true,  prod.summary, true).value).Append("</td>")
 						.Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">")
 							.Append("&euro;&nbsp;")
 							.Append(op.taxable.ToString("#,###0.00"))
@@ -449,14 +517,41 @@ namespace com.nemesys.services
 						.Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">")
 							.Append(productFields)
 						.Append("</td>")					
+						.Append("</tr>");				
+					
+						boorderProducts.Append("<tr>")
+						.Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">")
+							.Append(productrep.getMainFieldTranslationCached(op.idProduct, 1 , boLangCode, true,  op.productName, true).value)
+							.Append(boadsRefTitle)
+						.Append("</td>")
+						.Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">").Append(productrep.getMainFieldTranslationCached(op.idProduct, 2 , langcode, true,  prod.summary, true).value).Append("</td>")
+						.Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">")
+							.Append("&euro;&nbsp;")
+							.Append(op.taxable.ToString("#,###0.00"))
+							.Append("<ul style=padding:0px;>")
+							.Append(boopmargin)
+							.Append(boopdiscPerc)
+							.Append(boorderProdRules)
+							.Append("</ul>")
+						.Append("</td>")
+						.Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">")
+							.Append("&euro;&nbsp;")
+							.Append(op.supplement.ToString("#,###0.00"))
+							.Append(bosuppdesc)
+						.Append("</td>")
+						.Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">").Append(op.productQuantity).Append("</td>")	
+						.Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">")
+							.Append(boproductFields)
+						.Append("</td>")					
 						.Append("</tr>");
 					}  
 				}
 				orderProducts.Append("</table>");
+				boorderProducts.Append("</table>");
 	
 	
 				userMessage.Append(orderProducts.ToString()).Append("<br/><br/>");		
-				adminMessage.Append(orderProducts.ToString()).Append("<br/><br/>");	
+				adminMessage.Append(boorderProducts.ToString()).Append("<br/><br/>");	
 				
 				userMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.tipo_pagam_order", langcode, defLangCode)).Append(":&nbsp;<b>").Append(paymentType).Append("</b><br/><br/>")
 				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.pagam_order_done", langcode, defLangCode)).Append(":&nbsp;<b>").Append(pdone).Append("</b><br/><br/>");
@@ -468,51 +563,64 @@ namespace com.nemesys.services
 					paymentTrans+="<strong>ID:</strong> "+q.idTransaction+";&nbsp;";
 					paymentTrans+="<strong>STATUS:</strong> "+q.status+";&nbsp;";
 					if(q.notified){
-						paymentTrans+="<strong>NOTIFIED:</strong> "+MultiLanguageService.translate("backend.commons.no", langcode, defLangCode)+";<br/>";
+						paymentTrans+="<strong>NOTIFIED:</strong> "+MultiLanguageService.translate("backend.commons.no", boLangCode, defLangCode)+";<br/>";
 					}else{
-						paymentTrans+="<strong>NOTIFIED:</strong> "+MultiLanguageService.translate("backend.commons.yes", langcode, defLangCode)+";<br/>";
+						paymentTrans+="<strong>NOTIFIED:</strong> "+MultiLanguageService.translate("backend.commons.yes", boLangCode, defLangCode)+";<br/>";
 					}
 				}
 				
-				adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.tipo_pagam_order", langcode, defLangCode)).Append(":&nbsp;<b>").Append(paymentType).Append("</b><br/><br/>")
-				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.pagam_order_done", langcode, defLangCode)).Append(":&nbsp;<b>").Append(pdone).Append("</b><br/><br/>")
-				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.list_transaction_order", langcode, defLangCode)).Append(":&nbsp;<b>")
+				adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.tipo_pagam_order", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(bopaymentType).Append("</b><br/><br/>")
+				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.pagam_order_done", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(bopdone).Append("</b><br/><br/>")
+				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.list_transaction_order", boLangCode, defLangCode)).Append(":&nbsp;<br/><b>")
 					.Append(paymentTrans)
 				.Append("</b><br/><br/>");			
 	
 				//****** MANAGE ORDER STATUS
 				string orderStatus = "";
+				string boorderStatus = "";
 				if(order.status==1){
 					orderStatus = statusOrder[order.status];
+					boorderStatus = statusOrder[order.status];
 					if(!String.IsNullOrEmpty(MultiLanguageService.translate("backend.ordini.view.table.label."+orderStatus, langcode, defLangCode))){
 						orderStatus = MultiLanguageService.translate("backend.ordini.view.table.label."+orderStatus, langcode, defLangCode);
+						boorderStatus = MultiLanguageService.translate("backend.ordini.view.table.label."+boorderStatus, boLangCode, defLangCode);
 					}
 				}else if(order.status==2){
 					orderStatus = statusOrder[order.status];
+					boorderStatus = statusOrder[order.status];
 					if(!String.IsNullOrEmpty(MultiLanguageService.translate("backend.ordini.view.table.label."+orderStatus, langcode, defLangCode))){
 						orderStatus = MultiLanguageService.translate("backend.ordini.view.table.label."+orderStatus, langcode, defLangCode);
+						boorderStatus = MultiLanguageService.translate("backend.ordini.view.table.label."+boorderStatus, boLangCode, defLangCode);
 					}
 				}else if(order.status==3){
 					orderStatus = statusOrder[order.status];
+					boorderStatus = statusOrder[order.status];
 					if(!String.IsNullOrEmpty(MultiLanguageService.translate("backend.ordini.view.table.label."+orderStatus, langcode, defLangCode))){
 						orderStatus = MultiLanguageService.translate("backend.ordini.view.table.label."+orderStatus, langcode, defLangCode);
+						boorderStatus = MultiLanguageService.translate("backend.ordini.view.table.label."+boorderStatus, boLangCode, defLangCode);
 					}
 				}else if(order.status==4){
 					orderStatus = statusOrder[order.status];
+					boorderStatus = statusOrder[order.status];
 					if(!String.IsNullOrEmpty(MultiLanguageService.translate("backend.ordini.view.table.label."+orderStatus, langcode, defLangCode))){
 						orderStatus = MultiLanguageService.translate("backend.ordini.view.table.label."+orderStatus, langcode, defLangCode);
+						boorderStatus = MultiLanguageService.translate("backend.ordini.view.table.label."+boorderStatus, boLangCode, defLangCode);
 					}
 				}		
 	
 				//****** MANAGE ORDER FEES
 				string orderFees = "";
+				string boorderFees = "";
 				if(fees != null && fees.Count>0){
 					foreach(OrderFee f in fees){
 						string label = f.feeDesc;
+						string bolabel = f.feeDesc;
 						if(!String.IsNullOrEmpty(MultiLanguageService.translate("backend.fee.description.label."+f.feeDesc, langcode, defLangCode))){
 							label = MultiLanguageService.translate("backend.fee.description.label."+f.feeDesc, langcode, defLangCode);
+							bolabel = MultiLanguageService.translate("backend.fee.description.label."+f.feeDesc, boLangCode, defLangCode);
 						}
 						orderFees+=label+"&nbsp;&nbsp;&nbsp;&euro;&nbsp;"+f.amount.ToString("#,###0.00")+"<br/>";
+						boorderFees+=bolabel+"&nbsp;&nbsp;&nbsp;&euro;&nbsp;"+f.amount.ToString("#,###0.00")+"<br/>";
 					}
 				}			
 				
@@ -520,36 +628,41 @@ namespace com.nemesys.services
 				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.spese_spediz_order", langcode, defLangCode)).Append(":&nbsp;<br/><b>").Append(orderFees).Append("</b><br/><br/>")
 				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.payment_commission", langcode, defLangCode)).Append(":&nbsp;<b>&euro;&nbsp;").Append(paymentCommissions.ToString("#,###0.00")).Append("</b><br/><br/>");
 				
-				adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.stato_order", langcode, defLangCode)).Append(":&nbsp;<b>").Append(orderStatus).Append("</b><br/><br/>")
-				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.spese_spediz_order", langcode, defLangCode)).Append(":&nbsp;<br/><b>").Append(orderFees).Append("</b><br/><br/>")
-				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.payment_commission", langcode, defLangCode)).Append(":&nbsp;<b>&euro;&nbsp;").Append(paymentCommissions.ToString("#,###0.00")).Append("</b><br/><br/>");	
+				adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.stato_order", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(boorderStatus).Append("</b><br/><br/>")
+				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.spese_spediz_order", boLangCode, defLangCode)).Append(":&nbsp;<br/><b>").Append(boorderFees).Append("</b><br/><br/>")
+				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.payment_commission", boLangCode, defLangCode)).Append(":&nbsp;<b>&euro;&nbsp;").Append(paymentCommissions.ToString("#,###0.00")).Append("</b><br/><br/>");	
 	
 				//****** MANAGE ORDER RULES
 				string orderRulesDesc = "";
+				string boorderRulesDesc = "";
 				if(hasOrderRule){
 					foreach(OrderBusinessRule x in orderRules){
 						if(!String.IsNullOrEmpty(MultiLanguageService.translate("backend.businessrule.label.label."+x.label, langcode, defLangCode))){ 
 							orderRulesDesc+=MultiLanguageService.translate("backend.businessrule.label.label."+x.label, langcode, defLangCode);
+							boorderRulesDesc+=MultiLanguageService.translate("backend.businessrule.label.label."+x.label, boLangCode, defLangCode);
 						}else{
 							orderRulesDesc+=x.label;
+							boorderRulesDesc+=x.label;
 						}
 						orderRulesDesc+="&nbsp;&nbsp;&nbsp;<b>&euro;&nbsp;"+x.value.ToString("#,###0.00")+"</b><br/>";
+						boorderRulesDesc+="&nbsp;&nbsp;&nbsp;<b>&euro;&nbsp;"+x.value.ToString("#,###0.00")+"</b><br/>";
 					}
 					orderRulesDesc+="<br/>";
+					boorderRulesDesc+="<br/>";
 					
 					userMessage.Append(orderRulesDesc);
-					adminMessage.Append("<b>").Append(MultiLanguageService.translate("backend.ordini.view.table.label.business_rules", langcode, defLangCode)).Append(":</b><br/>").Append(orderRulesDesc);
+					adminMessage.Append("<b>").Append(MultiLanguageService.translate("backend.ordini.view.table.label.business_rules", boLangCode, defLangCode)).Append(":</b><br/>").Append(boorderRulesDesc);
 				}
 				
 				userMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.totale_order", langcode, defLangCode)).Append(":&nbsp;<b>&euro;&nbsp;").Append(orderAmount.ToString("#,###0.00")).Append("</b><br/><br/>");
-				adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.totale_order", langcode, defLangCode)).Append(":&nbsp;<b>&euro;&nbsp;").Append(orderAmount.ToString("#,###0.00")).Append("</b><br/><br/>");
+				adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.totale_order", boLangCode, defLangCode)).Append(":&nbsp;<b>&euro;&nbsp;").Append(orderAmount.ToString("#,###0.00")).Append("</b><br/><br/>");
 				
 			
 				replacementsUser.Add("<%content%>",HttpUtility.HtmlDecode(userMessage.ToString()));
 				replacementsAdmin.Add("<%content%>",HttpUtility.HtmlDecode(adminMessage.ToString()));
 				
 				MailService.prepareAndSend("order-confirmed", langcode, defLangCode, "backend.mails.detail.table.label.subject_", replacementsUser, null, url);
-				MailService.prepareAndSend("order-confirmed", langcode, defLangCode, "backend.mails.detail.table.label.subject_", replacementsAdmin, null, url);	
+				MailService.prepareAndSend("order-confirmed", boLangCode, defLangCode, "backend.mails.detail.table.label.subject_", replacementsAdmin, null, url);	
 				
 				order.mailSent=true;
 				orderep.update(order);
@@ -578,6 +691,8 @@ namespace com.nemesys.services
 				User user = usrrep.getById(order.userId);
 				
 				bool hasDownAttach = false;
+						
+				//lrep.write(new Logger("order.products.Count: "+order.products.Count,"system","debug",DateTime.Now));
 				
 				if(order.products != null && order.products.Count>0){			
 					ListDictionary replacementsUser = new ListDictionary();
@@ -585,6 +700,14 @@ namespace com.nemesys.services
 					StringBuilder userMessage = new StringBuilder();
 					StringBuilder adminMessage = new StringBuilder();	
 					replacementsUser.Add("mail_receiver",user.email);	
+			
+					string boLangCode = confservice.get("bo_lang_code_default").value;
+					if(String.IsNullOrEmpty(boLangCode)){
+						boLangCode = defLangCode;
+					}
+					
+					//lrep.write(new Logger("langcode: "+langcode,"system","debug",DateTime.Now));
+					//lrep.write(new Logger("boLangCode: "+boLangCode,"system","debug",DateTime.Now));
 					
 					//start user message
 					userMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.id_ordine", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.id).Append("</b><br/><br/>")
@@ -593,16 +716,16 @@ namespace com.nemesys.services
 					.Append(MultiLanguageService.translate("frontend.registration.manage.label.email", langcode, defLangCode)).Append(":&nbsp;<b>").Append(user.email).Append("</b><br/><br/>");		
 					
 					//start admin message
-					adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.id_ordine", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.id).Append("</b><br/><br/>")
-					.Append(MultiLanguageService.translate("backend.ordini.view.table.label.guid_ordine", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.guid).Append("</b><br/><br/>")
-					.Append(MultiLanguageService.translate("backend.ordini.view.table.label.order_client", langcode, defLangCode)).Append("&nbsp;-&nbsp;ID:&nbsp;<b>").Append(user.username).Append("</b>&nbsp;-&nbsp;")
-					.Append(MultiLanguageService.translate("frontend.registration.manage.label.email", langcode, defLangCode)).Append(":&nbsp;<b>").Append(user.email).Append("</b><br/><br/>");					
+					adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.id_ordine", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(order.id).Append("</b><br/><br/>")
+					.Append(MultiLanguageService.translate("backend.ordini.view.table.label.guid_ordine", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(order.guid).Append("</b><br/><br/>")
+					.Append(MultiLanguageService.translate("backend.ordini.view.table.label.order_client", boLangCode, defLangCode)).Append("&nbsp;-&nbsp;ID:&nbsp;<b>").Append(user.username).Append("</b>&nbsp;-&nbsp;")
+					.Append(MultiLanguageService.translate("frontend.registration.manage.label.email", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(user.email).Append("</b><br/><br/>");					
 						
 					userMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.dta_insert_order", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.insertDate.ToString("dd/MM/yyyy HH:mm")).Append("</b><br/><br/>");
-					adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.dta_insert_order", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.insertDate.ToString("dd/MM/yyyy HH:mm")).Append("</b><br/><br/>");				
+					adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.dta_insert_order", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(order.insertDate.ToString("dd/MM/yyyy HH:mm")).Append("</b><br/><br/>");				
 		
 					userMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.attached_prods", langcode, defLangCode)).Append("<br/>");		
-					adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.attached_prods", langcode, defLangCode)).Append("<br/>");					
+					adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.attached_prods", boLangCode, defLangCode)).Append("<br/>");					
 					
 					
 					userMessage.Append("<table border=0 align=top cellpadding=3 cellspacing=0 style=\"border:1px solid #C9C9C9;\">");
@@ -613,10 +736,14 @@ namespace com.nemesys.services
 							IList<OrderProductAttachmentDownload> attachments = orderep.getAttachmentDownload(order.id, op.idProduct);
 							if(attachments != null && attachments.Count>0){
 								userMessage.Append("<tr>").Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">").Append(productrep.getMainFieldTranslationCached(op.idProduct, 1 , langcode, true,  op.productName, true).value).Append("</td>").Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">");
-								adminMessage.Append("<tr>").Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">").Append(productrep.getMainFieldTranslationCached(op.idProduct, 1 , langcode, true,  op.productName, true).value).Append("</td>").Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">");
+								adminMessage.Append("<tr>").Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">").Append(productrep.getMainFieldTranslationCached(op.idProduct, 1 , boLangCode, true,  op.productName, true).value).Append("</td>").Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">");
 									
+								//lrep.write(new Logger("attachments.Count: "+attachments.Count,"system","debug",DateTime.Now));
+								
 								foreach(OrderProductAttachmentDownload d in attachments){
 									// check if is still valid download
+									//lrep.write(new Logger("OrderProductAttachmentDownload: "+d.ToString(),"system","debug",DateTime.Now));
+									
 									if(d.active){
 										ProductAttachmentDownload down =  productrep.getProductAttachmentDownloadById(d.idDownFile);
 										if(down != null){
@@ -636,12 +763,14 @@ namespace com.nemesys.services
 					userMessage.Append("</table>");
 					adminMessage.Append("</table>");						
 					
+					//lrep.write(new Logger("hasDownAttach: "+hasDownAttach,"system","debug",DateTime.Now));
+				
 					if(hasDownAttach){
 						replacementsUser.Add("<%content%>",HttpUtility.HtmlDecode(userMessage.ToString()));
 						replacementsAdmin.Add("<%content%>",HttpUtility.HtmlDecode(adminMessage.ToString()));
 						
 						MailService.prepareAndSend("order-down-confirmed", langcode, defLangCode, "backend.mails.detail.table.label.subject_", replacementsUser, null, url);
-						MailService.prepareAndSend("order-down-confirmed", langcode, defLangCode, "backend.mails.detail.table.label.subject_", replacementsAdmin, null, url);	
+						MailService.prepareAndSend("order-down-confirmed", boLangCode, defLangCode, "backend.mails.detail.table.label.subject_", replacementsAdmin, null, url);	
 					
 						order.downloadNotified=true;
 						orderep.update(order);	

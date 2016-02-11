@@ -496,28 +496,6 @@ namespace com.nemesys.database.repository
 			}
 			
 			return results;		
-		}	
-
-		public IList<PaymentFieldFixed> getPaymentFieldsFixed(string keyword)
-		{
-			IList<PaymentFieldFixed> results = null;
-			
-			using (ISession session = NHibernateHelper.getCurrentSession())
-			{
-				string sql = "from PaymentFieldFixed  where 1=1";
-				if(!String.IsNullOrEmpty(keyword)){
-				sql += " and keyword= :keyword";
-				}
-				sql += " order by keyword asc";
-				IQuery q = session.CreateQuery(sql);
-				if(!String.IsNullOrEmpty(keyword)){
-				q.SetString("keyword",keyword);	
-				}
-				results = q.List<PaymentFieldFixed>();
-				NHibernateHelper.closeSession();
-			}
-			
-			return results;			
-		}	
+		}		
 	}
 }

@@ -83,6 +83,7 @@ function changeActiveLang(strAction, strLangCode){
 			builder.Scheme = "http";
 		}
 		builder.Port = -1;	
+		builder.Query="";
 		builder.Path = searchPath.ToString();		
 		url = builder.ToString();%>                
 		<a href="javascript:changeActiveLang('<%=url%>', '<%=x.label%>');" title="<%//=lang.getTranslated("frontend.header.label.tips_nav_lang")%><%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" class="lang-widget<%if(x.label==lang.currentLangCode){Response.Write("-active");}%>"><img src="/common/img/flag/flag-<%=x.label%>.png" alt="<%//=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" border="0" align="absmiddle" /><%//=x.label%></a>

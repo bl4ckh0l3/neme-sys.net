@@ -22,7 +22,8 @@ protected void Page_Load(Object sender, EventArgs e)
 	builder.Scheme = "http";
 	builder.Port = -1;
 	//builder.Path = "default.aspx";	
-	builder.Path = "";		
+	builder.Path = "";
+	builder.Query="";
 	url = builder.ToString();
 }
 </script>

@@ -200,9 +200,9 @@ public partial class _OrderView : Page
 					paymentTrans+="<strong>ID:</strong> "+q.idTransaction+";&nbsp;";
 					paymentTrans+="<strong>STATUS:</strong> "+q.status+";&nbsp;";
 					if(q.notified){
-						paymentTrans+="<strong>NOTIFIED:</strong> "+lang.getTranslated("backend.commons.no")+";<br/>";
-					}else{
 						paymentTrans+="<strong>NOTIFIED:</strong> "+lang.getTranslated("backend.commons.yes")+";<br/>";
+					}else{
+						paymentTrans+="<strong>NOTIFIED:</strong> "+lang.getTranslated("backend.commons.no")+";<br/>";
 					}
 				}						
 			

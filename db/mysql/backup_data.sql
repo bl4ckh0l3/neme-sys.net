@@ -110,34 +110,23 @@ INSERT INTO `SYSTEM_FIELDS_TYPE_CONTENT` (`id`, `description`) VALUES (6, 'datet
 INSERT INTO `SYSTEM_FIELDS_TYPE_CONTENT` (`id`, `description`) VALUES (7, 'country');
 INSERT INTO `SYSTEM_FIELDS_TYPE_CONTENT` (`id`, `description`) VALUES (8, 'state/region');
 
-INSERT INTO `PAYMENT_FIELDS_FIXED` (`id`,`keyword`,`value`,`used`) VALUES (1,'id_order_ack','order id',1);
-INSERT INTO `PAYMENT_FIELDS_FIXED` (`id`,`keyword`,`value`,`used`) VALUES (2,'amount_order_ack','order total',1);
-
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (16,1,'shoptransactionid',NULL,'id_order_ack');
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (17,1,'amount',NULL,'amount_order_ack');
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (18,1,'external_url','https://testecomm.sella.it/gestpay/pagam.asp',NULL);
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (19,1,'currency','242',NULL);
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (20,1,'shoplogin','GESPAY47944',NULL);
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (21,1,'a','GESPAY47944',NULL);
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (22,1,'b',NULL,'id_order_ack');
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (1,2,'custom',NULL,'id_order_ack');
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (2,2,'amount',NULL,'amount_order_ack');
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (3,2,'external_url','https://www.paypal.com/cgi-bin/webscr',NULL);
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (4,2,'cmd','_xclick',NULL);
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (5,2,'business',NULL,NULL);
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (6,2,'ack','Success',NULL);
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (7,2,'return','http://localhost/common/include/checkin.asp',NULL);
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (8,2,'cancel_return','http://localhost/common/include/checkin_fault.asp',NULL);
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (9,2,'item_name',NULL,NULL);
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (10,2,'currency_code','EUR',NULL);
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (11,2,'image_url',NULL,NULL);
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (12,2,'notify_url','http://localhost/editor/payments/moduli/paypal/checkin_notify.asp',NULL);
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (13,2,'tx',NULL,NULL);
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (14,2,'at',NULL,NULL);
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`,`id_module`,`keyword`,`value`,`match_field`) VALUES (15,2,'cm',NULL,'id_order_ack');
+INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(3,  2, 'EXTERNAL_URL', 'https://www.paypal.com/cgi-bin/webscr', NULL);
+INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(24, 2, 'ENDPOINT_URL', 'https://api-3t.paypal.com/nvp', NULL);
+INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(23, 2, 'PWD', NULL, NULL);
+INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(5,  2, 'USER', NULL, NULL);
+INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(10, 2, 'PAYMENTREQUEST_0_CURRENCYCODE', 'EUR', NULL);
+INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(11, 2, 'LOGOIMG', NULL, NULL);
+INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(14, 2, 'SIGNATURE', NULL, NULL);
+INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(16, 1, 'shoptransactionid', NULL, 'id_order_ack');
+INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(17, 1, 'amount', NULL, 'amount_order_ack');
+INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(18, 1, 'external_url', 'https://testecomm.sella.it/gestpay/pagam.asp', NULL);
+INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(19, 1, 'currency', '242', NULL);
+INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(20, 1, 'shoplogin', 'GESPAY47944', NULL);
+INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(21, 1, 'a', 'GESPAY47944', NULL);
+INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(22, 1, 'b', NULL, 'id_order_ack');
 
 INSERT INTO `PAYMENT_MODULES` (`id`,`name`,`icon`,`id_order_field`,`ip_provider`) VALUES (1,'sella','<img src="/common/img/credit_cards.png" border="0" align="absmiddle">','shoptransactionid|b','');
-INSERT INTO `PAYMENT_MODULES` (`id`,`name`,`icon`,`id_order_field`,`ip_provider`) VALUES (2,'paypal','<a href="#" onclick=javascript:window.open("https://www.paypal.com/us/cgi-bin/webscr?cmd=xpt/Marketing/popup/OLCWhatIsPayPal-outside","olcwhatispaypal","toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=400, height=350");><img  src="https://www.paypal.com/en_US/i/logo/PayPal_mark_50x34.gif" border="0" alt="Acceptance Mark" align="absmiddle"></a>','custom|cm','212.48.8.140|87.0.139.170');
+INSERT INTO `PAYMENT_MODULES` (`id`,`name`,`icon`,`id_order_field`,`ip_provider`) VALUES (2,'paypal','<a href="#" onclick=javascript:window.open("https://www.paypal.com/us/cgi-bin/webscr?cmd=xpt/Marketing/popup/OLCWhatIsPayPal-outside","olcwhatispaypal","toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=400, height=350");><img  src="https://www.paypal.com/en_US/i/logo/PayPal_mark_50x34.gif" border="0" alt="Acceptance Mark" align="absmiddle"></a>','','212.48.8.140|87.0.139.170');
 
 INSERT INTO `CURRENCY` (`id`,`currency`,`rate`,`refer_date`,`insert_date`,`active`,`is_default`) VALUES(1,'EUR','1.0000','2002-01-01','2002-01-01 00:00:00',1,1);
 

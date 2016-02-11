@@ -1725,6 +1725,7 @@ public partial class _Checkout : Page
 					//******************* GESTIONE CHECKOUT SU GATEWAY ESTERNI IN BASE AL METODO DI PAGAMENTO SELEZIONATO
 					if(externalGateway){
 						// TODO implementare checkout si gateway esterno
+						Server.Transfer("/checkout/checkout.aspx?orderid="+finalOrderId,true);
 					}else{
 						//***** send confirm order email
 						bool mailSent = OrderService.sendConfirmOrderMail(finalOrderId, lang.currentLangCode, lang.defaultLangCode, orderMailBuilder.ToString());

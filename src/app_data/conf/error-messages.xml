@@ -144,4 +144,8 @@
 	<keyword>042</keyword>
 	<value>portal.commons.errors.label.usr_field_already_exist</value>
 </error-messages>
+<error-messages>
+	<keyword>043</keyword>
+	<value>portal.commons.payment_fault</value>
+</error-messages>
 </root>

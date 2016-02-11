@@ -23,7 +23,5 @@ namespace com.nemesys.database.repository
 		
 		IPaymentField getPaymentFieldById(int idField);		
 		IPaymentField getPaymentFieldByIdCached(int idField, bool cached);
-		
-		IList<PaymentFieldFixed> getPaymentFieldsFixed(string keyword);
 	}
 }

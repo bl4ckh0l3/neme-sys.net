@@ -38,6 +38,7 @@ protected void Page_Load(Object sender, EventArgs e)
 	UriBuilder builder = new UriBuilder(Request.Url);
 	builder.Scheme = "http";
 	builder.Port = -1;	
+	builder.Query="";
 	builder.Path = searchPath.ToString();		
 	url = builder.ToString();
 }

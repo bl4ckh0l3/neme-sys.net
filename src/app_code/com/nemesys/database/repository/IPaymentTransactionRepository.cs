@@ -11,6 +11,8 @@ namespace com.nemesys.database.repository
 		void update(PaymentTransaction paymentTransaction);		
 		void delete(PaymentTransaction paymentTransaction);
 		
+		void savePaymentTransaction(FOrder order, PaymentTransaction paymentTransaction);
+		
 		PaymentTransaction getById(int id);
 		PaymentTransaction getByIdCached(int id, bool cached);
 				

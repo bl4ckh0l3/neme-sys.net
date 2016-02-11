@@ -714,16 +714,6 @@ CREATE TABLE `PAYMENT_MODULES_FIELDS` (
   UNIQUE KEY `Index_2` (`id_module`,`keyword`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `PAYMENT_FIELDS_FIXED`;
-CREATE TABLE `PAYMENT_FIELDS_FIXED` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `keyword` varchar(50) NOT NULL,
-  `value` varchar(100) default NULL,
-  `used` smallint(1) unsigned NOT NULL default '1',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `Index_2` (`keyword`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 DROP TABLE IF EXISTS `PAYMENT_TRANSACTIONS`;
 CREATE TABLE `PAYMENT_TRANSACTIONS` (
   `id` int(11) unsigned NOT NULL auto_increment,

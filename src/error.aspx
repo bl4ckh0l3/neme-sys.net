@@ -1,4 +1,4 @@
-<%@ Page Language="C#"%>
+<%@ Page Language="C#" ValidateRequest="false"%>
 <%@ import Namespace="System" %>
 <%@ import Namespace="System.Collections" %>
 <%@ import Namespace="System.Collections.Generic" %>

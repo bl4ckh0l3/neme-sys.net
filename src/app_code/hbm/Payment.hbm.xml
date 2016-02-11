@@ -32,16 +32,6 @@
 	<property name="matchField" column="match_field" />
     </class>
 
-    <class name="PaymentFieldFixed" table="PAYMENT_FIELDS_FIXED">
-        <id name="id">
-            <column name="id" sql-type="int(11)" not-null="true"/>
-            <generator class="native" />
-        </id>
-	<property name="keyword" column="keyword" not-null="true" />		
-	<property name="value" column="value" />
-	<property name="used" type="Boolean" column="used" not-null="true" />
-    </class>
-
     <class name="PaymentModule" table="PAYMENT_MODULES">
         <id name="id">
             <column name="id" sql-type="int(11)" not-null="true"/>

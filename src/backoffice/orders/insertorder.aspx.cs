@@ -1839,6 +1839,7 @@ public partial class _InsertOrder : Page
 				//******************* GESTIONE CHECKOUT SU GATEWAY ESTERNI IN BASE AL METODO DI PAGAMENTO SELEZIONATO
 				if(externalGateway && !orderPagamDone){
 					// TODO implementare checkout si gateway esterno
+					Server.Transfer("/checkout/checkout.aspx?orderid="+finalOrderId,true);
 				}else{
 					if(orderPagamDone){
 						//***** send confirm order email

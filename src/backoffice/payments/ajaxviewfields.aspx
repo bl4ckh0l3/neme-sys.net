@@ -17,8 +17,7 @@
 public ASP.BoMultiLanguageControl lang;
 protected PaymentModule paymentModule;
 protected IList<IPaymentField> paymentFields;
-protected IList<PaymentFieldFixed> paymentFieldsFixed;
-protected bool hasFields, hasFixedFields;
+protected bool hasFields;
 
 protected void Page_Init(Object sender, EventArgs e)
 {
@@ -36,7 +35,6 @@ protected void Page_Load(Object sender, EventArgs e)
 	IPaymentModuleRepository paymodrep = RepositoryFactory.getInstance<IPaymentModuleRepository>("IPaymentModuleRepository");
 	StringBuilder url = new StringBuilder("/error.aspx?error_code=");
 	hasFields = false;
-	hasFixedFields = false;
 	bool hasPayment = false;
 	int idPayment = Convert.ToInt32(Request["idPayment"]);
 	int idModule = Convert.ToInt32(Request["idModule"]);
@@ -54,16 +52,12 @@ protected void Page_Load(Object sender, EventArgs e)
 		}
 		
 		if(paymentFields != null && paymentFields.Count>0){hasFields = true;}
-		
-		paymentFieldsFixed = payrep.getPaymentFieldsFixed(null);
-		if(paymentFieldsFixed != null && paymentFieldsFixed.Count>0){hasFixedFields = true;}
 	}
 	catch(Exception ex)
 	{
 		Response.Write(ex.Message);
 		paymentModule=null;
 		paymentFields=null;
-		paymentFieldsFixed=null;
 	}	
 }
 </script>
@@ -89,14 +83,6 @@ protected void Page_Load(Object sender, EventArgs e)
 			payTmpCss = "formFieldTXTReadOnly";
 			paytmpreadonly = "readonly=\"true\"";
 			paytmpval = paymentField.matchField;
-			if(hasFixedFields){
-				foreach(PaymentFieldFixed pff in paymentFieldsFixed){
-					if(pff.keyword.Equals(paymentField.matchField)){
-						paytmplabel += " ("+pff.value+")";
-						break;
-					}
-				}
-			}
 		}%>
 		<div align="left" style="float:top">				
 		<input type="text" name="fieldname_<%=paymentField.keyword%>" value="<%=paytmpval%>" class="<%=payTmpCss%>" <%=paytmpreadonly%>>

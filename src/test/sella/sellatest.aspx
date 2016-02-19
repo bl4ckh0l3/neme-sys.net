@@ -58,7 +58,7 @@
                 //Get the VBVRisp encrypted string required to access the issuer authentication page
                 var VBVRisp = Result.VBVRisp
                 //redirect the user to the issuer authentication pages
-                var a = 'Response.Write(Shop_Login);%>';
+                var a = '<%Response.Write(Shop_Login);%>';
                 var b = VBVRisp;
                 var c = document.location.href; //this is the landing page where the user will be redirected after the issuer authentication must be ABSOLUTE
                 var AuthUrl = 'https://testecomm.sella.it/pagam/pagam3d.aspx'; //TESTCODES

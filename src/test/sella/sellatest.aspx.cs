@@ -37,7 +37,8 @@ public partial class _SellaTest : System.Web.UI.Page
         }else{
             //Encrypt the needed parameters 
             string Amount = "0.05";
-            string ShopTransactionId = "iframeCryptTest";
+            //string ShopTransactionId = "iframeCryptTest";
+            string ShopTransactionId = "123456789";
             string Currency = "242"; //UicCode
             PaymentTypeDetail PaymentTDetail = new PaymentTypeDetail();
             ShippingDetails ShipDetails = new ShippingDetails();

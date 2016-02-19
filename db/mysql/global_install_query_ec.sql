@@ -306,13 +306,9 @@ INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `ma
 INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(10, 2, 'PAYMENTREQUEST_0_CURRENCYCODE', 'EUR', NULL);
 INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(11, 2, 'LOGOIMG', NULL, NULL);
 INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(14, 2, 'SIGNATURE', NULL, NULL);
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(16, 1, 'shoptransactionid', NULL, 'id_order_ack');
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(17, 1, 'amount', NULL, 'amount_order_ack');
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(18, 1, 'external_url', 'https://testecomm.sella.it/gestpay/pagam.asp', NULL);
+INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(18, 1, 'EXTERNAL_URL', 'https://ecomm.sella.it/pagam/pagam.aspx', NULL);
 INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(19, 1, 'currency', '242', NULL);
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(20, 1, 'shoplogin', 'GESPAY47944', NULL);
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(21, 1, 'a', 'GESPAY47944', NULL);
-INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(22, 1, 'b', NULL, 'id_order_ack');
+INSERT INTO `PAYMENT_MODULES_FIELDS` (`id`, `id_module`, `keyword`, `value`, `match_field`) VALUES(20, 1, 'shoplogin', '', NULL);
 INSERT INTO `PAYMENT_MODULES` (`id`,`name`,`icon`,`id_order_field`,`ip_provider`) VALUES (1,'sella','<img src="/common/img/credit_cards.png" border="0" align="absmiddle">','shoptransactionid|b','');
 INSERT INTO `PAYMENT_MODULES` (`id`,`name`,`icon`,`id_order_field`,`ip_provider`) VALUES (2,'paypal','<a href="#" onclick=javascript:window.open("https://www.paypal.com/us/cgi-bin/webscr?cmd=xpt/Marketing/popup/OLCWhatIsPayPal-outside","olcwhatispaypal","toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=400, height=350");><img  src="https://www.paypal.com/en_US/i/logo/PayPal_mark_50x34.gif" border="0" alt="Acceptance Mark" align="absmiddle"></a>','','212.48.8.140|87.0.139.170');
 INSERT INTO `CURRENCY` (`id`,`currency`,`rate`,`refer_date`,`insert_date`,`active`,`is_default`) VALUES(1,'EUR','1.0000','2002-01-01','2002-01-01 00:00:00',1,1);

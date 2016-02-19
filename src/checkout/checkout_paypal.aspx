@@ -61,7 +61,7 @@ protected void Page_Load(object sender, EventArgs e)
 				string returnURL = orderUri.ToString()+"checkout/checkin.aspx";
 				string cancelURL = orderUri.ToString()+"checkout/checkin_failed.aspx";
 				string amount = order.amount.ToString("0.00").Replace(",",".");
-				string custom = order.id.ToString()+"|"+order.guid+"|"+amount+langCode;
+				string custom = order.id.ToString()+"|"+amount+langCode;
 				custom = Utils.encodeTo64(custom);
 				string currency = "";
 				

@@ -309,7 +309,9 @@
 				<exclude name="public/layout/addson/user/user-profile-widget.ascx"/>
 				<exclude name="public/layout/addson/user/user-mask-widget.ascx"/>
 				<exclude name="public/layout/addson/user/user-online-widget.ascx"/>
-				<exclude name="public/layout/addson/contents/comments-widget.ascx"/>	
+				<exclude name="public/layout/addson/contents/comments-widget.ascx"/>
+				
+				<exclude name="**/checkout/**"/>	
 				
 				<!-- *** escludo tutti i template eccetto il base *** -->
 				<exclude name="**/public/templates/**/*"/>								
@@ -329,6 +331,8 @@
 				<exclude name="**/app_data/conf/nemesys-config.xml"/>
 				<exclude name="**/app_data/conf/repository-mapping.xml"/>
 
+				<exclude name="**/App_WebReferences/**"/>				
+				
 				<exclude name="**/app_code/hbm/Ads.hbm.xml"/>
 				<exclude name="**/app_code/hbm/BillsAddress.hbm.xml"/>
 				<exclude name="**/app_code/hbm/BusinessRule.hbm.xml"/>
@@ -831,6 +835,10 @@
 				<include name="**/backoffice/business-strategy/**"/>
 				<include name="**/backoffice/supplements/**"/>
 				<include name="public/layout/include/menu-frontend.ascx"/>		
+
+				<include name="**/checkout/**"/>
+				
+				<include name="**/App_WebReferences/**"/>
 
 				<include name="**/app_code/hbm/Ads.hbm.xml"/>
 				<include name="**/app_code/hbm/BillsAddress.hbm.xml"/>

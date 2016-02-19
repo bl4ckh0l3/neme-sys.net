@@ -108,12 +108,12 @@ namespace com.nemesys.services
 			return status;
 		}
 		
-		public static bool isOrderVerified(FOrder order, string refOrderId, string refOrderGuid, string refOrderAmount)
+		public static bool isOrderVerified(FOrder order, string refOrderId/*, string refOrderGuid*/, string refOrderAmount)
 		{
 			bool verified = true;
 			
 			verified =	verified && order.id.ToString().Equals(refOrderId) && 
-						order.guid.Equals(refOrderGuid) && 
+						//order.guid.Equals(refOrderGuid) && 
 						order.amount.ToString("0.00").Replace(",",".").Equals(refOrderAmount);
 			
 			return verified;

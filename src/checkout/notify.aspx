@@ -21,7 +21,7 @@ protected void Page_Load(object sender, EventArgs e)
 	if(!String.IsNullOrEmpty(Request["custom"])){
 		Server.Transfer("/checkout/notify_paypal.aspx?custom="+Request["custom"],true);
 	}else if(!String.IsNullOrEmpty(Request["b"])){
-		Server.Transfer("/checkout/notify_sella.aspx?b="+Request["b"],true);
+		Server.Transfer("/checkout/notify_sella.aspx?b="+Request["b"]+"&a="+Request["a"],true);
 	}else{
 		Logger log = new Logger();
 		log.usr= "system";

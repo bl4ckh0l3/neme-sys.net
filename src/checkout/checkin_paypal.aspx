@@ -128,15 +128,15 @@ protected void Page_Load(object sender, EventArgs e)
 						
 						string custom = "";
 						string reforderid = "";
-						string refguid = "";
+						//string refguid = "";
 						string refamount = "";
 						postValues.TryGetValue("CUSTOM", out custom);
 						custom = HttpUtility.UrlDecode(custom);				
 						string[] references = Utils.decodeFrom64(custom).Split('|');
 						if(references != null && references.Length>=3){
 							reforderid = references[0];
-							refguid = references[1];
-							refamount = references[2];
+							//refguid = references[1];
+							refamount = references[1];//2 if guid is eanbled 
 							
 							order = orderep.getByIdExtended(Convert.ToInt32(reforderid), true);
 						}
@@ -208,7 +208,7 @@ protected void Page_Load(object sender, EventArgs e)
 								postValues.TryGetValue("PAYMENTINFO_0_TRANSACTIONID", out transactionId);
 								carryOn = true; 
 								
-								bool orderVerified = OrderService.isOrderVerified(order, reforderid, refguid, refamount);
+								bool orderVerified = OrderService.isOrderVerified(order, reforderid/*, refguid*/, refamount);
 								
 								strAck = HttpUtility.UrlDecode(strAck).ToLower();
 								if (!String.IsNullOrEmpty(strAck) && (strAck == "success" || strAck == "successwithwarning") && orderVerified){
@@ -227,7 +227,7 @@ protected void Page_Load(object sender, EventArgs e)
 			lrep.write(new Logger("ex.Message: "+ex.Message,"system","error",DateTime.Now));
 		}
 
-		lrep.write(new Logger("carryOn: "+carryOn,"system","debug",DateTime.Now));
+		//lrep.write(new Logger("carryOn: "+carryOn,"system","debug",DateTime.Now));
 			
 		if(carryOn){
 			PaymentTransaction payTrans = new PaymentTransaction();
@@ -255,6 +255,8 @@ protected void Page_Load(object sender, EventArgs e)
 		}else{
 			Response.Redirect("/error.aspx?error_code=043");
 		}
+	}else{
+		Response.Redirect("/error.aspx?error_code=043");
 	}
 }
 </script>

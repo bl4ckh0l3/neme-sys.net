@@ -29,14 +29,14 @@ protected void Page_Load(object sender, EventArgs e)
 	IPaymentRepository payrep = RepositoryFactory.getInstance<IPaymentRepository>("IPaymentRepository");
 	IPaymentTransactionRepository paytransrep = RepositoryFactory.getInstance<IPaymentTransactionRepository>("IPaymentTransactionRepository");
 	ILoggerRepository lrep = RepositoryFactory.getInstance<ILoggerRepository>("ILoggerRepository");
-	
-	if(!String.IsNullOrEmpty(Request["custom"])){
-		try{
+
+	try{	
+		if(!String.IsNullOrEmpty(Request["custom"])){
 			FOrder order = null;
 		
 			string custom = Request["custom"];
 			string reforderid = "";
-			string refguid = "";
+			//string refguid = "";
 			string refamount = "";
 			string reflang = "";
 			string mailLangCode = lang.currentLangCode;
@@ -45,13 +45,13 @@ protected void Page_Load(object sender, EventArgs e)
 			string[] references = custom.Split('|');
 			if(references != null && references.Length>=3){
 				reforderid = references[0];
-				refguid = references[1];
-				refamount = references[2];
+				//refguid = references[1];
+				refamount = references[1];//2 if guid is eanbled 
 				
 				order = orderep.getByIdExtended(Convert.ToInt32(reforderid), true);
 				
-				if(references.Length==4){
-					reflang = references[3];
+				if(references.Length==3){
+					reflang = references[2];
 					if(!String.IsNullOrEmpty(reflang)){
 						mailLangCode = reflang;
 					}
@@ -105,7 +105,7 @@ protected void Page_Load(object sender, EventArgs e)
 					payTrans.insertDate = DateTime.Now;	
 						
 					// Step 1c: Process the response from PayPal.
-					if("VERIFIED".Equals(response) && OrderService.isOrderVerified(order, reforderid, refguid, refamount)){
+					if("VERIFIED".Equals(response) && OrderService.isOrderVerified(order, reforderid/*, refguid*/, refamount)){
 						if("completed".Equals(paymentStatus)){
 							order.paymentDone=true;
 							payTrans.notified = true;	
@@ -141,7 +141,7 @@ protected void Page_Load(object sender, EventArgs e)
 						
 						Logger log1 = new Logger();
 						log1.usr= "system";
-						log1.msg = "order verified: "+ order.id+" - response: "+response+" - status: "+paymentStatus;
+						log1.msg = "paypal: order verified: "+ order.id+" - response: "+response+" - status: "+paymentStatus;
 						log1.type = "info";
 						log1.date = DateTime.Now;
 						lrep.write(log1);		
@@ -154,21 +154,27 @@ protected void Page_Load(object sender, EventArgs e)
 					
 						Logger log2 = new Logger();
 						log2.usr= "system";
-						log2.msg = "order validation failed: "+ order.id+" - response: "+response+" - status: "+paymentStatus;
+						log2.msg = "paypal: order validation failed: "+ order.id+" - response: "+response+" - status: "+paymentStatus;
 						log2.type = "info";
 						log2.date = DateTime.Now;
 						lrep.write(log2);						
 					}
+				}else{
+					throw new Exception("paypal: external url not found");
 				}
+			}else{
+				throw new Exception("paypal: order validation failed: "+reforderid);
 			}
-		}catch(Exception ex){
-			Logger log = new Logger();
-			log.usr= "system";
-			log.msg = ex.Message;
-			log.type = "error";
-			log.date = DateTime.Now;
-			lrep.write(log);
-		}
+		}else{
+			throw new Exception("paypal: order validation failed");
+		}	
+	}catch(Exception ex){
+		Logger log = new Logger();
+		log.usr= "system";
+		log.msg = ex.Message;
+		log.type = "error";
+		log.date = DateTime.Now;
+		lrep.write(log);
 	}	
 }
 </script>

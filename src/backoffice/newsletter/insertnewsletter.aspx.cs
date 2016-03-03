@@ -75,7 +75,7 @@ public partial class _Newsletter : Page
 /*<!--nsys-nwsletins6-->*/		
 		try
 		{
-			voucherCampaigns = voucherep.find("4", 1);	
+			voucherCampaigns = voucherep.find("4", true);	
 			if(voucherCampaigns != null && voucherCampaigns.Count>0){
 				hasVoucherCampaign = true;
 			}

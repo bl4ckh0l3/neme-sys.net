@@ -309,8 +309,16 @@ public partial class _Category : Page
 					if(MyFileCollection != null && MyFileCollection.Count>0){
 						MyFile = MyFileCollection[0];						
 						fileName = Path.GetFileName(MyFile.FileName);
-						if(!String.IsNullOrEmpty(fileName)){
-							category.filePath = fileName;
+						if(!String.IsNullOrEmpty(fileName)){	
+							switch (Path.GetExtension(fileName))
+							{
+								case ".jpg": case ".jpeg": case ".png": case ".gif": case ".bmp":						
+									category.filePath = fileName;
+									break;
+								default:
+									throw new Exception("022");										
+									break;
+							}						
 						}
 					}
 					

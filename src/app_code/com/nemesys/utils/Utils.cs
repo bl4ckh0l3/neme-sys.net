@@ -1,5 +1,7 @@
 using System;
 using System.Text;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace com.nemesys.model
 {
@@ -45,6 +47,25 @@ namespace com.nemesys.model
 				result = Encoding.UTF8.GetString(data);
 			}
 			return result;
+		}
+		
+		public static bool isValidExtension(string ext)
+		{
+			IList<string> acceptedExtension = new List<string>();
+			acceptedExtension.Add(".jpg");
+			acceptedExtension.Add(".jpeg");
+			acceptedExtension.Add(".png");
+			acceptedExtension.Add(".gif");
+			acceptedExtension.Add(".bmp");
+			acceptedExtension.Add(".doc");
+			acceptedExtension.Add(".docx"); 
+			acceptedExtension.Add(".xls");
+			acceptedExtension.Add(".xlsx");
+			acceptedExtension.Add(".pdf");
+			acceptedExtension.Add(".csv");
+			acceptedExtension.Add(".zip");	
+			
+			return acceptedExtension.Contains(ext);
 		}
 	}
 }

@@ -116,7 +116,7 @@ namespace com.nemesys.database.repository
 			return businessRule;
 		}	
 
-		public IList<BusinessRule> find(string type, int active)
+		public IList<BusinessRule> find(string type, Nullable<bool> active)
 		{
 			IList<BusinessRule> results = null;
 
@@ -131,7 +131,7 @@ namespace com.nemesys.database.repository
 				if(ids.Count>0){strSQL+=string.Format(" and ruleType in({0})",string.Join(",",ids.ToArray()));}
 			}
 			
-			if (active>-1){
+			if (active != null){
 				strSQL += " and active=:active";
 			}
 			strSQL += " order by ruleType asc";			
@@ -139,7 +139,7 @@ namespace com.nemesys.database.repository
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			{	
 				IQuery q = session.CreateQuery(strSQL);
-				if (active>-1){
+				if (active != null){
 					q.SetBoolean("active", Convert.ToBoolean(active));
 				}				
 				

@@ -17,7 +17,7 @@ namespace com.nemesys.database.repository
 
 		void saveCompleteCountry(Country country, IList<Geolocalization> listOfPoints, IList<MultiLanguage> newtranslactions, IList<MultiLanguage> updtranslactions, IList<MultiLanguage> deltranslactions);
 				
-		IList<Country> find(string active, string useFor, string searchKey, int pageIndex, int pageSize,out long totalCount);
+		IList<Country> find(Nullable<bool> active, string useFor, string searchKey, int pageIndex, int pageSize,out long totalCount);
 				
 		IList<Country> findAllCountries(string useFor);
 		

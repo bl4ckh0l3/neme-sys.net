@@ -374,7 +374,7 @@ namespace com.nemesys.database.repository
 			return count;
 		}
 				
-		public IList<FOrder> find(string guid, int idUser, string dateFrom, string dateTo, string status, int paymentType, string paymentDone, int orderBy, bool withItems)
+		public IList<FOrder> find(string guid, int idUser, string dateFrom, string dateTo, string status, int paymentType, Nullable<bool> paymentDone, int orderBy, bool withItems)
 		{
 			IList<FOrder> results = null;
 			
@@ -409,7 +409,7 @@ namespace com.nemesys.database.repository
 				strSQL += " and paymentId=:paymentId";
 			}
 			
-			if (!String.IsNullOrEmpty(paymentDone)){			
+			if (paymentDone != null){			
 				strSQL += " and paymentDone=:paymentDone";
 			}
 			
@@ -480,8 +480,8 @@ namespace com.nemesys.database.repository
 					if (paymentType > 0){
 						q.SetInt32("paymentId", Convert.ToInt32(paymentType));
 					}
-					if (!String.IsNullOrEmpty(paymentDone)){
-						q.SetBoolean("paymentDone", Convert.ToBoolean(Convert.ToInt32(paymentDone)));
+					if (paymentDone != null){
+						q.SetBoolean("paymentDone", Convert.ToBoolean(paymentDone));
 					}					
 					
 					results = q.List<FOrder>();

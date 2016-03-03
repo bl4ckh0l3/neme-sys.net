@@ -25,12 +25,12 @@ namespace com.nemesys.services
 		protected static ITemplateRepository templrep = RepositoryFactory.getInstance<ITemplateRepository>("ITemplateRepository");
 		protected static ConfigurationService confservice = new ConfigurationService();
 		
-		public static IList<Category> getMenu(int numMenu, string hierarchyFrom, string hierarchyTo, int level, string boolDeep)
+		public static IList<Category> getMenu(int numMenu, string hierarchyFrom, string hierarchyTo, int level, Nullable<bool> boolDeep)
 		{
 			IList<Category> result = new List<Category>();	
 			try
 			{
-				IList<Category> categories = catrep.findCached(numMenu, "true", true);	
+				IList<Category> categories = catrep.findCached(numMenu, true, true);	
 				//System.Web.HttpContext.Current.Response.Write("<b>categories!=null:</b>"+(categories!=null)+"<br>");
 				foreach(Category category in categories)
 				{
@@ -41,7 +41,7 @@ namespace com.nemesys.services
 					
 					//System.Web.HttpContext.Current.Response.Write("<b>hierarchyDouble:</b>"+hierarchyDouble+"<br><b>hierarchyFrom:</b>"+hierarchyFrom+"<br><br><b>hierarchyTo:</b>"+hierarchyTo+"<br>");
 					
-					if(!String.IsNullOrEmpty(boolDeep)) {
+					if(boolDeep != null) {
 						if(!Convert.ToBoolean(boolDeep)) {					
 							if (clevel == level) {
 								if(addedByHierarchy(hierarchyDouble, hierarchyFrom, hierarchyTo)){

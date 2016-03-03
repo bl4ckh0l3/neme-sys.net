@@ -950,7 +950,7 @@ namespace com.nemesys.database.repository
 			return results;	
 		}
 
-		public IList<User> find(string userNameOrMail, string roles, string active, string isPublic, string automatic, int order_by, bool withAttach, bool withFriend, bool withLang, bool withCats, bool withNewsletters, bool withFields)
+		public IList<User> find(string userNameOrMail, string roles, Nullable<bool> active, Nullable<bool> isPublic, Nullable<bool> automatic, int order_by, bool withAttach, bool withFriend, bool withLang, bool withCats, bool withNewsletters, bool withFields)
 		{
 			IList<User> results = null;		
 			string strSQL = "from User where 1=1";
@@ -966,13 +966,13 @@ namespace com.nemesys.database.repository
 				}						
 				if(ids.Count>0){strSQL+=string.Format(" and role in({0})",string.Join(",",ids.ToArray()));}		
 			}			
-			if (!String.IsNullOrEmpty(active)){	
+			if (active != null){	
 				strSQL += " and active=:active";	
 			}	
-			if (!String.IsNullOrEmpty(isPublic)){
+			if (isPublic != null){
 				strSQL += " and isPublicProfile=:isPublic";
 			}	
-			if (!String.IsNullOrEmpty(automatic)){	
+			if (automatic != null){	
 				strSQL += " and isAutomaticUser=:automatic";
 			}
 
@@ -1017,16 +1017,13 @@ namespace com.nemesys.database.repository
 						q.SetString("username", String.Format("%{0}%", userNameOrMail));
 						q.SetString("email", String.Format("%{0}%", userNameOrMail));
 					}
-					/*if (!String.IsNullOrEmpty(roles)){
-						q.SetString("roles", roles);
-					}*/
-					if (!String.IsNullOrEmpty(active)){
+					if (active != null){
 						q.SetBoolean("active", Convert.ToBoolean(active));
 					}
-					if (!String.IsNullOrEmpty(isPublic)){
+					if (isPublic != null){
 						q.SetBoolean("isPublic", Convert.ToBoolean(isPublic));
 					}
-					if (!String.IsNullOrEmpty(automatic)){
+					if (automatic != null){
 						q.SetBoolean("automatic", Convert.ToBoolean(automatic));
 					}
 					results = q.List<User>();
@@ -1114,7 +1111,7 @@ namespace com.nemesys.database.repository
 			return results;		
 		}
 
-		public IList<User> find(string userNameOrMail, string roles, string active, string isPublic, string automatic, int order_by, int pageIndex, int pageSize,out long totalCount)
+		public IList<User> find(string userNameOrMail, string roles, Nullable<bool> active, Nullable<bool> isPublic, Nullable<bool> automatic, int order_by, int pageIndex, int pageSize,out long totalCount)
 		{
 			IList<User> users = null;		
 			totalCount = 0;	
@@ -1131,13 +1128,13 @@ namespace com.nemesys.database.repository
 				}						
 				if(ids.Count>0){strSQL+=string.Format(" and role in({0})",string.Join(",",ids.ToArray()));}
 			}	
-			if (!String.IsNullOrEmpty(active)){	
+			if (active != null){	
 				strSQL += " and active=:active";	
 			}	
-			if (!String.IsNullOrEmpty(isPublic)){
+			if (isPublic != null){
 				strSQL += " and isPublicProfile=:isPublic";
 			}	
-			if (!String.IsNullOrEmpty(automatic)){	
+			if (automatic != null){	
 				strSQL += " and isAutomaticUser=:automatic";
 			}
 					
@@ -1156,15 +1153,15 @@ namespace com.nemesys.database.repository
 						qCount.SetString("username", String.Format("%{0}%", userNameOrMail));
 						qCount.SetString("email", String.Format("%{0}%", userNameOrMail));
 					}
-					if (!String.IsNullOrEmpty(active)){
+					if (active != null){
 						q.SetBoolean("active", Convert.ToBoolean(active));
 						qCount.SetBoolean("active", Convert.ToBoolean(active));
 					}
-					if (!String.IsNullOrEmpty(isPublic)){
+					if (isPublic != null){
 						q.SetBoolean("isPublic", Convert.ToBoolean(isPublic));
 						qCount.SetBoolean("isPublic", Convert.ToBoolean(isPublic));
 					}
-					if (!String.IsNullOrEmpty(automatic)){
+					if (automatic != null){
 						q.SetBoolean("automatic", Convert.ToBoolean(automatic));
 						qCount.SetBoolean("automatic", Convert.ToBoolean(automatic));
 					}
@@ -1580,14 +1577,14 @@ namespace com.nemesys.database.repository
 			return exist;		
 		}
 	
-		public IList<UserField> getUserFields(string active, List<string> userFor, List<string> applyTo)
+		public IList<UserField> getUserFields(Nullable<bool> active, List<string> userFor, List<string> applyTo)
 		{
 			IList<UserField> results = null;
 			
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			{
 				string sql = "from UserField  where 1=1";
-				if(!String.IsNullOrEmpty(active)){
+				if(active != null){
 					sql += " and enabled= :enabled";
 				}
 				if(userFor != null && userFor.Count>0){
@@ -1599,7 +1596,7 @@ namespace com.nemesys.database.repository
 				sql += " order by sorting, groupDescription, description asc";
 				
 				IQuery q = session.CreateQuery(sql);
-				if(!String.IsNullOrEmpty(active)){
+				if(active != null){
 				q.SetBoolean("enabled",Convert.ToBoolean(active));	
 				}
 				results = q.List<UserField>();

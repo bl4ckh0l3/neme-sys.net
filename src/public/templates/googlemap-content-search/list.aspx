@@ -450,7 +450,7 @@ jQuery(document).ready(function(){
 						<%
 						fieldValueMatch = "";						
 						objListPairKeyValue.TryGetValue("contratto", out fieldValueMatch);
-						IList<string> contracts =  contentrep.getContentFieldValuesByDescriptionCached("contratto", true, "false", "true");								
+						IList<string> contracts =  contentrep.getContentFieldValuesByDescriptionCached("contratto", false, true, true);								
 						%>
 						<select name="field_contratto" id="field_contratto">
 						<option value=""></option>
@@ -467,7 +467,7 @@ jQuery(document).ready(function(){
 						<%
 						fieldValueMatch = "";						
 						objListPairKeyValue.TryGetValue("categoria", out fieldValueMatch);
-						IList<string> categories =  contentrep.getContentFieldValuesByDescriptionCached("categoria", true, "false", "true");								
+						IList<string> categories =  contentrep.getContentFieldValuesByDescriptionCached("categoria", false, true, true);								
 						%>
 						<select name="field_categoria" id="field_categoria">
 						<option value=""></option>
@@ -484,7 +484,7 @@ jQuery(document).ready(function(){
 						<%
 						fieldValueMatch = "";						
 						objListPairKeyValue.TryGetValue("tipologia", out fieldValueMatch);
-						IList<string> typology =  contentrep.getContentFieldValuesByDescriptionCached("tipologia", true, "false", "true");								
+						IList<string> typology =  contentrep.getContentFieldValuesByDescriptionCached("tipologia", false, true, true);								
 						%>
 						<select name="field_tipologia" id="field_tipologia" multiple="3">
 						<option value=""></option>
@@ -513,7 +513,7 @@ jQuery(document).ready(function(){
 						<%
 						fieldValueMatch = "";						
 						objListPairKeyValue.TryGetValue("tipo_proprieta", out fieldValueMatch);
-						IList<string> typeproperty =  contentrep.getContentFieldValuesByDescriptionCached("tipo_proprieta", true, "false", "true");
+						IList<string> typeproperty =  contentrep.getContentFieldValuesByDescriptionCached("tipo_proprieta", false, true, true);
 						%>
 						<select name="field_tipo_proprieta" id="field_tipo_proprieta">
 						<option value=""></option>
@@ -530,7 +530,7 @@ jQuery(document).ready(function(){
 						<%
 						fieldValueMatch = "";						
 						objListPairKeyValue.TryGetValue("stato", out fieldValueMatch);
-						IList<string> status =  contentrep.getContentFieldValuesByDescriptionCached("stato", true, "false", "true");								
+						IList<string> status =  contentrep.getContentFieldValuesByDescriptionCached("stato", false, true, true);								
 						%>
 						<select name="field_stato" id="field_stato">
 						<option value=""></option>
@@ -547,7 +547,7 @@ jQuery(document).ready(function(){
 						<%
 						fieldValueMatch = "";						
 						objListPairKeyValue.TryGetValue("riscaldamento", out fieldValueMatch);
-						IList<string> heating =  contentrep.getContentFieldValuesByDescriptionCached("riscaldamento", true, "false", "true");								
+						IList<string> heating =  contentrep.getContentFieldValuesByDescriptionCached("riscaldamento", false, true, true);								
 						%>
 						<select name="field_riscaldamento" id="field_riscaldamento">
 						<option value=""></option>
@@ -564,7 +564,7 @@ jQuery(document).ready(function(){
 						<%
 						fieldValueMatch = "";						
 						objListPairKeyValue.TryGetValue("bagni", out fieldValueMatch);
-						IList<string> bathslist =  contentrep.getContentFieldValuesByDescriptionCached("bagni", true, "false", "true");								
+						IList<string> bathslist =  contentrep.getContentFieldValuesByDescriptionCached("bagni", false, true, true);								
 						%>
 						<select name="field_bagni" id="field_bagni">
 						<option value=""></option>
@@ -609,7 +609,7 @@ jQuery(document).ready(function(){
 						<%
 						fieldValueMatch = "";						
 						objListPairKeyValue.TryGetValue("accessori", out fieldValueMatch);
-						IList<string> accessories =  contentrep.getContentFieldValuesByDescriptionCached("accessori", true, "false", "true");								
+						IList<string> accessories =  contentrep.getContentFieldValuesByDescriptionCached("accessori", false, true, true);								
 						
 						if(accessories != null && accessories.Count>0){
 							IList<string> splitaccessories = new List<string>();

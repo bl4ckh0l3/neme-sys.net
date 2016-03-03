@@ -87,7 +87,16 @@ protected void Page_Load(Object sender, EventArgs e)
 		users = new List<User>();
 		try
 		{
-			users = usrrep.find(search_key, rolef, activef, publicf, "false", order_by, false, false, false, false, true,true);
+			Nullable<bool> isActive = null;
+			if (!String.IsNullOrEmpty(activef)) {
+				isActive = Convert.ToBoolean(activef);
+			}
+			Nullable<bool> isPublic = null;
+			if (!String.IsNullOrEmpty(publicf)) {
+				isPublic = Convert.ToBoolean(publicf);
+			}			
+		
+			users = usrrep.find(search_key, rolef, isActive, isPublic, false, order_by, false, false, false, false, true,true);
 			if(users != null)
 			{				
 				bolFoundLista = true;					
@@ -106,7 +115,7 @@ protected void Page_Load(Object sender, EventArgs e)
 			List<string> usesFor = new List<string>();
 			usesFor.Add("1");
 			usesFor.Add("3");
-			usrfields = usrrep.getUserFields("true",usesFor, null);
+			usrfields = usrrep.getUserFields(true,usesFor, null);
 			if(usrfields != null)
 			{				
 				bolFoundField = true;

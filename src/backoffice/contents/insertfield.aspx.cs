@@ -123,7 +123,11 @@ public partial class _ContentField : Page
 			{
 				field.common = true;
 				field.idParentContent = -1;
-				field.forBlog = false;
+				bool useForBlog = false;
+				/*<!--nsys-modblog2-->*/
+				if(!String.IsNullOrEmpty(Request["for_blog"])){useForBlog = Convert.ToBoolean(Convert.ToInt32(Request["for_blog"]));}
+				/*<!---nsys-modblog2-->*/
+				field.forBlog = useForBlog;
 				field.description = Request["description"];					
 				field.groupDescription = Request["id_group"];
 				field.type = Convert.ToInt32(Request["id_type"]);

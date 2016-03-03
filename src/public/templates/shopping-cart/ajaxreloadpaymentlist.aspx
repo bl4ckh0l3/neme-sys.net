@@ -74,7 +74,7 @@ protected void Page_Load(Object sender, EventArgs e)
 			paymentType = 0;
 		}
 					
-		paymentMethods = payrep.find(-1, paymentType, "true", "0,2", true, true);
+		paymentMethods = payrep.find(-1, paymentType, true, "0,2", true, true);
 		
 	}
 	catch(Exception ex)

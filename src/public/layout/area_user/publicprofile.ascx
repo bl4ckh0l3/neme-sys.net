@@ -92,7 +92,7 @@
 
 		// recupero elementi della pagina necessari
 		try{				
-			objLPC = preferencerep.find(-1, publicuser.id,  -1, -1, "true", null, null);
+			objLPC = preferencerep.find(-1, publicuser.id,  -1, -1, true, null, null);
 			if(objLPC != null && objLPC.Count>0){
 				preferenceFound = true;
 			}
@@ -111,7 +111,7 @@
 			List<string> applyTo = new List<string>();
 			applyTo.Add("0");
 			applyTo.Add("2");
-			usrfields = usrrep.getUserFields("true",usesFor,applyTo);
+			usrfields = usrrep.getUserFields(true,usesFor,applyTo);
 			if(usrfields != null)
 			{				
 				bolFoundField = true;				
@@ -205,9 +205,17 @@
 					Directory.CreateDirectory(dirName);
 				}					
 				if(!String.IsNullOrEmpty(fileName))
-				{
-					UserService.SaveStreamToFile(MyFile.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/user/"+publicuser.id+"/"+MyFile.FileName));
-					message.Append("<br/><br/>").Append("<img align='top' src='/public/upload/files/user/").Append(publicuser.id).Append("/").Append(MyFile.FileName).Append("'>");
+				{	
+					switch (Path.GetExtension(fileName))
+					{
+						case ".jpg": case ".jpeg": case ".png": case ".gif": case ".bmp":
+							UserService.SaveStreamToFile(MyFile.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/user/"+publicuser.id+"/"+MyFile.FileName));
+							message.Append("<br/><br/>").Append("<img align='top' src='/public/upload/files/user/").Append(publicuser.id).Append("/").Append(MyFile.FileName).Append("'>");
+							break;
+						default:
+							throw new Exception("022");										
+							break;
+					}
 				}
 
 				preference.message = message.ToString();				

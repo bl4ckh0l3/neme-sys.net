@@ -298,14 +298,14 @@ namespace com.nemesys.database.repository
 			}
 		}
 		
-		public IList<Payment> find(int idModule, int paymentType, string isActive, string applyTo, bool withFields, bool cached)
+		public IList<Payment> find(int idModule, int paymentType, Nullable<bool> active, string applyTo, bool withFields, bool cached)
 		{
 			IList<Payment> results = null;
 			
 			StringBuilder cacheKey = new StringBuilder("list-payment")
 			.Append("-").Append(idModule)
 			.Append("-").Append(paymentType)
-			.Append("-").Append(isActive)
+			.Append("-").Append(active)
 			.Append("-").Append(applyTo);
 							
 			//System.Web.HttpContext.Current.Response.Write("cacheKey: " + cacheKey.ToString());
@@ -327,7 +327,7 @@ namespace com.nemesys.database.repository
 			if (paymentType > 0){			
 				strSQL += " and paymentType=:paymentType";
 			}
-			if(!String.IsNullOrEmpty(isActive)){
+			if(active != null){
 				strSQL += " and isActive= :isActive";
 			}
 			
@@ -354,8 +354,8 @@ namespace com.nemesys.database.repository
 					if (paymentType > 0){
 						q.SetInt32("paymentType", Convert.ToInt32(paymentType));
 					}
-					if(!String.IsNullOrEmpty(isActive)){
-						q.SetBoolean("isActive",Convert.ToBoolean(isActive));	
+					if(active != null){
+						q.SetBoolean("isActive",Convert.ToBoolean(active));	
 					}
 					results = q.List<Payment>();
 
@@ -429,12 +429,12 @@ namespace com.nemesys.database.repository
 			return result;		
 		}
 	
-		public IList<IPaymentField> getPaymentFields(int idPayment, int idModule, string keyword, string matchField, string doMatch)
+		public IList<IPaymentField> getPaymentFields(int idPayment, int idModule, string keyword, string matchField, Nullable<bool> doMatch)
 		{
 			return getPaymentFieldsCached(idPayment, idModule, keyword, matchField, doMatch, false);
 		}
 	
-		public IList<IPaymentField> getPaymentFieldsCached(int idPayment, int idModule, string keyword, string matchField, string doMatch, bool cached)
+		public IList<IPaymentField> getPaymentFieldsCached(int idPayment, int idModule, string keyword, string matchField, Nullable<bool> doMatch, bool cached)
 		{
 			IList<IPaymentField> results = null;
 			StringBuilder cacheKey = new StringBuilder("list-payment-field-").Append(idPayment).Append("-").Append(idModule).Append("-").Append(matchField);
@@ -462,7 +462,7 @@ namespace com.nemesys.database.repository
 				if(!String.IsNullOrEmpty(matchField)){
 				sql += " and match_field= :match_field";
 				}
-				if(!String.IsNullOrEmpty(doMatch)){
+				if(doMatch != null){
 					if(Convert.ToBoolean(doMatch)){
 						sql += " and match_field <>'' and not match_field IS NULL";
 					}else{

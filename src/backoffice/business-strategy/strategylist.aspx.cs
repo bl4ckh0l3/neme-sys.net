@@ -145,7 +145,7 @@ public partial class _StrategyList : Page
 		//***************** RECUPERO BUSINESS RULES 
 		try
 		{
-			businessRules = brulerep.find(null, -1);
+			businessRules = brulerep.find(null, null);
 			if(businessRules != null && businessRules.Count>0)
 			{				
 				bolFoundRules = true;				

@@ -126,7 +126,12 @@ protected void renderNotAjax()
 		if(model=="tips"){
 			menu = MenuService.getMenuTips(hierarchy);
 		}else{
-			menu = MenuService.getMenu(menuNumber, hierarchyFrom, hierarchyTo, level, deep);
+			Nullable<bool> isDeep = null;
+			if (!String.IsNullOrEmpty(deep)) {
+				isDeep = Convert.ToBoolean(deep);
+			}		
+		
+			menu = MenuService.getMenu(menuNumber, hierarchyFrom, hierarchyTo, level, isDeep);
 		}
 		
 		if(menu != null && menu.Count>0)

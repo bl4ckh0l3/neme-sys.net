@@ -81,7 +81,7 @@ namespace com.nemesys.database.repository
 			return voucher;			
 		}
 
-		public IList<VoucherCampaign> find(string type, int active)
+		public IList<VoucherCampaign> find(string type, Nullable<bool> active)
 		{
 			IList<VoucherCampaign> results = null;
 
@@ -96,7 +96,7 @@ namespace com.nemesys.database.repository
 				if(ids.Count>0){strSQL+=string.Format(" and type in({0})",string.Join(",",ids.ToArray()));}
 			}
 			
-			if (active>-1){
+			if (active != null){
 				strSQL += " and active=:active";
 			}
 			strSQL += " order by type asc";			
@@ -104,7 +104,7 @@ namespace com.nemesys.database.repository
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			{	
 				IQuery q = session.CreateQuery(strSQL);
-				if (active>-1){
+				if (active != null){
 					q.SetBoolean("active", Convert.ToBoolean(active));
 				}				
 				

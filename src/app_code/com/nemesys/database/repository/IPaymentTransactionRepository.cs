@@ -16,7 +16,7 @@ namespace com.nemesys.database.repository
 		PaymentTransaction getById(int id);
 		PaymentTransaction getByIdCached(int id, bool cached);
 				
-		IList<PaymentTransaction> find(int idOrder, int idModule, string idTransaction, string notified, bool cached);
+		IList<PaymentTransaction> find(int idOrder, int idModule, string idTransaction, Nullable<bool> notified, bool cached);
 		
 		bool isPaymentTransactionNotified(PaymentTransaction paymentTransaction);
 		

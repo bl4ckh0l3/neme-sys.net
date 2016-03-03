@@ -45,8 +45,8 @@ namespace com.nemesys.database.repository
 		
 		IList<ProductCategory> getProductCategories(int idProduct);
 		
-		IList<ProductField> getProductFields(int idProduct, string active, string common);
-		IList<ProductField> getProductFieldsCached(int idProduct, string active, bool cached, string common);
+		IList<ProductField> getProductFields(int idProduct, Nullable<bool> active, Nullable<bool> common);
+		IList<ProductField> getProductFieldsCached(int idProduct, Nullable<bool> active, Nullable<bool> common, bool cached);
 		
 		ProductFieldsValue getProductFieldValue(int idField, string value);
 		ProductFieldsValue getProductFieldValueCached(int idField, string value, bool cached);
@@ -54,8 +54,8 @@ namespace com.nemesys.database.repository
 		IList<ProductFieldsValue> getProductFieldValues(int idField);		
 		IList<ProductFieldsValue> getProductFieldValuesCached(int idField, bool cached);
 		
-		IList<string> getProductFieldValuesByDescription(string description, string common, string active);
-		IList<string> getProductFieldValuesByDescriptionCached(string description, bool cached, string common, string active);
+		IList<string> getProductFieldValuesByDescription(string description, Nullable<bool> common, Nullable<bool> active);
+		IList<string> getProductFieldValuesByDescriptionCached(string description, Nullable<bool> common, Nullable<bool> active, bool cached);
 
 		ProductField getProductFieldById(int idField);		
 		ProductField getProductFieldByIdCached(int idField, bool cached);

@@ -164,11 +164,11 @@ namespace com.nemesys.database.repository
 			return result;
 		}
 
-		public IList<Currency> findAll(string active)
+		public IList<Currency> findAll(Nullable<bool> active)
 		{		
 			IList<Currency> currencies = null;		
 			string strSQL = "from Currency where 1=1";			
-			if (!String.IsNullOrEmpty(active)){			
+			if (active != null){			
 				strSQL += " and active=:active";
 			}	
 			strSQL +=" order by currency asc";			
@@ -179,7 +179,7 @@ namespace com.nemesys.database.repository
 				IQuery q = session.CreateQuery(strSQL);	
 				try
 				{
-					if (!String.IsNullOrEmpty(active)){
+					if (active != null){
 						q.SetBoolean("active", Convert.ToBoolean(active));
 					}
 					currencies = q.List<Currency>();
@@ -196,7 +196,7 @@ namespace com.nemesys.database.repository
 			return currencies;
 		}
 
-		public IList<Currency> find(string currency, string active, int pageIndex, int pageSize,out long totalCount)
+		public IList<Currency> find(string currency, Nullable<bool> active, int pageIndex, int pageSize,out long totalCount)
 		{		
 			IList<Currency> currencies = null;		
 			totalCount = 0;	
@@ -204,7 +204,7 @@ namespace com.nemesys.database.repository
 			if (!String.IsNullOrEmpty(currency)){			
 				strSQL += " and currency=:currency";
 			}			
-			if (!String.IsNullOrEmpty(active)){			
+			if (active != null){			
 				strSQL += " and active=:active";
 			}	
 			strSQL +=" order by currency asc";			
@@ -220,7 +220,7 @@ namespace com.nemesys.database.repository
 						q.SetString("currency", currency);
 						qCount.SetString("currency", currency);
 					}
-					if (!String.IsNullOrEmpty(active)){
+					if (active != null){
 						q.SetBoolean("active", Convert.ToBoolean(active));
 						qCount.SetBoolean("active", Convert.ToBoolean(active));
 					}

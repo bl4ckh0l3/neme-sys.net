@@ -1590,12 +1590,12 @@ namespace com.nemesys.database.repository
 			return result;		
 		}
 	
-		public IList<ContentField> getContentFields(int idContent, string active, string forBlog, string common)
+		public IList<ContentField> getContentFields(int idContent, Nullable<bool> active, Nullable<bool> forBlog, Nullable<bool> common)
 		{
-			return getContentFieldsCached(idContent, active, forBlog, false, common);
+			return getContentFieldsCached(idContent, active, forBlog, common, false);
 		}
 	
-		public IList<ContentField> getContentFieldsCached(int idContent, string active, string forBlog, bool cached, string common)
+		public IList<ContentField> getContentFieldsCached(int idContent, Nullable<bool> active, Nullable<bool> forBlog, Nullable<bool> common, bool cached)
 		{
 			IList<ContentField> results = null;
 			StringBuilder cacheKey = new StringBuilder("list-field-fcontent-").Append(idContent).Append("-").Append(active).Append("-").Append(forBlog).Append("-").Append(common);
@@ -1614,13 +1614,13 @@ namespace com.nemesys.database.repository
 				if(idContent!=-1){
 				sql += " and id_parent_content= :id_content";
 				}
-				if(!String.IsNullOrEmpty(active)){
+				if(active != null){
 				sql += " and enabled= :enabled";
 				}
-				if(!String.IsNullOrEmpty(forBlog)){
+				if(forBlog != null){
 				sql += " and forBlog= :forBlog";
 				}
-				if(!String.IsNullOrEmpty(common)){
+				if(common != null){
 				sql += " and common= :common";
 				}
 				sql += " order by sorting, groupDescription, description asc";
@@ -1628,13 +1628,13 @@ namespace com.nemesys.database.repository
 				if(idContent!=-1){
 				q.SetInt32("id_content",idContent);	
 				}
-				if(!String.IsNullOrEmpty(active)){
+				if(active != null){
 				q.SetBoolean("enabled",Convert.ToBoolean(active));	
 				}
-				if(!String.IsNullOrEmpty(forBlog)){
+				if(forBlog != null){
 				q.SetBoolean("forBlog",Convert.ToBoolean(forBlog));	
 				}
-				if(!String.IsNullOrEmpty(common)){
+				if(common != null){
 				q.SetBoolean("common",Convert.ToBoolean(common));	
 				}
 				results = q.List<ContentField>();
@@ -1691,12 +1691,12 @@ namespace com.nemesys.database.repository
 			return results;	
 		}
 	
-		public IList<string> getContentFieldValuesByDescription(string description, string common, string active)
+		public IList<string> getContentFieldValuesByDescription(string description, Nullable<bool> common, Nullable<bool> active)
 		{
-			return getContentFieldValuesByDescriptionCached(description, false, common, active);
+			return getContentFieldValuesByDescriptionCached(description, common, active, false);
 		}
 	
-		public IList<string> getContentFieldValuesByDescriptionCached(string description, bool cached, string common, string active)
+		public IList<string> getContentFieldValuesByDescriptionCached(string description, Nullable<bool> common, Nullable<bool> active, bool cached)
 		{
 			IList values = null;
 			IList<string> results = null;	
@@ -1713,10 +1713,10 @@ namespace com.nemesys.database.repository
 			
 			string strSQL = "select distinct value from CONTENT_FIELDS where description=:description and not isnull(value) and trim(value)<>''";			
 			
-			if(!String.IsNullOrEmpty(common)){
+			if(common != null){
 			strSQL += " and common= :common";
 			}			
-			if(!String.IsNullOrEmpty(active)){
+			if(active != null){
 			strSQL += " and enabled= :enabled";
 			}
 			strSQL += " order by value asc";
@@ -1725,10 +1725,10 @@ namespace com.nemesys.database.repository
 			{
 				IQuery q = session.CreateSQLQuery(strSQL).AddScalar("value", NHibernateUtil.String);
 				q.SetString("description",description);
-				if(!String.IsNullOrEmpty(common)){
+				if(common != null){
 				q.SetBoolean("common",Convert.ToBoolean(common));	
 				}	
-				if(!String.IsNullOrEmpty(active)){
+				if(active != null){
 				q.SetBoolean("enabled",Convert.ToBoolean(active));	
 				}			
 				values = q.List();			

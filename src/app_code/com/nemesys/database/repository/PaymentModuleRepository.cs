@@ -225,12 +225,12 @@ namespace com.nemesys.database.repository
 			return results;		
 		}
 	
-		public IList<IPaymentField> getPaymentModuleFields(int idModule, string keyword, string matchField, string doMatch)
+		public IList<IPaymentField> getPaymentModuleFields(int idModule, string keyword, string matchField, Nullable<bool> doMatch)
 		{
 			return getPaymentModuleFieldsCached(idModule, keyword, matchField, doMatch, false);
 		}
 	
-		public IList<IPaymentField> getPaymentModuleFieldsCached(int idModule, string keyword, string matchField, string doMatch, bool cached)
+		public IList<IPaymentField> getPaymentModuleFieldsCached(int idModule, string keyword, string matchField, Nullable<bool> doMatch, bool cached)
 		{
 			IList<IPaymentField> results = null;
 			StringBuilder cacheKey = new StringBuilder("list-payment-module-field-").Append(idModule).Append("-").Append(matchField);
@@ -255,7 +255,7 @@ namespace com.nemesys.database.repository
 				if(!String.IsNullOrEmpty(matchField)){
 				sql += " and match_field= :match_field";
 				}
-				if(!String.IsNullOrEmpty(doMatch)){
+				if(doMatch != null){
 					if(Convert.ToBoolean(doMatch)){
 						sql += " and match_field <>'' and not match_field IS NULL";
 					}else{

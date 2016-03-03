@@ -2,6 +2,7 @@ using System;
 using System.Data;
 using System.Web;
 using System.Web.UI;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using com.nemesys.model;
@@ -160,6 +161,12 @@ public partial class _Mail : Page
 						//	HttpPostedFile tmp = MyFileCollection[k];
 							//Response.Write("filename:"+tmp.FileName);
 						//}
+
+						string fileName = Path.GetFileName(MyFile.FileName);
+						if(fileName==".bat" || fileName==".exe" || fileName==".dll" || fileName==".zip")
+						{
+							throw new Exception("022");
+						}						
 						
 						FileLen = MyFile.ContentLength;
 						byte[] input = new byte[FileLen];

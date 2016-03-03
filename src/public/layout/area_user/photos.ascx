@@ -133,23 +133,31 @@
 				}					
 				if(!String.IsNullOrEmpty(fileName))
 				{
-					UserService.SaveStreamToFile(MyFile.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/user/"+login.userLogged.id+"/"+MyFile.FileName));
-
-					User user = usrrep.getById(login.userLogged.id);	
-					
-					UserAttachment attachment = new UserAttachment();
-					attachment.idUser = login.userLogged.id;
-					attachment.fileName = fileName;	
-					attachment.contentType = MyFile.ContentType;
-					attachment.filePath = login.userLogged.id+"/";
-					attachment.fileDida = Request["file_dida"];
-					attachment.fileLabel = Request["file_label"];
-					attachment.isAvatar = false;							
-					attachment.insertDate = DateTime.Now;
-
-					user.attachments.Add(attachment);
-					usrrep.update(user);
-					login.updateUserLogged(user);	
+					switch (Path.GetExtension(fileName))
+					{
+						case ".jpg": case ".jpeg": case ".png": case ".gif": case ".bmp":					
+							UserService.SaveStreamToFile(MyFile.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/user/"+login.userLogged.id+"/"+MyFile.FileName));
+		
+							User user = usrrep.getById(login.userLogged.id);	
+							
+							UserAttachment attachment = new UserAttachment();
+							attachment.idUser = login.userLogged.id;
+							attachment.fileName = fileName;	
+							attachment.contentType = MyFile.ContentType;
+							attachment.filePath = login.userLogged.id+"/";
+							attachment.fileDida = Request["file_dida"];
+							attachment.fileLabel = Request["file_label"];
+							attachment.isAvatar = false;							
+							attachment.insertDate = DateTime.Now;
+		
+							user.attachments.Add(attachment);
+							usrrep.update(user);
+							login.updateUserLogged(user);
+							break;
+						default:
+							throw new Exception("022");										
+							break;
+					}	
 				}			
 			}
 			catch(Exception ex)

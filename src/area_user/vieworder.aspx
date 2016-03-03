@@ -234,7 +234,7 @@ protected void Page_Load(object sender, EventArgs e)
 						FContent content = contentrep.getByIdCached(comment.elementId, true);
 						User user = usrrep.getById(order.userId);
 								
-						MailMsg mtemplate = mailrep.getByName("confirm-comment", lang.currentLangCode, "true");
+						MailMsg mtemplate = mailrep.getByName("confirm-comment", lang.currentLangCode, true);
 						ListDictionary replacements = new ListDictionary();
 						
 						StringBuilder newsContent = new StringBuilder();

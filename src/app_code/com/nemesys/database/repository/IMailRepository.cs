@@ -19,7 +19,7 @@ namespace com.nemesys.database.repository
 		
 		MailMsg getByName(string name, string langCode);
 		
-		MailMsg getByName(string name, string langCode, string active);
+		MailMsg getByName(string name, string langCode, Nullable<bool> active);
 
 		bool mailAlreadyExists(string name, string langCode, int mailid);
 
@@ -29,6 +29,6 @@ namespace com.nemesys.database.repository
 		
 		IList<MailCategory> findCategories();
 		
-		IList<MailMsg> find(string active, string category, int pageIndex, int pageSize,out long totalCount);
+		IList<MailMsg> find(Nullable<bool> active, string category, int pageIndex, int pageSize,out long totalCount);
 	}
 }

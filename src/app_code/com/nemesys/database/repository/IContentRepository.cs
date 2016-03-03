@@ -41,15 +41,15 @@ namespace com.nemesys.database.repository
 		
 		IList<ContentCategory> getContentCategories(int idContent);
 		
-		IList<ContentField> getContentFields(int idContent, string active, string forBlog, string common);
-		IList<ContentField> getContentFieldsCached(int idContent, string active, string forBlog, bool cached, string common);
+		IList<ContentField> getContentFields(int idContent, Nullable<bool> active, Nullable<bool> forBlog, Nullable<bool> common);
+		IList<ContentField> getContentFieldsCached(int idContent, Nullable<bool> active, Nullable<bool> forBlog, Nullable<bool> common, bool cached);
 		
 		IList<ContentFieldsValue> getContentFieldValues(int idField);
 		
 		IList<ContentFieldsValue> getContentFieldValuesCached(int idField, bool cached);
 		
-		IList<string> getContentFieldValuesByDescription(string description, string common, string active);
-		IList<string> getContentFieldValuesByDescriptionCached(string description, bool cached, string common, string active);
+		IList<string> getContentFieldValuesByDescription(string description, Nullable<bool> common, Nullable<bool> active);
+		IList<string> getContentFieldValuesByDescriptionCached(string description, Nullable<bool> common, Nullable<bool> active, bool cached);
 
 		ContentField getContentFieldById(int idField);
 		

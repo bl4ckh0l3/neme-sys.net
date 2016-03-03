@@ -28,7 +28,7 @@ namespace com.nemesys.database.repository
 		
 		Preference getById(int id);
 
-		IList<Preference> find(int userId, int friendId, int commentId, int commentType, string active, string boolExcludeComments, string boolExcludeTypes);
+		IList<Preference> find(int userId, int friendId, int commentId, int commentType, Nullable<bool> active, Nullable<bool> boolExcludeComments, Nullable<bool> boolExcludeTypes);
 		
 		long getPositivePercentage(int userId);
 

@@ -253,8 +253,8 @@ $(function() {
 				  <td>			  
 				  <select name="payment_done" class="formFieldChangeStato">
 					<option value=""></option>
-					<option value="0" <%if("0".Equals(search_paydone)){Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.no")%></option>
-					<option value="1" <%if("1".Equals(search_paydone)){Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.yes")%></option>
+					<option value="false" <%if("false".Equals(search_paydone)){Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.no")%></option>
+					<option value="true" <%if("true".Equals(search_paydone)){Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.yes")%></option>
 				  </select>		  
 				  </td> 
 				<td>			  

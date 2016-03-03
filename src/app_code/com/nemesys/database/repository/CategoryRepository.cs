@@ -637,12 +637,12 @@ namespace com.nemesys.database.repository
 			return exist;		
 		}
 	
-		public IList<Category> find(int menu, string active)
+		public IList<Category> find(int menu, Nullable<bool> active)
 		{
 			return findCached(menu, active, false);
 		}
 	
-		public IList<Category> findCached(int menu, string active, bool cached)
+		public IList<Category> findCached(int menu, Nullable<bool> active, bool cached)
 		{
 			IList<Category> results = null;
 			StringBuilder cacheKey = null;
@@ -662,7 +662,7 @@ namespace com.nemesys.database.repository
 				if (menu>0){			
 					strSQL += " and numMenu=:menu";
 				}
-				if (!String.IsNullOrEmpty(active)){			
+				if (active != null){			
 					strSQL += " and visible=:visible";
 				}			
 				strSQL +=" order by cast(hierarchy as double) asc";				
@@ -671,7 +671,7 @@ namespace com.nemesys.database.repository
 				if (menu>0){			
 					q.SetInt32("menu",menu);
 				}
-				if (!String.IsNullOrEmpty(active)){			
+				if (active != null){			
 					q.SetBoolean("visible",Convert.ToBoolean(active));
 				}
 				results = q.List<Category>();

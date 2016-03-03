@@ -87,7 +87,7 @@ namespace com.nemesys.database.repository
 			return preference;
 		}
 
-		public IList<Preference> find(int userId, int friendId, int commentId, int commentType, string active, string boolExcludeComments, string boolExcludeTypes)
+		public IList<Preference> find(int userId, int friendId, int commentId, int commentType, Nullable<bool> active, Nullable<bool> boolExcludeComments, Nullable<bool> boolExcludeTypes)
 		{
 			IList<Preference> results = null;
 			
@@ -109,7 +109,7 @@ namespace com.nemesys.database.repository
 				strSQL += " and commentType=:commentType";
 			}
 			
-			if(!String.IsNullOrEmpty(boolExcludeComments)) {
+			if(boolExcludeComments != null) {
 				if(Convert.ToBoolean(boolExcludeComments)){
 					strSQL += " and (ISNULL(commentId) or commentId<=0)";
 				}else{
@@ -117,7 +117,7 @@ namespace com.nemesys.database.repository
 				}
 			}		
 			
-			if(!String.IsNullOrEmpty(boolExcludeTypes)) {
+			if(boolExcludeTypes != null) {
 				if(Convert.ToBoolean(boolExcludeTypes)){
 					strSQL += " and (ISNULL(type) or type=0)";
 				}else{
@@ -125,7 +125,7 @@ namespace com.nemesys.database.repository
 				}
 			}
 			
-			if(!String.IsNullOrEmpty(active)) {
+			if(active != null) {
 				if(Convert.ToBoolean(active)){
 					strSQL += " and active=1";
 				}else{

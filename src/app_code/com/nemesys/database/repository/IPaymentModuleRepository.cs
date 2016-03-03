@@ -19,7 +19,7 @@ namespace com.nemesys.database.repository
 				
 		IList<PaymentModule> find(int idModule, string name, bool cached);
 		
-		IList<IPaymentField> getPaymentModuleFields(int idModule, string keyword, string matchField, string doMatch);
-		IList<IPaymentField> getPaymentModuleFieldsCached(int idModule, string keyword, string matchField, string doMatch, bool cached);
+		IList<IPaymentField> getPaymentModuleFields(int idModule, string keyword, string matchField, Nullable<bool> doMatch);
+		IList<IPaymentField> getPaymentModuleFieldsCached(int idModule, string keyword, string matchField, Nullable<bool> doMatch, bool cached);
 	}
 }

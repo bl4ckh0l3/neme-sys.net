@@ -17,7 +17,7 @@ namespace com.nemesys.database.repository
 		
 		BusinessRule getById(int id);
 		
-		IList<BusinessRule> find(string type, int active);
+		IList<BusinessRule> find(string type, Nullable<bool> active);
 		
 		void insertBusinessRuleConfig(BusinessRuleConfig businessRuleConfig);
 		void updateBusinessRuleConfig(BusinessRuleConfig businessRuleConfig);

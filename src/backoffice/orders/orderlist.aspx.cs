@@ -153,7 +153,7 @@ public partial class _OrderList : Page
 			if (Session["payment_done"] != null) {
 				search_paydone = (string)Session["payment_done"];
 			}else{
-				Session["payment_done"] = "";
+				Session["payment_done"] = null;
 				search_paydone = (string)Session["payment_done"];
 			}
 		}
@@ -232,7 +232,7 @@ public partial class _OrderList : Page
 		
 		try
 		{
-			users = usrrep.find(null, "3", "true", null, "false", 1, false, false, false, false, false, false);
+			users = usrrep.find(null, "3", true, null, false, 1, false, false, false, false, false, false);
 			if(users != null && users.Count>0){				
 				bolFoundUser = true;
 			}	    	
@@ -297,7 +297,7 @@ public partial class _OrderList : Page
 
 		try
 		{		
-			IList<FOrder> ordersC = orderrep.find(null, -1, dtaChartFrom, dtaChartTo, "3", -1, "1", -1, true);
+			IList<FOrder> ordersC = orderrep.find(null, -1, dtaChartFrom, dtaChartTo, "3", -1, true, -1, true);
 	
 			if(ordersC != null && ordersC.Count>0){	
 				showChart = true;
@@ -329,7 +329,12 @@ public partial class _OrderList : Page
 		//***** SE SI TRATTA DI UPDATE DELETE O MULTI RECUPERO I PARAMETRI ED ESEGUO OPERAZIONI	
 		try
 		{
-			orders = orderrep.find(search_guid, search_user, search_datefrom, search_dateto, search_status, search_paytype, search_paydone, search_orderby, true);
+			Nullable<bool> spaydone = null;
+			if (!String.IsNullOrEmpty(search_paydone)) {
+				spaydone = Convert.ToBoolean(search_paydone);
+			}
+			
+			orders = orderrep.find(search_guid, search_user, search_datefrom, search_dateto, search_status, search_paytype, spaydone, search_orderby, true);
 			if(orders != null && orders.Count>0){				
 				bolFoundLista = true;
 			}	    	

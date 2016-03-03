@@ -115,7 +115,7 @@ public partial class _VoucherView : Page
 		}
 
 		try{
-			users = usrrep.find(null, "3", "true", null, "false", -1, false, false, false, false, false,false);	
+			users = usrrep.find(null, "3", true, null, false, -1, false, false, false, false, false,false);	
 			if(users!=null && users.Count>0){
 				bolFoundUsers = true;
 			}

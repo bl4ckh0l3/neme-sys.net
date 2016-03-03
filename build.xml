@@ -213,6 +213,12 @@
 		<copy file="${src.dir}/backoffice/countries/countrylist.aspx" todir="${dist.dir}/${buildVers}/tmp/backoffice/countries"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/countries/countrylist.aspx" flags="gis" byline="false" match="(&lt;!--nsys-cntlist1--&gt;)(.*?)(&lt;!---nsys-cntlist1--&gt;)" replace="\1${nsys-cntlist1}\3" />
 
+		<copy file="${src.dir}/backoffice/contents/insertfield.aspx" todir="${dist.dir}/${buildVers}/tmp/backoffice/contents"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/contents/insertfield.aspx" flags="gis" byline="false" match="(&lt;!--nsys-modblog2--&gt;)(.*?)(&lt;!---nsys-modblog2--&gt;)" replace="\1${nsys-modblog2}\3" /> 	
+
+		<copy file="${src.dir}/backoffice/contents/insertfield.aspx.cs" todir="${dist.dir}/${buildVers}/tmp/backoffice/contents"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/contents/insertfield.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-modblog2--&gt;\*/)(.*?)(/\*&lt;!---nsys-modblog2--&gt;\*/)" replace="\1${nsys-modblog2}\3" />	
+		
 		<copy file="${db.dir}/global_install_query.sql" todir="${dist.dir}/${buildVers}/tmp"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/global_install_query.sql" flags="gis" byline="false" match="buildVersSql" replace="${buildVers}" />
 	</target>
@@ -288,6 +294,8 @@
 				<exclude name="backoffice/newsletter/newsletterlist.aspx.cs"/>
 				<exclude name="backoffice/newsletter/insertnewsletter.aspx"/>
 				<exclude name="backoffice/newsletter/insertnewsletter.aspx.cs"/>
+				<exclude name="backoffice/contents/insertfield.aspx"/>
+				<exclude name="backoffice/contents/insertfield.aspx.cs"/>
 				<exclude name="backoffice/img/logo.png"/>				
 				<exclude name="**/backoffice/shoppingcart/**"/>
 				<exclude name="**/backoffice/orders/**"/>
@@ -411,6 +419,8 @@
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="newsletterlist.aspx.cs" prefix="backoffice/newsletter"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="insertnewsletter.aspx" prefix="backoffice/newsletter"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="insertnewsletter.aspx.cs" prefix="backoffice/newsletter"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/contents" includes="insertfield.aspx" prefix="backoffice/contents"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/contents" includes="insertfield.aspx.cs" prefix="backoffice/contents"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/area_user" includes="account.ascx" prefix="public/layout/area_user"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/css" includes="stile.css" prefix="public/layout/css"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/include" includes="header.ascx" prefix="public/layout/include"/>	
@@ -524,6 +534,12 @@
 		
 		<copy file="${src.dir}/backoffice/business-strategy/insertbusinessrule.aspx.cs" todir="${dist.dir}/${buildVers}/tmp/backoffice/business-strategy"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/business-strategy/insertbusinessrule.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-voucher4--&gt;\*/)(.*?)(/\*&lt;!---nsys-voucher4--&gt;\*/)" replace="\1${nsys-voucher4}\3" />
+
+		<copy file="${src.dir}/backoffice/contents/insertfield.aspx" todir="${dist.dir}/${buildVers}/tmp/backoffice/contents"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/contents/insertfield.aspx" flags="gis" byline="false" match="(&lt;!--nsys-modblog2--&gt;)(.*?)(&lt;!---nsys-modblog2--&gt;)" replace="\1${nsys-modblog2}\3" /> 	
+
+		<copy file="${src.dir}/backoffice/contents/insertfield.aspx.cs" todir="${dist.dir}/${buildVers}/tmp/backoffice/contents"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/contents/insertfield.aspx.cs" flags="gis" byline="false" match="(/\*&lt;!--nsys-modblog2--&gt;\*/)(.*?)(/\*&lt;!---nsys-modblog2--&gt;\*/)" replace="\1${nsys-modblog2}\3" />	
 		
 		<copy file="${db.dir}/global_install_query_ec.sql" todir="${dist.dir}/${buildVers}/tmp"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/global_install_query_ec.sql" flags="gis" byline="false" match="buildVersSql" replace="${buildVers}" />		
@@ -591,6 +607,8 @@
 				<exclude name="backoffice/newsletter/insertnewsletter.aspx.cs"/>
 				<exclude name="backoffice/business-strategy/insertbusinessrule.aspx"/>
 				<exclude name="backoffice/business-strategy/insertbusinessrule.aspx.cs"/>
+				<exclude name="backoffice/contents/insertfield.aspx"/>
+				<exclude name="backoffice/contents/insertfield.aspx.cs"/>
 				<exclude name="public/layout/area_user/account.ascx"/>
 				<exclude name="public/layout/area_user/friends.ascx"/>
 				<exclude name="public/layout/area_user/photos.ascx"/>
@@ -655,6 +673,9 @@
 			
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/business-strategy" includes="insertbusinessrule.aspx" prefix="backoffice/business-strategy"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/business-strategy" includes="insertbusinessrule.aspx.cs" prefix="backoffice/business-strategy"/>
+
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/contents" includes="insertfield.aspx" prefix="backoffice/contents"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/contents" includes="insertfield.aspx.cs" prefix="backoffice/contents"/>
 					
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/app_data/conf" includes="nemesys-config.xml" fullpath="app_data/conf/nemesys-config.xml"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/area_user" includes="account.ascx" prefix="public/layout/area_user"/>
@@ -1309,6 +1330,8 @@
 			<zipfileset dir="${src.dir}">
 				
 				<!-- file inclusi -->
+				<include name="backoffice/contents/insertfield.aspx"/>
+				<include name="backoffice/contents/insertfield.aspx.cs"/>
 				<include name="**/area_user/ads/**/*"/>	
 				<exclude name="**/area_user/ads/contentlist.aspx"/>	
 				<exclude name="**/area_user/ads/insertads.aspx"/>		

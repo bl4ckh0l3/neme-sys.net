@@ -26,8 +26,8 @@ namespace com.nemesys.database.repository
 		
 		Comment getById(int id);
 
-		IList<Comment> find(int userId, int elementId, int elementType, string active);
+		IList<Comment> find(int userId, int elementId, int elementType, Nullable<bool> active);
 
-		long countComments(int userId, int elementType, string active, bool doDistinct);
+		long countComments(int userId, int elementType, Nullable<bool> active, bool doDistinct);
 	}
 }

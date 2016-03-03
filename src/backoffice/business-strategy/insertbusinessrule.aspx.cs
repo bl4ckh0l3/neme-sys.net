@@ -72,7 +72,7 @@ public partial class _BusinessRule : Page
 
 /*<!--nsys-voucher4-->*/	
 		try{
-			voucherCampaign = voucherrep.find("",1);
+			voucherCampaign = voucherrep.find("",true);
 			if(voucherCampaign != null && voucherCampaign.Count>0){
 				hasVoucherCampaign = true;
 			}
@@ -107,7 +107,7 @@ public partial class _BusinessRule : Page
 		}
 		
 		try{			
-			brules = brulerep.find("1,2,4,5", 1);	
+			brules = brulerep.find("1,2,4,5", true);	
 			if(brules == null){				
 				brules = new List<BusinessRule>();
 				orderRulesMap = new Dictionary<int, int>();

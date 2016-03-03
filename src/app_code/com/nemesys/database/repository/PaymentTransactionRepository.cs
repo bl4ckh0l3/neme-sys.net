@@ -193,7 +193,7 @@ namespace com.nemesys.database.repository
 			return paymentTransaction;
 		}
 		
-		public IList<PaymentTransaction> find(int idOrder, int idModule, string idTransaction, string notified, bool cached)
+		public IList<PaymentTransaction> find(int idOrder, int idModule, string idTransaction, Nullable<bool> notified, bool cached)
 		{
 			IList<PaymentTransaction> results = null;
 			
@@ -224,7 +224,7 @@ namespace com.nemesys.database.repository
 			if (!String.IsNullOrEmpty(idTransaction)){			
 				strSQL += " and idTransaction=:idTransaction";
 			}
-			if(!String.IsNullOrEmpty(notified)){
+			if(notified != null){
 				if(Convert.ToBoolean(notified)){
 					strSQL += " and notified=:notified and status=:status";
 				}else{
@@ -249,7 +249,7 @@ namespace com.nemesys.database.repository
 					if(!String.IsNullOrEmpty(idTransaction)){
 						q.SetString("idTransaction", idTransaction);
 					}
-					if(!String.IsNullOrEmpty(notified)){
+					if(notified != null){
 						if(Convert.ToBoolean(notified)){		
 							q.SetBoolean("notified", Convert.ToBoolean(notified));
 							q.SetString("status", CommonKeywords.getSuccessKey());

@@ -88,7 +88,12 @@ protected void Page_Load(Object sender, EventArgs e)
 	{
 		try
 		{
-			orders = orderrep.find(search_guid, search_user, search_datefrom, search_dateto, search_status, search_paytype, search_paydone, search_orderby, false);
+			Nullable<bool> spaydone = null;
+			if (!String.IsNullOrEmpty(search_paydone)) {
+				spaydone = Convert.ToBoolean(search_paydone);
+			}
+			
+			orders = orderrep.find(search_guid, search_user, search_datefrom, search_dateto, search_status, search_paytype, spaydone, search_orderby, false);
 			if(orders != null && orders.Count>0){				
 				bolFoundLista = true;
 			}	    	

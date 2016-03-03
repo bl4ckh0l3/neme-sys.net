@@ -171,7 +171,7 @@ public partial class _Product : Page
 			languages = new List<Language>();
 		}
 		try{				
-			users = usrrep.find(null, "3", "true", null, "false", 1, false, false, false, false, true, false);		
+			users = usrrep.find(null, "3", true, null, false, 1, false, false, false, false, true, false);		
 			if(users == null){				
 				users = new List<User>();						
 			}
@@ -235,7 +235,7 @@ public partial class _Product : Page
 			stateRegions = new List<Country>();
 		}
 		try{				
-			commonfields = prodrep.getProductFields(-1, null, "true");
+			commonfields = prodrep.getProductFields(-1, true, true);
 			hasCommonProductFields = true;				
 			if(commonfields == null){				
 				commonfields = new List<ProductField>();	
@@ -372,7 +372,7 @@ public partial class _Product : Page
 				pre_el_id = Request["pre_el_id"];	
 				//Response.Write("pre_el_id:"+pre_el_id+"<br>");	
 				try{				
-					IList<ProductField> tmpProductFields = prodrep.getProductFields(Convert.ToInt32(pre_el_id), null, "false");			
+					IList<ProductField> tmpProductFields = prodrep.getProductFields(Convert.ToInt32(pre_el_id), null, false);			
 					if(tmpProductFields != null){	
 						//Response.Write("before starting save - product.fields.Count:"+product.fields.Count+"<br>");
 						//Response.Write("before starting save - tmpProductFields.Count:"+tmpProductFields.Count+"<br>");		
@@ -657,18 +657,22 @@ public partial class _Product : Page
 						HttpPostedFile tmp = MyFileCollection[k];
 						string name = Path.GetFileName(tmp.FileName);
 						if(!String.IsNullOrEmpty(name) && name==fileName)
-						{
-							//Response.Write("found: fileName: "+name+" - productType: "+tmp.ContentType+" - label: "+label+" - dida: "+dida+"<br>");
-							ProductAttachment ca = new ProductAttachment();
-							ca.id=-1;
-							ca.fileName=name;
-							ca.contentType=tmp.ContentType;
-							ca.fileLabel=label;
-							ca.fileDida=dida;
-							ca.idParentProduct=product.id;
-							ca.filePath=product.id+"/";
-							product.attachments.Add(ca);							
-							break;
+						{							
+							if(Utils.isValidExtension(Path.GetExtension(name))){
+								//Response.Write("found: fileName: "+name+" - productType: "+tmp.ContentType+" - label: "+label+" - dida: "+dida+"<br>");
+								ProductAttachment ca = new ProductAttachment();
+								ca.id=-1;
+								ca.fileName=name;
+								ca.contentType=tmp.ContentType;
+								ca.fileLabel=label;
+								ca.fileDida=dida;
+								ca.idParentProduct=product.id;
+								ca.filePath=product.id+"/";
+								product.attachments.Add(ca);							
+								break;
+							}else{
+								throw new Exception("022");
+							}
 						}
 					}
 				}
@@ -686,19 +690,23 @@ public partial class _Product : Page
 						string name = Path.GetFileName(tmp.FileName);
 						if(!String.IsNullOrEmpty(name) && name==fileName)
 						{
-							//Response.Write("found: fileName: "+name+" - productType: "+tmp.ContentType+" - label: "+label+" - dida: "+dida+"<br>");
-							ProductAttachmentDownload ca = new ProductAttachmentDownload();
-							ca.id=-1;
-							ca.fileName=name;
-							ca.contentType=tmp.ContentType;
-							ca.fileLabel=label;
-							ca.fileDida=dida;
-							ca.idParentProduct=product.id;
-							ca.filePath=product.id+"/";
-							ca.fileSize=tmp.ContentLength;
-							product.dattachments.Add(ca);
-							newProductAttachmentDownload.Add(ca);
-							break;
+							if(Utils.isValidExtension(Path.GetExtension(name))){
+								//Response.Write("found: fileName: "+name+" - productType: "+tmp.ContentType+" - label: "+label+" - dida: "+dida+"<br>");
+								ProductAttachmentDownload ca = new ProductAttachmentDownload();
+								ca.id=-1;
+								ca.fileName=name;
+								ca.contentType=tmp.ContentType;
+								ca.fileLabel=label;
+								ca.fileDida=dida;
+								ca.idParentProduct=product.id;
+								ca.filePath=product.id+"/";
+								ca.fileSize=tmp.ContentLength;
+								product.dattachments.Add(ca);
+								newProductAttachmentDownload.Add(ca);
+								break;
+							}else{
+								throw new Exception("022");
+							}
 						}
 					}
 				}
@@ -1090,14 +1098,19 @@ public partial class _Product : Page
 						string fileName = Path.GetFileName(tmp.FileName);
 						if(!String.IsNullOrEmpty(fileName))
 						{
-							if(newProductAttachmentDownload != null && newProductAttachmentDownload.Count >0){
-								foreach(ProductAttachmentDownload pad in newProductAttachmentDownload){
-									if(product.prodType == 1 && pad.fileName.Equals(fileName)){
-										TemplateService.SaveStreamToFile(tmp.InputStream, HttpContext.Current.Server.MapPath("~/app_data/products/"+product.id+"/"+tmp.FileName));
+							if(Utils.isValidExtension(Path.GetExtension(fileName)))
+							{
+								if(newProductAttachmentDownload != null && newProductAttachmentDownload.Count >0){
+									foreach(ProductAttachmentDownload pad in newProductAttachmentDownload){
+										if(product.prodType == 1 && pad.fileName.Equals(fileName)){
+											TemplateService.SaveStreamToFile(tmp.InputStream, HttpContext.Current.Server.MapPath("~/app_data/products/"+product.id+"/"+tmp.FileName));
+										}
 									}
+								}else{
+									TemplateService.SaveStreamToFile(tmp.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/products/"+product.id+"/"+tmp.FileName));
 								}
 							}else{
-								TemplateService.SaveStreamToFile(tmp.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/products/"+product.id+"/"+tmp.FileName));
+								throw new Exception("022");
 							}
 						}
 					}

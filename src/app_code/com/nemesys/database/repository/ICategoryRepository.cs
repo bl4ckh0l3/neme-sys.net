@@ -40,9 +40,9 @@ namespace com.nemesys.database.repository
 		
 		bool categoryAlreadyExists(string hierarchy, string description, int catid);
 		
-		IList<Category> find(int menu, string active);
+		IList<Category> find(int menu, Nullable<bool> active);
 		
-		IList<Category> findCached(int menu, string active, bool cached);
+		IList<Category> findCached(int menu, Nullable<bool> active, bool cached);
 		
 		Category findFirstSubCategoryWithElements(Category category);
 		

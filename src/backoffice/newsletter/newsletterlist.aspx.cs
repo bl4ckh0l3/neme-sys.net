@@ -92,7 +92,7 @@ public partial class _NewsletterList : Page
 /*<!--nsys-nwsletlist3-->*/
 		try
 		{
-			voucherCampaigns = voucherep.find("4", 1);	
+			voucherCampaigns = voucherep.find("4", true);	
 			if(voucherCampaigns != null && voucherCampaigns.Count>0){
 				hasVoucherCampaign = true;
 			}

@@ -103,7 +103,7 @@ protected void Page_Load(Object sender, EventArgs e)
 						ubuilder.Query = "";
 						try
 						{				
-							MailMsg mtemplate = mailrep.getByName("user-mail-check-friend", lang.currentLangCode, "true");
+							MailMsg mtemplate = mailrep.getByName("user-mail-check-friend", lang.currentLangCode, true);
 							ListDictionary replacements = new ListDictionary();
 							
 							StringBuilder newsContent = new StringBuilder();

@@ -66,7 +66,7 @@ public partial class _VoucherList : Page
 
 		//***** SE SI TRATTA DI UPDATE DELETE O MULTI RECUPERO I PARAMETRI ED ESEGUO OPERAZIONI	
 		try{
-			campaigns = voucherep.find(null, -1);
+			campaigns = voucherep.find(null, null);
 			if(campaigns != null){				
 				bolFoundLista = true;			
 			}	    	

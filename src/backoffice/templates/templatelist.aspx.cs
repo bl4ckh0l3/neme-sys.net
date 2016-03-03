@@ -169,7 +169,7 @@ public partial class _TemplateList : Page
 										filext = Path.GetExtension(fileName);
 									}
 		
-									if(filext==".bat" || filext==".exe" || filext==".dll")
+									if(".bat".Equals(filext) || ".exe".Equals(filext) || ".dll".Equals(filext))
 									{					
 										url.Append(Regex.Replace(lang.getTranslated("backend.templates.lista.button.label.invalid_file"), @"\t|\n|\r", " "));					
 										carryOn = false;
@@ -264,7 +264,7 @@ public partial class _TemplateList : Page
 							filext = Path.GetExtension(fileName);
 						}
 
-						if(filext==".bat" || filext==".exe" || filext==".dll")
+						if(".bat".Equals(filext) || ".exe".Equals(filext) || ".dll".Equals(filext))
 						{					
 							url.Append(Regex.Replace(lang.getTranslated("backend.templates.lista.button.label.invalid_file"), @"\t|\n|\r", " "));					
 							carryOn = false;

@@ -7182,3 +7182,5 @@ INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.voucher.label.error_delete_code', 'IT', 'Errore nella cancellazione del codice voucher');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.mails.detail.table.label.subject_Conferma voucher generato!', 'EN', 'Confirm generated voucher!');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.mails.detail.table.label.subject_Conferma voucher generato!', 'IT', 'Conferma voucher generato!');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.contenuti.detail.table.label.for_blog', 'EN', 'Enabled for blog');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.contenuti.detail.table.label.for_blog', 'IT', 'Abilitato per i blog');

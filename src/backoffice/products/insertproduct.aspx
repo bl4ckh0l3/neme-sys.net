@@ -3596,7 +3596,7 @@ function fieldValueSlideToggle(idsuffix){
 					<%int counterCommon = 0;
 					int valuesCounterCommon = 0;		
 					foreach(ProductField cf in commonfields){
-						if(cf.common && cf.enabled){							
+						if(cf.common){							
 							string labelFormCommon = cf.description;
 
 							bool hasCommonFieldValue= false;

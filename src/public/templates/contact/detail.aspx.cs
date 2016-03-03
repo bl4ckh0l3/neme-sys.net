@@ -69,7 +69,7 @@ public partial class _Detail : Page
 		confservice = new ConfigurationService();
 		currentUrl = Request.Url.ToString();
 
-		//se il sito è offline rimando a pagina default
+		//se il sito ï¿½ offline rimando a pagina default
 		if ("1".Equals(confservice.get("go_offline").value)) 
 		{
 			UriBuilder defRedirect = new UriBuilder(Request.Url);
@@ -306,7 +306,7 @@ public partial class _Detail : Page
 				try
 				{
 		
-					MailMsg mtemplate = mailrep.getByName("contact-mail", lang.currentLangCode, "true");
+					MailMsg mtemplate = mailrep.getByName("contact-mail", lang.currentLangCode, true);
 					ListDictionary replacements = new ListDictionary();
 					
 					StringBuilder newsContent = new StringBuilder();					

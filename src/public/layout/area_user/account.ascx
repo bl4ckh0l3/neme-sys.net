@@ -141,7 +141,7 @@
 			List<string> applyTo = new List<string>();
 			applyTo.Add("0");
 			applyTo.Add("2");				
-			usrfields = usrrep.getUserFields("true",usesFor,applyTo);
+			usrfields = usrrep.getUserFields(true,usesFor,applyTo);
 			if(usrfields != null && usrfields.Count>0){
 				bolFoundFields = true;
 			}else{				

@@ -193,7 +193,7 @@ public partial class _List : Page
 			
 			try
 			{			
-				currencyList = currrep.findAll("true");
+				currencyList = currrep.findAll(true);
 			}
 			catch (Exception ex){
 				currencyList = new List<Currency>();

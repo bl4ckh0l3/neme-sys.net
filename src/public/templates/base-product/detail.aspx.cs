@@ -177,7 +177,7 @@ public partial class _Detail : Page
 			
 			try
 			{			
-				currencyList = currrep.findAll("true");
+				currencyList = currrep.findAll(true);
 			}
 			catch (Exception ex){
 				currencyList = new List<Currency>();

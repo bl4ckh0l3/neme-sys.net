@@ -114,10 +114,10 @@ namespace com.nemesys.database.repository
 
 		public MailMsg getByName(string name, string langCode)
 		{
-			return getByName(name, langCode, "true");
+			return getByName(name, langCode, true);
 		}
 		
-		public MailMsg getByName(string name, string langCode, string active)
+		public MailMsg getByName(string name, string langCode, Nullable<bool> active)
 		{
 			MailMsg result = null;
 			using (ISession session = NHibernateHelper.getCurrentSession())
@@ -127,7 +127,7 @@ namespace com.nemesys.database.repository
 				if (!String.IsNullOrEmpty(langCode)){			
 					strSQL += " and langCode=:langCode";
 				}			
-				if (!String.IsNullOrEmpty(active)){			
+				if (active != null){			
 					strSQL += " and isActive=:active";
 				}		
 				IQuery q = session.CreateQuery(strSQL);
@@ -135,7 +135,7 @@ namespace com.nemesys.database.repository
 				if (!String.IsNullOrEmpty(langCode)){			
 					q.SetString("langCode",langCode);
 				}	
-				if (!String.IsNullOrEmpty(active)){			
+				if (active != null){			
 					q.SetBoolean("active",Convert.ToBoolean(active));
 				}
 				try
@@ -146,12 +146,12 @@ namespace com.nemesys.database.repository
 				if(result==null && !String.IsNullOrEmpty(langCode))
 				{
 					strSQL = "from MailMsg where name=:name";			
-					if (!String.IsNullOrEmpty(active)){			
+					if (active != null){			
 						strSQL += " and isActive=:active";
 					}	
 					q = session.CreateQuery(strSQL);
 					q.SetString("name",name);	
-					if (!String.IsNullOrEmpty(active)){			
+					if (active != null){			
 						q.SetBoolean("active",Convert.ToBoolean(active));
 					}
 					try
@@ -236,13 +236,13 @@ namespace com.nemesys.database.repository
 			return results;	
 		}
 
-		public IList<MailMsg> find(string active, string category, int pageIndex, int pageSize,out long totalCount)
+		public IList<MailMsg> find(Nullable<bool> active, string category, int pageIndex, int pageSize,out long totalCount)
 		{		
 			IList<MailMsg> mails = null;		
 			totalCount = 0;
 			
 			string strSQL = "from MailMsg where 1=1 ";
-			if (!String.IsNullOrEmpty(active)){			
+			if (active != null){			
 				strSQL += " and active=:active";
 			}	
 			if (!String.IsNullOrEmpty(category)){			
@@ -257,7 +257,7 @@ namespace com.nemesys.database.repository
 				IQuery qCount = session.CreateQuery("select count(*) "+strSQL);	
 				try
 				{
-					if (!String.IsNullOrEmpty(active)){
+					if (active != null){
 						q.SetBoolean("active", Convert.ToBoolean(active));
 						qCount.SetBoolean("active", Convert.ToBoolean(active));
 					}	

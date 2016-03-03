@@ -221,14 +221,14 @@ jQuery(document).ready(function(){
 				<th>
 				<select name="activef" class="formfieldSelect">
 				<option value=""></option>
-				<OPTION VALUE="false" <%if (Request["activef"]== "false") {Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.no")%></OPTION>
-				<OPTION VALUE="true" <%if (Request["activef"]== "true") {Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.yes")%></OPTION>
+				<OPTION VALUE="false" <%if ("false".Equals(Request["activef"])) {Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.no")%></OPTION>
+				<OPTION VALUE="true" <%if ("true".Equals(Request["activef"])) {Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.yes")%></OPTION>
 				</SELECT></td>
 				<th>
 				<select name="publicf" class="formfieldSelect">
 				<option value=""></option>
-				<OPTION VALUE="false" <%if (Request["publicf"]== "false") {Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.no")%></OPTION>
-				<OPTION VALUE="true" <%if (Request["publicf"]== "true") {Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.yes")%></OPTION>
+				<OPTION VALUE="false" <%if ("false".Equals(Request["publicf"])) {Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.no")%></OPTION>
+				<OPTION VALUE="true" <%if ("true".Equals(Request["publicf"])) {Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.yes")%></OPTION>
 				</SELECT></th>
 				<th>&nbsp;</th>
 				<th>&nbsp;</th>

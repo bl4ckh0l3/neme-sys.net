@@ -21,9 +21,9 @@ namespace com.nemesys.database.repository
 
 		Currency getByCurrency(string currency);
 		
-		IList<Currency> findAll(string active);
+		IList<Currency> findAll(Nullable<bool> active);
 		
-		IList<Currency> find(string currency, string active, int pageIndex, int pageSize,out long totalCount);
+		IList<Currency> find(string currency, Nullable<bool> active, int pageIndex, int pageSize,out long totalCount);
 		
 		decimal convertCurrency(decimal amount, string currencyFrom, string currencyTo);
 	}

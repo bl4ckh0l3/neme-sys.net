@@ -428,7 +428,7 @@ public partial class _Checkout : Page
 		if(carryOn){
 			//********** VERIFICO SE ESISTE UNA CAMPAGNA VOUCHER ATTIVA E SE E' STATO INSERITO UN VOUCHER E IN TAL CASO CERCO UNA RULE DI TIPO VOUCHER
 			
-			businessRules = brulerep.find("3", 1);
+			businessRules = brulerep.find("3", true);
 			if(businessRules != null && businessRules.Count>0){
 				activeVoucherCampaign = true;
 				//*** recupero il voucher_code dalla request o dalla session
@@ -461,7 +461,7 @@ public partial class _Checkout : Page
 				//*** verifico se esiste una rule primo ordine e se l'utente ne possiede i requisiti
 				if (!hasOrderRule){ 
 					if(orderep.countByIdUser(login.userLogged.id)==0){
-						businessRules = brulerep.find("4,5", 1);
+						businessRules = brulerep.find("4,5", true);
 						if(businessRules != null && businessRules.Count>0){
 							hasOrderRule = true;
 						}
@@ -471,7 +471,7 @@ public partial class _Checkout : Page
 			
 			//********** SE NON ESISTE GIA' UNA RULE PRIMO ORDINE, CERCO TUTTE LE RULE PER ORDINE ATTIVE
 			if (!hasOrderRule){
-				businessRules = brulerep.find("1,2", 1);
+				businessRules = brulerep.find("1,2", true);
 				if(businessRules != null && businessRules.Count>0){
 					hasOrderRule = true;
 				}
@@ -481,7 +481,7 @@ public partial class _Checkout : Page
 				List<string> usesFor = new List<string>();
 				usesFor.Add("2");
 				usesFor.Add("3");		
-				usrfields = usrrep.getUserFields("true",usesFor,null);
+				usrfields = usrrep.getUserFields(true,usesFor,null);
 				if(usrfields != null && usrfields.Count>0){
 					bolFoundFields = true;
 				}else{				
@@ -618,7 +618,7 @@ public partial class _Checkout : Page
 					}
 				}
 				userCurrency =  currrep.getByCurrency(tmpuserCurrency);
-				currencyList = currrep.findAll("true");
+				currencyList = currrep.findAll(true);
 				
 				if(!String.IsNullOrEmpty(lang.getTranslated("backend.currency.symbol.label."+Session["currency"]))) {
 					currency = lang.getTranslated("backend.currency.symbol.label."+Session["currency"]);
@@ -728,7 +728,7 @@ public partial class _Checkout : Page
 					
 					if (!voucherExcludeProdRule){
 						//*** cerco le business rule basate sui prodotti e prodotti correlati
-						productBusinessRules = brulerep.find("6,7,8,9,10", 1);
+						productBusinessRules = brulerep.find("6,7,8,9,10", true);
 						if(productBusinessRules != null && productBusinessRules.Count>0){
 							bolHasProdRule = true;
 						}
@@ -1249,7 +1249,7 @@ public partial class _Checkout : Page
 					}
 					
 					try{
-						paymentMethods = payrep.find(-1, paymentType, "true", "0,2", true, true);  
+						paymentMethods = payrep.find(-1, paymentType, true, "0,2", true, true);  
 					}catch (Exception ex){
 						//Response.Write("bolFoundLista Exception:"+ex.Message+"<br>");
 						paymentMethods = new List<Payment>();

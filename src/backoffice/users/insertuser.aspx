@@ -156,9 +156,9 @@ function uncheckNewsletter(){
 				total = preftrep.countTotal(user.id, true);
 				percentual = preftrep.getPositivePercentage(user.id);
 
-				long total_comment_news = commentrep.countComments(user.id,1,"true",false);
+				long total_comment_news = commentrep.countComments(user.id,1,true,false);
 				//<!--nsys-usrins4-->
-				long total_comment_prod = commentrep.countComments(user.id,2,"true",false);
+				long total_comment_prod = commentrep.countComments(user.id,2,true,false);
 				//<!---nsys-usrins4-->				
 				%>
 				<div style="padding-left:0px;padding-top:3px;" class="txtUserPreference">

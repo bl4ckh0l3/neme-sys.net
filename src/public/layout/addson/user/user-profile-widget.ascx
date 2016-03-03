@@ -66,9 +66,9 @@ if(logged){
   total = preftrep.countTotal(login.userLogged.id, true);
   percentual = preftrep.getPositivePercentage(login.userLogged.id);
 
-  long total_comment_news = commentrep.countComments(login.userLogged.id,1,"true",false);
+  long total_comment_news = commentrep.countComments(login.userLogged.id,1,true,false);
   //<!--nsys-addsuser1-->
-  long total_comment_prod = commentrep.countComments(login.userLogged.id,2,"true",false);
+  long total_comment_prod = commentrep.countComments(login.userLogged.id,2,true,false);
   //<!---nsys-addsuser1-->
   %>
   <br/>

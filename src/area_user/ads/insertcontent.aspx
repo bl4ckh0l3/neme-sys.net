@@ -1320,7 +1320,7 @@ $(document).ready(function(){
 					<%int counterCommon = 0;
 					int valuesCounterCommon = 0;
 					foreach(ContentField cf in commonfields){
-						if(cf.common && cf.enabled){							
+						if(cf.common){							
 							string labelFormCommon = cf.description;%>
 							<input type="hidden" value="<%=cf.id%>" name="id_field" id="id_field_<%=cf.id%>">	  
 							<tr class="<%if(counterCommon % 2 == 0){Response.Write("table-list-on");}else{Response.Write("table-list-off");}%>" id="tr_ccontent_field_<%=cf.id%>">

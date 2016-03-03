@@ -142,7 +142,7 @@ protected void Page_Load(Object sender, EventArgs e)
 			userid = login.userLogged.id;
 		}
 		
-		IList<Comment> comments = commentrep.find(-1, Convert.ToInt32(elemId), Convert.ToInt32(elemType), "true");		
+		IList<Comment> comments = commentrep.find(-1, Convert.ToInt32(elemId), Convert.ToInt32(elemType), true);		
 		if (comments != null && comments.Count>0){
 		  commentsFound = true;
 		}
@@ -165,7 +165,7 @@ protected void Page_Load(Object sender, EventArgs e)
 					avatarPath = "/public/upload/files/user/"+avatar.filePath+avatar.fileName;
 				}
 				
-				IList<Preference> objLPC = preferencerep.find(-1, comment.userId, comment.id, comment.elementType, null, "false", "false");
+				IList<Preference> objLPC = preferencerep.find(-1, comment.userId, comment.id, comment.elementType, null, false, false);
 				if(objLPC != null && objLPC.Count>0){
 					hasPrefs = true;
 					foreach(Preference h in objLPC){

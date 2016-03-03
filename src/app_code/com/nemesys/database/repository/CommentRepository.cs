@@ -78,7 +78,7 @@ namespace com.nemesys.database.repository
 			return comment;
 		}
 
-		public IList<Comment> find(int userId, int elementId, int elementType, string active)
+		public IList<Comment> find(int userId, int elementId, int elementType, Nullable<bool> active)
 		{
 			IList<Comment> results = null;
 			
@@ -96,7 +96,7 @@ namespace com.nemesys.database.repository
 				strSQL += " and elementType=:elementType";
 			}
 			
-			if (!String.IsNullOrEmpty(active)){
+			if (active != null){
 				strSQL += " and active=:active";
 			}
 			
@@ -117,7 +117,7 @@ namespace com.nemesys.database.repository
 					if (elementType!=0){
 						q.SetInt32("elementType", elementType);
 					}
-					if (!String.IsNullOrEmpty(active)){
+					if (active != null){
 						q.SetBoolean("active", Convert.ToBoolean(active));
 					}
 					results = q.List<Comment>();
@@ -134,7 +134,7 @@ namespace com.nemesys.database.repository
 			return results;		
 		}
 
-		public long countComments(int userId, int elementType, string active, bool doDistinct)
+		public long countComments(int userId, int elementType, Nullable<bool> active, bool doDistinct)
 		{
 			long result = 0;
 			using (ISession session = NHibernateHelper.getCurrentSession())
@@ -149,7 +149,7 @@ namespace com.nemesys.database.repository
 					strSQLCount += " and element_type=:elementType";
 				}
 				
-				if (!String.IsNullOrEmpty(active)){
+				if (active != null){
 					strSQLCount += " and active=:active";
 				}				
 				
@@ -158,7 +158,7 @@ namespace com.nemesys.database.repository
 				if (elementType!=0){
 					qCount.SetInt32("elementType", elementType);
 				}
-				if (!String.IsNullOrEmpty(active)){
+				if (active != null){
 					qCount.SetBoolean("active", Convert.ToBoolean(active));
 				}
 				result = qCount.UniqueResult<long>();

@@ -31,9 +31,9 @@ namespace com.nemesys.database.repository
 		
 		IList<User> find(bool withAttach, bool withFriend, bool withLang, bool withCats, bool withNewsletters, bool withFields);
 		
-		IList<User> find(string userNameOrMail, string roles, string active, string isPublic, string automatic, int order_by, int pageIndex, int pageSize,out long totalCount);
+		IList<User> find(string userNameOrMail, string roles, Nullable<bool> active, Nullable<bool> isPublic, Nullable<bool> automatic, int order_by, int pageIndex, int pageSize,out long totalCount);
 		
-		IList<User> find(string userNameOrMail, string roles, string active, string isPublic, string automatic, int order_by, bool withAttach, bool withFriend, bool withLang, bool withCats, bool withNewsletters, bool withFields);
+		IList<User> find(string userNameOrMail, string roles, Nullable<bool> active, Nullable<bool> isPublic, Nullable<bool> automatic, int order_by, bool withAttach, bool withFriend, bool withLang, bool withCats, bool withNewsletters, bool withFields);
 		
 		UserConfirmation getConfirmationCode(User user);
 		
@@ -75,7 +75,7 @@ namespace com.nemesys.database.repository
 		
 		IDictionary<string,int> getUniqueFieldsMatch(int idField);
 		
-		IList<UserField> getUserFields(string active, List<string> userFor, List<string> applyTo);
+		IList<UserField> getUserFields(Nullable<bool> active, List<string> userFor, List<string> applyTo);
 		
 		IList<UserFieldsValue> getUserFieldValues(int idField);		
 

@@ -2285,12 +2285,12 @@ namespace com.nemesys.database.repository
 			return result;		
 		}
 	
-		public IList<ProductField> getProductFields(int idProduct, string active, string common)
+		public IList<ProductField> getProductFields(int idProduct, Nullable<bool> active, Nullable<bool> common)
 		{
-			return getProductFieldsCached(idProduct, active, false, common);
+			return getProductFieldsCached(idProduct, active, common, false);
 		}
 	
-		public IList<ProductField> getProductFieldsCached(int idProduct, string active, bool cached, string common)
+		public IList<ProductField> getProductFieldsCached(int idProduct, Nullable<bool> active, Nullable<bool> common, bool cached)
 		{
 			IList<ProductField> results = null;
 			StringBuilder cacheKey = new StringBuilder("list-field-fproduct-").Append(idProduct).Append("-").Append(active).Append("-").Append(common);
@@ -2309,10 +2309,10 @@ namespace com.nemesys.database.repository
 				if(idProduct!=-1){
 				sql += " and id_parent_product= :id_product";
 				}
-				if(!String.IsNullOrEmpty(active)){
+				if(active != null){
 				sql += " and enabled= :enabled";
 				}
-				if(!String.IsNullOrEmpty(common)){
+				if(common != null){
 				sql += " and common= :common";
 				}
 				sql += " order by sorting, groupDescription, description asc";
@@ -2320,10 +2320,10 @@ namespace com.nemesys.database.repository
 				if(idProduct!=-1){
 				q.SetInt32("id_product",idProduct);	
 				}
-				if(!String.IsNullOrEmpty(active)){
+				if(active != null){
 				q.SetBoolean("enabled",Convert.ToBoolean(active));	
 				}
-				if(!String.IsNullOrEmpty(common)){
+				if(common != null){
 				q.SetBoolean("common",Convert.ToBoolean(common));	
 				}
 				results = q.List<ProductField>();
@@ -2420,12 +2420,12 @@ namespace com.nemesys.database.repository
 			return results;	
 		}
 	
-		public IList<string> getProductFieldValuesByDescription(string description, string common, string active)
+		public IList<string> getProductFieldValuesByDescription(string description, Nullable<bool> common, Nullable<bool> active)
 		{
-			return getProductFieldValuesByDescriptionCached(description, false, common, active);
+			return getProductFieldValuesByDescriptionCached(description, common, active, false);
 		}
 	
-		public IList<string> getProductFieldValuesByDescriptionCached(string description, bool cached, string common, string active)
+		public IList<string> getProductFieldValuesByDescriptionCached(string description, Nullable<bool> common, Nullable<bool> active, bool cached)
 		{
 			IList values = null;
 			IList<string> results = null;	
@@ -2442,10 +2442,10 @@ namespace com.nemesys.database.repository
 			
 			string strSQL = "select distinct value from PRODUCT_FIELDS where description=:description and not isnull(value) and trim(value)<>''";			
 			
-			if(!String.IsNullOrEmpty(common)){
+			if(common != null){
 			strSQL += " and common= :common";
 			}			
-			if(!String.IsNullOrEmpty(active)){
+			if(active != null){
 			strSQL += " and enabled= :enabled";
 			}
 			strSQL += " order by value asc";
@@ -2454,10 +2454,10 @@ namespace com.nemesys.database.repository
 			{
 				IQuery q = session.CreateSQLQuery(strSQL).AddScalar("value", NHibernateUtil.String);
 				q.SetString("description",description);
-				if(!String.IsNullOrEmpty(common)){
+				if(common != null){
 				q.SetBoolean("common",Convert.ToBoolean(common));	
 				}	
-				if(!String.IsNullOrEmpty(active)){
+				if(active != null){
 				q.SetBoolean("enabled",Convert.ToBoolean(active));	
 				}			
 				values = q.List();			

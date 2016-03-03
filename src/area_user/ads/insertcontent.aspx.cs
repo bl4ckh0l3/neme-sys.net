@@ -146,7 +146,7 @@ public partial class _FeContent : Page
 			languages = new List<Language>();
 		}
 		try{				
-			users = usrrep.find(null, "3", "true", null, "false", 1, false, false, false, false, true, false);		
+			users = usrrep.find(null, "3", true, null, false, 1, false, false, false, false, true, false);		
 			if(users == null){				
 				users = new List<User>();						
 			}
@@ -218,7 +218,7 @@ public partial class _FeContent : Page
 			stateRegions = new List<Country>();
 		}
 		try{				
-			commonfields = contrep.getContentFields(-1, null, "false", "true");
+			commonfields = contrep.getContentFields(-1, true, true, true);
 			hasCommonContentFields = true;				
 			if(commonfields == null){				
 				commonfields = new List<ContentField>();	
@@ -281,7 +281,7 @@ public partial class _FeContent : Page
 				pre_el_id = Request["pre_el_id"];	
 				//Response.Write("pre_el_id:"+pre_el_id+"<br>");	
 				try{				
-					IList<ContentField> tmpContentFields = contrep.getContentFields(Convert.ToInt32(pre_el_id), null, "false", "false");			
+					IList<ContentField> tmpContentFields = contrep.getContentFields(Convert.ToInt32(pre_el_id), null, null, false);			
 					if(tmpContentFields != null){	
 						//Response.Write("before starting save - content.fields.Count:"+content.fields.Count+"<br>");
 						//Response.Write("before starting save - tmpContentFields.Count:"+tmpContentFields.Count+"<br>");		
@@ -452,17 +452,21 @@ public partial class _FeContent : Page
 						HttpPostedFile tmp = MyFileCollection[k];
 						string name = Path.GetFileName(tmp.FileName);
 						if(!String.IsNullOrEmpty(name) && name==fileName)
-						{
-							//Response.Write("found: fileName: "+name+" - contentType: "+tmp.ContentType+" - label: "+label+" - dida: "+dida+"<br>");
-							ContentAttachment ca = new ContentAttachment();
-							ca.fileName=name;
-							ca.contentType=tmp.ContentType;
-							ca.fileLabel=label;
-							ca.fileDida=dida;
-							ca.idParentContent=content.id;
-							ca.filePath=content.id+"/";
-							content.attachments.Add(ca);							
-							break;
+						{							
+							if(Utils.isValidExtension(Path.GetExtension(name))){
+								//Response.Write("found: fileName: "+name+" - contentType: "+tmp.ContentType+" - label: "+label+" - dida: "+dida+"<br>");
+								ContentAttachment ca = new ContentAttachment();
+								ca.fileName=name;
+								ca.contentType=tmp.ContentType;
+								ca.fileLabel=label;
+								ca.fileDida=dida;
+								ca.idParentContent=content.id;
+								ca.filePath=content.id+"/";
+								content.attachments.Add(ca);							
+								break;		
+							}else{
+								throw new Exception("022");
+							}							
 						}
 					}
 				}
@@ -488,11 +492,15 @@ public partial class _FeContent : Page
 					{
 						HttpPostedFile tmp = MyFileCollection[k];	
 						string fileName = Path.GetFileName(tmp.FileName);
-						//Response.Write("final: tmp.FileName:"+tmp.FileName+" - fileName:"+fileName+"<br>");
 						if(!String.IsNullOrEmpty(fileName))
 						{
-							TemplateService.SaveStreamToFile(tmp.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/contents/"+content.id+"/"+tmp.FileName));								
-						}
+							if(Utils.isValidExtension(Path.GetExtension(fileName)))
+							{
+								TemplateService.SaveStreamToFile(tmp.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/contents/"+content.id+"/"+tmp.FileName));								
+							}else{
+								throw new Exception("022");
+							}
+						}						
 					}
 					
 					log.usr= login.userLogged.username;
@@ -538,7 +546,7 @@ public partial class _FeContent : Page
 						.Append(content.summary).Append("<br/><br/>")
 						.Append(content.description).Append("<br/><br/>");
 						
-						IList<ContentField> cfnewsletter = contrep.getContentFields(content.id, "true", "false", "false");
+						IList<ContentField> cfnewsletter = contrep.getContentFields(content.id, true, false, false);
 						if(cfnewsletter != null && cfnewsletter.Count>0) {
 							foreach(ContentField cf in cfnewsletter){			
 								string labelForm = cf.description;								

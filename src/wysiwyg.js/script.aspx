@@ -20,7 +20,15 @@ protected void Page_Load(object sender, EventArgs e)
 	
 	if(!String.IsNullOrEmpty(fileName))
 	{
-		TemplateService.SaveStreamToFile(MyFile.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/wysiwyg_editor/"+MyFile.FileName));
+		switch (Path.GetExtension(fileName))
+		{
+			case ".jpg": case ".jpeg": case ".png": case ".gif": case ".bmp":
+				TemplateService.SaveStreamToFile(MyFile.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/wysiwyg_editor/"+MyFile.FileName));
+				break;
+			default:
+				throw new Exception("022");										
+				break;
+		}
 	}	
 }
 </script>

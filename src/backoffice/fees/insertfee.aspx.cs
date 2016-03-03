@@ -107,7 +107,7 @@ public partial class _Fee : Page
 			bolFoundSupG = false;
 		}		
 		try{
-			IList<ProductField> productFieldsTmp = prodrep.getProductFields(-1, "true", "false");
+			IList<ProductField> productFieldsTmp = prodrep.getProductFields(-1, true, false);
 			IList<string> descs = new List<string>();
 			//Response.Write("productFieldsTmp.Count: "+productFieldsTmp.Count);
 			if(productFieldsTmp != null && productFieldsTmp.Count>0){				

@@ -355,7 +355,7 @@ public partial class _ContentList : Page
 		//***************** RECUPERO LISTA COMMON CONTENT FIELDS 
 		try
 		{
-			contentfields = contentrep.getContentFields(-1, null, "false", "true");
+			contentfields = contentrep.getContentFields(-1, null, null, true);
 			if(contentfields != null && contentfields.Count>0)
 			{				
 				bolFoundField = true;				

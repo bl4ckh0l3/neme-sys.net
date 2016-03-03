@@ -190,12 +190,12 @@ namespace com.nemesys.database.repository
 			return results;	
 		}
 
-		public IList<Country> find(string active, string useFor, string searchKey, int pageIndex, int pageSize,out long totalCount)
+		public IList<Country> find(Nullable<bool> active, string useFor, string searchKey, int pageIndex, int pageSize,out long totalCount)
 		{		
 			IList<Country> countries = null;		
 			totalCount = 0;	
 			string strSQL = "from Country where 1=1";
-			if (!String.IsNullOrEmpty(active)){			
+			if (active != null){			
 				strSQL += " and active=:active";
 			}
 			if (!String.IsNullOrEmpty(useFor)){			
@@ -220,7 +220,7 @@ namespace com.nemesys.database.repository
 				IQuery qCount = session.CreateQuery("select count(*) "+strSQL);	
 				try
 				{
-					if (!String.IsNullOrEmpty(active)){
+					if (active != null){
 						q.SetBoolean("active", Convert.ToBoolean(active));
 						qCount.SetBoolean("active", Convert.ToBoolean(active));
 					}

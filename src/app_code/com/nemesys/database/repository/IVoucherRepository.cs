@@ -14,7 +14,7 @@ namespace com.nemesys.database.repository
 		VoucherCampaign getById(int id);
 		VoucherCampaign getByLabel(string label);
 		
-		IList<VoucherCampaign> find(string type, int active);
+		IList<VoucherCampaign> find(string type, Nullable<bool> active);
 		
 		void insertVoucherCode(VoucherCode voucherCode);
 		void updateVoucherCode(VoucherCode voucherCode);

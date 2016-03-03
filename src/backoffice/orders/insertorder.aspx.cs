@@ -248,7 +248,7 @@ public partial class _InsertOrder : Page
 		}		
 
 		try{				
-			users = usrrep.find(null, "3", "true", null, "false", 1, false, false, false, false, false, false);
+			users = usrrep.find(null, "3", true, null, false, 1, false, false, false, false, false, false);
 		}catch (Exception ex){
 			users = new List<User>();
 		}
@@ -281,7 +281,7 @@ public partial class _InsertOrder : Page
 		
 		//********** VERIFICO SE ESISTE UNA CAMPAGNA VOUCHER ATTIVA E SE E' STATO INSERITO UN VOUCHER E IN TAL CASO CERCO UNA RULE DI TIPO VOUCHER
 		
-		businessRules = brulerep.find("3", 1);
+		businessRules = brulerep.find("3", true);
 		if(businessRules != null && businessRules.Count>0){
 			activeVoucherCampaign = true;
 			//*** recupero il voucher_code dalla request o dalla session
@@ -384,7 +384,7 @@ public partial class _InsertOrder : Page
 					if (bolHasProdRule){
 						//*** cerco le business rule basate sui prodotti e prodotti correlati
 						productBusinessRules = new List<BusinessRule>();
-						//productBusinessRules = brulerep.find("6,7,8,9,10", 1);
+						//productBusinessRules = brulerep.find("6,7,8,9,10", true);
 						
 						foreach(OrderBusinessRule obr in productRules){
 							BusinessRule b = new BusinessRule();
@@ -601,7 +601,7 @@ public partial class _InsertOrder : Page
 			if(user != null){
 				if (!hasOrderRule){ 
 					if(orderep.countByIdUser(user.id)==0){
-						businessRules = brulerep.find("4,5", 1);
+						businessRules = brulerep.find("4,5", true);
 						if(businessRules != null && businessRules.Count>0){
 							hasOrderRule = true;
 						}
@@ -611,7 +611,7 @@ public partial class _InsertOrder : Page
 			
 			//********** SE NON ESISTE GIA' UNA RULE PRIMO ORDINE, CERCO TUTTE LE RULE PER ORDINE ATTIVE
 			if (!hasOrderRule){
-				businessRules = brulerep.find("1,2", 1);
+				businessRules = brulerep.find("1,2", true);
 				if(businessRules != null && businessRules.Count>0){
 					hasOrderRule = true;
 				}
@@ -624,7 +624,7 @@ public partial class _InsertOrder : Page
 					
 					if (!voucherExcludeProdRule){
 						//*** cerco le business rule basate sui prodotti e prodotti correlati
-						productBusinessRules = brulerep.find("6,7,8,9,10", 1);
+						productBusinessRules = brulerep.find("6,7,8,9,10", true);
 						if(productBusinessRules != null && productBusinessRules.Count>0){
 							bolHasProdRule = true;
 						}
@@ -1328,7 +1328,7 @@ public partial class _InsertOrder : Page
 		}
 		
 		try{
-			paymentMethods = payrep.find(-1, paymentType, "true", "0,2", true, true);  
+			paymentMethods = payrep.find(-1, paymentType, true, "0,2", true, true);  
 		}catch (Exception ex){
 			//Response.Write("bolFoundLista Exception:"+ex.Message+"<br>");
 			paymentMethods = new List<Payment>();

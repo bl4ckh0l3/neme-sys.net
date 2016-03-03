@@ -231,6 +231,14 @@ function onChangeFyeldTypeContent(){
 			<option value="1"<%if (field.editable) { Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.yes")%></option>	
 			</SELECT>
 		  </div>
+		  <!--nsys-modblog2-->
+		  <div align="left" style="float:left;padding-right:20px;"><span class="labelForm"><%=lang.getTranslated("backend.contenuti.detail.table.label.for_blog")%></span><br>
+			<select name="for_blog" id="for_blog" class="formFieldTXTShort">
+			<option value="0"<%if (!field.forBlog) { Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.no")%></option>	
+			<option value="1"<%if (field.forBlog) { Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.yes")%></option>	
+			</SELECT>
+		  </div>
+		  <!---nsys-modblog2-->
 		  <br><br><br>
 		  <div align="left" style="float:left;padding-right:20px;padding-top:10px;">
 		  	<span class="labelForm"><%=lang.getTranslated("backend.contenuti.detail.table.label.type")%></span><br>

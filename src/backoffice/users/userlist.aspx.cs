@@ -276,7 +276,16 @@ public partial class _UserList : Page
 		users = new List<User>();
 		try
 		{
-			users = usrrep.find(search_key, rolef, activef, publicf, "false", order_by, false, false, false, false, false,true);
+			Nullable<bool> isActive = null;
+			if (!String.IsNullOrEmpty(activef)) {
+				isActive = Convert.ToBoolean(activef);
+			}
+			Nullable<bool> isPublic = null;
+			if (!String.IsNullOrEmpty(publicf)) {
+				isPublic = Convert.ToBoolean(publicf);
+			}				
+			
+			users = usrrep.find(search_key, rolef, isActive, isPublic, false, order_by, false, false, false, false, false,true);
 			if(users != null)
 			{				
 				bolFoundLista = true;					

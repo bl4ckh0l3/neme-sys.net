@@ -219,7 +219,7 @@ protected void Page_Load(Object sender, EventArgs e)
 			</div>
 			
 			<%
-			IList<Preference> objLPC = preferencerep.find(-1, comment.userId, comment.id, comment.elementType, null, "false", "false");
+			IList<Preference> objLPC = preferencerep.find(-1, comment.userId, comment.id, comment.elementType, null, false, false);
 			if(objLPC != null && objLPC.Count>0){
 				foreach(Preference h in objLPC){
 					string cusername = "";

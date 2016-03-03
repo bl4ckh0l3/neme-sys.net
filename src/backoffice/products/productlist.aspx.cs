@@ -384,7 +384,7 @@ public partial class _ProductList : Page
 		//***************** RECUPERO LISTA COMMON CONTENT FIELDS 
 		try
 		{
-			productfields = productrep.getProductFields(-1, null, "true");
+			productfields = productrep.getProductFields(-1, null, true);
 			if(productfields != null && productfields.Count>0)
 			{				
 				bolFoundField = true;				

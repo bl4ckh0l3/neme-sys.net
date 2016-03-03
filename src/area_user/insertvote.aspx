@@ -58,7 +58,7 @@ protected void Page_Load(Object sender, EventArgs e)
 		if (friend != null && (friend.id != user.id)) {
 			try
 			{
-				IList<Preference> existsPreferences = preferencerep.find(friend.id, userId, id_comment, comment_type, null, "false", "false");
+				IList<Preference> existsPreferences = preferencerep.find(friend.id, userId, id_comment, comment_type, null, false, false);
 				if(existsPreferences == null || (existsPreferences != null && existsPreferences.Count==0)){			
 					Preference preference = new Preference();
 					preference.userId = friend.id;
@@ -84,7 +84,7 @@ protected void Page_Load(Object sender, EventArgs e)
 							Comment comment = commentrep.getById(id_comment);
 							FContent content = contentrep.getByIdCached(comment.elementId, true);
 									
-							MailMsg mtemplate = mailrep.getByName("confirm-vote", lang.currentLangCode, "true");
+							MailMsg mtemplate = mailrep.getByName("confirm-vote", lang.currentLangCode, true);
 							ListDictionary replacements = new ListDictionary();
 							
 							StringBuilder newsContent = new StringBuilder();

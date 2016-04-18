@@ -466,7 +466,7 @@ namespace com.nemesys.services
 										}
 										tmpCounter++;
 									}
-									renderField+="</div><div style='clear:left;'></div>";
+									renderField+="</div><div class='usfieldsep' style='clear:left;'></div>";
 								}
 								break;
 							case 6:
@@ -533,7 +533,7 @@ namespace com.nemesys.services
 						}
 					}	
 					
-					renderField+="</div><div style='clear:left;'></div>";				
+					renderField+="</div><div class='usfieldsep' style='clear:left;'></div>";				
 				}
 			}
 			catch(Exception ex)

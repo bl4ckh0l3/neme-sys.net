@@ -227,7 +227,7 @@ public partial class _Product : Page
 			countries = new List<Country>();
 		}
 		try{				
-			stateRegions = countryrep.findStateRegionByCountry(null,"1");	
+			stateRegions = countryrep.findStateRegionByCountry(null,"1,3");	
 			if(stateRegions == null){				
 				stateRegions = new List<Country>();						
 			}

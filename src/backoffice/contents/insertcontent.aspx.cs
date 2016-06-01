@@ -210,7 +210,7 @@ public partial class _Content : Page
 			countries = new List<Country>();
 		}
 		try{				
-			stateRegions = countryrep.findStateRegionByCountry(null,"1");	
+			stateRegions = countryrep.findStateRegionByCountry(null,"1,3");	
 			if(stateRegions == null){				
 				stateRegions = new List<Country>();						
 			}
@@ -309,7 +309,6 @@ public partial class _Content : Page
 
 		// CLEAR PHANTOMS FIELDS AND GEOLOCALIZATIONS (based on insert date)
 		
-
 		
 		
 		// TODO gestione preview contenuti

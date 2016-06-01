@@ -3629,8 +3629,10 @@ function fieldValueSlideToggle(idsuffix){
 							</td>
 							<td id="td_product_field_value_<%=cf.id%>">
 								<%if(cf.type==3 || cf.type==4 || cf.type==5 || cf.type==6){
+									int indexOfVal = 0;
 									if(cf.typeContent==7 && !String.IsNullOrEmpty(cf.value)){
-										string tmpcfvalCommon = cf.value.Substring(0,cf.value.IndexOf('_'));
+										if(cf.value.IndexOf('_')>=0){indexOfVal=cf.value.IndexOf('_');}
+										string tmpcfvalCommon = cf.value.Substring(0,indexOfVal);
 										foreach(Country c in countries){
 											if(tmpcfvalCommon == c.countryCode){
 												Response.Write(c.countryDescription);
@@ -3638,7 +3640,8 @@ function fieldValueSlideToggle(idsuffix){
 											}
 										}
 									}else if(cf.typeContent==8 && !String.IsNullOrEmpty(cf.value)){
-										string tmpcfvalCommon = cf.value.Substring(0,cf.value.IndexOf('_'));
+										if(cf.value.IndexOf('_')>=0){indexOfVal=cf.value.IndexOf('_');}
+										string tmpcfvalCommon = cf.value.Substring(0,indexOfVal);
 										foreach(Country sr in stateRegions){
 											if(tmpcfvalCommon == sr.stateRegionCode){
 												Response.Write(sr.countryDescription+" "+sr.stateRegionDescription);
@@ -4411,8 +4414,10 @@ function fieldValueSlideToggle(idsuffix){
 							</td>
 							<td id="td_product_field_value_<%=cf.id%>">
 								<%if(cf.type==3 || cf.type==4 || cf.type==5 || cf.type==6){
+									int indexOfVal = 0;
 									if(cf.typeContent==7 && !String.IsNullOrEmpty(cf.value)){
-										string tmpcfval = cf.value.Substring(0,cf.value.IndexOf('_'));
+										if(cf.value.IndexOf('_')>=0){indexOfVal=cf.value.IndexOf('_');}
+										string tmpcfval = cf.value.Substring(0,indexOfVal);
 										foreach(Country c in countries){
 											if(tmpcfval == c.countryCode){
 												Response.Write(c.countryDescription);
@@ -4420,7 +4425,8 @@ function fieldValueSlideToggle(idsuffix){
 											}
 										}
 									}else if(cf.typeContent==8 && !String.IsNullOrEmpty(cf.value)){
-										string tmpcfval = cf.value.Substring(0,cf.value.IndexOf('_'));
+										if(cf.value.IndexOf('_')>=0){indexOfVal=cf.value.IndexOf('_');}
+										string tmpcfval = cf.value.Substring(0,indexOfVal);
 										foreach(Country sr in stateRegions){
 											if(tmpcfval == sr.stateRegionCode){
 												Response.Write(sr.countryDescription+" "+sr.stateRegionDescription);

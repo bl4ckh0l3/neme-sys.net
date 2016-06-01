@@ -647,7 +647,7 @@ jQuery(document).ready(function(){
 					<div id="regione_provincia" style="padding-top:30px;">
 						<span style="font-weight:bold;"><%=lang.getTranslated("frontend.template.annunci.label.regione_provincia")%></span><br/>
 						<%
-						IList<Country> stateRegions = countryrep.findStateRegionByCountry("IT","1");	
+						IList<Country> stateRegions = countryrep.findStateRegionByCountry("IT","1,3");	
 						fieldValueMatch = "";						
 						objListPairKeyValue.TryGetValue("regione_provincia", out fieldValueMatch);%>
 						<select name="field_regione_provincia" id="field_regione_provincia">

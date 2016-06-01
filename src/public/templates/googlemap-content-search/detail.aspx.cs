@@ -66,7 +66,7 @@ public partial class _Detail : Page
 		countryrep = RepositoryFactory.getInstance<ICountryRepository>("ICountryRepository");
 		confservice = new ConfigurationService();
 
-		//se il sito è offline rimando a pagina default
+		//se il sito ï¿½ offline rimando a pagina default
 		if ("1".Equals(confservice.get("go_offline").value)) 
 		{
 			UriBuilder defRedirect = new UriBuilder(Request.Url);
@@ -107,7 +107,7 @@ public partial class _Detail : Page
 			countries = new List<Country>();
 		}
 		try{				
-			stateRegions = countryrep.findStateRegionByCountry(null,"1");	
+			stateRegions = countryrep.findStateRegionByCountry(null,"1,3");	
 			if(stateRegions == null){				
 				stateRegions = new List<Country>();						
 			}

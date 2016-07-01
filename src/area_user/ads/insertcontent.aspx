@@ -29,7 +29,7 @@
 <META http-equiv="Content-Type" CONTENT="text/html; charset=utf-8">
 <CommonCssJs:insert runat="server" />
 <link rel="stylesheet" href="/public/layout/css/area_user.css" type="text/css">
-<script src="/common/js/hashtable.js"></script>
+<script src="/common/js/hashtable.min.js"></script>
 <script>
 var listPreviewGerContent = new Hashtable();
 <%foreach(string z in previewUrls.Keys){%>

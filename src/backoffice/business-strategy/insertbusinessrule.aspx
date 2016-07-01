@@ -16,7 +16,7 @@
 <head>
 <CommonMeta:insert runat="server" />
 <CommonCssJs:insert runat="server" />
-<SCRIPT SRC="/common/js/hashtable.js"></SCRIPT>
+<SCRIPT SRC="/common/js/hashtable.min.js"></SCRIPT>
 <script language="JavaScript">
 var rulesStrategyMap;
 rulesStrategyMap = new Hashtable();

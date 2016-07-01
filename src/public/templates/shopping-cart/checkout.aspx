@@ -23,7 +23,7 @@
 <META name="autore" CONTENT="Neme-sys; email:info@neme-sys.org">
 <META http-equiv="Content-Type" CONTENT="text/html; charset=utf-8">
 <CommonCssJs:insert runat="server" />
-<script src="/common/js/hashtable.js"></script>
+<script src="/common/js/hashtable.min.js"></script>
 <script>  
 var listPaymentMethods;
 listPaymentMethods = new Hashtable();

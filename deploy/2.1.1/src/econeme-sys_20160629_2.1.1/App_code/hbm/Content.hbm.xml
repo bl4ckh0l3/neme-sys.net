@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="com.nemesys.model" assembly="App_Code">
+    <class name="FContent" table="CONTENT">
+        <id name="id">
+            <column name="id" sql-type="int(11)" not-null="true"/>
+            <generator class="native" />
+        </id>
+		<property name="title" column="title" not-null="true" />
+		<property name="summary" column="summary" />
+		<property name="description" column="description" />
+		<property name="keyword" column="keyword" />
+		<property name="status" type="Int32" column="status" not-null="true" />
+		<property name="pageTitle" column="page_title" />
+		<property name="metaKeyword" column="meta_keyword" />
+		<property name="metaDescription" column="meta_description" />
+		<property name="userId" column="id_user" type="Int32" />
+		<property name="insertDate">
+			<column name="insert_date" sql-type="timestamp" />
+		</property>	
+		<property name="publishDate">
+		    <column name="publish_date" sql-type="timestamp" />
+		</property>	
+		<property name="deleteDate">
+		    <column name="delete_date" sql-type="datetime" />
+		</property>	
+		<bag name="attachments" table="CONTENT_ATTACHMENTS" inverse="true" lazy="true" cascade="all">
+			<key column="id_parent_content"/>
+			<one-to-many class="ContentAttachment"/>
+		</bag>
+		<bag name="languages" table="CONTENT_LANGUAGES" inverse="true" lazy="true" cascade="all">
+			<key column="id_parent_content"/>
+			<one-to-many class="ContentLanguage"/>
+		</bag>
+		<bag name="categories" table="CONTENT_CATEGORIES" inverse="true" lazy="true" cascade="all">
+			<key column="id_parent_content"/>
+			<one-to-many class="ContentCategory"/>
+		</bag>
+		<bag name="fields" table="CONTENT_FIELDS" inverse="true" lazy="true" cascade="all">
+			<key column="id_parent_content"/>
+			<one-to-many class="ContentField"/>
+		</bag>
+    </class>
+
+    <class name="ContentAttachment" table="CONTENT_ATTACHMENTS">
+        <id name="id">
+            <column name="id" sql-type="int(11)" not-null="true"/>
+            <generator class="native" />
+        </id>
+		<property name="idParentContent" column="id_parent_content" not-null="true" />
+		<property name="filePath" column="file_path" not-null="true" />
+		<property name="fileName" column="file_name" not-null="true" />
+		<property name="contentType" column="content_type" not-null="true" />
+		<property name="fileDida" column="file_dida" />
+		<property name="fileLabel" column="file_label" type="Int32" not-null="true" />	
+		<property name="insertDate">
+			<column name="insert_date" sql-type="timestamp" />
+		</property>	
+    </class>
+
+    <class name="ContentAttachmentLabel" table="CONTENT_ATTACHMENTS_LABEL">
+        <id name="id">
+            <column name="id" sql-type="int(11)" not-null="true"/>
+            <generator class="native" />
+        </id>
+		<property name="description" column="description" not-null="true" />
+    </class>
+
+	<class name="ContentLanguage" table="CONTENT_LANGUAGES">
+		<composite-id>
+			<key-property name="idParentContent" column="id_parent_content" type="Int32" />
+			<key-property name="idLanguage" column="id_language" type="Int32" />
+		</composite-id>
+	</class>
+
+	<class name="ContentCategory" table="CONTENT_CATEGORIES">
+		<composite-id>
+			<key-property name="idParent" column="id_parent_content" type="Int32" />
+			<key-property name="idCategory" column="id_category" type="Int32" />
+		</composite-id>
+	</class>
+
+    <class name="ContentField" table="CONTENT_FIELDS">
+        <id name="id">
+            <column name="id" sql-type="int(11)" not-null="true"/>
+            <generator class="native" />
+        </id>
+		<property name="idParentContent" column="id_parent_content" type="Int32" not-null="true" />
+		<property name="description" column="description" not-null="true" />
+		<property name="groupDescription" column="group_description" />
+		<property name="type" column="type" not-null="true"  type="Int32" />
+		<property name="typeContent" column="type_content" not-null="true"  type="Int32" />
+		<property name="sorting" column="sorting" not-null="true"  type="Int32" />
+		<property name="required" column="required" not-null="true"  type="Boolean" />
+		<property name="enabled" column="enabled" not-null="true"  type="Boolean" />
+		<property name="editable" column="editable" not-null="true"  type="Boolean" />
+		<property name="forBlog" column="for_blog" not-null="true"  type="Boolean" />
+		<property name="common" column="common" not-null="true"  type="Boolean" />
+		<property name="maxLenght" column="max_lenght" type="Int32" />
+		<property name="value" column="value" />
+    </class>
+
+	<class name="ContentFieldsValue" table="CONTENT_FIELDS_VALUES">
+		<composite-id>
+			<key-property name="idParentField" column="id_field" type="Int32" />
+			<key-property name="value" column="value" />
+		</composite-id>
+		<property name="sorting" column="sorting" not-null="true"  type="Int32" />
+	</class>
+</hibernate-mapping>

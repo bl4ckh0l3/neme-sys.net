@@ -223,9 +223,9 @@
 <CommonCssJs:insert runat="server" />
 <link rel="stylesheet" href="/public/layout/css/area_user.css" type="text/css">
 <link rel="stylesheet" href="/common/css/jquery.fancybox.css" type="text/css" media="screen" />
-<script type="text/javascript" src="/common/js/jquery.fancybox.pack.js"></script>
+<script type="text/javascript" src="/common/js/jquery.fancybox.pack.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/common/css/jquery.fancybox-buttons.css?v=1.0.5" />
-<script type="text/javascript" src="/common/js/jquery.fancybox-buttons.js?v=1.0.5"></script>
+<script type="text/javascript" src="/common/js/jquery.fancybox-buttons.min.js?v=1.0.5"></script>
 <script language="JavaScript">
 function changeTab(number){
 	if(number==1)

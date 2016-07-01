@@ -11,12 +11,15 @@
 	<property name="docs.dir" value="${dist.dir}/documentation"/>
 	<property name="snippet.dir" value="${dist.dir}/snippet"/>
 	<property name="mod_install.dir" value="${dist.dir}/mod_install"/>
-	<property name="db.dir" value="db/mysql"/>	
-
+	<property name="db.dir" value="db/mysql"/>
+    <property name="yuicompress.dir" value="/Users/dtesta/libs"/>
+	<property name="yuicompress" value="${yuicompress.dir}/yuicompressor-2.4.8.jar" description="YUICompressor" />
+	
 	<tstamp>
 		<format property="build.date" pattern="yyyyMMdd" />
 	</tstamp>
-
+	
+	
 
 	<target name="usage">
 		<echo message=""/>
@@ -221,6 +224,28 @@
 		
 		<copy file="${db.dir}/global_install_query.sql" todir="${dist.dir}/${buildVers}/tmp"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/global_install_query.sql" flags="gis" byline="false" match="buildVersSql" replace="${buildVers}" />
+			
+		<mkdir dir="${dist.dir}/${buildVers}/tmp/common/js"/>
+        <apply executable="java" parallel="false" verbose="true" dest="${dist.dir}/${buildVers}/tmp/common/js">
+            <fileset dir="${src.dir}/common/js">
+                <include name="hashtable.js" />
+				<include name="jquery.fancybox-buttons.js" />
+				<include name="highcharts.js" />
+				<include name="jquery.form.js" />
+				<include name="javascript_global.js" />
+				<include name="jqueryslidemenu.js" />
+				<include name="jquery.timers.js" /> 
+				<include name="jquery.datetimepicker.js" />                     
+            </fileset>
+            <arg line="-jar" />
+            <arg path="${yuicompress}" />
+            <arg value="--charset" />
+            <arg value="ANSI" />
+            <arg value="-o" />
+            <targetfile />
+            <mapper type="glob" from="*.js" to="*.min.js" />
+        </apply>		
+		
 	</target>
 	
 	<target name="delete_zip_cms" if="zipToDeleteCms"> 
@@ -282,7 +307,21 @@
 				<exclude name="common/img/logo.png"/>					
 				<exclude name="common/include/checkin.asp"/>
 				<exclude name="common/include/checkin_fault.asp"/>
-				<exclude name="common/include/download-order-attach.aspx"/>		
+				<exclude name="common/include/download-order-attach.aspx"/>	
+                <exclude name="common/js/hashtable.js" />
+				<exclude name="common/js/jquery.fancybox-buttons.js" />
+				<exclude name="common/js/highcharts.js" />
+				<exclude name="common/js/jquery.form.js" />
+				<exclude name="common/js/javascript_global.js" />
+				<exclude name="common/js/jqueryslidemenu.js" />
+				<exclude name="common/js/jquery.timers.js" /> 
+				<exclude name="common/js/jquery.datetimepicker.js" /> 
+				<exclude name="common/js/ajaxsbmt.js" />
+				<exclude name="common/js/jquery-ui-timepicker-addon.js" />
+				<exclude name="common/js/jquery.cross-slide.js" />
+				<exclude name="common/js/jquery.cycle.lite.js" />
+				<exclude name="common/js/news_ie.js" />
+				<exclude name="common/js/swfobject.js" />
 				<exclude name="backoffice/index.aspx"/>
 				<exclude name="backoffice/include/menu.ascx"/>
 				<exclude name="backoffice/countries/countrylist.aspx"/>
@@ -429,6 +468,15 @@
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/addson/user" includes="user-mask-widget.ascx" prefix="public/layout/addson/user"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/addson/user" includes="user-online-widget.ascx" prefix="public/layout/addson/user"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/addson/comments" includes="comments-widget.ascx" prefix="public/layout/addson/comments"/>
+			
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="hashtable.min.js" prefix="common/js"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.fancybox-buttons.min.js" prefix="common/js"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="highcharts.min.js" prefix="common/js"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.form.min.js" prefix="common/js"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="javascript_global.min.js" prefix="common/js"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jqueryslidemenu.min.js" prefix="common/js"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.timers.min.js" prefix="common/js"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.datetimepicker.min.js" prefix="common/js"/>
 
 			<!-- includo il logo di neme-sys al posto del logo econeme-sys -->
 			<zipfileset dir="${snippet.dir}/cms/backoffice/img" includes="logo.png" prefix="backoffice/img"/>
@@ -546,6 +594,28 @@
 		
 		<copy file="${src.dir}/backoffice/include/menu.ascx" todir="${dist.dir}/${buildVers}/tmp/backoffice/include"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/backoffice/include/menu.ascx" flags="gis" byline="false" match="(&lt;!--nsys-voucher1--&gt;)(.*?)(&lt;!---nsys-voucher1--&gt;)" replace="\1${nsys-voucher1}\3" />	
+		
+		<mkdir dir="${dist.dir}/${buildVers}/tmp/common/js"/>
+        <apply executable="java" parallel="false" verbose="true" dest="${dist.dir}/${buildVers}/tmp/common/js">
+            <fileset dir="${src.dir}/common/js">
+                <include name="hashtable.js" /> 
+				<include name="jquery.fancybox-buttons.js" />
+				<include name="highcharts.js" />
+				<include name="jquery.form.js" />
+				<include name="javascript_global.js" />
+				<include name="jqueryslidemenu.js" />
+				<include name="jquery.timers.js" /> 
+				<include name="jquery.datetimepicker.js" />                     
+            </fileset>
+            <arg line="-jar" />
+            <arg path="${yuicompress}" />
+            <arg value="--charset" />
+            <arg value="ANSI" />
+            <arg value="-o" />
+            <targetfile />
+            <mapper type="glob" from="*.js" to="*.min.js" />
+        </apply>
+        
 	</target>
 	
 	<target name="delete_zip_cms.ec" if="zipToDeleteEc"> 
@@ -600,6 +670,20 @@
 				<exclude name="area_user/publicprofile.aspx"/>			
 				<exclude name="**/area_user/ads/**"/>		
 				<exclude name="common/img/logo.png"/>	
+                <exclude name="common/js/hashtable.js" /> 
+				<exclude name="common/js/jquery.fancybox-buttons.js" />
+				<exclude name="common/js/highcharts.js" />
+				<exclude name="common/js/jquery.form.js" />
+				<exclude name="common/js/javascript_global.js" />
+				<exclude name="common/js/jqueryslidemenu.js" />
+				<exclude name="common/js/jquery.timers.js" /> 
+				<exclude name="common/js/jquery.datetimepicker.js" />
+				<exclude name="common/js/ajaxsbmt.js" />
+				<exclude name="common/js/jquery-ui-timepicker-addon.js" />
+				<exclude name="common/js/jquery.cross-slide.js" />
+				<exclude name="common/js/jquery.cycle.lite.js" />
+				<exclude name="common/js/news_ie.js" />
+				<exclude name="common/js/swfobject.js" />
 				<exclude name="backoffice/include/menu.ascx"/>
 				<exclude name="backoffice/newsletter/newsletterlist.aspx"/>
 				<exclude name="backoffice/newsletter/newsletterlist.aspx.cs"/>
@@ -685,6 +769,15 @@
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/addson/user" includes="user-mask-widget.ascx" prefix="public/layout/addson/user"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/addson/user" includes="user-online-widget.ascx" prefix="public/layout/addson/user"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/addson/comments" includes="comments-widget.ascx" prefix="public/layout/addson/comments"/>	
+			
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="hashtable.min.js" prefix="common/js"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.fancybox-buttons.min.js" prefix="common/js"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="highcharts.min.js" prefix="common/js"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.form.min.js" prefix="common/js"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="javascript_global.min.js" prefix="common/js"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jqueryslidemenu.min.js" prefix="common/js"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.timers.min.js" prefix="common/js"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.datetimepicker.min.js" prefix="common/js"/>
 		</zip>
 
 		<delete includeemptydirs="true">

@@ -220,6 +220,7 @@ span.imgError{background:#FFFFFF;color:#FF0000;display:inline;}
 .spese-div select {width:200px;}
 #prodotto-conto .spese-div span.rules{color:#FF0000;}
 /*#payment_commission{color:#FF0000;}*/
+#bills-container .bills-group-name {color:#666666;}
 
 
 /********* commenti */

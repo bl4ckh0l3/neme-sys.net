@@ -1187,6 +1187,29 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 								});		
 								<%}
 							}else{%>
+								$(document).ready(function(){										
+									var type_val_ch = $('#ship_country').val();
+									var query_string = "field_val="+encodeURIComponent(type_val_ch);
+				
+									$.ajax({
+										async: true,
+										type: "GET",
+										cache: false,
+										url: "/backoffice/orders/ajaxstateregionupdate.aspx",
+										data: query_string,
+										success: function(response) {
+											//alert("response: "+response);
+											$("select#ship_state_region").empty();
+											$("select#ship_state_region").append($("<option></option>").attr("value","").text(""));
+											$("select#ship_state_region").append(response);
+										},
+										error: function() {
+											$("select#ship_state_region").empty();
+											$("select#ship_state_region").append($("<option></option>").attr("value","").text(""));
+										}
+									});	
+								});								
+							
 								$('#ship_country').change(function() {
 									var type_val_ch = $('#ship_country').val();
 									var query_string = "field_val="+encodeURIComponent(type_val_ch);
@@ -1270,6 +1293,29 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 							</div>
 							
 							<script>
+							$(document).ready(function(){										
+								var type_val_ch = $('#bills_country').val();
+								var query_string = "field_val="+encodeURIComponent(type_val_ch);
+			
+								$.ajax({
+									async: true,
+									type: "GET",
+									cache: false,
+									url: "/backoffice/orders/ajaxstateregionupdate.aspx",
+									data: query_string,
+									success: function(response) {
+										//alert("response: "+response);
+										$("select#bills_state_region").empty();
+										$("select#bills_state_region").append($("<option></option>").attr("value","").text(""));
+										$("select#bills_state_region").append(response);
+									},
+									error: function() {
+										$("select#bills_state_region").empty();
+										$("select#bills_state_region").append($("<option></option>").attr("value","").text(""));
+									}
+								});	
+							});								
+							
 							$('#bills_country').change(function() {
 								var type_val_ch = $('#bills_country').val();
 								var query_string = "field_val="+encodeURIComponent(type_val_ch);

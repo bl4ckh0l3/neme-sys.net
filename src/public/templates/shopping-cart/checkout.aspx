@@ -1028,7 +1028,7 @@ function selectPayAndBills4Form(applyBills){
 										
 										if(!oldGroupDesc.Equals(f.feeGroup) && !String.IsNullOrEmpty(f.feeGroup)){
 											bills2Charge.Add(f.feeGroup,false);
-											Response.Write("<strong id="+f.feeGroup+">"+billGdesc+"</strong><br/>");
+											Response.Write("<strong class=bills-group-name id="+f.feeGroup+">"+billGdesc+"</strong><br/>");
 										}
 										
 										if(f.autoactive){

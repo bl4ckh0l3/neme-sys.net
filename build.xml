@@ -500,6 +500,22 @@
 		</delete>
 		
 		<unzip src="${dist.dir}/${buildVers}/src/${name}_${build.date}_${buildVers}.zip" dest="${dist.dir}/${buildVers}/tmp" />
+
+		<delete includeemptydirs="true">
+			<fileset dir="${dist.dir}/${buildVers}/tmp/App_code" includes="**/*"/>
+			<fileset dir="${dist.dir}/${buildVers}/tmp/App_data" includes="**/*"/>
+			<fileset dir="${dist.dir}/${buildVers}/tmp/App_WebReferences" includes="**/*"/>
+			<fileset dir="${dist.dir}/${buildVers}/tmp/area_user" includes="**/*"/>
+			<fileset dir="${dist.dir}/${buildVers}/tmp/bin" includes="**/*"/>
+			<fileset dir="${dist.dir}/${buildVers}/tmp/cleditor" includes="**/*"/>
+			<fileset dir="${dist.dir}/${buildVers}/tmp/fckeditor" includes="**/*"/>
+			<fileset dir="${dist.dir}/${buildVers}/tmp/jquery-lightbox" includes="**/*"/>
+			<fileset dir="${dist.dir}/${buildVers}/tmp/licences" includes="**/*"/>
+			<fileset dir="${dist.dir}/${buildVers}/tmp/public" includes="**/*"/>
+			<fileset dir="${dist.dir}/${buildVers}/tmp/test" includes="**/*"/>
+			<fileset dir="${dist.dir}/${buildVers}/tmp/checkout" includes="**/*"/>
+			<fileset dir="${dist.dir}/${buildVers}/tmp/common" includes="**/*"/>		
+		</delete>		
 		
 	</target>	
 	

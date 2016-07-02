@@ -133,7 +133,7 @@
 				}					
 				if(!String.IsNullOrEmpty(fileName))
 				{
-					switch (Path.GetExtension(fileName))
+					switch (Path.GetExtension(fileName).ToLower())
 					{
 						case ".jpg": case ".jpeg": case ".png": case ".gif": case ".bmp":					
 							UserService.SaveStreamToFile(MyFile.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/user/"+login.userLogged.id+"/"+MyFile.FileName));
@@ -263,8 +263,19 @@ function changeAlbumName(){
 	}	
 }
 
-function openAlbum(divid){
-	$('#'+divid).show();
+function openAlbum(divid, title){
+	var content = $('#'+divid).html();
+	$('#itemsAlbumTitle').append(title);
+	$('#itemsAlbumContent').append(content).append("<div style=clear:both;></div>");
+	$('#itemsAlbumContainer').hide();
+	$('#itemsAlbum').show();
+}
+
+function closeAlbum(){
+	$('#itemsAlbumTitle').empty();
+	$('#itemsAlbumContent').empty();
+	$('#itemsAlbum').hide();
+	$('#itemsAlbumContainer').show();
 }
 </script>
 </head>
@@ -340,7 +351,7 @@ function openAlbum(divid){
 								string divfloat = "left";
 								if(photoCounter % 3 == 0){divfloat = "top";}%>				
 								<div style="margin-bottom:10px;float:<%=divfloat%>;margin-right:5px;width:200px;height:200px;overflow:hidden;border:1px solid #E3E3E3;text-align:center;vertical-align:middle;">
-								<div style="position:absolute;background-color:#FFFFFF;cursor:pointer;" onclick="javascript:deletePhoto(<%=attachment.id%>);" title="<%=lang.getTranslated("frontend.area_user.manage.label.delete_photo")%>">x</div>
+								<div style="position:absolute;background-color:#FFFFFF;cursor:pointer;" onclick="javascript:deletePhoto(<%=attachment.id%>);" title="<%=lang.getTranslated("frontend.area_user.manage.label.delete_photo")%>"><div style="border:1px solid #ff0000;background-color:#FFFFFF;color:#ff0000;text-align: center; vertical-align: top; height: 16px; width: 16px;">x</div></div>
 								<a class="fancybox" href="<%=basePath+attachment.filePath+attachment.fileName%>" title="<%=attachment.fileDida%>"><img width="200" alt="<%=attachment.fileDida%>" title="<%=attachment.fileDida%>" src="<%=basePath+attachment.filePath+attachment.fileName%>" hspace="0" vspace="0" border="0"></a>
 								</div>
 								<%photoCounter++;		
@@ -361,8 +372,19 @@ function openAlbum(divid){
 					if(bolFoundPhotos) {
 						int photoCounterA = 1;
 						
-						if(albums.Keys != null){
-							foreach(string x in albums.Keys){
+						if(albums.Keys != null){%>
+						
+							<div id="itemsAlbum" style="z-index:1;display:none;background-color:#FFFFFF;min-width:675px;border:1px solid #E3E3E3;">
+								<div style="text-align:right;width:100%;background-color:#FFFFFF;cursor:pointer;font-weight:bold;" onclick="closeAlbum();" title="<%=lang.getTranslated("frontend.area_user.manage.label.close_album")%>">
+									<div id="itemsAlbumTitle" align="center" style="float:left;text-align:center;width:97%;color:#172c81;padding-bottom:5px;"></div>
+									<div style="float:right;border:1px solid #000000;background-color:#FFFFFF;color:#000000;text-align: center; vertical-align:top; height: 15px; width: 15px;">x</div>
+								</div>
+								<div id="itemsAlbumContent"></div>
+							</div>						
+						
+						
+							<div id="itemsAlbumContainer">
+							<%foreach(string x in albums.Keys){
 								if(x!="none"){
 									IList<UserAttachment> itemsAlbum = null;
 									if(albums.TryGetValue(x, out itemsAlbum)){
@@ -370,22 +392,20 @@ function openAlbum(divid){
 											string divfloatA = "left";
 											if(photoCounterA % 3 == 0){divfloatA = "top";}%>				
 											<div style="margin-bottom:10px;float:<%=divfloatA%>;margin-right:5px;width:200px;height:200px;overflow:hidden;border:1px solid #E3E3E3;text-align:center;vertical-align:middle;">
-											<div style="position:relative;background-color:#FFFFFF;cursor:pointer;" onclick="javascript:openAlbum('itemsAlbum_<%=x.Replace(" ","")%>');"><%=attachment.fileLabel%></div>
+											<div style="position:relative;background-color:#FFFFFF;cursor:pointer;font-weight:bold;color:#172c81;text-decoration:underline;padding-bottom:5px;" onclick="javascript:openAlbum('itemsAlbum_<%=x.Replace(" ","")%>','<%=x%>');"><%=attachment.fileLabel%></div>
 											<a" href="<%=basePath+attachment.filePath+attachment.fileName%>" title="<%=attachment.fileDida%>"><img src="<%=basePath+attachment.filePath+attachment.fileName%>" width="200" alt="<%=attachment.fileDida%>" title="<%=attachment.fileDida%>" /></a>
 											</div>
 											<%photoCounterA++;
 											break;											
 										}%>
-										
-										<div id="itemsAlbum_<%=x.Replace(" ","")%>" style="z-index:1;display:none;position:absolute;background-color:#FFFFFF;min-width:615px;border:1px solid #E3E3E3;">
-										<div style="text-align:right;width:100%;background-color:#FFFFFF;cursor:pointer;" onclick="$('#itemsAlbum_<%=x.Replace(" ","")%>').hide();" title="<%=lang.getTranslated("frontend.area_user.manage.label.close_album")%>">x</div>
+										<div id="itemsAlbum_<%=x.Replace(" ","")%>" style="display:none;">
 										<%
 										int photoCounterX = 1;
 										foreach (UserAttachment attachment in itemsAlbum){
 											string divfloat = "left";
 											if(photoCounterX % 3 == 0){divfloat = "top";}%>
 											<div style="margin-bottom:10px;float:<%=divfloat%>;margin-right:5px;width:200px;height:200px;overflow:hidden;border:1px solid #E3E3E3;text-align:center;vertical-align:middle;">
-											<div style="position:absolute;background-color:#FFFFFF;cursor:pointer;" onclick="javascript:deletePhoto(<%=attachment.id%>);" title="<%=lang.getTranslated("frontend.area_user.manage.label.delete_photo")%>">x</div>
+											<div style="position:absolute;background-color:#FFFFFF;cursor:pointer;" onclick="javascript:deletePhoto(<%=attachment.id%>);" title="<%=lang.getTranslated("frontend.area_user.manage.label.delete_photo")%>"><div style="border:1px solid #ff0000;background-color:#FFFFFF;color:#ff0000;text-align: center; vertical-align: top; height: 16px; width: 16px;">x</div></div>
 											<a class="fancybox_<%=x.Replace(" ","")%>" href="<%=basePath+attachment.filePath+attachment.fileName%>" title="<%=attachment.fileDida%>"><img width="200" alt="<%=attachment.fileDida%>" title="<%=attachment.fileDida%>" src="<%=basePath+attachment.filePath+attachment.fileName%>" hspace="0" vspace="0" border="0"></a>
 											</div>										
 											<%photoCounterX++;
@@ -398,8 +418,9 @@ function openAlbum(divid){
 										</script>	
 									<%}
 								}
-							}
-						}
+							}%>
+							</div>
+						<%}
 					}%>
 				</div>
 			</div>

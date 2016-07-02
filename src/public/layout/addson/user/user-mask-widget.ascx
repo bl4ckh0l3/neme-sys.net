@@ -164,7 +164,6 @@ protected void Page_Load(Object sender, EventArgs e)
 	<%}else{%>
 		<img class="imgAvatarUser" align="top" width="50" <%=forcedAvHeight%> src="/common/img/unkow-user.jpg" />
 	<%}%>
-	<%if(!String.IsNullOrEmpty(avatarPath)){%>
 	<script>
 		var varIntervalCounter = 0;
 		var myTimer;
@@ -174,7 +173,7 @@ protected void Page_Load(Object sender, EventArgs e)
 		{
 			var d=new Date();
 			var t=d.toLocaleTimeString();
-			t=t.substring(0,t.lastIndexOf('.'));
+			t=t.substring(0,t.length-3);
 			document.getElementById("user-mask-clock").value=t;
 		}
   	
@@ -188,12 +187,13 @@ protected void Page_Load(Object sender, EventArgs e)
 				clearInterval(myTimer);    
 			  }
 		}
-			
+
+		<%if(!String.IsNullOrEmpty(avatarPath)){%>			
 		jQuery(document).ready(function(){	
 		  myTimer = setInterval("reloadAvatarImage()",100);
-		});
-	</script>	
-	<%}%>
+		});	
+		<%}%>
+	</script>
 	</div>
 	<div style="float:left;">	
 	<a href="/area_user/account.aspx"><%=lang.getTranslated("frontend.area_user.manage.label.profile")%></a>

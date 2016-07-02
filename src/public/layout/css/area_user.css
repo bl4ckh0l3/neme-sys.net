@@ -128,7 +128,7 @@
 .area_user_tabs input{padding:8px;}
 .area_user_tabs input.active{background-color:#EEEEEE; border:1px solid #000000;color:#172C81;}
 .area_user_tabs input{background-color:#EEEEEE; border:1px solid #E3E3E3;}
-.area_user_tabs input:hover{color:#172C81;}
+.area_user_tabs input:hover{color:#172C81;cursor:pointer;}
 
 #backend-content table.inner-table-cat-list{width:485px;border:none;}
 #backend-content table.inner-table-cat-list th{text-align:left;font-weight: bold;color: #FFFFFF; background-color: #bc9e9e;vertical-align: middle;padding:3px;margin:0px;}

@@ -303,12 +303,12 @@ function closeAlbum(){
 						<br/>
 						<div style="float:left;margin-right:20px;">
 							<span class="labelForm"><%=lang.getTranslated("frontend.area_user.manage.label.create_dida")%></span><br/>
-							<input type="text" value="" name="file_dida">
+							<input type="text" value="" name="file_dida" onkeypress="javascript:return numberLetterSpaceUnderScore(event);">
 						</div>
 						<div style="float:top;margin-right:20px;">					
 							<span class="labelForm"><%=lang.getTranslated("frontend.area_user.manage.label.create_album")%></span>
 							<img onclick="javascipt:changeAlbumName();" style="cursor:pointer;" align="absmiddle" src="/backoffice/img/arrow_rotate_clockwise.png" title="<%=lang.getTranslated("frontend.area_user.manage.label.use_exist_album")%>" hspace="2" vspace="0" border="0"><br/>
-							<input type="text" value="" name="file_label" id="file_label">
+							<input type="text" value="" name="file_label" id="file_label" onkeypress="javascript:return numberLetterSpaceUnderScore(event);">
 							<select name="file_label_c" id="file_label_c" style="display:none;min-width:150px;vertical-align:top;">
 							<option></option>
 							<%

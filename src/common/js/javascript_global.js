@@ -129,6 +129,20 @@ function isIntegerUnsigned(e){
 	return false;
 }
 
+// consente di digitare solo letter, numeri, spazi, underscore ^[A-Z0-9 _]*$
+function numberLetterSpaceUnderScore(e){
+    var charCode = e.which;
+    var fieldVal="";
+    if (charCode != 0) {
+        fieldVal = String.fromCharCode(charCode);
+    }	
+		
+	var expr =/^[a-z0-9 _-]*$/i;
+	var ok = expr.test(fieldVal);
+		
+	return ok;
+}
+
 //non consente di digitare caratteri speciali
 function notSpecialChar(e){
 	var key = window.event ? e.keyCode : e.which;	

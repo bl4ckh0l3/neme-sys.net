@@ -499,7 +499,7 @@
 			<fileset dir="${dist.dir}/${buildVers}/tmp" includes="**/*"/>
 		</delete>
 		
-		<copy file="${dist.dir}/${buildVers}/src/${name}_${build.date}_${buildVers}.zip" todir="${dist.dir}/${buildVers}/tmp"/>
+		<unzip src="${dist.dir}/${buildVers}/src/${name}_${build.date}_${buildVers}.zip" dest="${dist.dir}/${buildVers}/tmp" />
 		
 	</target>	
 	

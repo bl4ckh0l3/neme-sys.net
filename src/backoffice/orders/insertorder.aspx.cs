@@ -821,7 +821,9 @@ public partial class _InsertOrder : Page
 							if(!String.IsNullOrEmpty(suppdesctrans)){
 								suppdesc = suppdesctrans;
 							}
-							suppdesc = "&nbsp;("+suppdesc+")";
+							if(!String.IsNullOrEmpty(suppdesc)){
+								suppdesc = "&nbsp;("+suppdesc+")";
+							}
 						}
 						
 						amount = price+supplement;

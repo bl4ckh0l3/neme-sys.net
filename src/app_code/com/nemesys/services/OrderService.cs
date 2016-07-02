@@ -421,11 +421,15 @@ namespace com.nemesys.services
 						if(!String.IsNullOrEmpty(suppdesctrans)){
 							suppdesc = suppdesctrans;
 						}
-						suppdesc = "&nbsp;("+suppdesc+")";	
+						if(!String.IsNullOrEmpty(suppdesc)){
+							suppdesc = "&nbsp;("+suppdesc+")";
+						}
 						if(!String.IsNullOrEmpty(bosuppdesctrans)){
 							bosuppdesc = bosuppdesctrans;
 						}
-						bosuppdesc = "&nbsp;("+bosuppdesc+")";	
+						if(!String.IsNullOrEmpty(bosuppdesc)){
+							bosuppdesc = "&nbsp;("+bosuppdesc+")";
+						}
 	
 						string opmargin = "";
 						string boopmargin = "";

@@ -494,7 +494,9 @@ public partial class _Detail : Page
 				if(!String.IsNullOrEmpty(suppdesctrans)){
 					suppdesc = suppdesctrans;
 				}
-				suppdesc = "&nbsp;("+suppdesc+")";
+				if(!String.IsNullOrEmpty(suppdesc)){
+					suppdesc = "&nbsp;("+suppdesc+")";
+				}
 			}
 			
 			if(defCurrency != null && userCurrency != null){

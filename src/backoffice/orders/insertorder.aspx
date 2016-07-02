@@ -803,8 +803,10 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 						if(!String.IsNullOrEmpty(suppdesctrans)){
 							suppdesc = suppdesctrans;
 						}
-						suppdesc = "&nbsp;("+suppdesc+")";	
-	
+						if(!String.IsNullOrEmpty(suppdesc)){
+							suppdesc = "&nbsp;("+suppdesc+")";
+						}
+							
 						string opmargin = "";
 						if(op.margin > 0){
 							opmargin = "<li>"+lang.getTranslated("frontend.carrello.table.label.commissioni")+":&nbsp;&euro;&nbsp;"+op.margin.ToString("#,###0.00")+"</li>";
@@ -1186,7 +1188,8 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 									document.form_insert_carrello.submit();
 								});		
 								<%}
-							}else{%>
+							}else{
+								if(!String.IsNullOrEmpty(shipaddr.country)){%>
 								$(document).ready(function(){										
 									var type_val_ch = $('#ship_country').val();
 									var query_string = "field_val="+encodeURIComponent(type_val_ch);
@@ -1208,7 +1211,8 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 											$("select#ship_state_region").append($("<option></option>").attr("value","").text(""));
 										}
 									});	
-								});								
+								});		
+								<%}%>						
 							
 								$('#ship_country').change(function() {
 									var type_val_ch = $('#ship_country').val();
@@ -1293,6 +1297,7 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 							</div>
 							
 							<script>
+							<%if(!String.IsNullOrEmpty(billsaddr.country)){%>
 							$(document).ready(function(){										
 								var type_val_ch = $('#bills_country').val();
 								var query_string = "field_val="+encodeURIComponent(type_val_ch);
@@ -1314,7 +1319,8 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 										$("select#bills_state_region").append($("<option></option>").attr("value","").text(""));
 									}
 								});	
-							});								
+							});	
+							<%}%>
 							
 							$('#bills_country').change(function() {
 								var type_val_ch = $('#bills_country').val();

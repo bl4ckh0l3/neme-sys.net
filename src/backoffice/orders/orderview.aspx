@@ -248,7 +248,9 @@ $(function() {
 							if(!String.IsNullOrEmpty(suppdesctrans)){
 								suppdesc = suppdesctrans;
 							}
-							suppdesc = "&nbsp;("+suppdesc+")";	
+							if(!String.IsNullOrEmpty(suppdesc)){
+								suppdesc = "&nbsp;("+suppdesc+")";
+							}
 		
 							string opmargin = "";
 							if(op.margin > 0){

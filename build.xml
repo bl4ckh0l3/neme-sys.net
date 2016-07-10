@@ -1557,7 +1557,7 @@
 			<zipfileset dir="${src.dir}">
 				<!-- file inclusi -->
 				<include name="backoffice/include/menu.ascx"/>
-				<include name="**/backoffice/voucher/**"/>		
+				<include name="**/backoffice/vouchers/**"/>		
 				<include name="backoffice/newsletter/newsletterlist.aspx"/>
 				<include name="backoffice/newsletter/newsletterlist.aspx.cs"/>
 				<include name="backoffice/newsletter/insertnewsletter.aspx"/>

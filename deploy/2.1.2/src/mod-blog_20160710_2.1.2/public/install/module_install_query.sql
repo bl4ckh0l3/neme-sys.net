@@ -1,1 +1,0 @@
-INSERT INTO `MODULES` (`keyword`, `description`, `version`, `active`) VALUES ('mod-blog', 'blog module installation', '2.1.2', '1');

@@ -92,7 +92,7 @@
 				<!-- file esclusi e recuperati da dir templates -->
 				<exclude name="**/IT/**"/>
 				<exclude name="**/EN/**"/>
-				<exclude name="shopping-card/**"/>
+				<exclude name="shopping-cart/**"/>
 				<exclude name="products/**"/>
 				<exclude name="ads-content/**"/>
 				<exclude name="googlemap-product*/**"/>
@@ -748,7 +748,7 @@
 			<zipfileset dir="${src.dir}/public/templates" includes="base-product/**/*" prefix="public/templates"/>
 			<zipfileset dir="${src.dir}/public/templates" includes="search/**/*" prefix="public/templates"/>
 			<zipfileset dir="${src.dir}/public/templates" includes="contact/**/*" prefix="public/templates"/>	
-			<zipfileset dir="${src.dir}/public/templates" includes="shopping-card/**/*" prefix="public/templates"/>
+			<zipfileset dir="${src.dir}/public/templates" includes="shopping-cart/**/*" prefix="public/templates"/>
 			
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="newsletterlist.aspx" prefix="backoffice/newsletter"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="newsletterlist.aspx.cs" prefix="backoffice/newsletter"/>
@@ -1039,7 +1039,7 @@
 			<zipfileset dir="${src.dir}/public/templates" includes="base-product/**/*" prefix="public/templates"/>
 			<zipfileset dir="${src.dir}/public/templates" includes="search/**/*" prefix="public/templates"/>
 			<zipfileset dir="${src.dir}/public/templates" includes="contact/**/*" prefix="public/templates"/>	
-			<zipfileset dir="${src.dir}/public/templates" includes="shopping-card/**/*" prefix="public/templates"/>
+			<zipfileset dir="${src.dir}/public/templates" includes="shopping-cart/**/*" prefix="public/templates"/>
 			
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="newsletterlist.aspx" prefix="backoffice/newsletter"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/newsletter" includes="newsletterlist.aspx.cs" prefix="backoffice/newsletter"/>

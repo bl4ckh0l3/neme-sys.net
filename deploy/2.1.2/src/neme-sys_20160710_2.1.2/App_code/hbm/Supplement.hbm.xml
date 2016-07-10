@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="com.nemesys.model" assembly="App_Code">
+	<class name="Supplement" table="SUPPLEMENT">
+		<id name="id">
+		<column name="id" sql-type="int(11)" not-null="true"/>
+		<generator class="native" />
+		</id>
+		<property name="description" column="description" not-null="true" />
+		<property name="value" type="Decimal" column="value" not-null="true" />	
+		<property name="type" column="type" not-null="true"  type="Int32" />
+	</class>
+
+	<class name="SupplementGroup" table="SUPPLEMENT_GROUP">
+		<id name="id">
+			<column name="id" sql-type="int(11)" not-null="true"/>
+			<generator class="native" />
+		</id>
+		<property name="description" column="description" not-null="true" />
+		<bag name="values" table="SUPPLEMENT_GROUP_VALUES" inverse="true" lazy="true" cascade="all">
+			<key column="idGroup"/>
+			<one-to-many class="SupplementGroupValue"/>
+		</bag>
+	</class>
+
+	<class name="SupplementGroupValue" table="SUPPLEMENT_GROUP_VALUES">
+		<id name="id">
+		    <column name="id" sql-type="int(11)" not-null="true"/>
+		    <generator class="native" />
+		</id>
+		<property name="idGroup" column="id_group" type="Int32" not-null="true"  />
+		<property name="countryCode" column="country_code" not-null="true" />
+		<property name="stateRegionCode" column="state_region_code" />
+		<property name="idFee" column="id_fee" not-null="true"  type="Int32" />
+		<property name="excludeCalculation" column="exclude_calculation" not-null="true"  type="Boolean" />
+	</class>
+</hibernate-mapping>

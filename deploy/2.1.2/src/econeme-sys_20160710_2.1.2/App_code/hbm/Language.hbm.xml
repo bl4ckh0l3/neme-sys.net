@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="com.nemesys.model" assembly="App_Code">
+    <class name="Language" table="LANGUAGE">
+        <id name="id">
+            <column name="id" sql-type="int(20)" not-null="true"/>
+            <generator class="native" />
+        </id>
+		<property name="label" column="label" not-null="true" />
+		<property name="description" column="description" />
+		<property name="urlSubdomain" column="url_subdomain" />
+		<property name="langActive" column="lang_active" type="Boolean" />
+		<property name="subdomainActive" column="subdomain_active" type="Boolean" />
+    </class>
+
+    <class name="AvailableLanguage" table="AVAILABLE_LANGUAGES">
+        <id name="keyword">
+            <column name="keyword" not-null="true"/>
+        </id>
+		<property name="description" column="description" />
+    </class>
+</hibernate-mapping>

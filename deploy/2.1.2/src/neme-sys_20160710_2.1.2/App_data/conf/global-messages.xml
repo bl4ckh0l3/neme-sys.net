@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>	
+	<global-messages>
+		<keyword>001</keyword>
+		<value>portal.commons.messages.label.send_new_password</value>
+	</global-messages>
+	<global-messages>
+		<keyword>002</keyword>
+		<value>portal.commons.messages.label.mail_been_sent</value>
+	</global-messages>
+	<global-messages>
+		<keyword>003</keyword>
+		<value>portal.commons.messages.label.user_deleted</value>
+	</global-messages>
+</root>

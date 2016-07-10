@@ -286,7 +286,8 @@
 		<echo message=""/>
 		
 		<antcall target="taskReplaceCms" />
-		
+		   
+		<chmod perm="jenkins+rw">
 		<zip destfile="${dist.dir}/${buildVers}/src/${name}_${build.date}_${buildVers}.zip"> 
 			<zipfileset dir="${src.dir}"> 
 				<include name="**/*"/>		
@@ -494,7 +495,8 @@
 			<zipfileset dir="${src.dir}/public/templates" includes="search/**/*" prefix="public/templates"/>
 			<zipfileset dir="${src.dir}/public/templates" includes="contact/**/*" prefix="public/templates"/>
 		</zip>
-
+		</chmod>
+                 
 		<delete includeemptydirs="true">
 			<fileset dir="${dist.dir}/${buildVers}/tmp" includes="**/*"/>
 		</delete>	
@@ -913,7 +915,7 @@
 		<echo message=""/>
 		
 		<antcall target="taskReplaceUpEco" />
-
+           
 		<zip destfile="${dist.dir}/${buildVers}/src/upto_eco${name}_${build.date}_${buildVers}.zip"> 
 			<zipfileset dir="${src.dir}">
 				

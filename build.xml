@@ -123,21 +123,21 @@
 		<copy file="${src.dir}/global.asax" todir="${dist.dir}/${buildVers}/tmp"/>	
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/global.asax" flags="gis" byline="false" match="(&lt;!--nsys-globalasa2--&gt;)(.*?)(&lt;!---nsys-globalasa2--&gt;)" replace="\1${nsys-globalasa2}\3" />
 		
-		<copy file="${src.dir}/app_data/conf/nemesys-config.xml" todir="${dist.dir}/${buildVers}/tmp/app_data/conf"/>
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig1--&gt;)(.*?)(&lt;!---nsys-nemesiconfig1--&gt;)" replace="\1${nsys-nemesiconfig1}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig2--&gt;)(.*?)(&lt;!---nsys-nemesiconfig2--&gt;)" replace="\1${nsys-nemesiconfig2}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig3--&gt;)(.*?)(&lt;!---nsys-nemesiconfig3--&gt;)" replace="\1${nsys-nemesiconfig3}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig4--&gt;)(.*?)(&lt;!---nsys-nemesiconfig4--&gt;)" replace="\1${nsys-nemesiconfig4}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig5--&gt;)(.*?)(&lt;!---nsys-nemesiconfig5--&gt;)" replace="\1${nsys-nemesiconfig5}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig6--&gt;)(.*?)(&lt;!---nsys-nemesiconfig6--&gt;)" replace="\1${nsys-nemesiconfig6}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig7--&gt;)(.*?)(&lt;!---nsys-nemesiconfig7--&gt;)" replace="\1${nsys-nemesiconfig7}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig8--&gt;)(.*?)(&lt;!---nsys-nemesiconfig8--&gt;)" replace="\1${nsys-nemesiconfig8}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig9--&gt;)(.*?)(&lt;!---nsys-nemesiconfig9--&gt;)" replace="\1${nsys-nemesiconfig9}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig10--&gt;)(.*?)(&lt;!---nsys-nemesiconfig10--&gt;)" replace="\1${nsys-nemesiconfig10}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig11--&gt;)(.*?)(&lt;!---nsys-nemesiconfig11--&gt;)" replace="\1${nsys-nemesiconfig11}\3" />
+		<copy file="${src.dir}/App_data/conf/nemesys-config.xml" todir="${dist.dir}/${buildVers}/tmp/App_data/conf"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig1--&gt;)(.*?)(&lt;!---nsys-nemesiconfig1--&gt;)" replace="\1${nsys-nemesiconfig1}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig2--&gt;)(.*?)(&lt;!---nsys-nemesiconfig2--&gt;)" replace="\1${nsys-nemesiconfig2}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig3--&gt;)(.*?)(&lt;!---nsys-nemesiconfig3--&gt;)" replace="\1${nsys-nemesiconfig3}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig4--&gt;)(.*?)(&lt;!---nsys-nemesiconfig4--&gt;)" replace="\1${nsys-nemesiconfig4}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig5--&gt;)(.*?)(&lt;!---nsys-nemesiconfig5--&gt;)" replace="\1${nsys-nemesiconfig5}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig6--&gt;)(.*?)(&lt;!---nsys-nemesiconfig6--&gt;)" replace="\1${nsys-nemesiconfig6}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig7--&gt;)(.*?)(&lt;!---nsys-nemesiconfig7--&gt;)" replace="\1${nsys-nemesiconfig7}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig8--&gt;)(.*?)(&lt;!---nsys-nemesiconfig8--&gt;)" replace="\1${nsys-nemesiconfig8}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig9--&gt;)(.*?)(&lt;!---nsys-nemesiconfig9--&gt;)" replace="\1${nsys-nemesiconfig9}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig10--&gt;)(.*?)(&lt;!---nsys-nemesiconfig10--&gt;)" replace="\1${nsys-nemesiconfig10}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig11--&gt;)(.*?)(&lt;!---nsys-nemesiconfig11--&gt;)" replace="\1${nsys-nemesiconfig11}\3" />
 
-		<copy file="${src.dir}/app_data/conf/repository-mapping.xml" todir="${dist.dir}/${buildVers}/tmp/app_data/conf"/>
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/repository-mapping.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesirepository1--&gt;)(.*?)(&lt;!---nsys-nemesirepository1--&gt;)" replace="\1${nsys-nemesirepository1}\3" />
+		<copy file="${src.dir}/App_data/conf/repository-mapping.xml" todir="${dist.dir}/${buildVers}/tmp/App_data/conf"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/repository-mapping.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesirepository1--&gt;)(.*?)(&lt;!---nsys-nemesirepository1--&gt;)" replace="\1${nsys-nemesirepository1}\3" />
 		
 		<copy file="${src.dir}/public/layout/area_user/account.ascx" todir="${dist.dir}/${buildVers}/tmp/public/layout/area_user"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/area_user/account.ascx" flags="gis" byline="false" match="(&lt;!--nsys-modcommunity1--&gt;)(.*?)(&lt;!---nsys-modcommunity1--&gt;)" replace="\1${nsys-modcommunity1}\3" /> 
@@ -375,78 +375,78 @@
 				<exclude name="**/public/utils/${docname}"/>
 				<exclude name="**/public/utils/templates_econeme-sys.zip"/>
 				
-				<exclude name="**/app_data/conf/nemesys-config.xml"/>
-				<exclude name="**/app_data/conf/repository-mapping.xml"/>
+				<exclude name="**/App_data/conf/nemesys-config.xml"/>
+				<exclude name="**/App_data/conf/repository-mapping.xml"/>
 
 				<exclude name="**/App_WebReferences/**"/>				
 				
-				<exclude name="**/app_code/hbm/Ads.hbm.xml"/>
-				<exclude name="**/app_code/hbm/BillsAddress.hbm.xml"/>
-				<exclude name="**/app_code/hbm/BusinessRule.hbm.xml"/>
-				<exclude name="**/app_code/hbm/Currency.hbm.xml"/>
-				<exclude name="**/app_code/hbm/Fee.hbm.xml"/>
-				<exclude name="**/app_code/hbm/Order.hbm.xml"/>
-				<exclude name="**/app_code/hbm/Payment.hbm.xml"/>
-				<exclude name="**/app_code/hbm/Product.hbm.xml"/>
-				<exclude name="**/app_code/hbm/ShippingAddress.hbm.xml"/>
-				<exclude name="**/app_code/hbm/ShoppingCart.hbm.xml"/>
-				<exclude name="**/app_code/hbm/Supplement.hbm.xml"/>
-				<exclude name="**/app_code/hbm/Voucher.hbm.xml"/>			
+				<exclude name="**/App_code/hbm/Ads.hbm.xml"/>
+				<exclude name="**/App_code/hbm/BillsAddress.hbm.xml"/>
+				<exclude name="**/App_code/hbm/BusinessRule.hbm.xml"/>
+				<exclude name="**/App_code/hbm/Currency.hbm.xml"/>
+				<exclude name="**/App_code/hbm/Fee.hbm.xml"/>
+				<exclude name="**/App_code/hbm/Order.hbm.xml"/>
+				<exclude name="**/App_code/hbm/Payment.hbm.xml"/>
+				<exclude name="**/App_code/hbm/Product.hbm.xml"/>
+				<exclude name="**/App_code/hbm/ShippingAddress.hbm.xml"/>
+				<exclude name="**/App_code/hbm/ShoppingCart.hbm.xml"/>
+				<exclude name="**/App_code/hbm/Supplement.hbm.xml"/>
+				<exclude name="**/App_code/hbm/Voucher.hbm.xml"/>			
 				
-				<exclude name="**/app_code/com/nemesys/model/ads/**/*"/>
-				<exclude name="**/app_code/com/nemesys/model/business-strategy/**/*"/>
-				<exclude name="**/app_code/com/nemesys/model/cart/**/*"/>
-				<exclude name="**/app_code/com/nemesys/model/currency/**/*"/>
-				<exclude name="**/app_code/com/nemesys/model/fees/**/*"/>
-				<exclude name="**/app_code/com/nemesys/model/order/**/*"/>
-				<exclude name="**/app_code/com/nemesys/model/payment/**/*"/>
-				<exclude name="**/app_code/com/nemesys/model/product/**/*"/>
-				<exclude name="**/app_code/com/nemesys/model/supplement/**/*"/>
-				<exclude name="**/app_code/com/nemesys/model/voucher/**/*"/>
+				<exclude name="**/App_code/com/nemesys/model/ads/**/*"/>
+				<exclude name="**/App_code/com/nemesys/model/business-strategy/**/*"/>
+				<exclude name="**/App_code/com/nemesys/model/cart/**/*"/>
+				<exclude name="**/App_code/com/nemesys/model/currency/**/*"/>
+				<exclude name="**/App_code/com/nemesys/model/fees/**/*"/>
+				<exclude name="**/App_code/com/nemesys/model/order/**/*"/>
+				<exclude name="**/App_code/com/nemesys/model/payment/**/*"/>
+				<exclude name="**/App_code/com/nemesys/model/product/**/*"/>
+				<exclude name="**/App_code/com/nemesys/model/supplement/**/*"/>
+				<exclude name="**/App_code/com/nemesys/model/voucher/**/*"/>
 
-				<exclude name="**/app_code/com/nemesys/database/repository/AdsRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/BillsAddressRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/BusinessRuleRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/CurrencyRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/FeeRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/IAdsRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/IBillsAddressRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/IBusinessRuleRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/ICurrencyRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/IFeeRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/IOrderRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/IPaymentModuleRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/IPaymentRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/IPaymentTransactionRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/IProductRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/IShippingAddressRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/IShoppingCartRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/ISupplementGroupRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/ISupplementRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/IVoucherRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/OrderRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/PaymentModuleRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/PaymentRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/PaymentTransactionRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/ProductRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/ShippingAddressRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/ShoppingCartRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/SupplementGroupRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/SupplementRepository.cs"/>
-				<exclude name="**/app_code/com/nemesys/database/repository/VoucherRepository.cs"/>		
+				<exclude name="**/App_code/com/nemesys/database/repository/AdsRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/BillsAddressRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/BusinessRuleRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/CurrencyRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/FeeRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/IAdsRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/IBillsAddressRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/IBusinessRuleRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/ICurrencyRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/IFeeRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/IOrderRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/IPaymentModuleRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/IPaymentRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/IPaymentTransactionRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/IProductRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/IShippingAddressRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/IShoppingCartRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/ISupplementGroupRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/ISupplementRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/IVoucherRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/OrderRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/PaymentModuleRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/PaymentRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/PaymentTransactionRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/ProductRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/ShippingAddressRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/ShoppingCartRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/SupplementGroupRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/SupplementRepository.cs"/>
+				<exclude name="**/App_code/com/nemesys/database/repository/VoucherRepository.cs"/>		
 				
-				<exclude name="**/app_code/com/nemesys/services/BusinessRuleService.cs"/>
-				<exclude name="**/app_code/com/nemesys/services/FeeService.cs"/>
-				<exclude name="**/app_code/com/nemesys/services/OrderService.cs"/>
-				<exclude name="**/app_code/com/nemesys/services/PaymentService.cs"/>
-				<exclude name="**/app_code/com/nemesys/services/ProductService.cs"/>
-				<exclude name="**/app_code/com/nemesys/services/ShoppingCartService.cs"/>
-				<exclude name="**/app_code/com/nemesys/services/VoucherService.cs"/>			
+				<exclude name="**/App_code/com/nemesys/services/BusinessRuleService.cs"/>
+				<exclude name="**/App_code/com/nemesys/services/FeeService.cs"/>
+				<exclude name="**/App_code/com/nemesys/services/OrderService.cs"/>
+				<exclude name="**/App_code/com/nemesys/services/PaymentService.cs"/>
+				<exclude name="**/App_code/com/nemesys/services/ProductService.cs"/>
+				<exclude name="**/App_code/com/nemesys/services/ShoppingCartService.cs"/>
+				<exclude name="**/App_code/com/nemesys/services/VoucherService.cs"/>			
 			</zipfileset>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp" includes="global.asax"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp" includes="web.config"/>	
-			<zipfileset dir="${dist.dir}/${buildVers}/tmp/app_data/conf" includes="nemesys-config.xml" fullpath="app_data/conf/nemesys-config.xml"/>
-			<zipfileset dir="${dist.dir}/${buildVers}/tmp/app_data/conf" includes="repository-mapping.xml" fullpath="app_data/conf/repository-mapping.xml"/>		
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/App_data/conf" includes="nemesys-config.xml" fullpath="App_data/conf/nemesys-config.xml"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/App_data/conf" includes="repository-mapping.xml" fullpath="App_data/conf/repository-mapping.xml"/>		
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice" includes="index.aspx" prefix="backoffice"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/users" includes="userlist.aspx" prefix="backoffice/users"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/users" includes="insertuser.aspx" prefix="backoffice/users"/>
@@ -517,17 +517,17 @@
 	<target name="taskReplaceEco">
 		<loadproperties srcFile="${mod_install.dir}/replace-resource/econemesys_replace.properties"/>
 		
-		<copy file="${src.dir}/app_data/conf/nemesys-config.xml" todir="${dist.dir}/${buildVers}/tmp/app_data/conf"/>
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig2--&gt;)(.*?)(&lt;!---nsys-nemesiconfig2--&gt;)" replace="\1${nsys-nemesiconfig2}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig3--&gt;)(.*?)(&lt;!---nsys-nemesiconfig3--&gt;)" replace="\1${nsys-nemesiconfig3}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig4--&gt;)(.*?)(&lt;!---nsys-nemesiconfig4--&gt;)" replace="\1${nsys-nemesiconfig4}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig5--&gt;)(.*?)(&lt;!---nsys-nemesiconfig5--&gt;)" replace="\1${nsys-nemesiconfig5}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig6--&gt;)(.*?)(&lt;!---nsys-nemesiconfig6--&gt;)" replace="\1${nsys-nemesiconfig6}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig7--&gt;)(.*?)(&lt;!---nsys-nemesiconfig7--&gt;)" replace="\1${nsys-nemesiconfig7}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig8--&gt;)(.*?)(&lt;!---nsys-nemesiconfig8--&gt;)" replace="\1${nsys-nemesiconfig8}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig9--&gt;)(.*?)(&lt;!---nsys-nemesiconfig9--&gt;)" replace="\1${nsys-nemesiconfig9}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig10--&gt;)(.*?)(&lt;!---nsys-nemesiconfig10--&gt;)" replace="\1${nsys-nemesiconfig10}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig11--&gt;)(.*?)(&lt;!---nsys-nemesiconfig11--&gt;)" replace="\1${nsys-nemesiconfig11}\3" />
+		<copy file="${src.dir}/App_data/conf/nemesys-config.xml" todir="${dist.dir}/${buildVers}/tmp/App_data/conf"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig2--&gt;)(.*?)(&lt;!---nsys-nemesiconfig2--&gt;)" replace="\1${nsys-nemesiconfig2}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig3--&gt;)(.*?)(&lt;!---nsys-nemesiconfig3--&gt;)" replace="\1${nsys-nemesiconfig3}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig4--&gt;)(.*?)(&lt;!---nsys-nemesiconfig4--&gt;)" replace="\1${nsys-nemesiconfig4}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig5--&gt;)(.*?)(&lt;!---nsys-nemesiconfig5--&gt;)" replace="\1${nsys-nemesiconfig5}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig6--&gt;)(.*?)(&lt;!---nsys-nemesiconfig6--&gt;)" replace="\1${nsys-nemesiconfig6}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig7--&gt;)(.*?)(&lt;!---nsys-nemesiconfig7--&gt;)" replace="\1${nsys-nemesiconfig7}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig8--&gt;)(.*?)(&lt;!---nsys-nemesiconfig8--&gt;)" replace="\1${nsys-nemesiconfig8}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig9--&gt;)(.*?)(&lt;!---nsys-nemesiconfig9--&gt;)" replace="\1${nsys-nemesiconfig9}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig10--&gt;)(.*?)(&lt;!---nsys-nemesiconfig10--&gt;)" replace="\1${nsys-nemesiconfig10}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig11--&gt;)(.*?)(&lt;!---nsys-nemesiconfig11--&gt;)" replace="\1${nsys-nemesiconfig11}\3" />
 		
 		<copy file="${src.dir}/public/layout/css/stile.css" todir="${dist.dir}/${buildVers}/tmp/public/layout/css"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/css/stile.css" flags="gis" byline="false" match="(/\*&lt;!--nsys-css1--&gt;\*/)(.*?)(/\*&lt;!---nsys-css1--&gt;\*/)" replace="\1${nsys-css1}\3" />
@@ -723,7 +723,7 @@
 				<exclude name="**/public/utils/${docname}"/>
 				<exclude name="**/public/utils/templates_econeme-sys.zip"/>
 				
-				<exclude name="**/app_data/conf/nemesys-config.xml"/>
+				<exclude name="**/App_data/conf/nemesys-config.xml"/>
 				
 			</zipfileset>
 			
@@ -761,7 +761,7 @@
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/contents" includes="insertfield.aspx" prefix="backoffice/contents"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/contents" includes="insertfield.aspx.cs" prefix="backoffice/contents"/>
 					
-			<zipfileset dir="${dist.dir}/${buildVers}/tmp/app_data/conf" includes="nemesys-config.xml" fullpath="app_data/conf/nemesys-config.xml"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/App_data/conf" includes="nemesys-config.xml" fullpath="App_data/conf/nemesys-config.xml"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/area_user" includes="account.ascx" prefix="public/layout/area_user"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/css" includes="stile.css" prefix="public/layout/css"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/include" includes="header.ascx" prefix="public/layout/include"/>	
@@ -802,17 +802,17 @@
 	<target name="taskReplaceUpEco">
 		<loadproperties srcFile="${mod_install.dir}/replace-resource/econemesys_replace.properties"/>
 		
-		<copy file="${src.dir}/app_data/conf/nemesys-config.xml" todir="${dist.dir}/${buildVers}/tmp/app_data/conf"/>
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig2--&gt;)(.*?)(&lt;!---nsys-nemesiconfig2--&gt;)" replace="\1${nsys-nemesiconfig2}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig3--&gt;)(.*?)(&lt;!---nsys-nemesiconfig3--&gt;)" replace="\1${nsys-nemesiconfig3}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig4--&gt;)(.*?)(&lt;!---nsys-nemesiconfig4--&gt;)" replace="\1${nsys-nemesiconfig4}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig5--&gt;)(.*?)(&lt;!---nsys-nemesiconfig5--&gt;)" replace="\1${nsys-nemesiconfig5}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig6--&gt;)(.*?)(&lt;!---nsys-nemesiconfig6--&gt;)" replace="\1${nsys-nemesiconfig6}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig7--&gt;)(.*?)(&lt;!---nsys-nemesiconfig7--&gt;)" replace="\1${nsys-nemesiconfig7}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig8--&gt;)(.*?)(&lt;!---nsys-nemesiconfig8--&gt;)" replace="\1${nsys-nemesiconfig8}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig9--&gt;)(.*?)(&lt;!---nsys-nemesiconfig9--&gt;)" replace="\1${nsys-nemesiconfig9}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig10--&gt;)(.*?)(&lt;!---nsys-nemesiconfig10--&gt;)" replace="\1${nsys-nemesiconfig10}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/app_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig11--&gt;)(.*?)(&lt;!---nsys-nemesiconfig11--&gt;)" replace="\1${nsys-nemesiconfig11}\3" />
+		<copy file="${src.dir}/App_data/conf/nemesys-config.xml" todir="${dist.dir}/${buildVers}/tmp/App_data/conf"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig2--&gt;)(.*?)(&lt;!---nsys-nemesiconfig2--&gt;)" replace="\1${nsys-nemesiconfig2}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig3--&gt;)(.*?)(&lt;!---nsys-nemesiconfig3--&gt;)" replace="\1${nsys-nemesiconfig3}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig4--&gt;)(.*?)(&lt;!---nsys-nemesiconfig4--&gt;)" replace="\1${nsys-nemesiconfig4}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig5--&gt;)(.*?)(&lt;!---nsys-nemesiconfig5--&gt;)" replace="\1${nsys-nemesiconfig5}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig6--&gt;)(.*?)(&lt;!---nsys-nemesiconfig6--&gt;)" replace="\1${nsys-nemesiconfig6}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig7--&gt;)(.*?)(&lt;!---nsys-nemesiconfig7--&gt;)" replace="\1${nsys-nemesiconfig7}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig8--&gt;)(.*?)(&lt;!---nsys-nemesiconfig8--&gt;)" replace="\1${nsys-nemesiconfig8}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig9--&gt;)(.*?)(&lt;!---nsys-nemesiconfig9--&gt;)" replace="\1${nsys-nemesiconfig9}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig10--&gt;)(.*?)(&lt;!---nsys-nemesiconfig10--&gt;)" replace="\1${nsys-nemesiconfig10}\3" />
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/App_data/conf/nemesys-config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig11--&gt;)(.*?)(&lt;!---nsys-nemesiconfig11--&gt;)" replace="\1${nsys-nemesiconfig11}\3" />
 		
 		<copy file="${src.dir}/public/layout/css/stile.css" todir="${dist.dir}/${buildVers}/tmp/public/layout/css"/>
 		<replaceregexp file="${dist.dir}/${buildVers}/tmp/public/layout/css/stile.css" flags="gis" byline="false" match="(/\*&lt;!--nsys-css1--&gt;\*/)(.*?)(/\*&lt;!---nsys-css1--&gt;\*/)" replace="\1${nsys-css1}\3" />
@@ -920,7 +920,7 @@
 				<!-- file inclusi -->								
 				<include name="global.asax"/>
 				<include name="web.config"/>
-				<include name="**/app_data/conf/repository-mapping.xml"/>
+				<include name="**/App_data/conf/repository-mapping.xml"/>
 				<include name="area_user/vieworder.aspx"/>				
 				<include name="area_user/userorders.aspx"/>				
 				<include name="area_user/userorders.aspx.cs"/>		
@@ -954,68 +954,68 @@
 				
 				<include name="**/App_WebReferences/**"/>
 
-				<include name="**/app_code/hbm/Ads.hbm.xml"/>
-				<include name="**/app_code/hbm/BillsAddress.hbm.xml"/>
-				<include name="**/app_code/hbm/BusinessRule.hbm.xml"/>
-				<include name="**/app_code/hbm/Currency.hbm.xml"/>
-				<include name="**/app_code/hbm/Fee.hbm.xml"/>
-				<include name="**/app_code/hbm/Order.hbm.xml"/>
-				<include name="**/app_code/hbm/Payment.hbm.xml"/>
-				<include name="**/app_code/hbm/Product.hbm.xml"/>
-				<include name="**/app_code/hbm/ShippingAddress.hbm.xml"/>
-				<include name="**/app_code/hbm/ShoppingCart.hbm.xml"/>
-				<include name="**/app_code/hbm/Supplement.hbm.xml"/>
-				<include name="**/app_code/hbm/Voucher.hbm.xml"/>			
+				<include name="**/App_code/hbm/Ads.hbm.xml"/>
+				<include name="**/App_code/hbm/BillsAddress.hbm.xml"/>
+				<include name="**/App_code/hbm/BusinessRule.hbm.xml"/>
+				<include name="**/App_code/hbm/Currency.hbm.xml"/>
+				<include name="**/App_code/hbm/Fee.hbm.xml"/>
+				<include name="**/App_code/hbm/Order.hbm.xml"/>
+				<include name="**/App_code/hbm/Payment.hbm.xml"/>
+				<include name="**/App_code/hbm/Product.hbm.xml"/>
+				<include name="**/App_code/hbm/ShippingAddress.hbm.xml"/>
+				<include name="**/App_code/hbm/ShoppingCart.hbm.xml"/>
+				<include name="**/App_code/hbm/Supplement.hbm.xml"/>
+				<include name="**/App_code/hbm/Voucher.hbm.xml"/>			
 
-				<include name="**/app_code/com/nemesys/model/ads/**/*"/>
-				<include name="**/app_code/com/nemesys/model/business-strategy/**/*"/>
-				<include name="**/app_code/com/nemesys/model/cart/**/*"/>
-				<include name="**/app_code/com/nemesys/model/currency/**/*"/>
-				<include name="**/app_code/com/nemesys/model/fees/**/*"/>
-				<include name="**/app_code/com/nemesys/model/order/**/*"/>
-				<include name="**/app_code/com/nemesys/model/payment/**/*"/>
-				<include name="**/app_code/com/nemesys/model/product/**/*"/>
-				<include name="**/app_code/com/nemesys/model/supplement/**/*"/>
-				<include name="**/app_code/com/nemesys/model/voucher/**/*"/>
+				<include name="**/App_code/com/nemesys/model/ads/**/*"/>
+				<include name="**/App_code/com/nemesys/model/business-strategy/**/*"/>
+				<include name="**/App_code/com/nemesys/model/cart/**/*"/>
+				<include name="**/App_code/com/nemesys/model/currency/**/*"/>
+				<include name="**/App_code/com/nemesys/model/fees/**/*"/>
+				<include name="**/App_code/com/nemesys/model/order/**/*"/>
+				<include name="**/App_code/com/nemesys/model/payment/**/*"/>
+				<include name="**/App_code/com/nemesys/model/product/**/*"/>
+				<include name="**/App_code/com/nemesys/model/supplement/**/*"/>
+				<include name="**/App_code/com/nemesys/model/voucher/**/*"/>
 
-				<include name="**/app_code/com/nemesys/database/repository/AdsRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/BillsAddressRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/BusinessRuleRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/CurrencyRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/FeeRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/IAdsRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/IBillsAddressRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/IBusinessRuleRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/ICurrencyRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/IFeeRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/IOrderRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/IPaymentModuleRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/IPaymentRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/IPaymentTransactionRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/IProductRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/IShippingAddressRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/IShoppingCartRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/ISupplementGroupRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/ISupplementRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/IVoucherRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/OrderRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/PaymentModuleRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/PaymentRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/PaymentTransactionRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/ProductRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/ShippingAddressRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/ShoppingCartRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/SupplementGroupRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/SupplementRepository.cs"/>
-				<include name="**/app_code/com/nemesys/database/repository/VoucherRepository.cs"/>		
+				<include name="**/App_code/com/nemesys/database/repository/AdsRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/BillsAddressRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/BusinessRuleRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/CurrencyRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/FeeRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/IAdsRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/IBillsAddressRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/IBusinessRuleRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/ICurrencyRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/IFeeRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/IOrderRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/IPaymentModuleRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/IPaymentRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/IPaymentTransactionRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/IProductRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/IShippingAddressRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/IShoppingCartRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/ISupplementGroupRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/ISupplementRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/IVoucherRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/OrderRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/PaymentModuleRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/PaymentRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/PaymentTransactionRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/ProductRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/ShippingAddressRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/ShoppingCartRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/SupplementGroupRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/SupplementRepository.cs"/>
+				<include name="**/App_code/com/nemesys/database/repository/VoucherRepository.cs"/>		
 
-				<include name="**/app_code/com/nemesys/services/BusinessRuleService.cs"/>
-				<include name="**/app_code/com/nemesys/services/FeeService.cs"/>
-				<include name="**/app_code/com/nemesys/services/OrderService.cs"/>
-				<include name="**/app_code/com/nemesys/services/PaymentService.cs"/>
-				<include name="**/app_code/com/nemesys/services/ProductService.cs"/>
-				<include name="**/app_code/com/nemesys/services/ShoppingCartService.cs"/>
-				<include name="**/app_code/com/nemesys/services/VoucherService.cs"/>			
+				<include name="**/App_code/com/nemesys/services/BusinessRuleService.cs"/>
+				<include name="**/App_code/com/nemesys/services/FeeService.cs"/>
+				<include name="**/App_code/com/nemesys/services/OrderService.cs"/>
+				<include name="**/App_code/com/nemesys/services/PaymentService.cs"/>
+				<include name="**/App_code/com/nemesys/services/ProductService.cs"/>
+				<include name="**/App_code/com/nemesys/services/ShoppingCartService.cs"/>
+				<include name="**/App_code/com/nemesys/services/VoucherService.cs"/>			
 			</zipfileset>
 			
 			<zipfileset dir="${mod_install.dir}" includes="portalinstall.aspx" prefix="public/install"/>			
@@ -1049,7 +1049,7 @@
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/business-strategy" includes="insertbusinessrule.aspx" prefix="backoffice/business-strategy"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/backoffice/business-strategy" includes="insertbusinessrule.aspx.cs" prefix="backoffice/business-strategy"/>
 					
-			<zipfileset dir="${dist.dir}/${buildVers}/tmp/app_data/conf" includes="nemesys-config.xml" fullpath="app_data/conf/nemesys-config.xml"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/App_data/conf" includes="nemesys-config.xml" fullpath="App_data/conf/nemesys-config.xml"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/area_user" includes="account.ascx" prefix="public/layout/area_user"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/css" includes="stile.css" prefix="public/layout/css"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/include" includes="header.ascx" prefix="public/layout/include"/>	
@@ -1218,7 +1218,7 @@
 				<exclude name="smsutils.asp"/>
 				<exclude name="**/public/demo/**"/>
 				<exclude name="**/test/**"/>
-				<exclude name="**/app_data/**/*"/>
+				<exclude name="**/App_data/**/*"/>
 				<exclude name="favicon.ico"/>
 
 				<exclude name="/common/include/logoff.asp"/>				

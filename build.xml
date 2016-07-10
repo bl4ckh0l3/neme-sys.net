@@ -351,8 +351,8 @@
 				<exclude name="public/layout/area_user/friends.ascx"/>
 				<exclude name="public/layout/area_user/photos.ascx"/>
 				<exclude name="public/layout/area_user/publicprofile.ascx"/>		
-				<exclude name="**/public/layout/css/stile.css"/>
-				<exclude name="**/public/layout/include/header.ascx"/>				
+				<exclude name="public/layout/css/stile.css"/>
+				<exclude name="public/layout/include/header.ascx"/>				
 				<exclude name="public/layout/addson/user/user-profile-widget.ascx"/>
 				<exclude name="public/layout/addson/user/user-mask-widget.ascx"/>
 				<exclude name="public/layout/addson/user/user-online-widget.ascx"/>
@@ -372,26 +372,26 @@
 				<exclude name="**/public/upload/files/header/**/*"/>
 				<exclude name="**/public/upload/files/modules/**/*"/>
 				
-				<exclude name="**/public/utils/${docname}"/>
-				<exclude name="**/public/utils/templates_econeme-sys.zip"/>
+				<exclude name="public/utils/${docname}"/>
+				<exclude name="public/utils/templates_econeme-sys.zip"/>
 				
-				<exclude name="**/App_data/conf/nemesys-config.xml"/>
-				<exclude name="**/App_data/conf/repository-mapping.xml"/>
+				<exclude name="App_data/conf/nemesys-config.xml"/>
+				<exclude name="App_data/conf/repository-mapping.xml"/>
 
 				<exclude name="**/App_WebReferences/**"/>				
 				
-				<exclude name="**/App_code/hbm/Ads.hbm.xml"/>
-				<exclude name="**/App_code/hbm/BillsAddress.hbm.xml"/>
-				<exclude name="**/App_code/hbm/BusinessRule.hbm.xml"/>
-				<exclude name="**/App_code/hbm/Currency.hbm.xml"/>
-				<exclude name="**/App_code/hbm/Fee.hbm.xml"/>
-				<exclude name="**/App_code/hbm/Order.hbm.xml"/>
-				<exclude name="**/App_code/hbm/Payment.hbm.xml"/>
-				<exclude name="**/App_code/hbm/Product.hbm.xml"/>
-				<exclude name="**/App_code/hbm/ShippingAddress.hbm.xml"/>
-				<exclude name="**/App_code/hbm/ShoppingCart.hbm.xml"/>
-				<exclude name="**/App_code/hbm/Supplement.hbm.xml"/>
-				<exclude name="**/App_code/hbm/Voucher.hbm.xml"/>			
+				<exclude name="App_code/hbm/Ads.hbm.xml"/>
+				<exclude name="App_code/hbm/BillsAddress.hbm.xml"/>
+				<exclude name="App_code/hbm/BusinessRule.hbm.xml"/>
+				<exclude name="App_code/hbm/Currency.hbm.xml"/>
+				<exclude name="App_code/hbm/Fee.hbm.xml"/>
+				<exclude name="App_code/hbm/Order.hbm.xml"/>
+				<exclude name="App_code/hbm/Payment.hbm.xml"/>
+				<exclude name="App_code/hbm/Product.hbm.xml"/>
+				<exclude name="App_code/hbm/ShippingAddress.hbm.xml"/>
+				<exclude name="App_code/hbm/ShoppingCart.hbm.xml"/>
+				<exclude name="App_code/hbm/Supplement.hbm.xml"/>
+				<exclude name="App_code/hbm/Voucher.hbm.xml"/>			
 				
 				<exclude name="**/App_code/com/nemesys/model/ads/**/*"/>
 				<exclude name="**/App_code/com/nemesys/model/business-strategy/**/*"/>
@@ -404,44 +404,44 @@
 				<exclude name="**/App_code/com/nemesys/model/supplement/**/*"/>
 				<exclude name="**/App_code/com/nemesys/model/voucher/**/*"/>
 
-				<exclude name="**/App_code/com/nemesys/database/repository/AdsRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/BillsAddressRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/BusinessRuleRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/CurrencyRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/FeeRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/IAdsRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/IBillsAddressRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/IBusinessRuleRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/ICurrencyRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/IFeeRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/IOrderRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/IPaymentModuleRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/IPaymentRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/IPaymentTransactionRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/IProductRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/IShippingAddressRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/IShoppingCartRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/ISupplementGroupRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/ISupplementRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/IVoucherRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/OrderRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/PaymentModuleRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/PaymentRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/PaymentTransactionRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/ProductRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/ShippingAddressRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/ShoppingCartRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/SupplementGroupRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/SupplementRepository.cs"/>
-				<exclude name="**/App_code/com/nemesys/database/repository/VoucherRepository.cs"/>		
+				<exclude name="App_code/com/nemesys/database/repository/AdsRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/BillsAddressRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/BusinessRuleRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/CurrencyRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/FeeRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/IAdsRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/IBillsAddressRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/IBusinessRuleRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/ICurrencyRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/IFeeRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/IOrderRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/IPaymentModuleRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/IPaymentRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/IPaymentTransactionRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/IProductRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/IShippingAddressRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/IShoppingCartRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/ISupplementGroupRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/ISupplementRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/IVoucherRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/OrderRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/PaymentModuleRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/PaymentRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/PaymentTransactionRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/ProductRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/ShippingAddressRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/ShoppingCartRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/SupplementGroupRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/SupplementRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/VoucherRepository.cs"/>		
 				
-				<exclude name="**/App_code/com/nemesys/services/BusinessRuleService.cs"/>
-				<exclude name="**/App_code/com/nemesys/services/FeeService.cs"/>
-				<exclude name="**/App_code/com/nemesys/services/OrderService.cs"/>
-				<exclude name="**/App_code/com/nemesys/services/PaymentService.cs"/>
-				<exclude name="**/App_code/com/nemesys/services/ProductService.cs"/>
-				<exclude name="**/App_code/com/nemesys/services/ShoppingCartService.cs"/>
-				<exclude name="**/App_code/com/nemesys/services/VoucherService.cs"/>			
+				<exclude name="App_code/com/nemesys/services/BusinessRuleService.cs"/>
+				<exclude name="App_code/com/nemesys/services/FeeService.cs"/>
+				<exclude name="App_code/com/nemesys/services/OrderService.cs"/>
+				<exclude name="App_code/com/nemesys/services/PaymentService.cs"/>
+				<exclude name="App_code/com/nemesys/services/ProductService.cs"/>
+				<exclude name="App_code/com/nemesys/services/ShoppingCartService.cs"/>
+				<exclude name="App_code/com/nemesys/services/VoucherService.cs"/>			
 			</zipfileset>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp" includes="global.asax"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp" includes="web.config"/>	
@@ -697,8 +697,8 @@
 				<exclude name="public/layout/area_user/friends.ascx"/>
 				<exclude name="public/layout/area_user/photos.ascx"/>
 				<exclude name="public/layout/area_user/publicprofile.ascx"/>	
-				<exclude name="**/public/layout/css/stile.css"/>
-				<exclude name="**/public/layout/include/header.ascx"/>				
+				<exclude name="public/layout/css/stile.css"/>
+				<exclude name="public/layout/include/header.ascx"/>				
 				<exclude name="public/layout/addson/user/user-profile-widget.ascx"/>
 				<exclude name="public/layout/addson/user/user-mask-widget.ascx"/>
 				<exclude name="public/layout/addson/user/user-online-widget.ascx"/>
@@ -720,10 +720,10 @@
 				<exclude name="**/public/upload/files/header/**/*"/>
 				<exclude name="**/public/upload/files/modules/**/*"/>
 				
-				<exclude name="**/public/utils/${docname}"/>
-				<exclude name="**/public/utils/templates_econeme-sys.zip"/>
+				<exclude name="public/utils/${docname}"/>
+				<exclude name="public/utils/templates_econeme-sys.zip"/>
 				
-				<exclude name="**/App_data/conf/nemesys-config.xml"/>
+				<exclude name="App_data/conf/nemesys-config.xml"/>
 				
 			</zipfileset>
 			
@@ -920,7 +920,7 @@
 				<!-- file inclusi -->								
 				<include name="global.asax"/>
 				<include name="web.config"/>
-				<include name="**/App_data/conf/repository-mapping.xml"/>
+				<include name="App_data/conf/repository-mapping.xml"/>
 				<include name="area_user/vieworder.aspx"/>				
 				<include name="area_user/userorders.aspx"/>				
 				<include name="area_user/userorders.aspx.cs"/>		
@@ -954,18 +954,18 @@
 				
 				<include name="**/App_WebReferences/**"/>
 
-				<include name="**/App_code/hbm/Ads.hbm.xml"/>
-				<include name="**/App_code/hbm/BillsAddress.hbm.xml"/>
-				<include name="**/App_code/hbm/BusinessRule.hbm.xml"/>
-				<include name="**/App_code/hbm/Currency.hbm.xml"/>
-				<include name="**/App_code/hbm/Fee.hbm.xml"/>
-				<include name="**/App_code/hbm/Order.hbm.xml"/>
-				<include name="**/App_code/hbm/Payment.hbm.xml"/>
-				<include name="**/App_code/hbm/Product.hbm.xml"/>
-				<include name="**/App_code/hbm/ShippingAddress.hbm.xml"/>
-				<include name="**/App_code/hbm/ShoppingCart.hbm.xml"/>
-				<include name="**/App_code/hbm/Supplement.hbm.xml"/>
-				<include name="**/App_code/hbm/Voucher.hbm.xml"/>			
+				<include name="App_code/hbm/Ads.hbm.xml"/>
+				<include name="App_code/hbm/BillsAddress.hbm.xml"/>
+				<include name="App_code/hbm/BusinessRule.hbm.xml"/>
+				<include name="App_code/hbm/Currency.hbm.xml"/>
+				<include name="App_code/hbm/Fee.hbm.xml"/>
+				<include name="App_code/hbm/Order.hbm.xml"/>
+				<include name="App_code/hbm/Payment.hbm.xml"/>
+				<include name="App_code/hbm/Product.hbm.xml"/>
+				<include name="App_code/hbm/ShippingAddress.hbm.xml"/>
+				<include name="App_code/hbm/ShoppingCart.hbm.xml"/>
+				<include name="App_code/hbm/Supplement.hbm.xml"/>
+				<include name="App_code/hbm/Voucher.hbm.xml"/>			
 
 				<include name="**/App_code/com/nemesys/model/ads/**/*"/>
 				<include name="**/App_code/com/nemesys/model/business-strategy/**/*"/>
@@ -978,44 +978,44 @@
 				<include name="**/App_code/com/nemesys/model/supplement/**/*"/>
 				<include name="**/App_code/com/nemesys/model/voucher/**/*"/>
 
-				<include name="**/App_code/com/nemesys/database/repository/AdsRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/BillsAddressRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/BusinessRuleRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/CurrencyRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/FeeRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/IAdsRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/IBillsAddressRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/IBusinessRuleRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/ICurrencyRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/IFeeRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/IOrderRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/IPaymentModuleRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/IPaymentRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/IPaymentTransactionRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/IProductRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/IShippingAddressRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/IShoppingCartRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/ISupplementGroupRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/ISupplementRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/IVoucherRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/OrderRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/PaymentModuleRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/PaymentRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/PaymentTransactionRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/ProductRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/ShippingAddressRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/ShoppingCartRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/SupplementGroupRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/SupplementRepository.cs"/>
-				<include name="**/App_code/com/nemesys/database/repository/VoucherRepository.cs"/>		
+				<include name="App_code/com/nemesys/database/repository/AdsRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/BillsAddressRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/BusinessRuleRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/CurrencyRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/FeeRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/IAdsRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/IBillsAddressRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/IBusinessRuleRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/ICurrencyRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/IFeeRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/IOrderRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/IPaymentModuleRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/IPaymentRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/IPaymentTransactionRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/IProductRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/IShippingAddressRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/IShoppingCartRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/ISupplementGroupRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/ISupplementRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/IVoucherRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/OrderRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/PaymentModuleRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/PaymentRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/PaymentTransactionRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/ProductRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/ShippingAddressRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/ShoppingCartRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/SupplementGroupRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/SupplementRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/VoucherRepository.cs"/>		
 
-				<include name="**/App_code/com/nemesys/services/BusinessRuleService.cs"/>
-				<include name="**/App_code/com/nemesys/services/FeeService.cs"/>
-				<include name="**/App_code/com/nemesys/services/OrderService.cs"/>
-				<include name="**/App_code/com/nemesys/services/PaymentService.cs"/>
-				<include name="**/App_code/com/nemesys/services/ProductService.cs"/>
-				<include name="**/App_code/com/nemesys/services/ShoppingCartService.cs"/>
-				<include name="**/App_code/com/nemesys/services/VoucherService.cs"/>			
+				<include name="App_code/com/nemesys/services/BusinessRuleService.cs"/>
+				<include name="App_code/com/nemesys/services/FeeService.cs"/>
+				<include name="App_code/com/nemesys/services/OrderService.cs"/>
+				<include name="App_code/com/nemesys/services/PaymentService.cs"/>
+				<include name="App_code/com/nemesys/services/ProductService.cs"/>
+				<include name="App_code/com/nemesys/services/ShoppingCartService.cs"/>
+				<include name="App_code/com/nemesys/services/VoucherService.cs"/>			
 			</zipfileset>
 			
 			<zipfileset dir="${mod_install.dir}" includes="portalinstall.aspx" prefix="public/install"/>			
@@ -1426,9 +1426,9 @@
 				<include name="backoffice/contents/insertfield.aspx"/>
 				<include name="backoffice/contents/insertfield.aspx.cs"/>
 				<include name="**/area_user/ads/**/*"/>	
-				<exclude name="**/area_user/ads/contentlist.aspx"/>	
-				<exclude name="**/area_user/ads/insertads.aspx"/>		
-				<exclude name="**/area_user/ads/insertads.aspx.cs"/>		
+				<exclude name="area_user/ads/contentlist.aspx"/>	
+				<exclude name="area_user/ads/insertads.aspx"/>		
+				<exclude name="area_user/ads/insertads.aspx.cs"/>		
 			</zipfileset>
 			
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/area_user/ads" includes="contentlist.aspx" prefix="area_user/ads"/>	

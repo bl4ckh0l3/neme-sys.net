@@ -658,7 +658,8 @@
 		<echo message=""/>
 		
 		<antcall target="taskReplaceEco" />
-
+        
+		<chmod perm="jenkins+rw">
 		<zip destfile="${dist.dir}/${buildVers}/src/eco${name}_${build.date}_${buildVers}.zip"> 
 			<zipfileset dir="${src.dir}"> 
 				<include name="**/*"/>
@@ -781,6 +782,7 @@
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.timers.min.js" prefix="common/js"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.datetimepicker.min.js" prefix="common/js"/>
 		</zip>
+		</chmod>
 
 		<delete includeemptydirs="true">
 			<fileset dir="${dist.dir}/${buildVers}/tmp" includes="**/*"/>
@@ -915,7 +917,8 @@
 		<echo message=""/>
 		
 		<antcall target="taskReplaceUpEco" />
-           
+          
+		<chmod perm="jenkins+rw">
 		<zip destfile="${dist.dir}/${buildVers}/src/upto_eco${name}_${build.date}_${buildVers}.zip"> 
 			<zipfileset dir="${src.dir}">
 				
@@ -1060,6 +1063,7 @@
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/addson/user" includes="user-online-widget.ascx" prefix="public/layout/addson/user"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/public/layout/addson/comments" includes="comments-widget.ascx" prefix="public/layout/addson/comments"/>			
 		</zip>
+		</chmod>
 
 		<delete includeemptydirs="true">
 			<fileset dir="${dist.dir}/${buildVers}/tmp" includes="**/*"/>

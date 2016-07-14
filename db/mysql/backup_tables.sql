@@ -299,11 +299,11 @@ CREATE TABLE `CONTENT_FIELDS` (
   `editable` smallint(1) UNSIGNED NOT NULL DEFAULT 0,
   `for_blog` smallint(1) UNSIGNED NOT NULL DEFAULT 0,
   `common` smallint(1) UNSIGNED NOT NULL DEFAULT 0,
-  `value` varchar(250) DEFAULT NULL,
+  `value` TEXT DEFAULT NULL,
   PRIMARY KEY  (`id`),
   KEY `Index_3` (`id_parent_content`),
   KEY `Index_4` (`type`),
-  KEY `Index_5` (`value`)
+  KEY `Index_5` (`value`(250))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -956,11 +956,11 @@ CREATE TABLE `PRODUCT_FIELDS` (
   `max_lenght` int(3) UNSIGNED DEFAULT NULL,
   `editable` smallint(1) UNSIGNED NOT NULL DEFAULT 0,
   `common` smallint(1) UNSIGNED NOT NULL DEFAULT 0,
-  `value` varchar(250) DEFAULT NULL,
+  `value` TEXT DEFAULT NULL,
   PRIMARY KEY  (`id`),
   KEY `Index_3` (`id_parent_product`),
   KEY `Index_4` (`type`),
-  KEY `Index_5` (`value`)
+  KEY `Index_5` (`value`(250))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

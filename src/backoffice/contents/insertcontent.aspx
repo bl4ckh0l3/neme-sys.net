@@ -2307,8 +2307,10 @@ $(document).ready(function(){
 										$.cleditor.defaultOptions.height = 200;
 										$.cleditor.defaultOptions.controls = "bold italic underline strikethrough subscript superscript | font size style | color highlight removeformat | bullets numbering | alignleft center alignright justify | rule | cut copy paste | image";		
 										$(document).ready(function(){
+											<%string ceVal = cf.value.Replace("\r\n", "").Replace("\n", "").Replace("\r", "");%>
+											var ceVal = '<%=ceVal%>';
 											$("#baseFieldHtmlEditor_e_<%=cf.id%>").empty();
-											$("#baseFieldHtmlEditor_e_<%=cf.id%>").append($('<textarea/>').attr('id', "field_value_e_<%=cf.id%>").attr('name', "field_value_<%=cf.id%>").attr('value', '<%=cf.value%>'));	
+											$("#baseFieldHtmlEditor_e_<%=cf.id%>").append($('<textarea/>').attr('id', "field_value_e_<%=cf.id%>").attr('name', "field_value_<%=cf.id%>").attr('value', ceVal));	
 											$("#field_value_e_<%=cf.id%>").cleditor();
 										});
 										</script>	

@@ -24,6 +24,7 @@ namespace com.nemesys.services
 		protected static ILanguageRepository langrep = RepositoryFactory.getInstance<ILanguageRepository>("ILanguageRepository");
 		protected static ICategoryRepository catrep = RepositoryFactory.getInstance<ICategoryRepository>("ICategoryRepository");
 		protected static ConfigurationService confservice = new ConfigurationService();
+		protected static string baseFileExt = ".aspx";
 		
 		public static void generateTree(string path, IDictionary<string, string> elementsMap)
 		{
@@ -150,6 +151,8 @@ namespace com.nemesys.services
 				
 				if(virtualPath.StartsWith("/")){virtualPath=virtualPath.Substring(1);}
 				//System.Web.HttpContext.Current.Response.Write("<b>3- modify virtualPath: </b>"+virtualPath+"<br>");
+				if(virtualPath.EndsWith(baseFileExt)){virtualPath=virtualPath.Substring(0,virtualPath.LastIndexOf(baseFileExt));}
+				//System.Web.HttpContext.Current.Response.Write("<b>4- modify virtualPath: </b>"+virtualPath+"<br>");
 				
 				Template templ = temprep.getByUrlRewriteCached(virtualPath, true);
 				if(!TemplateService.isTemplateNull(templ))
@@ -293,6 +296,9 @@ namespace com.nemesys.services
 				//System.Web.HttpContext.Current.Response.Write("<b>start virtualPath: </b>"+virtualPath+"<br>");
 				
 				if(virtualPath.StartsWith("/")){virtualPath=virtualPath.Substring(1);}
+				//System.Web.HttpContext.Current.Response.Write("<b>start virtualPath: </b>"+virtualPath+"<br>");
+				if(virtualPath.EndsWith(baseFileExt)){virtualPath=virtualPath.Substring(0,virtualPath.LastIndexOf(baseFileExt));}
+				//System.Web.HttpContext.Current.Response.Write("<b>modify virtualPath: </b>"+virtualPath+"<br>");
 				
 				result = temprep.getByUrlRewriteCached(virtualPath, true);
 				if(TemplateService.isTemplateNull(result))

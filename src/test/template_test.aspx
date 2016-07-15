@@ -35,6 +35,9 @@ protected void Page_Load(Object sender, EventArgs e)
 		string resolvedPath3 = TemplateService.resolveVirtualPath("/base-aspx/list.aspx", out newLangCode);
 		Response.Write("resolvedPath3:"+resolvedPath3+" -newLangCode:"+newLangCode+"<br>");
 		
+		string resolvedPath4 = TemplateService.resolveVirtualPath("/it/homepage.aspx", out newLangCode);
+		Response.Write("resolvedPath4:"+resolvedPath4+" -newLangCode:"+newLangCode+"<br>");
+		
 	}
 	    catch (Exception ex)
 	{

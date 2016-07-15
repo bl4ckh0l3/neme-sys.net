@@ -24,6 +24,7 @@ namespace com.nemesys.services
 		protected static ILanguageRepository langrep = RepositoryFactory.getInstance<ILanguageRepository>("ILanguageRepository");
 		protected static ITemplateRepository templrep = RepositoryFactory.getInstance<ITemplateRepository>("ITemplateRepository");
 		protected static ConfigurationService confservice = new ConfigurationService();
+		protected static string baseFileExt = ".aspx";
 		
 		public static IList<Category> getMenu(int numMenu, string hierarchyFrom, string hierarchyTo, int level, Nullable<bool> boolDeep)
 		{
@@ -120,6 +121,11 @@ namespace com.nemesys.services
 
 			string baseRealPath = "/public/templates/";
 			//System.Web.HttpContext.Current.Response.Write("<b>start tmpBaseUrl:</b>"+tmpBaseUrl+"<br>");
+			string fileExt = "";
+			if(Convert.ToBoolean(Convert.ToInt32(confservice.get("url_rewrite_file_ext").value))){
+				fileExt = baseFileExt;
+			}
+			
 			try
 			{
 				if(template.pages != null)
@@ -135,7 +141,8 @@ namespace com.nemesys.services
 								}else{								
 									builder.Append("/");
 								}
-								builder.Append(tp.urlRewrite);								
+								builder.Append(tp.urlRewrite);	
+								builder.Append(fileExt);							
 								resolveHrefUrl = builder.ToString();
 								break;
 							}else{

@@ -64,7 +64,7 @@ public partial class _List : Page
 		ITemplateRepository templrep = RepositoryFactory.getInstance<ITemplateRepository>("ITemplateRepository");
 		confservice = new ConfigurationService();
 
-		//se il sito è offline rimando a pagina default
+		//se il sito ï¿½ offline rimando a pagina default
 		if ("1".Equals(confservice.get("go_offline").value)) 
 		{
 			UriBuilder defRedirect = new UriBuilder(Request.Url);
@@ -143,31 +143,17 @@ public partial class _List : Page
 							orderBy = template.orderBy;					
 							bool langHasSubDomainActive = false;
 							string langUrlSubdomain = "";
-							Language language = langrep.getByLabel(lang.currentLangCode, true);	
-							
-							string currentPath = basePath.Replace("/public/templates/","");
-							currentPath = currentPath.Replace(lang.currentLangCode+"/","");
 							
 							modelPageNum = TemplateService.getMaxPriority(template.pages);
+
+							Language language = langrep.getByLabel(lang.currentLangCode, true);	
+							if(language != null)
+							{	
+								langHasSubDomainActive = language.subdomainActive;
+								langUrlSubdomain = language.urlSubdomain;
+							}								
 							
-							foreach(TemplatePage tp in template.pages){
-								if(tp.priority==modelPageNum){
-									string templatePath = tp.filePath+tp.fileName;
-									string urlRewritePath = tp.urlRewrite;
-								
-									modelPageNum = tp.priority;
-									
-									if(language != null)
-									{	
-										langHasSubDomainActive = language.subdomainActive;
-										langUrlSubdomain = language.urlSubdomain;
-									}								
-									
-									detailURL = MenuService.resolvePageHrefUrl(builder.ToString(), modelPageNum, lang.currentLangCode, langHasSubDomainActive, langUrlSubdomain, category, template, true);
-									//Response.Write("detailURL:"+detailURL+"<br>");
-									break;
-							}
-							}
+							detailURL = MenuService.resolvePageHrefUrl(builder.ToString(), modelPageNum, lang.currentLangCode, langHasSubDomainActive, langUrlSubdomain, category, template, true);							
 						}
 					}
 										

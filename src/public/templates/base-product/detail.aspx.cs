@@ -99,15 +99,7 @@ public partial class _Detail : Page
 		string newLangCode = "";
 
 		StringBuilder shoppingcardPath = new StringBuilder();
-		/*if(confservice.get("url_with_langcode_prefix").value=="1")
-		{	
-			shoppingcardPath.Append(lang.currentLangCode.ToLower()).Append("/");
-		}*/
-		shoppingcardPath.Append("public/templates/shopping-cart/checkout");
-		if(confservice.get("url_rewrite_file_ext").value=="1")
-		{	
-			shoppingcardPath.Append(".aspx");
-		}
+		shoppingcardPath.Append("public/templates/shopping-cart/checkout.aspx");
 		
 		UriBuilder shoppingcardBuilder = new UriBuilder(Request.Url);
 		if(confservice.get("use_https").value=="1")

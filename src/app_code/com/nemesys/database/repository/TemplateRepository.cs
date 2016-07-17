@@ -363,55 +363,80 @@ namespace com.nemesys.database.repository
 			return template;
 		}	
 
-		public TemplatePage getByUrlRewrite(string urlRewrite)
+		public TemplateVO getByUrlRewrite(string urlRewrite)
 		{
 			return getByUrlRewriteCached(urlRewrite, false);
 		}
 
-		public TemplatePage getByUrlRewriteCached(string urlRewrite, bool cached)
+		public TemplateVO getByUrlRewriteCached(string urlRewrite, bool cached)
 		{
+			TemplateVO tvo = null;
 			TemplatePage tp = null;
+			string langCode = "";
 
 			if(cached)
 			{
-				tp = (TemplatePage)HttpContext.Current.Cache.Get("template-urlrewrite-"+Utils.encodeTo64(urlRewrite));
-				if(tp != null){
-					return tp;
+				tvo = (TemplateVO)HttpContext.Current.Cache.Get("template-urlrewrite-"+Utils.encodeTo64(urlRewrite));
+				if(tvo != null){
+					return tvo;
 				}
 			}
+			
+			//System.Web.HttpContext.Current.Response.Write("TemplateRepository.getByUrlRewriteCached - urlRewrite:"+urlRewrite+"<br>");
 						
 			if(!String.IsNullOrEmpty(urlRewrite)){
 				using (ISession session = NHibernateHelper.getCurrentSession())
 				{
-					string strSQL = "select {t.*} from TEMPLATE_PAGES {t} where {t}.id IN(select templatepageid from CATEGORY_TEMPLATES where url_rewrite= :urlRewrite)";
-					//System.Web.HttpContext.Current.Response.Write("<b>strSQL: </b>"+strSQL+"<br>");
+					IQuery q = session.CreateQuery("from CategoryTemplate where urlRewrite=:urlRewrite");
+					q.SetString("urlRewrite",urlRewrite);
+					CategoryTemplate ct = q.UniqueResult<CategoryTemplate>();					
 					
-					IQuery q = session.CreateSQLQuery(strSQL).AddEntity ("t", typeof(TemplatePage));
-					q.SetString("urlRewrite",urlRewrite);	
-					tp = q.UniqueResult<TemplatePage>();
+					//System.Web.HttpContext.Current.Response.Write("TemplateRepository.getByUrlRewriteCached - ct!=null:"+(ct!=null)+"<br>");
+					
+					if(ct != null){
+						langCode = ct.langCode;
+						
+						//System.Web.HttpContext.Current.Response.Write("TemplateRepository.getByUrlRewriteCached - langCode:"+langCode+"<br>");
+						//System.Web.HttpContext.Current.Response.Write("TemplateRepository.getByUrlRewriteCached - ct.templatePageId:"+ct.templatePageId+"<br>");
+						
+						IQuery q2 = session.CreateSQLQuery("select {t.*} from TEMPLATE_PAGES {t} where {t}.id=:templatePageId").AddEntity ("t", typeof(TemplatePage));
+						q2.SetInt32("templatePageId",ct.templatePageId);	
+						tp = q2.UniqueResult<TemplatePage>();
+					}
+					//System.Web.HttpContext.Current.Response.Write("TemplateRepository.getByUrlRewriteCached - by CategoryTemplate - tp!=null:"+(tp!=null)+"<br>");
 					
 					if(tp==null){				
-						strSQL = "select {t.*} from TEMPLATE_PAGES {t} where url_rewrite= :urlRewrite";
-						//System.Web.HttpContext.Current.Response.Write("<b>strSQL: </b>"+strSQL+"<br>");
-						q = session.CreateSQLQuery(strSQL).AddEntity ("t", typeof(TemplatePage));
-						q.SetString("urlRewrite",urlRewrite);	
-						tp = q.UniqueResult<TemplatePage>();
+						IQuery q3 = session.CreateSQLQuery("select {t.*} from TEMPLATE_PAGES {t} where url_rewrite= :urlRewrite").AddEntity ("t", typeof(TemplatePage));
+						q3.SetString("urlRewrite",urlRewrite);	
+						tp = q3.UniqueResult<TemplatePage>();
 					}
+					//System.Web.HttpContext.Current.Response.Write("TemplateRepository.getByUrlRewriteCached - by TemplatePage - tp!=null:"+(tp!=null)+"<br>");
 					
 					NHibernateHelper.closeSession();					
 				}	
 			}
 			
-			if(cached)
-			{
-				if(tp == null){
-					tp = new TemplatePage();
-					tp.id=-1;
-				}
-				HttpContext.Current.Cache.Insert("template-urlrewrite-"+Utils.encodeTo64(urlRewrite), tp, null, DateTime.Now.AddHours(24), System.Web.Caching.Cache.NoSlidingExpiration, CacheItemPriority.High, null);
+			if(tp != null && tp.id>-1){
+				//System.Web.HttpContext.Current.Response.Write("TemplateRepository.getByUrlRewriteCached - tp:"+tp.ToString()+"<br>");
+				//System.Web.HttpContext.Current.Response.Write("TemplateRepository.getByUrlRewriteCached - langCode:"+langCode+"<br>");
+				//System.Web.HttpContext.Current.Response.Write("TemplateRepository.getByUrlRewriteCached - tvo!=null:"+(tvo!=null)+"<br>");
+				tvo = new TemplateVO();
+				tvo.templatePage = tp;
+				tvo.langCode = langCode;
 			}
 			
-			return tp;		
+			if(cached)
+			{
+				//System.Web.HttpContext.Current.Response.Write("TemplateRepository.getByUrlRewriteCached - cached:"+cached+"<br>");
+				if(tvo == null || tvo.templatePage == null){
+					tvo = new TemplateVO();
+				}
+				HttpContext.Current.Cache.Insert("template-urlrewrite-"+Utils.encodeTo64(urlRewrite), tvo, null, DateTime.Now.AddHours(24), System.Web.Caching.Cache.NoSlidingExpiration, CacheItemPriority.High, null);
+			}
+			
+			//System.Web.HttpContext.Current.Response.Write("TemplateRepository.getByUrlRewriteCached - tvo!=null:"+(tvo!=null)+"<br>");
+			
+			return tvo;		
 		}
 
 		public Template getByDirectory(string directory)

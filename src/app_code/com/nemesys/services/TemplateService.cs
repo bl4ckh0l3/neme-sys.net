@@ -154,15 +154,24 @@ namespace com.nemesys.services
 				if(virtualPath.EndsWith(baseFileExt)){virtualPath=virtualPath.Substring(0,virtualPath.LastIndexOf(baseFileExt));}
 				//System.Web.HttpContext.Current.Response.Write("<b>4- modify virtualPath: </b>"+virtualPath+"<br>");
 				
-				TemplatePage tp = temprep.getByUrlRewriteCached(virtualPath, true);
-				if(tp != null && tp.id>-1)
+				TemplateVO tvo = temprep.getByUrlRewriteCached(virtualPath, true);
+				//System.Web.HttpContext.Current.Response.Write("TemplateService.resolveVirtualPath - <b>tvo: </b>"+(tvo!=null)+"<br>");
+					
+				if(tvo != null && tvo.templatePage != null)
 				{
+					//System.Web.HttpContext.Current.Response.Write("<b>tvo: </b>"+tvo.ToString()+"<br>");
+					
+					if(String.IsNullOrEmpty(newLangCode) && !String.IsNullOrEmpty(tvo.langCode))
+					{
+						newLangCode = tvo.langCode;
+					}
+				
 					//System.Web.HttpContext.Current.Response.Write("<b>templ: </b>"+templ.ToString()+"<br>");
-					StringBuilder builder = new StringBuilder(basePath).Append(tp.filePath).Append(tp.fileName);
+					StringBuilder builder = new StringBuilder(basePath).Append(tvo.templatePage.filePath).Append(tvo.templatePage.fileName);
 					realPath = builder.ToString();
 				}
 			}catch(Exception ex){
-				//System.Web.HttpContext.Current.Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
+				//System.Web.HttpContext.Current.Response.Write("TemplateSerivce.resolveVirtualPath -  An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
 				realPath="";
 			}
 			//System.Web.HttpContext.Current.Response.Write("<b>5- realPath: </b>"+realPath+"<br>");
@@ -307,14 +316,19 @@ namespace com.nemesys.services
 				if(virtualPath.EndsWith(baseFileExt)){virtualPath=virtualPath.Substring(0,virtualPath.LastIndexOf(baseFileExt));}
 				//System.Web.HttpContext.Current.Response.Write("<b>TemplateService: modify virtualPath: </b>"+virtualPath+"<br>");
 				
-				TemplatePage tp = temprep.getByUrlRewriteCached(virtualPath, true);
-				if(tp==null  || tp.id==1)
+				TemplateVO tvo = temprep.getByUrlRewriteCached(virtualPath, true);
+					
+				if(tvo != null && tvo.templatePage != null)
 				{
+					if(String.IsNullOrEmpty(newLangCode) && !String.IsNullOrEmpty(tvo.langCode))
+					{
+						newLangCode = tvo.langCode;
+					}
+					result = temprep.getByIdCached(tvo.templatePage.templateId, true);
+				}else{
 					//System.Web.HttpContext.Current.Response.Write("<b>Path.GetDirectoryName(virtualPath):</b>"+Path.GetDirectoryName(virtualPath)+";<br>");
 					result = temprep.getByDirectoryCached(Path.GetDirectoryName(virtualPath), true);
 					//System.Web.HttpContext.Current.Response.Write("<b>result: </b>"+result.ToString()+"<br>");
-				}else{
-					result = temprep.getByIdCached(tp.templateId, true);
 				}
 			}catch(Exception ex){
 				//System.Web.HttpContext.Current.Response.Write("TemplateService.resolveTemplateByVirtualPath - An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);

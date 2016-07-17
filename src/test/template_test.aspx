@@ -15,31 +15,27 @@ protected Template template;
 protected void Page_Load(Object sender, EventArgs e)
 {
 	try
-	{
-		
-		/*template = trep.getByUrlRewrite("/first-custom-template/");
-		if(template!=null){
-			Response.Write("template: " + template.ToString()+"<br>");
-		}*/
-		
+	{	
 		ITemplateRepository temprep = RepositoryFactory.getInstance<ITemplateRepository>("ITemplateRepository");
-		//Template test = temprep.getById(1);
-		//temprep.update(test);
+
 		string newLangCode = "";
 		string resolvedPath = TemplateService.resolveVirtualPath("/IT/base-aspx/list.aspx", out newLangCode);
-		Response.Write("resolvedPath:"+resolvedPath+" -newLangCode:"+newLangCode+"<br>");
+		Response.Write("<br>resolvedPath:"+resolvedPath+" -newLangCode:"+newLangCode+"<br><br>");
 		
 		string resolvedPath2 = TemplateService.resolveVirtualPath("/it/base-aspx/list.aspx", out newLangCode);
-		Response.Write("resolvedPath2:"+resolvedPath2+" -newLangCode:"+newLangCode+"<br>");
+		Response.Write("<br>resolvedPath2:"+resolvedPath2+" -newLangCode:"+newLangCode+"<br><br>");
 		
 		string resolvedPath3 = TemplateService.resolveVirtualPath("/base-aspx/list.aspx", out newLangCode);
-		Response.Write("resolvedPath3:"+resolvedPath3+" -newLangCode:"+newLangCode+"<br>");
+		Response.Write("<br>resolvedPath3:"+resolvedPath3+" -newLangCode:"+newLangCode+"<br><br>");
 		
 		string resolvedPath4 = TemplateService.resolveVirtualPath("/it/homepage.aspx", out newLangCode);
-		Response.Write("resolvedPath4:"+resolvedPath4+" -newLangCode:"+newLangCode+"<br>");
+		Response.Write("<br>resolvedPath4:"+resolvedPath4+" -newLangCode:"+newLangCode+"<br><br>");
 		
 		string resolvedPath5 = TemplateService.resolveVirtualPath("/it/homepage", out newLangCode);
-		Response.Write("resolvedPath5:"+resolvedPath5+" -newLangCode:"+newLangCode+"<br>");
+		Response.Write("<br>resolvedPath5:"+resolvedPath5+" -newLangCode:"+newLangCode+"<br><br>");
+		
+		string resolvedPath6 = TemplateService.resolveVirtualPath("/pagina-homer", out newLangCode);
+		Response.Write("<br>resolvedPath6:"+resolvedPath6+" -newLangCode:"+newLangCode+"<br><br>");
 		
 	}
 	    catch (Exception ex)

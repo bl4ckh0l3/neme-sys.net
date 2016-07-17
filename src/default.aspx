@@ -5,8 +5,8 @@
 <head runat="server">
 	<title></title>
 </head>
-<%if (!String.IsNullOrEmpty(resolved)) {%>
-	<body onload="document.controller_redirect.submit();">
+<%if(!String.IsNullOrEmpty(resolved)) {%>
+	<body onload="document.controller_redirect.submit();"><!--  -->
 	<form method="post" name="controller_redirect" action="<%=resolved%>">
 	<input type="hidden" name="categoryid" value="<%=categoryid%>">
 	<input type="hidden" name="hierarchy" value="<%=hierarchy%>">

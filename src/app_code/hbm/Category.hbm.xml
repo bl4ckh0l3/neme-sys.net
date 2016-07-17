@@ -27,7 +27,9 @@
 		<composite-id>
 			<key-property name="categoryId" column="categoryid" type="Int32" />
 			<key-property name="templateId" column="templateid" type="Int32" />
+			<key-property name="templatePageId" column="templatepageid" type="Int32" />
 			<key-property name="langCode" column="lang_code" type="string" />
+			<key-property name="urlRewrite" column="url_rewrite" type="string" />
 		</composite-id>
 	</class>
 </hibernate-mapping>

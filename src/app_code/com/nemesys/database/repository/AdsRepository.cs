@@ -299,7 +299,7 @@ namespace com.nemesys.database.repository
 				}
 				catch(Exception ex)
 				{
-					System.Web.HttpContext.Current.Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
+					//System.Web.HttpContext.Current.Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
 					// DO NOTHING: RETURN NULL
 				}
 				tx.Commit();

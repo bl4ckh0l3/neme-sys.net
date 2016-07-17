@@ -165,6 +165,10 @@ namespace com.nemesys.database.repository
 				else if(cacheKey.Contains("template-urlrewrite-"))
 				{ 
 					HttpContext.Current.Cache.Remove(cacheKey);
+				}				 
+				else if(cacheKey.Contains("templatepage-"))
+				{ 
+					HttpContext.Current.Cache.Remove(cacheKey);
 				}
 			}
 		}
@@ -211,7 +215,11 @@ namespace com.nemesys.database.repository
 					else if(cacheKey.Contains("list-category"))
 					{ 	
 						HttpContext.Current.Cache.Remove(cacheKey);
-					} 
+					} 				 
+					else if(cacheKey.Contains("templatepage-"))
+					{ 
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}
 				}
 				
 				//cancello la directory fisica del template
@@ -260,7 +268,6 @@ namespace com.nemesys.database.repository
 				Template newtemplate = new Template();
 				newtemplate.directory = newdir;
 				newtemplate.description = newdir;
-				newtemplate.langCode = template.langCode;
 				newtemplate.isBase = template.isBase;
 				newtemplate.elemXpage = template.elemXpage;
 				newtemplate.orderBy = template.orderBy;
@@ -306,6 +313,10 @@ namespace com.nemesys.database.repository
 				if(cacheKey.Contains("template-urlrewrite-"))
 				{ 
 					HttpContext.Current.Cache.Remove(cacheKey);
+				}				 
+				else if(cacheKey.Contains("templatepage-"))
+				{ 
+					HttpContext.Current.Cache.Remove(cacheKey);
 				}
 			}
 		}
@@ -340,7 +351,7 @@ namespace com.nemesys.database.repository
 				NHibernateHelper.closeSession();
 			}
 			
-			if(cached && template != null)
+			if(cached)
 			{
 				if(template == null){
 					template = new Template();
@@ -352,53 +363,39 @@ namespace com.nemesys.database.repository
 			return template;
 		}	
 
-		public Template getByUrlRewrite(string urlRewrite)
+		public TemplatePage getByUrlRewrite(string urlRewrite)
 		{
 			return getByUrlRewriteCached(urlRewrite, false);
 		}
 
-		public Template getByUrlRewriteCached(string urlRewrite, bool cached)
+		public TemplatePage getByUrlRewriteCached(string urlRewrite, bool cached)
 		{
-			IList<Template> templates = null;
-			Template template = null;
+			TemplatePage tp = null;
 
 			if(cached)
 			{
-				template = (Template)HttpContext.Current.Cache.Get("template-urlrewrite-"+Utils.encodeTo64(urlRewrite));
-				if(template != null){
-					return template;
+				tp = (TemplatePage)HttpContext.Current.Cache.Get("template-urlrewrite-"+Utils.encodeTo64(urlRewrite));
+				if(tp != null){
+					return tp;
 				}
 			}
 						
 			if(!String.IsNullOrEmpty(urlRewrite)){
 				using (ISession session = NHibernateHelper.getCurrentSession())
 				{
-					string strSQL = "select {t.*} from TEMPLATE {t} where {t}.id IN(select templateid from TEMPLATE_PAGES where url_rewrite= :urlRewrite)";
-					
+					string strSQL = "select {t.*} from TEMPLATE_PAGES {t} where {t}.id IN(select templatepageid from CATEGORY_TEMPLATES where url_rewrite= :urlRewrite)";
 					//System.Web.HttpContext.Current.Response.Write("<b>strSQL: </b>"+strSQL+"<br>");
 					
-					IQuery q = session.CreateSQLQuery(strSQL).AddEntity ("t", typeof(Template));
+					IQuery q = session.CreateSQLQuery(strSQL).AddEntity ("t", typeof(TemplatePage));
 					q.SetString("urlRewrite",urlRewrite);	
-					templates = q.List<Template>();
+					tp = q.UniqueResult<TemplatePage>();
 					
-					if(templates!=null)
-					{
-						if(templates.Count!=1)
-						{
-							template = null;
-						}else
-						{
-							template = templates[0];			
-							template.pages = session.CreateCriteria(typeof(TemplatePage))
-							.SetFetchMode("Permissions", FetchMode.Join)
-							.Add(Restrictions.Eq("templateId", template.id))
-							.AddOrder(Order.Asc("priority"))
-							.List<TemplatePage>();					
-						}
-					}
-					else
-					{
-						template = null;	
+					if(tp==null){				
+						strSQL = "select {t.*} from TEMPLATE_PAGES {t} where url_rewrite= :urlRewrite";
+						//System.Web.HttpContext.Current.Response.Write("<b>strSQL: </b>"+strSQL+"<br>");
+						q = session.CreateSQLQuery(strSQL).AddEntity ("t", typeof(TemplatePage));
+						q.SetString("urlRewrite",urlRewrite);	
+						tp = q.UniqueResult<TemplatePage>();
 					}
 					
 					NHibernateHelper.closeSession();					
@@ -407,14 +404,14 @@ namespace com.nemesys.database.repository
 			
 			if(cached)
 			{
-				if(template == null){
-					template = new Template();
-					template.id=-1;
+				if(tp == null){
+					tp = new TemplatePage();
+					tp.id=-1;
 				}
-				HttpContext.Current.Cache.Insert("template-urlrewrite-"+Utils.encodeTo64(urlRewrite), template, null, DateTime.Now.AddHours(24), System.Web.Caching.Cache.NoSlidingExpiration, CacheItemPriority.High, null);
+				HttpContext.Current.Cache.Insert("template-urlrewrite-"+Utils.encodeTo64(urlRewrite), tp, null, DateTime.Now.AddHours(24), System.Web.Caching.Cache.NoSlidingExpiration, CacheItemPriority.High, null);
 			}
 			
-			return template;		
+			return tp;		
 		}
 
 		public Template getByDirectory(string directory)
@@ -480,20 +477,13 @@ namespace com.nemesys.database.repository
 			return result;
 		}	
 	
-		public IList<Template> getTemplateList(string langCode)
+		public IList<Template> getTemplateList()
 		{
 			IList<Template> results = null;
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			{
-				string strSQL = "from Template where 1=1";
-				if (!String.IsNullOrEmpty(langCode)){
-					strSQL+= " and langCode=:langCode";
-				}
-				strSQL+= " order by  description asc";				
-				IQuery q = session.CreateQuery(strSQL);	
-				if (!String.IsNullOrEmpty(langCode)){
-					q.SetString("langCode",langCode);				
-				}				
+				string strSQL = "from Template order by  description asc";				
+				IQuery q = session.CreateQuery(strSQL);					
 				results = q.List<Template>();
 				NHibernateHelper.closeSession();
 			}			
@@ -564,14 +554,38 @@ namespace com.nemesys.database.repository
 		}
 		
 		public TemplatePage getPageById(int id)
+		{			
+			return getPageByIdCached(id, false);		
+		}
+		
+		public TemplatePage getPageByIdCached(int id, bool cached)
 		{	
-			TemplatePage page = null;				
+			TemplatePage page = null;		
+
+			if(cached)
+			{
+				page = (TemplatePage)HttpContext.Current.Cache.Get("templatepage-"+id);				
+				if(page != null){
+					return page;
+				}
+			}
+			
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			{				
 				page = session.Get<TemplatePage>(id);
 				NHibernateHelper.closeSession();
-			}			
-			return page;		
+			}
+			
+			if(cached && page != null)
+			{
+				if(page == null){
+					page = new TemplatePage();
+					page.id=-1;
+				}
+				HttpContext.Current.Cache.Insert("templatepage-"+page.id, page, null, DateTime.Now.AddHours(24), System.Web.Caching.Cache.NoSlidingExpiration, CacheItemPriority.High, null);
+			}
+						
+			return page;			
 		}
 		
 		public TemplatePage findByPriority(int templateId, int priority)

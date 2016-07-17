@@ -46,8 +46,11 @@ DROP TABLE IF EXISTS `CATEGORY_TEMPLATES`;
 CREATE TABLE IF NOT EXISTS `CATEGORY_TEMPLATES` (
   `categoryid` int(11) NOT NULL,
   `templateid` int(11) NOT NULL,
+  `templatepageid` int(11) NOT NULL,
   `lang_code` varchar(10) NOT NULL,
-  PRIMARY KEY (`categoryid`, `templateid`, `lang_code`)
+  `url_rewrite` varchar(250) default NULL, 
+  PRIMARY KEY (`categoryid`, `templateid`, `templatepageid`, `lang_code`),
+  KEY `url_rewrite` (`url_rewrite`)
 )ENGINE = InnoDB  DEFAULT CHARSET=utf8;
 
 
@@ -369,7 +372,6 @@ DROP TABLE IF EXISTS `TEMPLATE`;
 CREATE TABLE IF NOT EXISTS `TEMPLATE` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `directory` varchar(250) NOT NULL,
-  `lang_code` varchar(10) default NULL,
   `description` varchar(250) default NULL,
   `is_base` smallint(1) unsigned NOT NULL DEFAULT '0',
   `order_by` int(2) unsigned NOT NULL DEFAULT '0',

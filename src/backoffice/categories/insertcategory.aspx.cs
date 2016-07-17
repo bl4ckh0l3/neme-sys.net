@@ -80,7 +80,7 @@ public partial class _Category : Page
 			languages = new List<Language>();
 		}
 		try{				
-			templates = templrep.getTemplateList(null);		
+			templates = templrep.getTemplateList();		
 			if(templates == null){				
 				templates = new List<Template>();						
 			}
@@ -139,14 +139,34 @@ public partial class _Category : Page
 					category.automatic = automatic;
 	
 					// PREPARO LE LISTE DI TEMPLATES DA INSERIRE/AGGIORNARE IN TRANSAZIONE
+					
 					category.templates = new List<CategoryTemplate>();
 					CategoryTemplate ctempl;
-					if(languages!=null){
+					if(idTemplate>-1 && languages!=null){
 						foreach (Language x in languages){
-							if(!String.IsNullOrEmpty(Request["id_template_"+x.label]) && -1 != Convert.ToInt32(Request["id_template_"+x.label])){
-								ctempl = new CategoryTemplate(category.id, Convert.ToInt32(Request["id_template_"+x.label]), x.label);		
-								category.templates.Add(ctempl);
-							}
+							string urlang = "";
+							int tpid = -1;
+
+							foreach (string key in Request.Form)
+							{
+								//Response.Write("key:"+key+"<br>");
+								if(key.StartsWith("url_rewrite_"+x.label+"_"))
+								{
+									string pageid = key.Substring(key.LastIndexOf('_')+1);
+									string currvalue = Request.Form[key];
+									//Response.Write("key:"+key+"<br>");
+									//Response.Write("category.id:"+category.id+"<br>");
+									//Response.Write("idTemplate:"+idTemplate+"<br>");
+									//Response.Write("pageid:"+pageid+"<br>");
+									//Response.Write("currvalue:"+currvalue+"<br>");
+									if(!String.IsNullOrEmpty(currvalue)){
+										ctempl = new CategoryTemplate(category.id, idTemplate, Convert.ToInt32(pageid), x.label, currvalue);		
+										category.templates.Add(ctempl);
+										//Response.Write("ctempl:"+ctempl.ToString()+"<br>");
+									}						
+								}
+							}							
+							
 						}
 					}
 					

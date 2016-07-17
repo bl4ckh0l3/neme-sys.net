@@ -6,7 +6,6 @@
 		<generator class="native" />
 		</id>
 		<property name="directory" column="directory" not-null="true" />
-		<property name="langCode" column="lang_code" />
 		<property name="description" column="description" />
 		<property name="isBase" type="Boolean" column="is_base" not-null="true" />
 		<property name="orderBy" column="order_by" />		

@@ -98,15 +98,29 @@ namespace com.nemesys.services
 		{
 			string resolveHrefUrl = "#";
 			string tmpBaseUrl = basePath;
-			//System.Web.HttpContext.Current.Response.Write("<b>0- basePath:</b>"+basePath+"<br>");
-			//System.Web.HttpContext.Current.Response.Write("<b>1- tmpBaseUrl:</b>"+tmpBaseUrl+"<br>");
+			/*
+			System.Web.HttpContext.Current.Response.Write("<b>MenuService.resolvePageHrefUrl:</b><br>");
+			System.Web.HttpContext.Current.Response.Write("<b>0- basePath:</b>"+basePath+"<br>");
+			System.Web.HttpContext.Current.Response.Write("<b>1- tmpBaseUrl:</b>"+tmpBaseUrl+"<br>");
+			System.Web.HttpContext.Current.Response.Write("<b>1- modelPageNum:</b>"+modelPageNum+"<br>");
+			System.Web.HttpContext.Current.Response.Write("<b>1- langCode:</b>"+langCode+"<br>");
+			System.Web.HttpContext.Current.Response.Write("<b>1- langSubDomainActive:</b>"+langSubDomainActive+"<br>");
+			System.Web.HttpContext.Current.Response.Write("<b>1- langUrlSubdomain:</b>"+langUrlSubdomain+"<br>");
+			System.Web.HttpContext.Current.Response.Write("<b>1- returnUrlRewrite:</b>"+returnUrlRewrite+"<br>");
+			*/
 
 			//'*** recupero la dir language o il sottodominio per lingua
-			string langcodeDir = "/" + langCode.ToLower() + "/";
+			string langcodeDir = "";
+			if(!String.IsNullOrEmpty(langCode)){
+				langcodeDir = "/" + langCode.ToLower() + "/";
+			}
 			if(langSubDomainActive) { langcodeDir = "";}
 			
 			//'*** verifico esistenza del sottodominio per categoria e compongo la base_url
-			string catSubDomUrl = category.subDomainUrl.Replace(" ","");
+			string catSubDomUrl = "";
+			if(category != null){
+				catSubDomUrl = category.subDomainUrl.Replace(" ","");
+			}
 
 			if(!String.IsNullOrEmpty(catSubDomUrl)){
 				tmpBaseUrl += catSubDomUrl;
@@ -128,7 +142,37 @@ namespace com.nemesys.services
 			
 			try
 			{
-				if(template.pages != null)
+				//System.Web.HttpContext.Current.Response.Write("<b>category.templates != null:</b>"+(category.templates != null)+"<br>");
+				if(category != null && category.templates != null && category.templates.Count>0){
+					//System.Web.HttpContext.Current.Response.Write("<b>category.templates.Count:</b>"+category.templates.Count+"<br>");
+					foreach(CategoryTemplate ct in category.templates)
+					{
+						if(!String.IsNullOrEmpty(langCode) && langCode.Equals(ct.langCode)){
+							TemplatePage tp = templrep.getPageByIdCached(ct.templatePageId, true);
+							//System.Web.HttpContext.Current.Response.Write("<b>tp:</b>"+tp.ToString()+"<br>");
+							if(tp != null && tp.priority==modelPageNum){
+								if(!String.IsNullOrEmpty(ct.urlRewrite) && returnUrlRewrite){								
+									StringBuilder builder = new StringBuilder(tmpBaseUrl);
+									//System.Web.HttpContext.Current.Response.Write("<b>3- tmpBaseUrl:</b>"+tmpBaseUrl+"<br>");
+									if(Convert.ToBoolean(Convert.ToInt32(confservice.get("url_with_langcode_prefix").value))){
+										builder.Append(langcodeDir);	
+									}else{								
+										builder.Append("/");
+									}
+									builder.Append(ct.urlRewrite);	
+									builder.Append(fileExt);							
+									resolveHrefUrl = builder.ToString();
+									break;
+								}else{
+									StringBuilder builder = new StringBuilder(tmpBaseUrl).Append(baseRealPath).Append(tp.filePath).Append(tp.fileName);
+									resolveHrefUrl = builder.ToString();	
+									break;						
+								}							
+							}
+						}
+					}
+				}
+				else if(template != null && template.pages != null)
 				{				
 					foreach(TemplatePage tp in template.pages)
 					{
@@ -153,6 +197,7 @@ namespace com.nemesys.services
 						}
 					}
 				}
+				//System.Web.HttpContext.Current.Response.Write("<b>resolveHrefUrl:</b>"+resolveHrefUrl+"<br>");
 			}catch(Exception ex){
 				//System.Web.HttpContext.Current.Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
 				resolveHrefUrl = "#";

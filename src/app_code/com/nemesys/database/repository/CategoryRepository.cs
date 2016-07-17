@@ -30,7 +30,9 @@ namespace com.nemesys.database.repository
 					foreach(CategoryTemplate ct in category.templates){
 						CategoryTemplate nct = new CategoryTemplate();
 						nct.templateId = ct.templateId;
-						nct.langCode = ct.langCode;								
+						nct.langCode = ct.langCode;		
+						nct.templatePageId = ct.templatePageId;
+						nct.urlRewrite = ct.urlRewrite;						
 						newTemplates.Add(nct);
 					}
 					category.templates.Clear();							
@@ -77,6 +79,10 @@ namespace com.nemesys.database.repository
 				{ 
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}
+				else if(cacheKey.Contains("template-urlrewrite-"))
+				{ 
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
 			}
 		}
 		
@@ -92,7 +98,9 @@ namespace com.nemesys.database.repository
 						CategoryTemplate nct = new CategoryTemplate();
 						nct.categoryId = ct.categoryId;
 						nct.templateId = ct.templateId;
-						nct.langCode = ct.langCode;								
+						nct.langCode = ct.langCode;	
+						nct.templatePageId = ct.templatePageId;
+						nct.urlRewrite = ct.urlRewrite;								
 						newTemplates.Add(nct);
 					}
 					category.templates.Clear();							
@@ -153,6 +161,10 @@ namespace com.nemesys.database.repository
 				{ 
 					HttpContext.Current.Cache.Remove(cacheKey);
 				} 
+				else if(cacheKey.Contains("template-urlrewrite-"))
+				{ 
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
 			}
 		}
 		
@@ -212,7 +224,11 @@ namespace com.nemesys.database.repository
 				else if(cacheKey.Contains("list-category-params"))
 				{ 
 					HttpContext.Current.Cache.Remove(cacheKey);
-				}  
+				} 
+				else if(cacheKey.Contains("template-urlrewrite-"))
+				{ 
+					HttpContext.Current.Cache.Remove(cacheKey);
+				} 
 			}
 		}
 
@@ -231,7 +247,9 @@ namespace com.nemesys.database.repository
 								CategoryTemplate nct = new CategoryTemplate();
 								nct.categoryId = ct.categoryId;
 								nct.templateId = ct.templateId;
-								nct.langCode = ct.langCode;								
+								nct.langCode = ct.langCode;	
+								nct.templatePageId = ct.templatePageId;
+								nct.urlRewrite = ct.urlRewrite;								
 								newTemplates.Add(nct);
 								//ids1.Add(ct.templateId.ToString());
 							}
@@ -256,7 +274,9 @@ namespace com.nemesys.database.repository
 							foreach(CategoryTemplate ct in category.templates){
 								CategoryTemplate nct = new CategoryTemplate();
 								nct.templateId = ct.templateId;
-								nct.langCode = ct.langCode;								
+								nct.langCode = ct.langCode;		
+								nct.templatePageId = ct.templatePageId;
+								nct.urlRewrite = ct.urlRewrite;							
 								newTemplates.Add(nct);
 							}
 							category.templates.Clear();							
@@ -364,6 +384,10 @@ namespace com.nemesys.database.repository
 				{ 
 					HttpContext.Current.Cache.Remove(cacheKey);
 				} 
+				else if(cacheKey.Contains("template-urlrewrite-"))
+				{ 
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
 			}
 		}
 	
@@ -899,7 +923,7 @@ namespace com.nemesys.database.repository
 				}
 				catch(Exception ex)
 				{
-					System.Web.HttpContext.Current.Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
+					//System.Web.HttpContext.Current.Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
 					// DO NOTHING: RETURN NULL
 				}
 				tx.Commit();

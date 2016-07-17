@@ -60,7 +60,7 @@ public partial class _Detail : Page
 		ITemplateRepository templrep = RepositoryFactory.getInstance<ITemplateRepository>("ITemplateRepository");
 		confservice = new ConfigurationService();
 
-		//se il sito è offline rimando a pagina default
+		//se il sito ï¿½ offline rimando a pagina default
 		if ("1".Equals(confservice.get("go_offline").value)) 
 		{
 			UriBuilder defRedirect = new UriBuilder(Request.Url);
@@ -120,27 +120,27 @@ public partial class _Detail : Page
 				setMetaCategory(category);
 			}
 										
-				template = TemplateService.resolveTemplateByVirtualPath(basePath, out newLangCode);
-				if(template != null)
+			template = TemplateService.resolveTemplateByVirtualPath(basePath, out newLangCode);
+			if(template != null)
+			{
+				if(CategoryService.isCategoryNull(category))
 				{
-					if(CategoryService.isCategoryNull(category))
+					category = catrep.getByTemplateCached(template.id, true);
+					if(!CategoryService.isCategoryNull(category))
 					{
-						category = catrep.getByTemplateCached(template.id, true);
-						if(!CategoryService.isCategoryNull(category))
-						{
-							if(String.IsNullOrEmpty(Request["lang_code"]) && !String.IsNullOrEmpty(newLangCode)){
-								HttpContext.Current.Items["lang-code"] = newLangCode;
-								lang.set();
-							}	
-							hierarchy = category.hierarchy;					
-							setMetaCategory(category); 					
-						}
+						if(String.IsNullOrEmpty(Request["lang_code"]) && !String.IsNullOrEmpty(newLangCode)){
+							HttpContext.Current.Items["lang-code"] = newLangCode;
+							lang.set();
+						}	
+						hierarchy = category.hierarchy;					
+						setMetaCategory(category); 					
 					}
 				}
-				if(!CategoryService.isCategoryNull(category))
-				{
-					categoryid = category.id.ToString();
-				}
+			}
+			if(!CategoryService.isCategoryNull(category))
+			{
+				categoryid = category.id.ToString();
+			}
 							
 			// tento il recupero del contenuto tramite id
 			if(!String.IsNullOrEmpty(Request["contentid"]))

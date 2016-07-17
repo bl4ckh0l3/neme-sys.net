@@ -154,26 +154,12 @@ namespace com.nemesys.services
 				if(virtualPath.EndsWith(baseFileExt)){virtualPath=virtualPath.Substring(0,virtualPath.LastIndexOf(baseFileExt));}
 				//System.Web.HttpContext.Current.Response.Write("<b>4- modify virtualPath: </b>"+virtualPath+"<br>");
 				
-				Template templ = temprep.getByUrlRewriteCached(virtualPath, true);
-				if(!TemplateService.isTemplateNull(templ))
+				TemplatePage tp = temprep.getByUrlRewriteCached(virtualPath, true);
+				if(tp != null && tp.id>-1)
 				{
 					//System.Web.HttpContext.Current.Response.Write("<b>templ: </b>"+templ.ToString()+"<br>");
-					
-					if(String.IsNullOrEmpty(newLangCode) && !String.IsNullOrEmpty(templ.langCode))
-					{
-						newLangCode = templ.langCode;
-					}
-					
-					foreach(TemplatePage tp in templ.pages)
-					{
-						string realTpPath = new StringBuilder().Append(tp.filePath).Append(tp.fileName).ToString();
-						//System.Web.HttpContext.Current.Response.Write("<b>4- realTpPath: </b>"+realTpPath+" -tp.urlRewrite:"+tp.urlRewrite+"<br>");
-						if(virtualPath==tp.urlRewrite || virtualPath==realTpPath){
-							StringBuilder builder = new StringBuilder(basePath).Append(tp.filePath).Append(tp.fileName);
-							realPath = builder.ToString();
-							break;
-						}
-					}
+					StringBuilder builder = new StringBuilder(basePath).Append(tp.filePath).Append(tp.fileName);
+					realPath = builder.ToString();
 				}
 			}catch(Exception ex){
 				//System.Web.HttpContext.Current.Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
@@ -192,6 +178,14 @@ namespace com.nemesys.services
 			newLangCode = "";
 			StringBuilder baseUrl = new StringBuilder();
 			
+			/*
+			System.Web.HttpContext.Current.Response.Write("<b>TemplateService.resolveDefaultPath:</b><br>");
+			System.Web.HttpContext.Current.Response.Write("<b>0- scheme:</b>"+scheme+"<br>");
+			System.Web.HttpContext.Current.Response.Write("<b>1- currentLangCode:</b>"+currentLangCode+"<br>");
+			System.Web.HttpContext.Current.Response.Write("<b>1- categoryid:</b>"+categoryid+"<br>");
+			System.Web.HttpContext.Current.Response.Write("<b>1- hierarchy:</b>"+hierarchy+"<br>");
+			*/
+			
 			try
 			{				
 				StringBuilder builder = new StringBuilder(scheme).Append("://");
@@ -208,13 +202,16 @@ namespace com.nemesys.services
 				if(!CategoryService.isCategoryNull(category)){							
 					// recupero l'id template corretto in base alla lingua
 					int templateId = category.idTemplate;
-					foreach(CategoryTemplate ct in category.templates)
+					if(category.templates != null && category.templates.Count>0)
 					{
-						if(ct.langCode==currentLangCode)
+						foreach(CategoryTemplate ct in category.templates)
 						{
-							templateId = ct.templateId;
-							break;
-						}	
+							if(ct.langCode==currentLangCode)
+							{
+								templateId = ct.templateId;
+								break;
+							}	
+						}
 					}
 					Template template = null;
 					if(templateId>0){
@@ -232,21 +229,29 @@ namespace com.nemesys.services
 							langUrlSubdomain = language.urlSubdomain;
 						}	
 
-						if(!String.IsNullOrEmpty(template.langCode))
-						{
-							newLangCode = template.langCode;
-						}else
-						{
-							newLangCode = currentLangCode;
-						}
+						newLangCode = currentLangCode;
+						
+						//System.Web.HttpContext.Current.Response.Write("<b>category!=null:</b>"+(category!=null)+"<br>");
+						//System.Web.HttpContext.Current.Response.Write("<b>template!=null:</b>"+(template!=null)+"<br>");
 											
 						foreach(TemplatePage tp in template.pages){
-							if(tp.priority>0 && tp.priority==1){								
-								baseUrl.Append(MenuService.resolvePageHrefUrl(builder.ToString(), 1, currentLangCode, langHasSubDomainActive, langUrlSubdomain, category, template, true));
+							//System.Web.HttpContext.Current.Response.Write("<b>tp:</b>"+tp.ToString()+"<br>");
+							if(tp.priority>0 && tp.priority==1){	
+								//System.Web.HttpContext.Current.Response.Write("<b>builder.ToString():</b>"+builder.ToString()+"<br>");	
+								//System.Web.HttpContext.Current.Response.Write("<b>currentLangCode:</b>"+currentLangCode+"<br>");	
+								//System.Web.HttpContext.Current.Response.Write("<b>langHasSubDomainActive:</b>"+langHasSubDomainActive+"<br>");	
+								//System.Web.HttpContext.Current.Response.Write("<b>langUrlSubdomain:</b>"+langUrlSubdomain+"<br>");		
+								//System.Web.HttpContext.Current.Response.Write("<b>baseUrl:</b>"+baseUrl.ToString()+"<br>");	
+
 								ohierarchy = category.hierarchy;
 								ocategoryid = category.id.ToString();	
-								UriBuilder urlBuilder = new UriBuilder(baseUrl.ToString());
-								realPath = urlBuilder.Path;
+								string resolvedURL = MenuService.resolvePageHrefUrl(builder.ToString(), 1, currentLangCode, langHasSubDomainActive, langUrlSubdomain, category, template, true);
+								//System.Web.HttpContext.Current.Response.Write("<b>resolvedURL:</b>"+resolvedURL+"<br>");
+								if(!String.IsNullOrEmpty(resolvedURL) && !"#".Equals(resolvedURL)){
+									baseUrl.Append(resolvedURL);
+									UriBuilder urlBuilder = new UriBuilder(baseUrl.ToString());
+									realPath = urlBuilder.Path;
+								}
 								break;
 							}
 						}
@@ -254,7 +259,7 @@ namespace com.nemesys.services
 				}
 			}
 			catch (Exception ex){
-				System.Web.HttpContext.Current.Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
+				//System.Web.HttpContext.Current.Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
 			}
 			
 			return realPath;
@@ -290,31 +295,31 @@ namespace com.nemesys.services
 								}	
 							}						
 						}
-					}catch (Exception ex){}					
+					}catch (Exception ex){
+						//System.Web.HttpContext.Current.Response.Write("TemplateService.resolveTemplateByVirtualPath (language for) - An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
+					}					
 				//}
 				
-				//System.Web.HttpContext.Current.Response.Write("<b>start virtualPath: </b>"+virtualPath+"<br>");
+				//System.Web.HttpContext.Current.Response.Write("<b>TemplateService: start virtualPath: </b>"+virtualPath+"<br>");
 				
 				if(virtualPath.StartsWith("/")){virtualPath=virtualPath.Substring(1);}
 				//System.Web.HttpContext.Current.Response.Write("<b>start virtualPath: </b>"+virtualPath+"<br>");
 				if(virtualPath.EndsWith(baseFileExt)){virtualPath=virtualPath.Substring(0,virtualPath.LastIndexOf(baseFileExt));}
-				//System.Web.HttpContext.Current.Response.Write("<b>modify virtualPath: </b>"+virtualPath+"<br>");
+				//System.Web.HttpContext.Current.Response.Write("<b>TemplateService: modify virtualPath: </b>"+virtualPath+"<br>");
 				
-				result = temprep.getByUrlRewriteCached(virtualPath, true);
-				if(TemplateService.isTemplateNull(result))
+				TemplatePage tp = temprep.getByUrlRewriteCached(virtualPath, true);
+				if(tp==null  || tp.id==1)
 				{
 					//System.Web.HttpContext.Current.Response.Write("<b>Path.GetDirectoryName(virtualPath):</b>"+Path.GetDirectoryName(virtualPath)+";<br>");
 					result = temprep.getByDirectoryCached(Path.GetDirectoryName(virtualPath), true);
 					//System.Web.HttpContext.Current.Response.Write("<b>result: </b>"+result.ToString()+"<br>");
+				}else{
+					result = temprep.getByIdCached(tp.templateId, true);
 				}
-				if(!TemplateService.isTemplateNull(result))
-				{
-					if(String.IsNullOrEmpty(newLangCode) && !String.IsNullOrEmpty(result.langCode))
-					{
-						newLangCode = result.langCode;
-					}
-				}
-			}catch(Exception ex){result = null;}
+			}catch(Exception ex){
+				//System.Web.HttpContext.Current.Response.Write("TemplateService.resolveTemplateByVirtualPath - An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
+				result = null;
+			}
 			
 			return result;
 		}

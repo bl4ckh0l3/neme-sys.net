@@ -127,7 +127,6 @@ public partial class _TemplateList : Page
 
 				if(carryOn){				
 					string tdescription = Request["description"];
-					string tlangCode = Request["tlang_code"];
 					
 					HttpFileCollection MyFileCollection;
 					HttpPostedFile MyFile;				
@@ -145,7 +144,6 @@ public partial class _TemplateList : Page
 						Template newtemplate = new Template();
 						newtemplate.directory = tdirectory;
 						newtemplate.description = tdescription;
-						newtemplate.langCode = tlangCode;
 						newtemplate.elemXpage = 10;
 						newtemplate.pages = new List<TemplatePage>();
 						

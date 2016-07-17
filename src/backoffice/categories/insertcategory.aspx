@@ -19,11 +19,17 @@
 <script language="JavaScript">
 function insertCategoria(){
 	if(controllaCampiInput()){
-		document.form_inserisci.submit();
+		//document.form_inserisci.submit();
+		$('#form_inserisci').submit();
 	}else{
 		return;
 	}
 }
+
+$('#form_inserisci').submit(function() {
+    $('#template_lang_cat').text($(this).serialize());
+    return false;
+});
 
 function controllaCampiInput(){		
 	if(document.form_inserisci.num_menu.value == ""){
@@ -120,7 +126,7 @@ jQuery(document).ready(function(){
 	$(document).mousemove(function(e){
 	tempX = e.pageX;
 	tempY = e.pageY;
-	}); 
+	});
 })
 
 function showDiv(elemID){
@@ -140,6 +146,30 @@ function hideDiv(elemID){
 	element.style.visibility = 'hidden';
 	element.style.display = "none";
 }
+
+function loadUrlRewrite(catid,templateid){
+	var query_string = "id="+catid+"&templateid="+templateid;	
+	//alert(query_string);
+
+	$.ajax({
+		async: true,
+		type: "GET",
+		cache: false,
+		url: "/backoffice/categories/ajaxurlrewrite.aspx",
+		data: query_string,
+		success: function(response) {
+			//alert(response);
+			$('#template_lang_cat').empty();
+			$('#template_lang_cat').append(response);
+		},
+		error: function(response) {
+			//alert(response.responseText);	
+			$('#template_lang_cat').hide();
+			$('#template_lang_cat').empty();
+			alert("<%=lang.getTranslated("portal.commons.js.label.loading_error")%>");
+		}
+	});	
+}
 </script>
 </head>
 <body onLoad="javascript:document.form_inserisci.num_menu.focus();">
@@ -148,8 +178,8 @@ function hideDiv(elemID){
 	<div id="container">
 		<CommonMenu:insert runat="server" />
 		<div id="backend-content">
+		<form action="/backoffice/categories/insertcategory.aspx" method="post" name="form_inserisci" id="form_inserisci" enctype="multipart/form-data" accept-charset="UTF-8">
 			<table border="0" cellspacing="0" cellpadding="0" class="principal">
-		<form action="/backoffice/categories/insertcategory.aspx" method="post" name="form_inserisci"  enctype="multipart/form-data" accept-charset="UTF-8">
 		  <input type="hidden" value="<%=category.id%>" name="id">
 		  <input type="hidden" value="insert" name="operation">
 		  <input type="hidden" value="0" name="set_to_users">
@@ -309,45 +339,23 @@ function hideDiv(elemID){
 			</select></td>
 			  <td align="center" valign="middle">&nbsp;</td>
 			  <td align="left" valign="top" colspan="3" class="special">
-				<div id="template_lang_cat">
-				<span class="labelForm"><%=lang.getTranslated("backend.categorie.lista.table.header.template_id_lang")%></span>
-				<%
-				string lang_code_cat, label_lang_cat;
-				foreach (Language x in languages){
-					lang_code_cat = x.label;
-					label_lang_cat = x.description;%>
-					<div style="padding-bottom:3px;">
-					<select name="id_template_<%=lang_code_cat%>" id="id_template_<%=lang_code_cat%>" class="formFieldTXT">
-						<option value="-1"></option>
-						<%foreach(Template t in templates){
-							if(t.langCode==lang_code_cat){
-								bool selected = false;
-								if(category.id!=-1){
-									foreach(CategoryTemplate ct in category.templates){
-										if(ct.templateId==t.id && ct.langCode==t.langCode){
-											selected = true;
-											break;
-										}
-									}
-								}%>
-								<option value="<%=t.id%>" <%if (selected) {Response.Write("selected");}%>><%=t.description%></option>
-							<%}
-						}%>
-					</select><img width="16" height="11" border="0" style="padding-left:5px;padding-right:5px;vertical-align:middle;" alt="<%=lang.getTranslated("backend.lingue.lista.table.lang_label."+label_lang_cat)%>" title="<%=lang.getTranslated("backend.lingue.lista.table.lang_label."+label_lang_cat)%>" src="/backoffice/img/flag/flag-<%=lang_code_cat%>.png"><%=lang.getTranslated("backend.lingue.lista.table.lang_label."+label_lang_cat)%>				
-					</div>
-				<%}%>
-				</div>&nbsp;
+				<div id="template_lang_cat"></div>&nbsp;
 			  </td>
 			</tr>
 			<script language="JavaScript">
 			$('#id_template').change(function() {
 				var id_template_val_ch = $('#id_template').val();
 				if(id_template_val_ch!=-1){				
-					$("#template_lang_cat").show();				
+					$("#template_lang_cat").show();		
+					loadUrlRewrite(<%=category.id%>,id_template_val_ch);
 				}else{
 					$("#template_lang_cat").hide();				
 				}
 			});
+
+			<%if(category.id>-1){%>
+			loadUrlRewrite(<%=category.id%>,<%=category.idTemplate%>);
+			<%}%>
 	
 			var id_template_val = $('#id_template').val();
 			if(id_template_val!=-1){
@@ -356,8 +364,8 @@ function hideDiv(elemID){
 				$("#template_lang_cat").hide();			
 			}
 			</script>
-			</form>	
 			</table>
+			</form>	
 			<br/>	    
 		  <input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.categorie.detail.button.inserisci.label")%>" onclick="javascript:insertCategoria();" />&nbsp;&nbsp;<input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.commons.back")%>" onclick="javascript:location.href='/backoffice/categories/categorylist.aspx?cssClass=LCE';" />
 		  <br/><br/>	

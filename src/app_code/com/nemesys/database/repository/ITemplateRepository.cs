@@ -19,19 +19,21 @@ namespace com.nemesys.database.repository
 		
 		Template getByIdCached(int id, bool cached);
 				
-		Template getByUrlRewrite(string urlRewrite);
+		TemplatePage getByUrlRewrite(string urlRewrite);
 		
-		Template getByUrlRewriteCached(string urlRewrite, bool cached);
+		TemplatePage getByUrlRewriteCached(string urlRewrite, bool cached);
 		
 		Template getByDirectory(string directory);
 		
 		Template getByDirectoryCached(string directory, bool cached);
 		
-		IList<Template> getTemplateList(string langCode);
+		IList<Template> getTemplateList();
 		
 		IList<Template> find(int pageIndex, int pageSize,out long totalCount);		
 		
 		TemplatePage getPageById(int id);
+		
+		TemplatePage getPageByIdCached(int id, bool cached);
 		
 		IList<TemplatePage> getTemplatePages(int templateId);	
 		

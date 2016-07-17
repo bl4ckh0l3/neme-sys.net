@@ -342,15 +342,6 @@ function addFile(thForm, refid){
 			<span class="labelForm"><%=lang.getTranslated("backend.templates.lista.table.header.template_dir")%></span><br/>
 			<input class="formFieldTXT" type="text" name="directory" value="" onkeypress="javascript:return notSpecialCharButUnderscoreAndMinus(event);">
 			</div>
-			<div style="float:left;padding-right:5px;">
-			<span class="labelForm"><%=lang.getTranslated("backend.templates.lista.table.header.lang_code")%></span><br/>
-			<select name="tlang_code" class="formfieldSelect">
-				<option value=""><%=lang.getTranslated("backend.templates.detail.table.label.neutral")%></option>
-				<%foreach (Language w in languages){%>
-					<option value="<%=w.label%>"><%=lang.getTranslated("portal.header.label.desc_lang."+w.label)%></option>
-				<%}%>
-			</select>
-			</div>
 			<div>
 			<span class="labelForm"><%=lang.getTranslated("backend.templates.lista.table.header.filename")%></span><br/>
 			<input id="template_body" type="file" runat="server">
@@ -388,7 +379,7 @@ function addFile(thForm, refid){
 				<th colspan="3">&nbsp;</th>
 				<th><lang:getTranslated keyword="backend.templates.lista.table.header.descrizione" runat="server" /></th>
 				<th><lang:getTranslated keyword="backend.templates.lista.table.header.template_dir" runat="server" /></th>
-				<th><lang:getTranslated keyword="backend.templates.lista.table.header.lang_code" runat="server" /></th>
+				<th>&nbsp;</th>
 			</tr>			  
 				<%int intCount = 0;				
 				if(bolFoundLista){
@@ -416,28 +407,7 @@ function addFile(thForm, refid){
 						</script>
 						</td>
 						<td nowrap width="30%"><%=k.directory%></td>
-						<td>
-						<div class="ajax" id="view_lang_code_<%=intCount%>" onmouseover="javascript:showHide('view_lang_code_<%=intCount%>','edit_lang_code_<%=intCount%>','lang_code_<%=intCount%>',500, true);">
-						<%
-						if (!String.IsNullOrEmpty(k.langCode)) { 
-							Response.Write(lang.getTranslated("portal.header.label.desc_lang."+k.langCode));
-						}else{ 
-							Response.Write(lang.getTranslated("backend.mails.detail.table.label.neutral"));
-						}
-						%>
-						</div>
-						<div class="ajax" id="edit_lang_code_<%=intCount%>">
-						<select name="langCode" class="formfieldAjaxSelect" id="lang_code_<%=intCount%>" onblur="javascript:updateField('edit_lang_code_<%=intCount%>','view_lang_code_<%=intCount%>','lang_code_<%=intCount%>','Template|ITemplateRepository|string',<%=k.id%>,2,<%=intCount%>);">
-							<option value=""><%=lang.getTranslated("backend.mails.detail.table.label.neutral")%></option>
-							<%foreach (Language w in languages){%>
-								<option value="<%=w.label%>" <%if(w.label==k.langCode){Response.Write(" selected");}%>><%=lang.getTranslated("portal.header.label.desc_lang."+w.label)%></option>
-							<%}%>
-						</select>
-						</div>
-						<script>
-						$("#edit_lang_code_<%=intCount%>").hide();
-						</script>
-						</td>
+						<td>&nbsp;</td>
 						</tr>
 						
 						<tr class="preview_row">

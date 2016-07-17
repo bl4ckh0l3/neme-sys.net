@@ -40,7 +40,7 @@ public partial class _Default : Page
 			try
 			{
 				resolved = TemplateService.resolveDefaultPath(Request.Url.Scheme, lang.currentLangCode, Request["categoryid"], Request["hierarchy"], out forcedLangCode, out categoryid, out hierarchy);
-				
+				//Response.Write("resolved"+resolved);
 				if(!String.IsNullOrEmpty(resolved)){
 					UriBuilder builder0 = new UriBuilder(Request.Url);
 					builder0.Scheme = "http";

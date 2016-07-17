@@ -10,7 +10,6 @@ namespace com.nemesys.model
 	{	
 		private int _id;
 		private string _directory;
-		private string _langCode;
 		private string _description;
 		private bool _isBase;
 		private int _orderBy;
@@ -28,11 +27,6 @@ namespace com.nemesys.model
 		public virtual string directory {
 			get { return _directory; }
 			set { _directory = value; }
-		}
-
-		public virtual string langCode {
-			get { return _langCode; }
-			set { _langCode = value; }
 		}
 
 		public virtual string description {
@@ -70,7 +64,6 @@ namespace com.nemesys.model
 			StringBuilder builder = new StringBuilder("Template: ")
 			.Append(" - id: ").Append(this._id)
 			.Append(" - directory: ").Append(this._directory)
-			.Append(" - langCode: ").Append(this._langCode)
 			.Append(" - description: ").Append(this._description)
 			.Append(" - isBase: ").Append(this._isBase)
 			.Append(" - orderBy: ").Append(this._orderBy)

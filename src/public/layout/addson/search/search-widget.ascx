@@ -29,7 +29,7 @@ protected void Page_Load(Object sender, EventArgs e)
 	{	
 		searchPath.Append(lang.currentLangCode.ToLower()).Append("/");
 	}
-	searchPath.Append("search/search_results");
+	searchPath.Append("search-results");
 	if(confservice.get("url_rewrite_file_ext").value=="1")
 	{	
 		searchPath.Append(".aspx");

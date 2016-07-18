@@ -353,16 +353,18 @@ function loadUrlRewrite(catid,templateid){
 				}
 			});
 
-			<%if(category.id>-1){%>
-			loadUrlRewrite(<%=category.id%>,<%=category.idTemplate%>);
-			<%}%>
+			jQuery(document).ready(function(){
+				<%if(category.id>-1){%>
+				loadUrlRewrite(<%=category.id%>,<%=category.idTemplate%>);
+				<%}%>
 	
-			var id_template_val = $('#id_template').val();
-			if(id_template_val!=-1){
-				$("#template_lang_cat").show();
-			}else{
-				$("#template_lang_cat").hide();			
-			}
+				var id_template_val = $('#id_template').val();
+				if(id_template_val!=-1){
+					$("#template_lang_cat").show();
+				}else{
+					$("#template_lang_cat").hide();			
+				}
+			})
 			</script>
 			</table>
 			</form>	

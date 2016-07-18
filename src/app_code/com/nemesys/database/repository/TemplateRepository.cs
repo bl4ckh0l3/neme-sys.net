@@ -120,6 +120,7 @@ namespace com.nemesys.database.repository
 				{
 					foreach(TemplatePage k in template.pages){
 						TemplatePage ntp = new TemplatePage();
+						ntp.id = k.id;
 						ntp.templateId = k.templateId;						
 						ntp.filePath = k.filePath;
 						ntp.fileName = k.fileName;
@@ -138,8 +139,12 @@ namespace com.nemesys.database.repository
 				if(newTemplatePages != null && newTemplatePages.Count>0)
 				{							
 					foreach(TemplatePage k in newTemplatePages){
+						int oldId = k.id;
+						int newId = -1;
 						k.templateId = template.id;
 						session.Save(k);
+						newId = k.id;
+						session.CreateQuery("update CategoryTemplate set templatePageId=:templatePageId where templateId=:templateId and templatePageId=:oldTemplatePageId").SetInt32("templatePageId",newId).SetInt32("templateId",template.id).SetInt32("oldTemplatePageId",oldId).ExecuteUpdate();
 					}
 				}
 				

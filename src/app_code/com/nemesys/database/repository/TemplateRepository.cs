@@ -175,6 +175,42 @@ namespace com.nemesys.database.repository
 				{ 
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}
+				else if(cacheKey.Contains("category-"))
+				{ 
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}				 
+				else if(cacheKey.Contains("category-hierarchy-"))
+				{ 
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}				 
+				else if(cacheKey.Contains("category-first-sub-"))
+				{ 
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("category-first-child-"))
+				{ 
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	
+				else if(cacheKey.Contains("category-template"))
+				{ 
+					HttpContext.Current.Cache.Remove(cacheKey);
+				} 
+				else if(cacheKey.Contains("category-first"))
+				{ 
+					HttpContext.Current.Cache.Remove(cacheKey);
+				} 							
+				else if(cacheKey.Contains("list-category"))
+				{ 	
+					HttpContext.Current.Cache.Remove(cacheKey);
+				} 
+				else if(cacheKey.Contains("list-category-active"))
+				{ 	
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}  
+				else if(cacheKey.Contains("list-category-params"))
+				{ 
+					HttpContext.Current.Cache.Remove(cacheKey);
+				} 			
 			}
 		}
 		
@@ -212,19 +248,47 @@ namespace com.nemesys.database.repository
 					else if(cacheKey.Contains("template-urlrewrite-"))
 					{ 
 						HttpContext.Current.Cache.Remove(cacheKey);
-					} 
+					} 				 
+					else if(cacheKey.Contains("templatepage-"))
+					{ 
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}
 					else if(cacheKey.Contains("category-"))
+					{ 
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}				 
+					else if(cacheKey.Contains("category-hierarchy-"))
+					{ 
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}				 
+					else if(cacheKey.Contains("category-first-sub-"))
+					{ 
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}
+					else if(cacheKey.Contains("category-first-child-"))
+					{ 
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}	
+					else if(cacheKey.Contains("category-template"))
+					{ 
+						HttpContext.Current.Cache.Remove(cacheKey);
+					} 
+					else if(cacheKey.Contains("category-first"))
 					{ 
 						HttpContext.Current.Cache.Remove(cacheKey);
 					} 							
 					else if(cacheKey.Contains("list-category"))
 					{ 	
 						HttpContext.Current.Cache.Remove(cacheKey);
-					} 				 
-					else if(cacheKey.Contains("templatepage-"))
+					} 
+					else if(cacheKey.Contains("list-category-active"))
+					{ 	
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}  
+					else if(cacheKey.Contains("list-category-params"))
 					{ 
 						HttpContext.Current.Cache.Remove(cacheKey);
-					}
+					} 
 				}
 				
 				//cancello la directory fisica del template

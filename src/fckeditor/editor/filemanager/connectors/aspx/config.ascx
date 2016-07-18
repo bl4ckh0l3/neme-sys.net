@@ -96,6 +96,8 @@
 		// For security, HTML is allowed in the first Kb of data for files having the
 		// following extensions only.
 		HtmlExtensions = new string[] { "html", "htm", "xml", "xsd", "txt", "js" };
+		
+		EnterMode = "br";
 
 		// WARNING: It is recommended to remove swf extension from the list of allowed extensions.
 		// SWF files can be used to perform XSS attack.

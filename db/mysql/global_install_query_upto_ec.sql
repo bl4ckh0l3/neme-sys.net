@@ -110,10 +110,10 @@ INSERT INTO `PAYMENT_MODULES` (`id`,`name`,`icon`,`id_order_field`,`ip_provider`
 INSERT INTO `PAYMENT_MODULES` (`id`,`name`,`icon`,`id_order_field`,`ip_provider`) VALUES (2,'paypal','<a href="#" onclick=javascript:window.open("https://www.paypal.com/us/cgi-bin/webscr?cmd=xpt/Marketing/popup/OLCWhatIsPayPal-outside","olcwhatispaypal","toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=400, height=350");><img  src="https://www.paypal.com/en_US/i/logo/PayPal_mark_50x34.gif" border="0" alt="Acceptance Mark" align="absmiddle"></a>','','212.48.8.140|87.0.139.170');
 INSERT INTO `CURRENCY` (`id`,`currency`,`rate`,`refer_date`,`insert_date`,`active`,`is_default`) VALUES(1,'EUR','1.0000','2002-01-01','2002-01-01 00:00:00',1,1);
 INSERT INTO `TEMPLATE` (`id`, `directory`, `lang_code`, `description`, `is_base`, `order_by`, `elem_x_page`, `modify_date`) VALUES (4, 'base-product', '', 'products', 0, 1, 10, '2013-06-14 19:51:06');
-INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `url_rewrite`, `priority`) VALUES (8, 4, 'product/', 'list.aspx', 'list.aspx', 1);
-INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `url_rewrite`, `priority`) VALUES (9, 4, 'product/', 'list.aspx.cs', '', -1);
-INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `url_rewrite`, `priority`) VALUES (10, 4, 'product/', 'detail.aspx', 'detail.aspx', 2);
-INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `url_rewrite`, `priority`) VALUES (11, 4, 'product/', 'detail.aspx.cs', '', -1);
-INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `url_rewrite`, `priority`) VALUES (12, 4, 'product/', 'ajaxcheckprodavailability.aspx', '', -1);
-INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `url_rewrite`, `priority`) VALUES (13, 4, 'product/', 'ajaxcheckprodfieldsqta.aspx', '', -1);
-INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `url_rewrite`, `priority`) VALUES (14, 4, 'product/', 'ajaxcheckprodqta.aspx', '', -1);
+INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `priority`) VALUES (8, 4, 'product/', 'list.aspx', 1);
+INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `priority`) VALUES (9, 4, 'product/', 'list.aspx.cs', -1);
+INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `priority`) VALUES (10, 4, 'product/', 'detail.aspx', 2);
+INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `priority`) VALUES (11, 4, 'product/', 'detail.aspx.cs', -1);
+INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `priority`) VALUES (12, 4, 'product/', 'ajaxcheckprodavailability.aspx', -1);
+INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `priority`) VALUES (13, 4, 'product/', 'ajaxcheckprodfieldsqta.aspx', -1);
+INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `priority`) VALUES (14, 4, 'product/', 'ajaxcheckprodqta.aspx', -1);

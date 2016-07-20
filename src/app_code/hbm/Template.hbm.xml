@@ -28,7 +28,6 @@
 		<property name="templateId" column="templateid" not-null="true" />
 		<property name="filePath" column="file_path" not-null="true" />
 		<property name="fileName" column="file_name" not-null="true" />
-		<property name="urlRewrite" column="url_rewrite" />
 		<property name="priority" column="priority" />	
 	</class>
 </hibernate-mapping>

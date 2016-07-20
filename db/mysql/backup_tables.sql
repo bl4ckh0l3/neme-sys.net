@@ -392,12 +392,10 @@ CREATE TABLE IF NOT EXISTS `TEMPLATE_PAGES` (
   `templateid` int(11) NOT NULL,
   `file_path` VARCHAR(100) NOT NULL,
   `file_name` VARCHAR(100) NOT NULL,
-  `url_rewrite` VARCHAR(250) default NULL,
   `priority` INTEGER NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   INDEX `Index_2`(`templateid`),
-  INDEX `Index_3`(`priority`),
-  INDEX `Index_4`(`url_rewrite`)
+  INDEX `Index_3`(`priority`)
 )ENGINE = InnoDB  DEFAULT CHARSET=utf8;
 
 

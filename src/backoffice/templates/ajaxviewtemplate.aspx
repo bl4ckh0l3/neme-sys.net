@@ -169,7 +169,7 @@ protected void Page_Load(Object sender, EventArgs e)
 			<div style="width:30px;text-align:right;">			
 			<div class="ajax" id="view_priority_<%=pageCounter%>_<%=z.id%>" onmouseover="javascript:showHide('view_priority_<%=pageCounter%>_<%=z.id%>','edit_priority_<%=pageCounter%>_<%=z.id%>','priority_<%=pageCounter%>_<%=z.id%>',500, false);"><%if(z.priority>=0) {Response.Write(z.priority);}%></div>				
 			</div>
-			<div class="ajax" id="edit_priority_<%=pageCounter%>_<%=z.id%>"><input type="text" class="formfieldAjaxShort" id="priority_<%=pageCounter%>_<%=z.id%>" name="priority" onmouseout="javascript:restoreField('edit_priority_<%=pageCounter%>_<%=z.id%>','view_priority_<%=pageCounter%>_<%=z.id%>','priority_<%=pageCounter%>_<%=z.id%>','TemplatePage|ITemplateRepository|int|getPageById|updateTemplatePage',<%=z.id%>,1,<%=pageCounter%>);" value="<%=z.priority%>" maxlength="2" onkeypress="javascript:return isInteger(event);"></div>
+			<div class="ajax" id="edit_priority_<%=pageCounter%>_<%=z.id%>"><input type="text" class="formfieldAjaxShort" id="priority_<%=pageCounter%>_<%=z.id%>" name="priority" onmouseout="javascript:restoreField('edit_priority_<%=pageCounter%>_<%=z.id%>','view_priority_<%=pageCounter%>_<%=z.id%>','priority_<%=pageCounter%>_<%=z.id%>','TemplatePage|ITemplateRepository|int|getPageById|updateTemplatePage',<%=z.id%>,1,<%=pageCounter%>);" value="<%=z.priority%>" maxlength="2" onkeypress="javascript:return isDouble(event);"></div>
 			<script>
 			$("#edit_priority_<%=pageCounter%>_<%=z.id%>").hide();
 			</script>

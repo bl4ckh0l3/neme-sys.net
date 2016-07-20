@@ -129,7 +129,7 @@ public partial class _Detail : Page
 			if(template == null)
 			{
 				template = TemplateService.resolveTemplateByVirtualPath(basePath, out newLangCode);
-				if(CategoryService.isCategoryNull(category))
+				if(CategoryService.isCategoryNull(category) && template != null)
 				{
 					category = catrep.getByTemplateCached(template.id, true);
 					if(!CategoryService.isCategoryNull(category))

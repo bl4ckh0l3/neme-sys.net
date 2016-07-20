@@ -127,8 +127,7 @@ public partial class _List : Page
 			if(template == null)
 			{
 				template = TemplateService.resolveTemplateByVirtualPath(basePath, lang.currentLangCode, out newLangCode);
-				
-				if(CategoryService.isCategoryNull(category))
+				if(CategoryService.isCategoryNull(category) && template != null)
 				{
 					category = catrep.getByTemplateCached(template.id, true);
 					if(!CategoryService.isCategoryNull(category))

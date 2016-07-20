@@ -211,7 +211,7 @@ public partial class _List : Page
 			if(!CategoryService.isCategoryNull(category)){				
 				setMetaCategory(category);
 				if(category.idTemplate>0){
-					template = templrep.getByIdCached(templateId,true);
+					template = templrep.getByIdCached(category.idTemplate,true);
 				}
 			}	
 

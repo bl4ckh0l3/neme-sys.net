@@ -14,6 +14,8 @@ private string cssClass, url;
 private IList<Language> languages;
 private ConfigurationService confservice;
 protected string hierarchy, categoryid;
+protected Category category;
+protected Template template;
 
 protected void Page_Init(Object sender, EventArgs e)
 {
@@ -30,8 +32,12 @@ protected void Page_Load(Object sender, EventArgs e)
 	cssClass = Request["cssClass"];
 	confservice = new ConfigurationService();
 	ILanguageRepository langrep = RepositoryFactory.getInstance<ILanguageRepository>("ILanguageRepository");
+	ICategoryRepository catrep = RepositoryFactory.getInstance<ICategoryRepository>("ICategoryRepository");
+	ITemplateRepository templrep = RepositoryFactory.getInstance<ITemplateRepository>("ITemplateRepository");
 	hierarchy = (string)Context.Items["hierarchy"];
 	categoryid = (string)Context.Items["categoryid"];
+	category = null;
+	template = null;
 	
 	//Response.Write("Context.Items[hierarchy]: " + Context.Items["hierarchy"]+"<br><br>Context.Items[categoryid]: "+Context.Items["categoryid"]+"<br><br>");
 			
@@ -43,7 +49,25 @@ protected void Page_Load(Object sender, EventArgs e)
 	{
 		categoryid = Request["categoryid"];
 	}
-						
+
+	if(!String.IsNullOrEmpty(categoryid))
+	{
+		category = catrep.getByIdCached(Convert.ToInt32(categoryid), true);
+		hierarchy = category.hierarchy;				
+	}
+	if(CategoryService.isCategoryNull(category))
+	{	
+		if(!String.IsNullOrEmpty(hierarchy))
+		{
+			category = catrep.getByHierarchyCached(hierarchy, true);	
+		}			
+	}			
+	if(!CategoryService.isCategoryNull(category)){	
+		if(category.idTemplate>0){
+			template = templrep.getByIdCached(category.idTemplate,true);
+		}		
+	}
+	
 	try
 	{
 		languages = langrep.findActive(true);
@@ -65,26 +89,38 @@ function changeActiveLang(strAction, strLangCode){
 <ul>
 	<li><%	
 	foreach (Language x in languages){
-
-		StringBuilder searchPath = new StringBuilder();
-		if(x.subdomainActive)
-		{	
-			searchPath.Append(x.urlSubdomain);
+		if(template != null)
+		{
+			bool langHasSubDomainActive = false;
+			string langUrlSubdomain = "";
+			langHasSubDomainActive = x.subdomainActive;
+			langUrlSubdomain = x.urlSubdomain;								
+			
+			url = MenuService.resolvePageHrefUrl(Request.Url.Scheme+"://", 1, x.label, langHasSubDomainActive, langUrlSubdomain, category, template, true);
+			//Response.Write("url:"+url+"<br>");				
 		}
 		
-		UriBuilder builder = new UriBuilder(Request.Url);
-		if(confservice.get("use_https").value=="1")
-		{	
-			builder.Scheme = "https";
-		}
-		else
-		{
-			builder.Scheme = "http";
-		}
-		builder.Port = -1;	
-		builder.Query="";
-		builder.Path = searchPath.ToString();		
-		url = builder.ToString();%>                
+		if(url== null){
+			StringBuilder searchPath = new StringBuilder();
+			if(x.subdomainActive)
+			{	
+				searchPath.Append(x.urlSubdomain);
+			}
+			
+			UriBuilder builder = new UriBuilder(Request.Url);
+			if(confservice.get("use_https").value=="1")
+			{	
+				builder.Scheme = "https";
+			}
+			else
+			{
+				builder.Scheme = "http";
+			}
+			builder.Port = -1;	
+			builder.Query="";
+			builder.Path = searchPath.ToString();		
+			url = builder.ToString();
+		}%>                
 		<a href="javascript:changeActiveLang('<%=url%>', '<%=x.label%>');" title="<%//=lang.getTranslated("frontend.header.label.tips_nav_lang")%><%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" class="lang-widget<%if(x.label==lang.currentLangCode){Response.Write("-active");}%>"><img src="/common/img/flag/flag-<%=x.label%>.png" alt="<%//=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" border="0" align="absmiddle" /><%//=x.label%></a>
 	<%}%>
 	</li>

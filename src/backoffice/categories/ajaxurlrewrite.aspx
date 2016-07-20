@@ -40,13 +40,14 @@ protected void Page_Load(Object sender, EventArgs e)
 	template = new Template();
 	template.id=-1;
 		
-	if(!String.IsNullOrEmpty(Request["id"]) && Request["id"]!= "-1")
-	{
-		try{
-			category = catrep.getById(Convert.ToInt32(Request["id"]));
-		}catch (Exception ex){
-			category = new Category();		
-			category.id = -1;
+		if(!String.IsNullOrEmpty(Request["id"]) && Request["id"]!= "-1")
+		{
+			try{
+				category = catrep.getById(Convert.ToInt32(Request["id"]));
+			}catch (Exception ex){
+				category = new Category();		
+				category.id = -1;
+			}		
 		}	
 	
 		// recupero elementi della pagina necessari
@@ -73,35 +74,32 @@ protected void Page_Load(Object sender, EventArgs e)
 		}catch (Exception ex){
 			template = new Template();
 			template.id=-1;
-		}	
-	}	
+		}
 }
 </script>
-<%if(category!=null && category.id>-1){%>
-	<span class="labelForm"><%=lang.getTranslated("backend.categorie.lista.table.header.template_id_lang")%></span>
-	<%
-	string lang_code_cat, label_lang_cat;
-	foreach (Language x in languages){
-		lang_code_cat = x.label;
-		label_lang_cat = x.description;%>
-		<div style="padding-bottom:3px;">
-		<img width="16" height="11" border="0" style="padding-left:0px;padding-right:5px;vertical-align:middle;" alt="<%=lang.getTranslated("backend.lingue.lista.table.lang_label."+label_lang_cat)%>" title="<%=lang.getTranslated("backend.lingue.lista.table.lang_label."+label_lang_cat)%>" src="/backoffice/img/flag/flag-<%=lang_code_cat%>.png"><%=lang.getTranslated("backend.lingue.lista.table.lang_label."+label_lang_cat)%><br/>	
-		<%if(template!=null && template.id>-1){
-			foreach(TemplatePage tp in template.pages){
-				if(tp.priority>0){
-					string urlRewrite = "";
-					if(category.id!=-1){
-						foreach(CategoryTemplate ct in category.templates){
-							if(ct.templateId==template.id && ct.langCode==lang_code_cat && ct.templatePageId==tp.id){
-								urlRewrite = ct.urlRewrite;
-								break;
-							}
+<span class="labelForm"><%=lang.getTranslated("backend.categorie.lista.table.header.template_id_lang")%></span>
+<%
+string lang_code_cat, label_lang_cat;
+foreach (Language x in languages){
+	lang_code_cat = x.label;
+	label_lang_cat = x.description;%>
+	<div style="padding-bottom:3px;">
+	<img width="16" height="11" border="0" style="padding-left:0px;padding-right:5px;vertical-align:middle;" alt="<%=lang.getTranslated("backend.lingue.lista.table.lang_label."+label_lang_cat)%>" title="<%=lang.getTranslated("backend.lingue.lista.table.lang_label."+label_lang_cat)%>" src="/backoffice/img/flag/flag-<%=lang_code_cat%>.png"><%=lang.getTranslated("backend.lingue.lista.table.lang_label."+label_lang_cat)%><br/>	
+	<%if(template!=null && template.id>-1){
+		foreach(TemplatePage tp in template.pages){
+			if(tp.priority>=0){
+				string urlRewrite = "";
+				if(category!=null && category.id!=-1){
+					foreach(CategoryTemplate ct in category.templates){
+						if(ct.templateId==template.id && ct.langCode==lang_code_cat && ct.templatePageId==tp.id){
+							urlRewrite = ct.urlRewrite;
+							break;
 						}
-					}%>
-					<input type="text" name="url_rewrite_<%=lang_code_cat+"_"+tp.id%>" value="<%=urlRewrite%>" class="formFieldTXT" style="margin-right:5px;" onkeypress="javascript:return notSpecialCharButUnderscoreAndMinusAndSlashAndDot(event);"><%=tp.filePath+tp.fileName%><br/>
-				<%}
-			}
-		}%>			
-		</div>
-	<%}%>
+					}
+				}%>
+				<input type="text" name="url_rewrite_<%=lang_code_cat+"_"+tp.id%>" value="<%=urlRewrite%>" class="formFieldTXT" style="margin-right:5px;" onkeypress="javascript:return notSpecialCharButUnderscoreAndMinusAndSlashAndDot(event);"><%=tp.filePath+tp.fileName%><br/>
+			<%}
+		}
+	}%>			
+	</div>
 <%}%>

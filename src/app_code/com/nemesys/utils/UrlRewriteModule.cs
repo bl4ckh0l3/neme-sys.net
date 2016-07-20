@@ -23,8 +23,8 @@ namespace com.nemesys.utils
 			if (!File.Exists(app.Context.Server.MapPath(requestedPath)))
 			{
 				string forcedLangCode = "";	
-				string resolved = TemplateService.resolveVirtualPath(requestedPath, out forcedLangCode);
-				if(!String.IsNullOrEmpty(resolved)){				 
+				string resolved = TemplateService.resolveVirtualPath(requestedPath, "", out forcedLangCode);
+				if(resolved != null){				 
 					/*builder = new StringBuilder("resolved: ").Append(resolved);	
 					log = new Logger(builder.ToString(), "system", "debug", DateTime.Now);	
 					lrep.write(log);*/

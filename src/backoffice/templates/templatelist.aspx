@@ -52,20 +52,6 @@ function changeRowListData(listCounter, objtype, field){
 	}
 }
 
-function checkExtension(fieldid){
-	<%if(Convert.ToBoolean(Convert.ToInt32(confservice.get("url_rewrite_file_ext").value))){%>
-	var fval = $('#'+fieldid).val();
-	
-	if(fval!="" && !strEndsWith(fval, ".aspx")){
-		$('#'+fieldid).val(fval+".aspx");
-	}
-	<%}%>
-}
-
-function strEndsWith(str, suffix) {
-    return str.match(suffix+"$")==suffix;
-}
-
 function confirmClone(theForm){
 	if(confirm("<%=lang.getTranslated("backend.templates.lista.js.alert.confirm_clone_template")%>")){
 /*<!--nsys-demoedittmp2-->*/

@@ -19,9 +19,9 @@ namespace com.nemesys.database.repository
 		
 		Template getByIdCached(int id, bool cached);
 				
-		TemplateVO getByUrlRewrite(string urlRewrite);
+		TemplateVO getByUrlRewrite(string urlRewrite, string defLangCode);
 		
-		TemplateVO getByUrlRewriteCached(string urlRewrite, bool cached);
+		TemplateVO getByUrlRewriteCached(string urlRewrite, string defLangCode, bool cached);
 		
 		Template getByDirectory(string directory);
 		

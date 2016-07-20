@@ -27,7 +27,29 @@ namespace com.nemesys.database.repository
 				IList<CategoryTemplate> newTemplates = new List<CategoryTemplate>();
 				if(category.templates != null && category.templates.Count>0)
 				{
-					foreach(CategoryTemplate ct in category.templates){
+					IQuery qCount;				
+					List<string> urls = new List<string>();
+					foreach(CategoryTemplate value in category.templates){
+						//if(!String.IsNullOrEmpty(value.urlRewrite)){
+						urls.Add("'"+value.urlRewrite+"'");
+						//}
+					}
+									
+					if(urls.Count>0){
+						string strSQLCount = "select count(DISTINCT categoryid) as count from CATEGORY_TEMPLATES where categoryid!=:categoryid";
+						strSQLCount+=string.Format(" and url_rewrite in ({0})",string.Join(",",urls.ToArray()));
+						qCount = session.CreateSQLQuery(strSQLCount).AddScalar("count", NHibernateUtil.Int64).SetInt32("categoryid",category.id);
+						long counter = qCount.UniqueResult<long>();
+						
+						if(counter>0)
+						{
+							tx.Rollback();
+							NHibernateHelper.closeSession();
+							throw new Exception("one of specified url rewrite already exists!");
+						}
+					}	
+					
+					foreach(CategoryTemplate ct in category.templates){			
 						CategoryTemplate nct = new CategoryTemplate();
 						nct.templateId = ct.templateId;
 						nct.langCode = ct.langCode;		
@@ -94,6 +116,28 @@ namespace com.nemesys.database.repository
 				IList<CategoryTemplate> newTemplates = new List<CategoryTemplate>();
 				if(category.templates != null && category.templates.Count>0)
 				{
+					IQuery qCount;				
+					List<string> urls = new List<string>();
+					foreach(CategoryTemplate value in category.templates){
+						//if(!String.IsNullOrEmpty(value.urlRewrite)){
+						urls.Add("'"+value.urlRewrite+"'");
+						//}
+					}
+									
+					if(urls.Count>0){
+						string strSQLCount = "select count(DISTINCT categoryid) as count from CATEGORY_TEMPLATES where categoryid!=:categoryid";
+						strSQLCount+=string.Format(" and url_rewrite in ({0})",string.Join(",",urls.ToArray()));
+						qCount = session.CreateSQLQuery(strSQLCount).AddScalar("count", NHibernateUtil.Int64).SetInt32("categoryid",category.id);
+						long counter = qCount.UniqueResult<long>();
+						
+						if(counter>0)
+						{
+							tx.Rollback();
+							NHibernateHelper.closeSession();
+							throw new Exception("one of specified url rewrite already exists!");
+						}
+					}					
+					
 					foreach(CategoryTemplate ct in category.templates){
 						CategoryTemplate nct = new CategoryTemplate();
 						nct.categoryId = ct.categoryId;
@@ -243,6 +287,26 @@ namespace com.nemesys.database.repository
 						//List<string> ids1 = new List<string>();
 						if(category.templates != null && category.templates.Count>0)
 						{
+							IQuery qCount;				
+							List<string> urls = new List<string>();
+							foreach(CategoryTemplate value in category.templates){
+								//if(!String.IsNullOrEmpty(value.urlRewrite)){
+								urls.Add("'"+value.urlRewrite+"'");
+								//}
+							}
+											
+							if(urls.Count>0){
+								string strSQLCount = "select count(DISTINCT categoryid) as count from CATEGORY_TEMPLATES where categoryid!=:categoryid";
+								strSQLCount+=string.Format(" and url_rewrite in ({0})",string.Join(",",urls.ToArray()));
+								qCount = session.CreateSQLQuery(strSQLCount).AddScalar("count", NHibernateUtil.Int64).SetInt32("categoryid",category.id);
+								long counter = qCount.UniqueResult<long>();
+								
+								if(counter>0)
+								{
+									throw new Exception("one of specified url rewrite already exists!");
+								}
+							}
+							
 							foreach(CategoryTemplate ct in category.templates){
 								CategoryTemplate nct = new CategoryTemplate();
 								nct.categoryId = ct.categoryId;
@@ -271,6 +335,26 @@ namespace com.nemesys.database.repository
 						IList<CategoryTemplate> newTemplates = new List<CategoryTemplate>();
 						if(category.templates != null && category.templates.Count>0)
 						{
+							IQuery qCount;				
+							List<string> urls = new List<string>();
+							foreach(CategoryTemplate value in category.templates){
+								//if(!String.IsNullOrEmpty(value.urlRewrite)){
+								urls.Add("'"+value.urlRewrite+"'");
+								//}
+							}
+											
+							if(urls.Count>0){
+								string strSQLCount = "select count(DISTINCT categoryid) as count from CATEGORY_TEMPLATES where categoryid!=:categoryid";
+								strSQLCount+=string.Format(" and url_rewrite in ({0})",string.Join(",",urls.ToArray()));
+								qCount = session.CreateSQLQuery(strSQLCount).AddScalar("count", NHibernateUtil.Int64).SetInt32("categoryid",category.id);
+								long counter = qCount.UniqueResult<long>();
+								
+								if(counter>0)
+								{
+									throw new Exception("one of specified url rewrite already exists!");
+								}
+							}
+							
 							foreach(CategoryTemplate ct in category.templates){
 								CategoryTemplate nct = new CategoryTemplate();
 								nct.templateId = ct.templateId;

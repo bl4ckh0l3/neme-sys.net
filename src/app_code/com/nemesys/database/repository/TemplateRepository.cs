@@ -19,36 +19,9 @@ namespace com.nemesys.database.repository
 	{		
 		public void insert(Template template)
 		{
-			bool carryOn = true;
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			using (ITransaction tx = session.BeginTransaction())
 			{
-				IQuery qCount;				
-				List<string> urls = new List<string>();
-				if(template.pages != null && template.pages.Count>0)
-				{
-					foreach(TemplatePage value in template.pages){
-						if(!String.IsNullOrEmpty(value.urlRewrite)){
-						urls.Add("'"+value.urlRewrite+"'");
-						}
-					}	
-				}	
-								
-				if(urls.Count>0){
-					string strSQLCount = "select count(DISTINCT id) as count from TEMPLATE_PAGES where 1=1";
-					strSQLCount+=string.Format(" and url_rewrite in ({0})",string.Join(",",urls.ToArray()));
-					qCount = session.CreateSQLQuery(strSQLCount).AddScalar("count", NHibernateUtil.Int64);
-					long counter = qCount.UniqueResult<long>();
-					
-					if(counter>0)
-					{
-						tx.Rollback();
-						NHibernateHelper.closeSession();
-						carryOn = false;
-						throw new Exception("one of specified url rewrite already exists!");
-					}
-				}
-
 				IList<TemplatePage> newTemplatePages = new List<TemplatePage>();
 				if(template.pages != null && template.pages.Count>0)
 				{
@@ -57,7 +30,6 @@ namespace com.nemesys.database.repository
 						//ntp.templateId = k.templateId
 						ntp.filePath = k.filePath;
 						ntp.fileName = k.fileName;
-						ntp.urlRewrite = k.urlRewrite;
 						ntp.priority = k.priority;							
 						newTemplatePages.Add(ntp);
 					}
@@ -74,47 +46,16 @@ namespace com.nemesys.database.repository
 						session.Save(k);
 					}
 				}
-
-				
-				if(carryOn){
-					tx.Commit();
-				}
+				tx.Commit();
 				NHibernateHelper.closeSession();
 			}
 		}
 		
 		public void update(Template template)
 		{
-			bool carryOn = true;
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			using (ITransaction tx = session.BeginTransaction())
 			{
-				IQuery qCount;				
-				List<string> urls = new List<string>();
-				if(template.pages != null && template.pages.Count>0)
-				{
-					foreach(TemplatePage value in template.pages){
-						if(!String.IsNullOrEmpty(value.urlRewrite)){
-						urls.Add("'"+value.urlRewrite+"'");
-						}
-					}	
-				}	
-								
-				if(urls.Count>0){
-					string strSQLCount = "select count(DISTINCT id) as count from TEMPLATE_PAGES where templateid!=:templateid";
-					strSQLCount+=string.Format(" and url_rewrite in ({0})",string.Join(",",urls.ToArray()));
-					qCount = session.CreateSQLQuery(strSQLCount).AddScalar("count", NHibernateUtil.Int64).SetInt32("templateid",template.id);
-					long counter = qCount.UniqueResult<long>();
-					
-					if(counter>0)
-					{
-						tx.Rollback();
-						NHibernateHelper.closeSession();
-						carryOn = false;
-						throw new Exception("one of specified url rewrite already exists!");
-					}
-				}	
-
 				IList<TemplatePage> newTemplatePages = new List<TemplatePage>();
 				if(template.pages != null && template.pages.Count>0)
 				{
@@ -124,7 +65,6 @@ namespace com.nemesys.database.repository
 						ntp.templateId = k.templateId;						
 						ntp.filePath = k.filePath;
 						ntp.fileName = k.fileName;
-						ntp.urlRewrite = k.urlRewrite;
 						ntp.priority = k.priority;						
 						newTemplatePages.Add(ntp);
 					}
@@ -148,9 +88,7 @@ namespace com.nemesys.database.repository
 					}
 				}
 				
-				if(carryOn){
-					tx.Commit();
-				}
+				tx.Commit();
 				NHibernateHelper.closeSession();
 			}
 			
@@ -303,37 +241,10 @@ namespace com.nemesys.database.repository
 		}		
 		
 		public void clone(Template template, string newdir)
-		{
-			bool carryOn = true;			
+		{			
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			using (ITransaction tx = session.BeginTransaction())
 			{
-				IQuery qCount;				
-				List<string> urls = new List<string>();
-				if(template.pages != null && template.pages.Count>0)
-				{
-					foreach(TemplatePage value in template.pages){
-						if(!String.IsNullOrEmpty(value.urlRewrite)){
-						urls.Add("'"+value.urlRewrite+"'");
-						}
-					}	
-				}	
-								
-				if(urls.Count>0){
-					string strSQLCount = "select count(DISTINCT id) as count from TEMPLATE_PAGES where templateid!=:templateid";
-					strSQLCount+=string.Format(" and url_rewrite in ({0})",string.Join(",",urls.ToArray()));
-					qCount = session.CreateSQLQuery(strSQLCount).AddScalar("count", NHibernateUtil.Int64).SetInt32("templateid",template.id);
-					long counter = qCount.UniqueResult<long>();
-					
-					if(counter>0)
-					{
-						tx.Rollback();
-						NHibernateHelper.closeSession();
-						carryOn = false;
-						throw new Exception("one of specified url rewrite already exists!");
-					}
-				}				
-
 				Template newtemplate = new Template();
 				newtemplate.directory = newdir;
 				newtemplate.description = newdir;
@@ -349,7 +260,6 @@ namespace com.nemesys.database.repository
 						TemplatePage ntp = new TemplatePage();					
 						ntp.filePath=k.filePath.Replace(template.directory,newdir);
 						ntp.fileName = k.fileName;
-						ntp.urlRewrite = "";
 						ntp.priority = k.priority;						
 						newTemplatePages.Add(ntp);
 					}
@@ -368,9 +278,7 @@ namespace com.nemesys.database.repository
 					}
 				}
 				
-				if(carryOn){
-					tx.Commit();
-				}
+				tx.Commit();
 				NHibernateHelper.closeSession();
 			}
 			
@@ -432,12 +340,12 @@ namespace com.nemesys.database.repository
 			return template;
 		}	
 
-		public TemplateVO getByUrlRewrite(string urlRewrite)
+		TemplateVO getByUrlRewrite(string urlRewrite, string defLangCode)
 		{
-			return getByUrlRewriteCached(urlRewrite, false);
+			return getByUrlRewriteCached(urlRewrite, defLangCode, false);
 		}
 
-		public TemplateVO getByUrlRewriteCached(string urlRewrite, bool cached)
+		public TemplateVO getByUrlRewriteCached(string urlRewrite, string defLangCode, bool cached)
 		{
 			TemplateVO tvo = null;
 			TemplatePage tp = null;
@@ -452,37 +360,42 @@ namespace com.nemesys.database.repository
 			}
 			
 			//System.Web.HttpContext.Current.Response.Write("TemplateRepository.getByUrlRewriteCached - urlRewrite:"+urlRewrite+"<br>");
-						
-			if(!String.IsNullOrEmpty(urlRewrite)){
-				using (ISession session = NHibernateHelper.getCurrentSession())
-				{
-					IQuery q = session.CreateQuery("from CategoryTemplate where urlRewrite=:urlRewrite");
-					q.SetString("urlRewrite",urlRewrite);
-					CategoryTemplate ct = q.UniqueResult<CategoryTemplate>();					
 					
-					//System.Web.HttpContext.Current.Response.Write("TemplateRepository.getByUrlRewriteCached - ct!=null:"+(ct!=null)+"<br>");
-					
-					if(ct != null){
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			{
+				IQuery q = session.CreateQuery("from CategoryTemplate where urlRewrite=:urlRewrite");
+				q.SetString("urlRewrite",urlRewrite);
+				IList<CategoryTemplate> ctl = q.List<CategoryTemplate>();					
+				
+				//System.Web.HttpContext.Current.Response.Write("TemplateRepository.getByUrlRewriteCached - ct!=null:"+(ct!=null)+"<br>");
+				CategoryTemplate ct = null;
+				
+				if(ctl != null && ctl.Count>0){
+					if(ctl.Count==1){
+						ct = ctl[0];
 						langCode = ct.langCode;
-						
-						//System.Web.HttpContext.Current.Response.Write("TemplateRepository.getByUrlRewriteCached - langCode:"+langCode+"<br>");
-						//System.Web.HttpContext.Current.Response.Write("TemplateRepository.getByUrlRewriteCached - ct.templatePageId:"+ct.templatePageId+"<br>");
-						
-						IQuery q2 = session.CreateSQLQuery("select {t.*} from TEMPLATE_PAGES {t} where {t}.id=:templatePageId").AddEntity ("t", typeof(TemplatePage));
-						q2.SetInt32("templatePageId",ct.templatePageId);	
-						tp = q2.UniqueResult<TemplatePage>();
+					}else{
+						foreach(CategoryTemplate c in ctl){
+							if(c.langCode.Equals(defLangCode)){
+								ct = c;
+								langCode = ct.langCode;
+								break;
+							}
+						}
+						if(ct == null){
+							ct = ctl[0];
+						}
 					}
-					//System.Web.HttpContext.Current.Response.Write("TemplateRepository.getByUrlRewriteCached - by CategoryTemplate - tp!=null:"+(tp!=null)+"<br>");
 					
-					if(tp==null){				
-						IQuery q3 = session.CreateSQLQuery("select {t.*} from TEMPLATE_PAGES {t} where url_rewrite= :urlRewrite").AddEntity ("t", typeof(TemplatePage));
-						q3.SetString("urlRewrite",urlRewrite);	
-						tp = q3.UniqueResult<TemplatePage>();
-					}
-					//System.Web.HttpContext.Current.Response.Write("TemplateRepository.getByUrlRewriteCached - by TemplatePage - tp!=null:"+(tp!=null)+"<br>");
 					
-					NHibernateHelper.closeSession();					
-				}	
+					//System.Web.HttpContext.Current.Response.Write("TemplateRepository.getByUrlRewriteCached - langCode:"+langCode+"<br>");
+					//System.Web.HttpContext.Current.Response.Write("TemplateRepository.getByUrlRewriteCached - ct.templatePageId:"+ct.templatePageId+"<br>");
+					
+					IQuery q2 = session.CreateSQLQuery("select {t.*} from TEMPLATE_PAGES {t} where {t}.id=:templatePageId").AddEntity ("t", typeof(TemplatePage));
+					q2.SetInt32("templatePageId",ct.templatePageId);	
+					tp = q2.UniqueResult<TemplatePage>();
+				}
+				NHibernateHelper.closeSession();					
 			}
 			
 			if(tp != null && tp.id>-1){

@@ -197,7 +197,6 @@ public partial class _TemplateList : Page
 												if(filext==".cs" || filext==".js" || filext==".css" || filext==".ascx")
 												{
 													tp.priority=-1;
-													tp.urlRewrite = "";
 												}
 												addPage = true;
 												break;
@@ -296,7 +295,6 @@ public partial class _TemplateList : Page
 									if(filext==".cs" || filext==".js" || filext==".css" || filext==".ascx")
 									{
 										tp.priority=-1;
-										tp.urlRewrite = "";
 									}
 									addPage = true;
 									break;

@@ -96,7 +96,7 @@ namespace com.nemesys.services
 		
 		public static string resolvePageHrefUrl(string basePath, int modelPageNum, string langCode, bool langSubDomainActive, string langUrlSubdomain, Category category, Template template, bool returnUrlRewrite)
 		{
-			string resolveHrefUrl = "#";
+			string resolveHrefUrl = null;
 			string tmpBaseUrl = basePath;
 			/*
 			System.Web.HttpContext.Current.Response.Write("<b>MenuService.resolvePageHrefUrl:</b><br>");
@@ -134,7 +134,6 @@ namespace com.nemesys.services
 			
 
 			string baseRealPath = "/public/templates/";
-			//System.Web.HttpContext.Current.Response.Write("<b>start tmpBaseUrl:</b>"+tmpBaseUrl+"<br>");
 			string fileExt = "";
 			if(Convert.ToBoolean(Convert.ToInt32(confservice.get("url_rewrite_file_ext").value))){
 				fileExt = baseFileExt;
@@ -151,7 +150,7 @@ namespace com.nemesys.services
 							TemplatePage tp = templrep.getPageByIdCached(ct.templatePageId, true);
 							//System.Web.HttpContext.Current.Response.Write("<b>tp:</b>"+tp.ToString()+"<br>");
 							if(tp != null && tp.priority==modelPageNum){
-								if(!String.IsNullOrEmpty(ct.urlRewrite) && returnUrlRewrite){								
+								if(/*!String.IsNullOrEmpty(ct.urlRewrite) && */returnUrlRewrite){								
 									StringBuilder builder = new StringBuilder(tmpBaseUrl);
 									//System.Web.HttpContext.Current.Response.Write("<b>3- tmpBaseUrl:</b>"+tmpBaseUrl+"<br>");
 									if(Convert.ToBoolean(Convert.ToInt32(confservice.get("url_with_langcode_prefix").value))){
@@ -172,35 +171,10 @@ namespace com.nemesys.services
 						}
 					}
 				}
-				else if(template != null && template.pages != null)
-				{				
-					foreach(TemplatePage tp in template.pages)
-					{
-						if(tp.priority==modelPageNum){
-							if(!String.IsNullOrEmpty(tp.urlRewrite) && returnUrlRewrite){								
-								StringBuilder builder = new StringBuilder(tmpBaseUrl);
-								//System.Web.HttpContext.Current.Response.Write("<b>3- tmpBaseUrl:</b>"+tmpBaseUrl+"<br>");
-								if(Convert.ToBoolean(Convert.ToInt32(confservice.get("url_with_langcode_prefix").value))){
-									builder.Append(langcodeDir);	
-								}else{								
-									builder.Append("/");
-								}
-								builder.Append(tp.urlRewrite);	
-								builder.Append(fileExt);							
-								resolveHrefUrl = builder.ToString();
-								break;
-							}else{
-								StringBuilder builder = new StringBuilder(tmpBaseUrl).Append(baseRealPath).Append(tp.filePath).Append(tp.fileName);
-								resolveHrefUrl = builder.ToString();	
-								break;						
-							}
-						}
-					}
-				}
 				//System.Web.HttpContext.Current.Response.Write("<b>resolveHrefUrl:</b>"+resolveHrefUrl+"<br>");
 			}catch(Exception ex){
 				//System.Web.HttpContext.Current.Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
-				resolveHrefUrl = "#";
+				resolveHrefUrl = null;
 			}
 			//System.Web.HttpContext.Current.Response.Write("<b>3- resolveHrefUrl:</b>"+resolveHrefUrl+"<br>");
 			return resolveHrefUrl;			
@@ -486,6 +460,9 @@ namespace com.nemesys.services
 					}
 										
 					strHref = resolvePageHrefUrl(basePath, modelPageNum, currentLangCode, langHasSubDomainActive, langUrlSubdomain, toCheck, template, true);
+					if(strHref==null){
+						strHref = "#";
+					}
 				}
 			}else{
 				strHref = "#";                  

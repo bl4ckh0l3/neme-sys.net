@@ -123,8 +123,8 @@ namespace com.nemesys.utils
 			// TODO chiamare template su db con url rewrite e comporre nuova url coretta
 			string realurl = context.Server.MapPath(URL);
 			string forcedLangCode = "";
-			string resolved = TemplateService.resolveVirtualPath(URL, out forcedLangCode);
-			if(!String.IsNullOrEmpty(resolved)){
+			string resolved = TemplateService.resolveVirtualPath(URL, "", out forcedLangCode);
+			if(resolved != null){
 				realurl = context.Server.MapPath(resolved);
 			}			
 					

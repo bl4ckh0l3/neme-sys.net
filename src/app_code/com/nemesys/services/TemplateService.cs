@@ -113,7 +113,7 @@ namespace com.nemesys.services
 			return deleted;			
 		}
 		
-		public static string resolveVirtualPath(string virtualPath, out string newLangCode)
+		public static string resolveVirtualPath(string virtualPath, string defLangCode, out string newLangCode)
 		{
 			string realPath = "";
 			string basePath = "/public/templates/";
@@ -145,6 +145,10 @@ namespace com.nemesys.services
 								}	
 							}						
 						}
+						
+						if(String.IsNullOrEmpty(newLangCode) && !String.IsNullOrEmpty(defLangCode)){
+							newLangCode = defLangCode;
+						}
 					}catch (Exception ex){}					
 				//}
 				//System.Web.HttpContext.Current.Response.Write("<b>2- modify virtualPath: </b>"+virtualPath+"<br>");
@@ -152,16 +156,16 @@ namespace com.nemesys.services
 				if(virtualPath.StartsWith("/")){virtualPath=virtualPath.Substring(1);}
 				//System.Web.HttpContext.Current.Response.Write("<b>3- modify virtualPath: </b>"+virtualPath+"<br>");
 				if(virtualPath.EndsWith(baseFileExt)){virtualPath=virtualPath.Substring(0,virtualPath.LastIndexOf(baseFileExt));}
-				//System.Web.HttpContext.Current.Response.Write("<b>4- modify virtualPath: </b>"+virtualPath+"<br>");
+				//System.Web.HttpContext.Current.Response.Write("TemplateService.resolveVirtualPath - <b>virtualPath: </b>"+virtualPath+"<br>");
 				
-				TemplateVO tvo = temprep.getByUrlRewriteCached(virtualPath, true);
+				TemplateVO tvo = temprep.getByUrlRewriteCached(virtualPath, newLangCode, true);
 				//System.Web.HttpContext.Current.Response.Write("TemplateService.resolveVirtualPath - <b>tvo: </b>"+(tvo!=null)+"<br>");
 					
 				if(tvo != null && tvo.templatePage != null)
 				{
 					//System.Web.HttpContext.Current.Response.Write("<b>tvo: </b>"+tvo.ToString()+"<br>");
 					
-					if(String.IsNullOrEmpty(newLangCode) && !String.IsNullOrEmpty(tvo.langCode))
+					if(!String.IsNullOrEmpty(tvo.langCode))
 					{
 						newLangCode = tvo.langCode;
 					}
@@ -211,17 +215,6 @@ namespace com.nemesys.services
 				if(!CategoryService.isCategoryNull(category)){							
 					// recupero l'id template corretto in base alla lingua
 					int templateId = category.idTemplate;
-					if(category.templates != null && category.templates.Count>0)
-					{
-						foreach(CategoryTemplate ct in category.templates)
-						{
-							if(ct.langCode==currentLangCode)
-							{
-								templateId = ct.templateId;
-								break;
-							}	
-						}
-					}
 					Template template = null;
 					if(templateId>0){
 						template = temprep.getByIdCached(templateId, true);
@@ -245,7 +238,7 @@ namespace com.nemesys.services
 											
 						foreach(TemplatePage tp in template.pages){
 							//System.Web.HttpContext.Current.Response.Write("<b>tp:</b>"+tp.ToString()+"<br>");
-							if(tp.priority>0 && tp.priority==1){	
+							if(1==tp.priority){	
 								//System.Web.HttpContext.Current.Response.Write("<b>builder.ToString():</b>"+builder.ToString()+"<br>");	
 								//System.Web.HttpContext.Current.Response.Write("<b>currentLangCode:</b>"+currentLangCode+"<br>");	
 								//System.Web.HttpContext.Current.Response.Write("<b>langHasSubDomainActive:</b>"+langHasSubDomainActive+"<br>");	
@@ -256,7 +249,7 @@ namespace com.nemesys.services
 								ocategoryid = category.id.ToString();	
 								string resolvedURL = MenuService.resolvePageHrefUrl(builder.ToString(), 1, currentLangCode, langHasSubDomainActive, langUrlSubdomain, category, template, true);
 								//System.Web.HttpContext.Current.Response.Write("<b>resolvedURL:</b>"+resolvedURL+"<br>");
-								if(!String.IsNullOrEmpty(resolvedURL) && !"#".Equals(resolvedURL)){
+								if(resolvedURL!=null){
 									baseUrl.Append(resolvedURL);
 									UriBuilder urlBuilder = new UriBuilder(baseUrl.ToString());
 									realPath = urlBuilder.Path;
@@ -274,7 +267,7 @@ namespace com.nemesys.services
 			return realPath;
 		}
 		
-		public static Template resolveTemplateByVirtualPath(string virtualPath, out string newLangCode)
+		public static Template resolveTemplateByVirtualPath(string virtualPath, string defLangCode, out string newLangCode)
 		{
 			Template result = null;
 			newLangCode = "";
@@ -304,6 +297,10 @@ namespace com.nemesys.services
 								}	
 							}						
 						}
+						
+						if(String.IsNullOrEmpty(newLangCode) && !String.IsNullOrEmpty(defLangCode)){
+							newLangCode = defLangCode;
+						}
 					}catch (Exception ex){
 						//System.Web.HttpContext.Current.Response.Write("TemplateService.resolveTemplateByVirtualPath (language for) - An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
 					}					
@@ -316,11 +313,11 @@ namespace com.nemesys.services
 				if(virtualPath.EndsWith(baseFileExt)){virtualPath=virtualPath.Substring(0,virtualPath.LastIndexOf(baseFileExt));}
 				//System.Web.HttpContext.Current.Response.Write("<b>TemplateService: modify virtualPath: </b>"+virtualPath+"<br>");
 				
-				TemplateVO tvo = temprep.getByUrlRewriteCached(virtualPath, true);
+				TemplateVO tvo = temprep.getByUrlRewriteCached(virtualPath, newLangCode, true);
 					
 				if(tvo != null && tvo.templatePage != null)
 				{
-					if(String.IsNullOrEmpty(newLangCode) && !String.IsNullOrEmpty(tvo.langCode))
+					if(!String.IsNullOrEmpty(tvo.langCode))
 					{
 						newLangCode = tvo.langCode;
 					}

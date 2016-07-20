@@ -143,12 +143,11 @@ protected void Page_Load(Object sender, EventArgs e)
 	</tr>		
 	<%if (template.pages != null && template.pages.Count > 0) {%>
 		<tr>
-		<td colspan="7">
+		<td colspan="6">
 		<table border="0" align="top" cellpadding="0" cellspacing="0" class="inner-table">
 		<th colspan="3">&nbsp;</th>
 		<th><%=lang.getTranslated("backend.templates.view.table.label.attached_pages")%></th>
 		<th><%=lang.getTranslated("backend.templates.view.table.label.page_priority")%></th>
-		<th><%=lang.getTranslated("backend.templates.view.table.label.url_rewrite")%></th>
 		<th>&nbsp;</th>
 		</tr>			
 		<%		
@@ -174,14 +173,6 @@ protected void Page_Load(Object sender, EventArgs e)
 			$("#edit_priority_<%=pageCounter%>_<%=z.id%>").hide();
 			</script>
 			</td>  
-			<td style="min-width:150px;vertical-align:top;">
-			<div class="ajax" id="view_urlrewrite_<%=pageCounter%>_<%=z.id%>" onmouseover="javascript:showHide('view_urlrewrite_<%=pageCounter%>_<%=z.id%>','edit_urlrewrite_<%=pageCounter%>_<%=z.id%>','urlrewrite_<%=pageCounter%>_<%=z.id%>',500, false);"><%if(!String.IsNullOrEmpty(z.urlRewrite)){Response.Write(z.urlRewrite);}else{if(z.priority>=0){Response.Write(lang.getTranslated("backend.templates.lista.table.label.empty_url"));}}%></div>
-			<div class="ajax" id="edit_urlrewrite_<%=pageCounter%>_<%=z.id%>"><input type="text" class="formfieldAjaxLong" id="urlrewrite_<%=pageCounter%>_<%=z.id%>" name="urlRewrite" onkeypress="javascript:return notSpecialCharButUnderscoreAndMinusAndSlashAndDot(event);" onmouseout="javascript:restoreField('edit_urlrewrite_<%=pageCounter%>_<%=z.id%>','view_urlrewrite_<%=pageCounter%>_<%=z.id%>','urlrewrite_<%=pageCounter%>_<%=z.id%>','TemplatePage|ITemplateRepository|string|getPageById|updateTemplatePage',<%=z.id%>,1,<%=pageCounter%>);" value="<%=z.urlRewrite%>"></div>
-			<script>
-			$("#edit_urlrewrite_<%=pageCounter%>_<%=z.id%>").hide();
-			
-			</script>				
-			</td>
 			<td><div id="show_part_<%=pageCounter%>_<%=z.id%>"><form accept-charset="UTF-8" method="post" action=""><textarea name="text_part_<%=pageCounter%>_<%=z.id%>" id="text_part_<%=pageCounter%>_<%=z.id%>" class="formFieldTXTAREABig"></textarea></form></div></td>
 			</tr>
 			<script>
@@ -194,7 +185,7 @@ protected void Page_Load(Object sender, EventArgs e)
 		}%>
 		
 		<tr id="attach_table_row<%=counter%>">
-			<td colspan="7" class="attach_table_cell<%=counter%>">
+			<td colspan="6" class="attach_table_cell<%=counter%>">
 			<form action="/backoffice/templates/templatelist.aspx" method="post" name="form_add_page<%=counter%>" enctype="multipart/form-data" accept-charset="UTF-8">
 			<input type="hidden" value="addfile" name="operation">
 			<input type="hidden" value="<%=template.id%>" name="templateid">
@@ -210,7 +201,7 @@ protected void Page_Load(Object sender, EventArgs e)
 		<script>
 		$("#loading-templ-page<%=counter%>").hide();
 		</script>  		
-		<tr><td colspan="7">&nbsp;</td></tr>
+		<tr><td colspan="6">&nbsp;</td></tr>
 		</table>
 		</td>
 		</tr>			

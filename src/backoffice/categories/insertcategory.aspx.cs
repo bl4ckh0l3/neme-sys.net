@@ -159,11 +159,9 @@ public partial class _Category : Page
 									//Response.Write("idTemplate:"+idTemplate+"<br>");
 									//Response.Write("pageid:"+pageid+"<br>");
 									//Response.Write("currvalue:"+currvalue+"<br>");
-									if(!String.IsNullOrEmpty(currvalue)){
-										ctempl = new CategoryTemplate(category.id, idTemplate, Convert.ToInt32(pageid), x.label, currvalue);		
-										category.templates.Add(ctempl);
-										//Response.Write("ctempl:"+ctempl.ToString()+"<br>");
-									}						
+									ctempl = new CategoryTemplate(category.id, idTemplate, Convert.ToInt32(pageid), x.label, currvalue);		
+									category.templates.Add(ctempl);
+									//Response.Write("ctempl:"+ctempl.ToString()+"<br>");					
 								}
 							}							
 							

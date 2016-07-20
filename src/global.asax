@@ -250,7 +250,7 @@
 		string originalPath = HttpContext.Current.Request.Path.ToLower();		
 		if (!File.Exists(Context.Server.MapPath(originalPath)))
 		{	
-			resolved = TemplateService.resolveVirtualPath(originalPath, out forcedLangCode);
+			resolved = TemplateService.resolveVirtualPath(originalPath, "", out forcedLangCode);
 	
 			/*
 			StringBuilder builder = new StringBuilder("originalPath: ")

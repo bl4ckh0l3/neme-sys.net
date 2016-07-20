@@ -143,11 +143,12 @@ protected void Page_Load(Object sender, EventArgs e)
 	</tr>		
 	<%if (template.pages != null && template.pages.Count > 0) {%>
 		<tr>
-		<td colspan="6">
+		<td colspan="7">
 		<table border="0" align="top" cellpadding="0" cellspacing="0" class="inner-table">
 		<th colspan="3">&nbsp;</th>
 		<th><%=lang.getTranslated("backend.templates.view.table.label.attached_pages")%></th>
 		<th><%=lang.getTranslated("backend.templates.view.table.label.page_priority")%></th>
+		<th>&nbsp;</th>
 		<th>&nbsp;</th>
 		</tr>			
 		<%		
@@ -172,6 +173,7 @@ protected void Page_Load(Object sender, EventArgs e)
 			<script>
 			$("#edit_priority_<%=pageCounter%>_<%=z.id%>").hide();
 			</script>
+			<td>&nbsp;</td>
 			</td>  
 			<td><div id="show_part_<%=pageCounter%>_<%=z.id%>"><form accept-charset="UTF-8" method="post" action=""><textarea name="text_part_<%=pageCounter%>_<%=z.id%>" id="text_part_<%=pageCounter%>_<%=z.id%>" class="formFieldTXTAREABig"></textarea></form></div></td>
 			</tr>
@@ -185,7 +187,7 @@ protected void Page_Load(Object sender, EventArgs e)
 		}%>
 		
 		<tr id="attach_table_row<%=counter%>">
-			<td colspan="6" class="attach_table_cell<%=counter%>">
+			<td colspan="7" class="attach_table_cell<%=counter%>">
 			<form action="/backoffice/templates/templatelist.aspx" method="post" name="form_add_page<%=counter%>" enctype="multipart/form-data" accept-charset="UTF-8">
 			<input type="hidden" value="addfile" name="operation">
 			<input type="hidden" value="<%=template.id%>" name="templateid">

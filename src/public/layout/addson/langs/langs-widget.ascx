@@ -69,9 +69,8 @@ function changeActiveLang(strAction, strLangCode){
 		StringBuilder searchPath = new StringBuilder();
 		if(x.subdomainActive)
 		{	
-			searchPath.Append(x.urlSubdomain)/*.Append("/")*/;
+			searchPath.Append(x.urlSubdomain);
 		}
-		//searchPath.Append("default.aspx");
 		
 		UriBuilder builder = new UriBuilder(Request.Url);
 		if(confservice.get("use_https").value=="1")

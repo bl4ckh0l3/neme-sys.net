@@ -50,10 +50,6 @@ public partial class _TemplateList : Page
 		confservice = new ConfigurationService();
 		StringBuilder url = new StringBuilder("/error.aspx?error_code=");		
 		Logger log = new Logger();
-		bool addFileExtToUrlRewrite = false;
-		if(Convert.ToBoolean(Convert.ToInt32(confservice.get("url_rewrite_file_ext").value))){
-			addFileExtToUrlRewrite = true;
-		}
 
 		if (!String.IsNullOrEmpty(Request["items"])) {
 			Session["templateItems"] = Convert.ToInt32(Request["items"]);
@@ -190,10 +186,6 @@ public partial class _TemplateList : Page
 											case ".cs": case ".aspx": case ".ascx": case ".js": case ".css":
 												zip.ExtractFile(entry, HttpContext.Current.Server.MapPath("~/public/templates/"+tdirectory+"/"+entry.FilenameInZip));
 												tp.filePath=tdirectory+"/"+Path.GetDirectoryName(entry.FilenameInZip);
-												string endUrl = Path.GetFileNameWithoutExtension(entry.FilenameInZip);
-												if(addFileExtToUrlRewrite){endUrl = tp.fileName;}
-												tp.urlRewrite = tdirectory+"/"+endUrl;
-												
 												if(filext==".cs" || filext==".js" || filext==".css" || filext==".ascx")
 												{
 													tp.priority=-1;
@@ -288,10 +280,6 @@ public partial class _TemplateList : Page
 								case ".cs": case ".aspx": case ".ascx": case ".js": case ".css":
 									TemplateService.SaveStreamToFile(tmp.InputStream, HttpContext.Current.Server.MapPath("~/public/templates/"+t.directory+"/"+tmp.FileName));								
 									tp.filePath=t.directory+"/"+Path.GetDirectoryName(tmp.FileName);
-									string endUrl = Path.GetFileNameWithoutExtension(tmp.FileName);
-									if(addFileExtToUrlRewrite){endUrl = tp.fileName;}
-									tp.urlRewrite = t.directory+"/"+endUrl;
-									
 									if(filext==".cs" || filext==".js" || filext==".css" || filext==".ascx")
 									{
 										tp.priority=-1;

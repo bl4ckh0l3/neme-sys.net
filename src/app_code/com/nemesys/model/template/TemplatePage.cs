@@ -9,7 +9,6 @@ namespace com.nemesys.model
 		private int _templateId;
 		private string _filePath;
 		private string _fileName;
-		private string _urlRewrite;
 		private int _priority;
 
 		
@@ -35,11 +34,6 @@ namespace com.nemesys.model
 			set { _fileName = value; }
 		}
 
-		public virtual string urlRewrite {
-			get { return _urlRewrite; }
-			set { _urlRewrite = value; }
-		}
-
 		public virtual int priority {
 			get { return _priority; }
 			set { _priority = value; }
@@ -57,7 +51,6 @@ namespace com.nemesys.model
 			.Append(" - templateId: ").Append(this._templateId)
 			.Append(" - filePath: ").Append(this._filePath)
 			.Append(" - fileName: ").Append(this._fileName)
-			.Append(" - urlRewrite: ").Append(this._urlRewrite)
 			.Append(" - priority: ").Append(this._priority);
 			
 			return builder.ToString();			

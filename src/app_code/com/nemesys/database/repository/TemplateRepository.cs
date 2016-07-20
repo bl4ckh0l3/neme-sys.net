@@ -340,7 +340,7 @@ namespace com.nemesys.database.repository
 			return template;
 		}	
 
-		TemplateVO getByUrlRewrite(string urlRewrite, string defLangCode)
+		public TemplateVO getByUrlRewrite(string urlRewrite, string defLangCode)
 		{
 			return getByUrlRewriteCached(urlRewrite, defLangCode, false);
 		}
@@ -646,31 +646,8 @@ namespace com.nemesys.database.repository
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			using (ITransaction tx = session.BeginTransaction())
 			{
-				IQuery qCount;				
-				List<string> urls = new List<string>();
-				if(!String.IsNullOrEmpty(page.urlRewrite)){
-				urls.Add("'"+page.urlRewrite+"'");
-				}
-								
-				if(urls.Count>0){
-					string strSQLCount = "select count(DISTINCT id) as count from TEMPLATE_PAGES where templateid!=:templateid";
-					strSQLCount+=string.Format(" and url_rewrite in ({0})",string.Join(",",urls.ToArray()));
-					qCount = session.CreateSQLQuery(strSQLCount).AddScalar("count", NHibernateUtil.Int64).SetInt32("templateid",page.templateId);
-					long counter = qCount.UniqueResult<long>();
-					
-					if(counter>0)
-					{
-						tx.Rollback();
-						NHibernateHelper.closeSession();
-						carryOn = false;
-						throw new Exception("one of specified url rewrite already exists!");
-					}
-				}			
-							
 				session.Update(page);	
-				if(carryOn){
-					tx.Commit();
-				}
+				tx.Commit();
 				NHibernateHelper.closeSession();
 			}
 

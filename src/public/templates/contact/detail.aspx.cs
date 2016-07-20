@@ -131,7 +131,7 @@ public partial class _Detail : Page
 				setMetaCategory(category);
 			}	
 			
-			template = TemplateService.resolveTemplateByVirtualPath(basePath, out newLangCode);
+			template = TemplateService.resolveTemplateByVirtualPath(basePath, lang.currentLangCode, out newLangCode);
 			if(template != null)
 			{
 				if(CategoryService.isCategoryNull(category))
@@ -237,7 +237,7 @@ public partial class _Detail : Page
 			}
 												
 			string tmpUrl = MenuService.resolvePageHrefUrl(Request.Url.Scheme+"://", modelPageNum, lang.currentLangCode, langHasSubDomainActive, langUrlSubdomain, category, template, true);
-			if(tmpUrl != "#"){
+			if(tmpUrl != null){
 				currentUrl = tmpUrl;
 			}
 			
@@ -338,7 +338,11 @@ public partial class _Detail : Page
 				}
 				if(carryOn){
 					string confirmURL = MenuService.resolvePageHrefUrl(Request.Url.Scheme+"://", 0, lang.currentLangCode, langHasSubDomainActive, langUrlSubdomain, category, template, true);
-					Response.Redirect(confirmURL);
+					if(confirmURL!=null){
+						Response.Redirect(confirmURL);
+					}else{
+						Response.Redirect(Request.Url.ToString());
+					}
 				}else{
 					Response.Redirect(Request.Url.ToString());
 				}

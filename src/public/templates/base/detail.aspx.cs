@@ -120,7 +120,7 @@ public partial class _Detail : Page
 				setMetaCategory(category);
 			}
 										
-			template = TemplateService.resolveTemplateByVirtualPath(basePath, out newLangCode);
+			template = TemplateService.resolveTemplateByVirtualPath(basePath, lang.currentLangCode, out newLangCode);
 			if(template != null)
 			{
 				if(CategoryService.isCategoryNull(category))
@@ -226,7 +226,11 @@ public partial class _Detail : Page
 			}
 												
 			cwwc1.elemId = content.id.ToString();
-			cwwc1.from = MenuService.resolvePageHrefUrl(Request.Url.Scheme+"://", modelPageNum, lang.currentLangCode, langHasSubDomainActive, langUrlSubdomain, category, template, true);
+			string cwwc1Link = MenuService.resolvePageHrefUrl(Request.Url.Scheme+"://", modelPageNum, lang.currentLangCode, langHasSubDomainActive, langUrlSubdomain, category, template, true);
+			if(cwwc1Link==null){
+				cwwc1Link = "#";
+			}
+			cwwc1.from = cwwc1Link;
 			cwwc1.hierarchy = hierarchy;
 			cwwc1.categoryId = categoryid;	
 			// set comment type

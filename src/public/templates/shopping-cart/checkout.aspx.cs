@@ -664,14 +664,6 @@ public partial class _Checkout : Page
 					
 					// recupero l'id template corretto in base alla lingua
 					int templateId = category.idTemplate;
-					foreach(CategoryTemplate ct in category.templates)
-					{
-						if(ct.langCode==lang.currentLangCode)
-						{
-							templateId = ct.templateId;
-							break;
-						}	
-					}
 					if(templateId>0){
 						template = templrep.getByIdCached(templateId,true);
 					}
@@ -682,30 +674,17 @@ public partial class _Checkout : Page
 						bool langHasSubDomainActive = false;
 						string langUrlSubdomain = "";
 						Language language = langrep.getByLabel(lang.currentLangCode, true);	
+						if(!LanguageService.isLanguageNull(language))
+						{	
+							langHasSubDomainActive = language.subdomainActive;
+							langUrlSubdomain = language.urlSubdomain;
+						}								
 						
-						string currentPath = basePath.Replace("/public/templates/","");
-						currentPath = currentPath.Replace(lang.currentLangCode+"/","");
-						//Response.Write("-currentPath:"+currentPath+"<br>");
-						//Response.Write("-language:"+language.ToString()+"<br>");
-						foreach(TemplatePage tp in template.pages){
-							if(tp.priority==1){
-								string templatePath = tp.filePath+tp.fileName;
-								string urlRewritePath = tp.urlRewrite;
-								//Response.Write("-templatePath:"+templatePath+"<br>-urlRewritePath:"+urlRewritePath+"<br>");
-								int modelPageNum = tp.priority;
-								//Response.Write("-modelPageNum:"+modelPageNum+"<br>");
-								
-								if(language != null)
-								{	
-									langHasSubDomainActive = language.subdomainActive;
-									langUrlSubdomain = language.urlSubdomain;
-								}								
-								
-								backURL = MenuService.resolvePageHrefUrl(builder.ToString(), modelPageNum, lang.currentLangCode, langHasSubDomainActive, langUrlSubdomain, category, template, true);
-								//Response.Write("-backURL:"+backURL+"<br>");	
-								break;
-							}
-						}
+						backURL = MenuService.resolvePageHrefUrl(builder.ToString(), 1, lang.currentLangCode, langHasSubDomainActive, langUrlSubdomain, category, template, true);
+						//Response.Write("2 detailURL:"+detailURL+"<br>");	
+						if(backURL==null){
+							backURL = "#";
+						}						
 					}
 				}	
 			}catch (Exception ex){
@@ -791,14 +770,6 @@ public partial class _Checkout : Page
 							
 							// recupero l'id template corretto in base alla lingua
 							int templateId = innerCategory.idTemplate;
-							foreach(CategoryTemplate ct in innerCategory.templates)
-							{
-								if(ct.langCode==lang.currentLangCode)
-								{
-									templateId = ct.templateId;
-									break;
-								}	
-							}
 							if(templateId>0){
 								innerTemplate = templrep.getByIdCached(templateId,true);
 							}
@@ -808,29 +779,19 @@ public partial class _Checkout : Page
 								string langUrlSubdomain = "";
 								Language language = langrep.getByLabel(lang.currentLangCode, true);	
 								
-								string currentPath = basePath.Replace("/public/templates/","");
-								currentPath = currentPath.Replace(lang.currentLangCode+"/","");
-								
 								modelPageNum = TemplateService.getMaxPriority(innerTemplate.pages);
 								
-								foreach(TemplatePage tp in innerTemplate.pages){
-									if(tp.priority==modelPageNum){
-										string templatePath = tp.filePath+tp.fileName;
-										string urlRewritePath = tp.urlRewrite;
-									
-										modelPageNum = tp.priority;
-										
-										if(language != null)
-										{	
-											langHasSubDomainActive = language.subdomainActive;
-											langUrlSubdomain = language.urlSubdomain;
-										}								
-										
-										detailURL = MenuService.resolvePageHrefUrl(builder.ToString(), modelPageNum, lang.currentLangCode, langHasSubDomainActive, langUrlSubdomain, innerCategory, innerTemplate, true);
-										//Response.Write("detailURL:"+detailURL+"<br>");
-										break;
-									}
-								}
+								if(!LanguageService.isLanguageNull(language))
+								{	
+									langHasSubDomainActive = language.subdomainActive;
+									langUrlSubdomain = language.urlSubdomain;
+								}								
+								
+								detailURL = MenuService.resolvePageHrefUrl(builder.ToString(), modelPageNum, lang.currentLangCode, langHasSubDomainActive, langUrlSubdomain, innerCategory, innerTemplate, true);
+								//Response.Write("2 detailURL:"+detailURL+"<br>");	
+								if(detailURL==null){
+									detailURL = "#";
+								}								
 							}
 						}						
 						

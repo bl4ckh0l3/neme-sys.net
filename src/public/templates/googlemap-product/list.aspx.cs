@@ -211,69 +211,17 @@ public partial class _List : Page
 			}
 
 			//Response.Write("category:"+category.ToString()+"<br>");			
-			
 			if(!CategoryService.isCategoryNull(category)){				
-				setMetaCategory(category); 					
-				
-				// recupero l'id template corretto in base alla lingua
-				int templateId = category.idTemplate;
-				foreach(CategoryTemplate ct in category.templates)
-				{
-					if(ct.langCode==lang.currentLangCode)
-					{
-						templateId = ct.templateId;
-						break;
-					}	
-				}
-				if(templateId>0){
-					template = templrep.getByIdCached(templateId,true);
-				}
-				if(template != null)
-				{
-					//Response.Write("template:"+template.ToString()+"<br>");
-					
-					itemsXpage = template.elemXpage;
-					orderBy = template.orderBy;
-					bool langHasSubDomainActive = false;
-					string langUrlSubdomain = "";
-					Language language = langrep.getByLabel(lang.currentLangCode, true);	
-					
-					string currentPath = basePath.Replace("/public/templates/","");
-					currentPath = currentPath.Replace(lang.currentLangCode+"/","");
-					//Response.Write("language:"+language.ToString()+"<br>");
-					foreach(TemplatePage tp in template.pages){
-						if(tp.priority>0){
-							string templatePath = tp.filePath+tp.fileName;
-							string urlRewritePath = tp.urlRewrite;
-							//Response.Write("templatePath:"+templatePath+" -urlRewritePath:"+urlRewritePath+"<br>");
-							if(currentPath == templatePath || currentPath == urlRewritePath){
-								modelPageNum = tp.priority;
-								//Response.Write("modelPageNum:"+modelPageNum+"<br>"
-								
-								if(language != null)
-								{	
-									langHasSubDomainActive = language.subdomainActive;
-									langUrlSubdomain = language.urlSubdomain;
-								}								
-								
-								detailURL = MenuService.resolvePageHrefUrl(builder.ToString(), modelPageNum+1, lang.currentLangCode, langHasSubDomainActive, langUrlSubdomain, category, template, true);
-								//Response.Write("detailURL:"+detailURL+"<br>");	
-								bolHasDetailLink = true;
-								break;
-							}
-						}
-					}
-				}
-			}	
+				setMetaCategory(category);
+			}
 			
-			// if category still null try to resolve category by url
-			if(CategoryService.isCategoryNull(category))
+			template = TemplateService.resolveTemplateByVirtualPath(basePath, lang.currentLangCode, out newLangCode);
+			if(template != null)
 			{
-				template = TemplateService.resolveTemplateByVirtualPath(basePath, out newLangCode);
-				if(template != null)
+				itemsXpage = template.elemXpage;
+				orderBy = template.orderBy;
+				if(CategoryService.isCategoryNull(category))
 				{
-					itemsXpage = template.elemXpage;
-					orderBy = template.orderBy;
 					category = catrep.getByTemplateCached(template.id, true);
 					if(!CategoryService.isCategoryNull(category))
 					{
@@ -282,22 +230,26 @@ public partial class _List : Page
 							lang.set();
 						}	
 						hierarchy = category.hierarchy;					
-						setMetaCategory(category); 
-						bool langHasSubDomainActive = false;
-						string langUrlSubdomain = "";
-						Language language = langrep.getByLabel(lang.currentLangCode, true);
-						if(!LanguageService.isLanguageNull(language))
-						{	
-							langHasSubDomainActive = language.subdomainActive;
-							langUrlSubdomain = language.urlSubdomain;
-						}								
-						
-						detailURL = MenuService.resolvePageHrefUrl(builder.ToString(), modelPageNum+1, lang.currentLangCode, langHasSubDomainActive, langUrlSubdomain, category, template, true);
-						//Response.Write("2 detailURL:"+detailURL+"<br>");	
-						bolHasDetailLink = true;						
+						setMetaCategory(category); 					
 					}
 				}
+				bool langHasSubDomainActive = false;
+				string langUrlSubdomain = "";
+				Language language = langrep.getByLabel(lang.currentLangCode, true);
+				if(!LanguageService.isLanguageNull(language))
+				{	
+					langHasSubDomainActive = language.subdomainActive;
+					langUrlSubdomain = language.urlSubdomain;
+				}								
+				
+				detailURL = MenuService.resolvePageHrefUrl(builder.ToString(), modelPageNum+1, lang.currentLangCode, langHasSubDomainActive, langUrlSubdomain, category, template, true);
+				//Response.Write("2 detailURL:"+detailURL+"<br>");	
+				if(detailURL==null){
+					detailURL = "#";
+				}
+				bolHasDetailLink = true;				
 			}
+			
 			if(!CategoryService.isCategoryNull(category))
 			{
 				categoryid = category.id.ToString();

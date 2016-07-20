@@ -126,14 +126,6 @@ public partial class _List : Page
 						
 						// recupero l'id template corretto in base alla lingua
 						int templateId = category.idTemplate;
-						foreach(CategoryTemplate ct in category.templates)
-						{
-							if(ct.langCode==lang.currentLangCode)
-							{
-								templateId = ct.templateId;
-								break;
-							}	
-						}
 						if(templateId>0){
 							template = templrep.getByIdCached(templateId,true);
 						}
@@ -153,7 +145,10 @@ public partial class _List : Page
 								langUrlSubdomain = language.urlSubdomain;
 							}								
 							
-							detailURL = MenuService.resolvePageHrefUrl(builder.ToString(), modelPageNum, lang.currentLangCode, langHasSubDomainActive, langUrlSubdomain, category, template, true);							
+							detailURL = MenuService.resolvePageHrefUrl(builder.ToString(), modelPageNum, lang.currentLangCode, langHasSubDomainActive, langUrlSubdomain, category, template, true);		
+							if(detailURL==null){
+								detailURL = "#";
+							}
 						}
 					}
 										

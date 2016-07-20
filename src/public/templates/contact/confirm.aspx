@@ -103,7 +103,7 @@ protected void Page_Load(object sender, EventArgs e)
 		// if category still null try to resolve category by url
 		if(CategoryService.isCategoryNull(category))
 		{
-			template = TemplateService.resolveTemplateByVirtualPath(basePath, out newLangCode);
+			template = TemplateService.resolveTemplateByVirtualPath(basePath, lang.currentLangCode, out newLangCode);
 			if(template != null)
 			{
 				category = catrep.getByTemplateCached(template.id, true);

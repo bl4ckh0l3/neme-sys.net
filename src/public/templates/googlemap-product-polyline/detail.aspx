@@ -540,7 +540,10 @@ function openRelatedProdPage(actionurl, hierarchy, idProduct, numPageNum){
 									relLangUrlSubdomain = relLanguage.urlSubdomain;
 								}								
 								
-								relUrl = MenuService.resolvePageHrefUrl(builder.ToString(), relModelPageNum, lang.currentLangCode, relLangHasSubDomainActive, relLangUrlSubdomain, relcategory, reltemplate, true);						
+								relUrl = MenuService.resolvePageHrefUrl(builder.ToString(), relModelPageNum, lang.currentLangCode, relLangHasSubDomainActive, relLangUrlSubdomain, relcategory, reltemplate, true);	
+								if(relUrl==null){
+									relUrl = "#";
+								}
 							}
 						}
 						%>

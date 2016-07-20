@@ -1,4 +1,4 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeFile="list.aspx.cs" Inherits="_List" Debug="false" %>
+<%@ Page Language="C#" AutoEventWireup="true" CodeFile="list.aspx.cs" Inherits="_List" Debug="true" %>
 <%@ import Namespace="System" %>
 <%@ import Namespace="System.Collections" %>
 <%@ import Namespace="System.Collections.Generic" %>
@@ -24,6 +24,7 @@
 <META name="autore" CONTENT="Neme-sys; email:info@neme-sys.org">
 <META http-equiv="Content-Type" CONTENT="text/html; charset=utf-8">
 <CommonCssJs:insert runat="server" />
+<link rel="stylesheet" href="/public/layout/css/stile.css" type="text/css">
 <script>  
 function openDetailContentPage(contentid){
 	<%if(bolHasDetailLink){%>

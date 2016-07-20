@@ -443,14 +443,6 @@ function openRelatedProdPage(actionurl, hierarchy, idProduct, numPageNum){
 							Template reltemplate = null;
 							
 							int relTemplateId = relcategory.idTemplate;
-							foreach(CategoryTemplate ct in relcategory.templates)
-							{
-								if(ct.langCode==lang.currentLangCode)
-								{
-									relTemplateId = ct.templateId;
-									break;
-								}	
-							}
 							if(relTemplateId>0){
 								reltemplate = templrep.getByIdCached(relTemplateId,true);
 							}
@@ -469,6 +461,9 @@ function openRelatedProdPage(actionurl, hierarchy, idProduct, numPageNum){
 								}								
 								
 								relUrl = MenuService.resolvePageHrefUrl(builder.ToString(), relModelPageNum, lang.currentLangCode, relLangHasSubDomainActive, relLangUrlSubdomain, relcategory, reltemplate, true);						
+								if(relUrl==null){
+									relUrl = "#";
+								}
 							}
 						}
 						%>

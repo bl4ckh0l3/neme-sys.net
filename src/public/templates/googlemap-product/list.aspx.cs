@@ -213,13 +213,15 @@ public partial class _List : Page
 			//Response.Write("category:"+category.ToString()+"<br>");			
 			if(!CategoryService.isCategoryNull(category)){				
 				setMetaCategory(category);
-			}
-			
-			template = TemplateService.resolveTemplateByVirtualPath(basePath, lang.currentLangCode, out newLangCode);
-			if(template != null)
+				if(category.idTemplate>0){
+					template = templrep.getByIdCached(templateId,true);
+				}
+			}	
+
+			if(template == null)
 			{
-				itemsXpage = template.elemXpage;
-				orderBy = template.orderBy;
+				template = TemplateService.resolveTemplateByVirtualPath(basePath, lang.currentLangCode, out newLangCode);
+				
 				if(CategoryService.isCategoryNull(category))
 				{
 					category = catrep.getByTemplateCached(template.id, true);
@@ -233,6 +235,11 @@ public partial class _List : Page
 						setMetaCategory(category); 					
 					}
 				}
+			}
+			
+			if(template != null){
+				itemsXpage = template.elemXpage;
+				orderBy = template.orderBy;
 				bool langHasSubDomainActive = false;
 				string langUrlSubdomain = "";
 				Language language = langrep.getByLabel(lang.currentLangCode, true);

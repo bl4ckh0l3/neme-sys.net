@@ -210,13 +210,15 @@ public partial class _List : Page
 			
 			if(!CategoryService.isCategoryNull(category)){				
 				setMetaCategory(category);
+				if(category.idTemplate>0){
+					template = templrep.getByIdCached(templateId,true);
+				}
 			}	
 
-			template = TemplateService.resolveTemplateByVirtualPath(basePath, lang.currentLangCode, out newLangCode);
-			if(template != null)
+			if(template == null)
 			{
-				itemsXpage = template.elemXpage;
-				orderBy = template.orderBy;
+				template = TemplateService.resolveTemplateByVirtualPath(basePath, lang.currentLangCode, out newLangCode);
+				
 				if(CategoryService.isCategoryNull(category))
 				{
 					category = catrep.getByTemplateCached(template.id, true);
@@ -230,6 +232,11 @@ public partial class _List : Page
 						setMetaCategory(category); 					
 					}
 				}
+			}
+			
+			if(template != null){
+				itemsXpage = template.elemXpage;
+				orderBy = template.orderBy;
 				bool langHasSubDomainActive = false;
 				string langUrlSubdomain = "";
 				Language language = langrep.getByLabel(lang.currentLangCode, true);

@@ -200,29 +200,32 @@ public partial class _Detail : Page
 			
 			if(!CategoryService.isCategoryNull(category)){				
 				setMetaCategory(category);
+				if(category.idTemplate>0){
+					template = templrep.getByIdCached(templateId,true);
+				}
 			}
 										
+			if(template == null)
+			{
 				template = TemplateService.resolveTemplateByVirtualPath(basePath, lang.currentLangCode, out newLangCode);
-				if(template != null)
+				if(CategoryService.isCategoryNull(category))
 				{
-					if(CategoryService.isCategoryNull(category))
+					category = catrep.getByTemplateCached(template.id, true);
+					if(!CategoryService.isCategoryNull(category))
 					{
-						category = catrep.getByTemplateCached(template.id, true);
-						if(!CategoryService.isCategoryNull(category))
-						{
-							if(String.IsNullOrEmpty(Request["lang_code"]) && !String.IsNullOrEmpty(newLangCode)){
-								HttpContext.Current.Items["lang-code"] = newLangCode;
-								lang.set();
-							}	
-							hierarchy = category.hierarchy;					
-							setMetaCategory(category); 					
-						}
+						if(String.IsNullOrEmpty(Request["lang_code"]) && !String.IsNullOrEmpty(newLangCode)){
+							HttpContext.Current.Items["lang-code"] = newLangCode;
+							lang.set();
+						}	
+						hierarchy = category.hierarchy;					
+						setMetaCategory(category); 					
 					}
 				}
-				if(!CategoryService.isCategoryNull(category))
-				{
-					categoryid = category.id.ToString();
-				}
+			}
+			if(!CategoryService.isCategoryNull(category))
+			{
+				categoryid = category.id.ToString();
+			}
 							
 			// tento il recupero del contenuto tramite id
 			if(!String.IsNullOrEmpty(Request["productid"]))

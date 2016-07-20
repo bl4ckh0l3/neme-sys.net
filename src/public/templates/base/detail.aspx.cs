@@ -118,11 +118,14 @@ public partial class _Detail : Page
 			
 			if(!CategoryService.isCategoryNull(category)){				
 				setMetaCategory(category);
+				if(category.idTemplate>0){
+					template = templrep.getByIdCached(templateId,true);
+				}
 			}
 										
-			template = TemplateService.resolveTemplateByVirtualPath(basePath, lang.currentLangCode, out newLangCode);
-			if(template != null)
+			if(template == null)
 			{
+				template = TemplateService.resolveTemplateByVirtualPath(basePath, lang.currentLangCode, out newLangCode);
 				if(CategoryService.isCategoryNull(category))
 				{
 					category = catrep.getByTemplateCached(template.id, true);

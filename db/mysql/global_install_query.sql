@@ -171,8 +171,8 @@ INSERT INTO `TEMPLATE` (`id`, `directory`, `description`, `is_base`, `order_by`,
 INSERT INTO `TEMPLATE` (`id`, `directory`, `description`, `is_base`, `order_by`, `elem_x_page`, `modify_date`) VALUES (3, 'contact', 'contact', 1, 1, 10, '2013-06-14 19:51:06');
 INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `priority`) VALUES (1, 1, 'base/', 'detail.aspx', 1);
 INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `priority`) VALUES (2, 1, 'base/', 'detail.aspx.cs', -1);
-INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `priority`) VALUES (3, 2, 'search/', 'list.aspx', 1);
-INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `priority`) VALUES (4, 2, 'search/', 'list.aspx.cs', -1);
+INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `priority`) VALUES (3, 2, 'search/', 'search-results.aspx', 1);
+INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `priority`) VALUES (4, 2, 'search/', 'search-results.aspx.cs', -1);
 INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `priority`) VALUES (5, 3, 'contact/', 'detail.aspx', 1);
 INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `priority`) VALUES (6, 3, 'contact/', 'confirm.aspx', 0);
 INSERT INTO `TEMPLATE_PAGES` (`id`, `templateid`, `file_path`, `file_name`, `priority`) VALUES (7, 3, 'contact/', 'detail.aspx.cs', -1);

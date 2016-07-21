@@ -22,25 +22,6 @@ protected void Page_Load(Object sender, EventArgs e)
 	Response.Charset="UTF-8";
 	Session.CodePage  = 65001;
 	cssClass = Request["cssClass"];
-	ConfigurationService confservice = new ConfigurationService();
-
-	StringBuilder searchPath = new StringBuilder();
-	if(confservice.get("url_with_langcode_prefix").value=="1")
-	{	
-		searchPath.Append(lang.currentLangCode.ToLower()).Append("/");
-	}
-	searchPath.Append("search-results");
-	if(confservice.get("url_rewrite_file_ext").value=="1")
-	{	
-		searchPath.Append(".aspx");
-	}
-	
-	UriBuilder builder = new UriBuilder(Request.Url);
-	builder.Scheme = "http";
-	builder.Port = -1;	
-	builder.Query="";
-	builder.Path = searchPath.ToString();		
-	url = builder.ToString();
 }
 </script>
 
@@ -64,5 +45,5 @@ protected void Page_Load(Object sender, EventArgs e)
 	  }
 	}
 </script>
-<form method="post" name="search" action="<%=url%>" onSubmit="return doSearch();">
+<form method="post" name="search" action="/public/templates/search/search-results.aspx" onSubmit="return doSearch();">
 <input name="send" align="absmiddle" class="buttonSearchHead" type="image" hspace="0" vspace="0" src="/common/img/zoom.png"><input name="search_full_txt" id="search_full_txt" type="text" value="<%=lang.getTranslated("frontend.header.label.search")%>" onFocus="cleanSearchField('search_full_txt');" onBlur="restoreSearchField('search_full_txt','<%=lang.getTranslated("frontend.header.label.search")%>');"></form>

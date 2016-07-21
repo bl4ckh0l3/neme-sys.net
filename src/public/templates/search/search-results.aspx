@@ -1,4 +1,4 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeFile="list.aspx.cs" Inherits="_List" Debug="false" %>
+<%@ Page Language="C#" AutoEventWireup="true" CodeFile="search-results.aspx.cs" Inherits="_List" Debug="false" %>
 <%@ import Namespace="System" %>
 <%@ import Namespace="System.Collections" %>
 <%@ import Namespace="System.Collections.Generic" %>

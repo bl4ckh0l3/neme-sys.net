@@ -17,7 +17,7 @@ namespace com.nemesys.database.repository
 {
 	public class CategoryRepository : ICategoryRepository
 	{	
-		//private IList<AvailableLanguage> availableLanguages = null;
+		protected static string baseFileExt = ".aspx";
 	
 		public void insert(Category category)
 		{
@@ -617,58 +617,52 @@ namespace com.nemesys.database.repository
 			return result;	
 		}
 
-		public Category getByTemplate(int  templateId)
+		public Category getByTemplate(int templateId, string virtualPath)
 		{
-			return getByTemplateCached(templateId, false);
+			return getByTemplateCached(templateId, virtualPath, false);
 		}
 
-		public Category getByTemplateCached(int  templateId, bool cached)
+		public Category getByTemplateCached(int templateId, string virtualPath, bool cached)
 		{
 			Category result = null;
 			
 			if(cached)
 			{
-				result = (Category)HttpContext.Current.Cache.Get("category-template-"+templateId);
+				result = (Category)HttpContext.Current.Cache.Get("category-template-"+templateId+virtualPath);
 				if(result != null){
 					return result;
 				}
 			}	
 			
-			IList<Category> categories = null;
+			IList<CategoryTemplate> cts = null;
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			{
-				IQuery q = session.CreateQuery("from Category where idTemplate=:templateId");
-				q.SetInt32("templateId",templateId);
-				categories = q.List<Category>();
-				
-				if(categories!=null && categories.Count>0)
-				{
-					result = categories[0];
-					if(result != null)
-					{
-						result.templates = session.CreateCriteria(typeof(CategoryTemplate))
-						.SetFetchMode("Permissions", FetchMode.Join)
-						.Add(Restrictions.Eq("categoryId", result.id))
-						.List<CategoryTemplate>();	
-					}				
+				string strSQL = "from CategoryTemplate where templateId=:templateId";
+			
+				if (!String.IsNullOrEmpty(virtualPath)){	
+					strSQL += " and urlRewrite=:urlRewrite";
 				}
-				else
+				
+				IQuery q = session.CreateQuery(strSQL);
+				q.SetInt32("templateId",templateId);	
+				
+				if (!String.IsNullOrEmpty(virtualPath)){
+					if(virtualPath.StartsWith("/")){virtualPath=virtualPath.Substring(1);}
+					//System.Web.HttpContext.Current.Response.Write("<b>3- modify virtualPath: </b>"+virtualPath+"<br>");
+					if(virtualPath.EndsWith(baseFileExt)){virtualPath=virtualPath.Substring(0,virtualPath.LastIndexOf(baseFileExt));}					
+					
+					q.SetString("urlRewrite", virtualPath);
+				}	
+			
+				cts = q.List<CategoryTemplate>();
+				
+				if(cts!=null && cts.Count>0)
 				{
-					q = session.CreateQuery("from Category where id in(select templateId from CategoryTemplate where templateId=:templateId)");
-					q.SetInt32("templateId",templateId);
-					IList<Category> results = q.List<Category>();
-
-					if(results != null && results.Count>0)
-					{
-						result = results[0];
-						if(result != null)
-						{
-							result.templates = session.CreateCriteria(typeof(CategoryTemplate))
-							.SetFetchMode("Permissions", FetchMode.Join)
-							.Add(Restrictions.Eq("categoryId", result.id))
-							.List<CategoryTemplate>();	
-						}
-					}
+					result = session.Get<Category>(cts[0].categoryId);	
+					result.templates = session.CreateCriteria(typeof(CategoryTemplate))
+					.SetFetchMode("Permissions", FetchMode.Join)
+					.Add(Restrictions.Eq("categoryId", result.id))
+					.List<CategoryTemplate>();			
 				}
 					
 				NHibernateHelper.closeSession();
@@ -680,7 +674,7 @@ namespace com.nemesys.database.repository
 					result = new Category();
 					result.id=-1;
 				}
-				HttpContext.Current.Cache.Insert("category-template-"+templateId, result, null, DateTime.Now.AddHours(24), System.Web.Caching.Cache.NoSlidingExpiration, CacheItemPriority.High, null);
+				HttpContext.Current.Cache.Insert("category-template-"+templateId+virtualPath, result, null, DateTime.Now.AddHours(24), System.Web.Caching.Cache.NoSlidingExpiration, CacheItemPriority.High, null);
 			}
 			
 			return result;	

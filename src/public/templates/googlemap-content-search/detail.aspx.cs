@@ -152,7 +152,7 @@ public partial class _Detail : Page
 				template = TemplateService.resolveTemplateByVirtualPath(basePath, lang.currentLangCode, out newLangCode);
 				if(CategoryService.isCategoryNull(category) && template != null)
 				{
-					category = catrep.getByTemplateCached(template.id, true);
+					category = catrep.getByTemplateCached(template.id, Page.Request.RawUrl.ToString(), true);
 					if(!CategoryService.isCategoryNull(category))
 					{
 						if(String.IsNullOrEmpty(Request["lang_code"]) && !String.IsNullOrEmpty(newLangCode)){

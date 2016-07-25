@@ -34,9 +34,9 @@ namespace com.nemesys.database.repository
 		
 		Category getByHierarchyCached(string hierarchy, bool cached);
 		
-		Category getByTemplate(int  templateId);
+		Category getByTemplate(int templateId, string virtualPath);
 		
-		Category getByTemplateCached(int  templateId, bool cached);
+		Category getByTemplateCached(int  templateId, string virtualPath, bool cached);
 		
 		bool categoryAlreadyExists(string hierarchy, string description, int catid);
 		

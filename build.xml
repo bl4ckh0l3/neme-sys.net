@@ -479,6 +479,7 @@
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jqueryslidemenu.min.js" prefix="common/js"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.timers.min.js" prefix="common/js"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.datetimepicker.min.js" prefix="common/js"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.infinitescroll.j" prefix="common/js"/>
 
 			<!-- includo il logo di neme-sys al posto del logo econeme-sys -->
 			<zipfileset dir="${snippet.dir}/cms/backoffice/img" includes="logo.png" prefix="backoffice/img"/>
@@ -782,6 +783,7 @@
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jqueryslidemenu.min.js" prefix="common/js"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.timers.min.js" prefix="common/js"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.datetimepicker.min.js" prefix="common/js"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.infinitescroll.j" prefix="common/js"/>
 		</zip>
 
 		<delete includeemptydirs="true">

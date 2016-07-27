@@ -235,7 +235,8 @@
 				<include name="javascript_global.js" />
 				<include name="jqueryslidemenu.js" />
 				<include name="jquery.timers.js" /> 
-				<include name="jquery.datetimepicker.js" />                     
+				<include name="jquery.datetimepicker.js" /> 
+				<include name="jquery.infinitescroll.js" /> 
             </fileset>
             <arg line="-jar" />
             <arg path="${yuicompress}" />
@@ -311,6 +312,7 @@
                 <exclude name="common/js/hashtable.js" />
 				<exclude name="common/js/jquery.fancybox-buttons.js" />
 				<exclude name="common/js/highcharts.js" />
+				<exclude name="common/js/jquery.infinitescroll.js" /> 
 				<exclude name="common/js/jquery.form.js" />
 				<exclude name="common/js/javascript_global.js" />
 				<exclude name="common/js/jqueryslidemenu.js" />
@@ -605,7 +607,8 @@
 				<include name="javascript_global.js" />
 				<include name="jqueryslidemenu.js" />
 				<include name="jquery.timers.js" /> 
-				<include name="jquery.datetimepicker.js" />                     
+				<include name="jquery.datetimepicker.js" /> 
+				<include name="jquery.infinitescroll.js" />                     
             </fileset>
             <arg line="-jar" />
             <arg path="${yuicompress}" />
@@ -673,6 +676,7 @@
                 <exclude name="common/js/hashtable.js" /> 
 				<exclude name="common/js/jquery.fancybox-buttons.js" />
 				<exclude name="common/js/highcharts.js" />
+				<exclude name="common/js/jquery.infinitescroll.js" /> 
 				<exclude name="common/js/jquery.form.js" />
 				<exclude name="common/js/javascript_global.js" />
 				<exclude name="common/js/jqueryslidemenu.js" />

@@ -236,7 +236,7 @@
 				<include name="jqueryslidemenu.js" />
 				<include name="jquery.timers.js" /> 
 				<include name="jquery.datetimepicker.js" /> 
-				<include name="jquery.infinitescroll.js" /> 
+				<include name="infinity-scroll.js" /> 
             </fileset>
             <arg line="-jar" />
             <arg path="${yuicompress}" />
@@ -312,7 +312,7 @@
                 <exclude name="common/js/hashtable.js" />
 				<exclude name="common/js/jquery.fancybox-buttons.js" />
 				<exclude name="common/js/highcharts.js" />
-				<exclude name="common/js/jquery.infinitescroll.js" /> 
+				<exclude name="common/js/infinity-scroll.js" /> 
 				<exclude name="common/js/jquery.form.js" />
 				<exclude name="common/js/javascript_global.js" />
 				<exclude name="common/js/jqueryslidemenu.js" />
@@ -479,7 +479,7 @@
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jqueryslidemenu.min.js" prefix="common/js"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.timers.min.js" prefix="common/js"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.datetimepicker.min.js" prefix="common/js"/>
-			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.infinitescroll.min.js" prefix="common/js"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="infinity-scroll.min.js" prefix="common/js"/>
 
 			<!-- includo il logo di neme-sys al posto del logo econeme-sys -->
 			<zipfileset dir="${snippet.dir}/cms/backoffice/img" includes="logo.png" prefix="backoffice/img"/>
@@ -609,7 +609,7 @@
 				<include name="jqueryslidemenu.js" />
 				<include name="jquery.timers.js" /> 
 				<include name="jquery.datetimepicker.js" /> 
-				<include name="jquery.infinitescroll.js" />                     
+				<include name="infinity-scroll.js" />                     
             </fileset>
             <arg line="-jar" />
             <arg path="${yuicompress}" />
@@ -677,7 +677,7 @@
                 <exclude name="common/js/hashtable.js" /> 
 				<exclude name="common/js/jquery.fancybox-buttons.js" />
 				<exclude name="common/js/highcharts.js" />
-				<exclude name="common/js/jquery.infinitescroll.js" /> 
+				<exclude name="common/js/infinity-scroll.js" /> 
 				<exclude name="common/js/jquery.form.js" />
 				<exclude name="common/js/javascript_global.js" />
 				<exclude name="common/js/jqueryslidemenu.js" />
@@ -783,7 +783,7 @@
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jqueryslidemenu.min.js" prefix="common/js"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.timers.min.js" prefix="common/js"/>
 			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.datetimepicker.min.js" prefix="common/js"/>
-			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="jquery.infinitescroll.min.js" prefix="common/js"/>
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp/common/js" includes="infinity-scroll.min.js" prefix="common/js"/>
 		</zip>
 
 		<delete includeemptydirs="true">

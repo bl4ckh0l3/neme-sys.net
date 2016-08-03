@@ -25,9 +25,10 @@
 <META http-equiv="Content-Type" CONTENT="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <CommonCssJs:insert runat="server" />
-<script type="text/javascript" src="/common/js/jquery.infinitescroll.min.js"></script>
-<link rel="stylesheet" href="/public/layout/css/stile.css" type="text/css">
+<script type="text/javascript" src="/common/js/infinity-scroll.min.js"></script>
 <script>  
+var maxPages = <%=this.totalCPages%>;
+var infinity_counter = 2;
 function openDetailContentPage(contentid){
 	<%if(bolHasDetailLink){%>
     document.form_detail_link_news.contentid.value=contentid;
@@ -35,53 +36,39 @@ function openDetailContentPage(contentid){
 	<%}%>
 }
 
-(function($, undefined) {
-	$.extend($.infinitescroll.prototype,{
+function infinityScroll(pageNum){	
+	var query_string = "categoryid=<%=categoryid%>&page="+pageNum+"&items=<%=itemsXpage%>";	
+	//alert(query_string);
+	
+	$('#loading_zoom').show();
+	
+	$.ajax({
+		async: true,
+		type: "GET",
+		cache: false,
+		url: "/common/include/content_xml.aspx",
+		data: query_string,
+		dataType: "xml",
+		success: function(xml) {
+			$('#loading_zoom').hide();
+			
+			$(xml).find('item').each(function(){
+				var id = $(this).find('id').text();
+				var title = $(this).find('title').text();
+				var summary = $(this).find('summary').text();
 
-		_setup_twitter: function infscr_setup_twitter () {
-			var opts = this.options,
-				instance = this;
-
-			// Bind nextSelector link to retrieve
-			$(opts.nextSelector).click(function(e) {
-				if (e.which == 1 && !e.metaKey && !e.shiftKey) {
-					e.preventDefault();
-					instance.retrieve();
-				}
+				var newrow = '<div><p class="title_contenuti"><a href="javascript:openDetailContentPage('+id+');">'+title+'</a></p>'+summary+'</div><p class=line></p>';
+				$('#contenuti').append(newrow);				
 			});
-
-			// Define loadingStart to never hide pager
-			instance.options.loading.start = function (opts) {
-				opts.loading.msg
-					.appendTo(opts.loading.selector)
-					.show(opts.loading.speed, function () {
-						instance.beginAjax(opts);
-					});
-			}
 		},
-		_showdonemsg_twitter: function infscr_showdonemsg_twitter () {
-			var opts = this.options,
-				instance = this;
-
-			//Do all the usual stuff
-			opts.loading.msg
-				.find('img')
-				.hide()
-				.parent()
-				.find('div').html(opts.loading.finishedMsg).animate({ opacity: 1 }, 2000, function () {
-					$(this).parent().fadeOut('normal');
-				});
-
-			//And also hide the navSelector
-			$(opts.navSelector).fadeOut('normal');
-
-			// user provided callback when done
-			opts.errorCallback.call($(opts.contentSelector)[0],'done');
-
+		error: function(response) {
+			//alert(response.responseText);	
+			//$('#commentsContainer').hide();
+			alert("<%=lang.getTranslated("portal.commons.js.label.loading_error")%>");
+			$('#loading_zoom').hide();
 		}
-
-	});
-})(jQuery);
+	});	
+}
 </script>
 </head>
 <body>
@@ -109,6 +96,7 @@ function openDetailContentPage(contentid){
 				<br/><br/><div align="center"><strong><lang:getTranslated keyword="portal.commons.templates.label.page_in_progress" runat="server" /></strong></div>
 			<%}%>
 			</div>
+			<div style="width:100%;text-align:center;"><img style="display:none" id="loading_zoom" src="/common/img/loading_icon3.gif" alt="" align="center" width="23" height="23" hspace="2" vspace="0" border="0"></div>
 			<form method="post" name="form_detail_link_news" action="<%=detailURL%>">	
 			<input type="hidden" value="" name="contentid">	
 			<input type="hidden" value="<%=modelPageNum+1%>" name="modelPageNum">	
@@ -126,27 +114,23 @@ function openDetailContentPage(contentid){
 	</div>
 	<CommonFooter:insert runat="server" />
 </div>
-<a id="next" href="/test/infinity-scroll/index2.html">next page?</a>
-
 <script type="text/javascript">
-$(document).ready(function(){
-	$('#contenuti').infinitescroll({
-		navSelector: "#next:last",
-		nextSelector: "#next:last",
-		itemSelector: "#content",
-		debug: false,
-		dataType: 'html',
-    maxPage: 6,
-		path: function(index) {
-			return "/test/infinity-scroll/index" + index + ".html";
-		}
-		// appendCallback	: false, // USE FOR PREPENDING
-    }, function(newElements, data, url){
-      // used for prepending data
-    	// $(newElements).css('background-color','#ffef00');
-    	// $(this).prepend(newElements);
-    });
-});
+var options = {
+  distance: 50,
+  callback: function(done) {
+    // 1. fetch data from the server
+    // 2. insert it into the document
+    // 3. call done when we are done
+    if(infinity_counter<=maxPages){
+    	infinityScroll(infinity_counter);
+    	done();
+    	infinity_counter++;
+    }
+  }
+}
+
+// setup infinite scroll
+infiniteScroll(options);
 </script>
 </body>
 </html>

@@ -12,9 +12,11 @@ public ASP.MultiLanguageControl lang;
 public ASP.UserLoginControl login;
 protected ConfigurationService confservice;
 protected bool bolFoundLista = false;
+protected bool paginate = false;
 protected IList<FContent> contents;
 protected int numPage, itemsXpage, orderBy, modelPageNum;
 protected int fromContent, toContent;
+protected long totalCount;
 protected IList<int> matchCategories = null;
 protected string status;
 protected string hierarchy;
@@ -68,6 +70,7 @@ protected void Page_Load(object sender, EventArgs e)
 	modelPageNum = 1;
 	attachmentsLabel = contentrep.getContentAttachmentLabelCached(true);
 	contentid = "";
+	totalCount = 0L;
 	
 	try
 	{
@@ -76,6 +79,14 @@ protected void Page_Load(object sender, EventArgs e)
 		{
 			contentid = Request["contentid"];				
 		}
+
+		// verifico se e' stata richiesta la paginazione
+		if(!String.IsNullOrEmpty(Request["items"]))
+		{
+			paginate = true;	
+			itemsXpage = Convert.ToInt32(Request["items"]);
+			numPage = Convert.ToInt32(Request["page"]);
+		}		
 		
 		// tento di risolvere la categoria e il template in base ai parametri della request
 		if(!String.IsNullOrEmpty(Request["categoryid"]))
@@ -116,7 +127,12 @@ protected void Page_Load(object sender, EventArgs e)
 			contents = new List<FContent>();
 			contents.Add(contentrep.getByIdCached(Convert.ToInt32(contentid), true));
 		}else{
-			contents = contentrep.find(null,null,status,0,null,null,orderBy,matchCategories,matchLanguages,true,true,true,true,true);		
+			if(paginate){
+				contents = contentrep.find(null,null,status,0,null,null,orderBy,matchCategories,matchLanguages,true,true,true,true,numPage,itemsXpage,out totalCount);
+			}else{
+				contents = contentrep.find(null,null,status,0,null,null,orderBy,matchCategories,matchLanguages,true,true,true,true,true);	
+			}
+			
 			if(contents != null && contents.Count>0){				
 				bolFoundLista = true;						
 			}
@@ -129,12 +145,17 @@ protected void Page_Load(object sender, EventArgs e)
 	}
 }	
 </script>
-<?xml version="1.0"?>
+<!--<?xml version="1.0"?>-->
   <root> 
 	<%
 	if(bolFoundLista) {		
+		if(paginate){%>
+			<total_count><%=totalCount%></total_count>
+		<%}
+		
 		foreach (FContent content in contents){%>
 			<item>
+			<id><%=content.id%></id>
 			<title><![CDATA[<%=content.title%>]]></title>
 			<summary><![CDATA[<%=content.summary%>]]></summary>
 			<description><![CDATA[<%=content.description%>]]></description>

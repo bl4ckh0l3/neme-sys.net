@@ -27,6 +27,7 @@ namespace com.nemesys.model
 		private IList<ProductCategory> _categories;
 		private IList<ProductRelation> _relations;
 		private IList<ProductField> _fields;
+		private IList<ProductCalendar> _calendar;
 		private decimal _price;
 		private decimal _discount;
 		private int _quantity;
@@ -136,6 +137,11 @@ namespace com.nemesys.model
 		public virtual IList<ProductField> fields {
 			get { return _fields; }
 			set { _fields = value; }
+		}
+
+		public virtual IList<ProductCalendar> calendar {
+			get { return _calendar; }
+			set { _calendar = value; }
 		}
 
 		public virtual decimal price {

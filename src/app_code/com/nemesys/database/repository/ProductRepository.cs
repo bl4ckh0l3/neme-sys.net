@@ -27,6 +27,7 @@ namespace com.nemesys.database.repository
 				IList<ProductCategory> newProductCategory = new List<ProductCategory>();
 				IList<ProductField> newProductField = new List<ProductField>();
 				IList<ProductRelation> newProductRelation = new List<ProductRelation>();
+				IList<ProductCalendar> newProductCalendar = new List<ProductCalendar>();
 				IDictionary<int,IList<ProductFieldsValue>> newProductFieldsValues = new Dictionary<int,IList<ProductFieldsValue>>();
 				IDictionary<int,IList<ProductFieldsRelValue>> newProductFieldsRelValues = new Dictionary<int,IList<ProductFieldsRelValue>>();
 				if(product.attachments != null && product.attachments.Count>0)
@@ -117,6 +118,20 @@ namespace com.nemesys.database.repository
 						newProductRelation.Add(ncr);
 					}
 					product.relations.Clear();							
+				}
+				if(product.calendar != null && product.calendar.Count>0)
+				{
+					foreach(ProductCalendar k in product.calendar){	
+						ProductCalendar npc = new ProductCalendar();
+						//npc.id=k.id;
+						npc.idParentProduct=k.idParentProduct;
+						npc.startDate=k.startDate;
+						npc.availability=k.availability;
+						npc.unit=k.unit;
+						npc.content=k.content;
+						newProductCalendar.Add(npc);
+					}
+					product.calendar.Clear();							
 				}			
 				
 				product.insertDate=DateTime.Now;
@@ -250,6 +265,13 @@ namespace com.nemesys.database.repository
 						k.idParentProduct = product.id;
 						session.Save(k);
 					}
+				}	
+				if(newProductCalendar != null && newProductCalendar.Count>0)
+				{							
+					foreach(ProductCalendar k in newProductCalendar){
+						k.idParentProduct = product.id;
+						session.Save(k);
+					}
 				}
 				
 				tx.Commit();
@@ -284,6 +306,7 @@ namespace com.nemesys.database.repository
 				IList<ProductCategory> newProductCategory = new List<ProductCategory>();
 				IList<ProductField> newProductField = new List<ProductField>();
 				IList<ProductRelation> newProductRelation = new List<ProductRelation>();
+				IList<ProductCalendar> newProductCalendar = new List<ProductCalendar>();
 				IDictionary<int,IList<ProductFieldsValue>> newProductFieldsValues = new Dictionary<int,IList<ProductFieldsValue>>();
 				IDictionary<int,IList<ProductFieldsRelValue>> newProductFieldsRelValues = new Dictionary<int,IList<ProductFieldsRelValue>>();
 				if(product.attachments != null && product.attachments.Count>0)
@@ -376,6 +399,20 @@ namespace com.nemesys.database.repository
 						newProductRelation.Add(ncr);
 					}
 					product.relations.Clear();							
+				}
+				if(product.calendar != null && product.calendar.Count>0)
+				{
+					foreach(ProductCalendar k in product.calendar){	
+						ProductCalendar npc = new ProductCalendar();
+						//npc.id=k.id;
+						npc.idParentProduct=k.idParentProduct;
+						npc.startDate=k.startDate;
+						npc.availability=k.availability;
+						npc.unit=k.unit;
+						npc.content=k.content;
+						newProductCalendar.Add(npc);
+					}
+					product.calendar.Clear();							
 				}			
 				
 				session.Update(product);	
@@ -385,6 +422,7 @@ namespace com.nemesys.database.repository
 				session.CreateQuery("delete from ProductLanguage where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
 				session.CreateQuery("delete from ProductCategory where idParent=:idParent").SetInt32("idParent",product.id).ExecuteUpdate();
 				session.CreateQuery("delete from ProductRelation where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
+				session.CreateQuery("delete from ProductCalendar where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
 				List<string> ids = new List<string>();
 				if(newProductFieldsValues != null && newProductFieldsValues.Count>0){
 					foreach(int fvpid in newProductFieldsValues.Keys){
@@ -513,6 +551,13 @@ namespace com.nemesys.database.repository
 						k.idParentProduct = product.id;
 						session.Save(k);
 					}
+				}	
+				if(newProductCalendar != null && newProductCalendar.Count>0)
+				{							
+					foreach(ProductCalendar k in newProductCalendar){
+						k.idParentProduct = product.id;
+						session.Save(k);
+					}
 				}			
 				
 				tx.Commit();
@@ -584,6 +629,11 @@ namespace com.nemesys.database.repository
 				{
 					session.CreateQuery("delete from ProductRelation where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
 					product.relations.Clear();						
+				}	
+				if(product.calendar != null && product.calendar.Count>0)
+				{
+					session.CreateQuery("delete from ProductCalendar where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
+					product.calendar.Clear();						
 				}
 				if(product.fields != null && product.fields.Count>0)
 				{
@@ -647,6 +697,7 @@ namespace com.nemesys.database.repository
 					IList<ProductCategory> newProductCategory = new List<ProductCategory>();
 					IList<ProductField> newProductField = new List<ProductField>();
 					IList<ProductRelation> newProductRelation = new List<ProductRelation>();
+					IList<ProductCalendar> newProductCalendar = new List<ProductCalendar>();
 					IDictionary<int,IList<ProductFieldsValue>> newProductFieldsValues = new Dictionary<int,IList<ProductFieldsValue>>();
 					IDictionary<int,IList<ProductFieldsRelValue>> newProductFieldsRelValues = new Dictionary<int,IList<ProductFieldsRelValue>>();
 					
@@ -758,6 +809,20 @@ namespace com.nemesys.database.repository
 								newProductRelation.Add(ncr);
 							}
 							product.relations.Clear();							
+						}
+						if(product.calendar != null && product.calendar.Count>0)
+						{
+							foreach(ProductCalendar k in product.calendar){	
+								ProductCalendar npc = new ProductCalendar();
+								//npc.id=k.id;
+								npc.idParentProduct=k.idParentProduct;
+								npc.startDate=k.startDate;
+								npc.availability=k.availability;
+								npc.unit=k.unit;
+								npc.content=k.content;
+								newProductCalendar.Add(npc);
+							}
+							product.calendar.Clear();							
 						}					
 						
 						session.Update(product);	
@@ -766,7 +831,8 @@ namespace com.nemesys.database.repository
 						//session.CreateQuery("delete from ProductAttachmentDownload where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
 						session.CreateQuery("delete from ProductLanguage where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
 						session.CreateQuery("delete from ProductCategory where idParent=:idParent").SetInt32("idParent",product.id).ExecuteUpdate();	
-						session.CreateQuery("delete from ProductRelation where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();		
+						session.CreateQuery("delete from ProductRelation where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();	
+						session.CreateQuery("delete from ProductCalendar where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();		
 						List<string> ids = new List<string>();
 						if(newProductFieldsValues != null && newProductFieldsValues.Count>0){
 							foreach(int fvpid in newProductFieldsValues.Keys){
@@ -895,7 +961,14 @@ namespace com.nemesys.database.repository
 								k.idParentProduct = product.id;
 								session.Save(k);
 							}
-						}		
+						}	
+						if(newProductCalendar != null && newProductCalendar.Count>0)
+						{							
+							foreach(ProductCalendar k in newProductCalendar){
+								k.idParentProduct = product.id;
+								session.Save(k);
+							}
+						}	
 					}else{
 						if(product.attachments != null && product.attachments.Count>0)
 						{
@@ -1001,6 +1074,20 @@ namespace com.nemesys.database.repository
 								newProductRelation.Add(ncr);
 							}
 							product.relations.Clear();							
+						}
+						if(product.calendar != null && product.calendar.Count>0)
+						{
+							foreach(ProductCalendar k in product.calendar){	
+								ProductCalendar npc = new ProductCalendar();
+								//npc.id=k.id;
+								npc.idParentProduct=k.idParentProduct;
+								npc.startDate=k.startDate;
+								npc.availability=k.availability;
+								npc.unit=k.unit;
+								npc.content=k.content;
+								newProductCalendar.Add(npc);
+							}
+							product.calendar.Clear();							
 						}				
 						
 						product.insertDate=DateTime.Now;
@@ -1133,6 +1220,13 @@ namespace com.nemesys.database.repository
 								k.idParentProduct = product.id;
 								session.Save(k);
 							}
+						}	
+						if(newProductCalendar != null && newProductCalendar.Count>0)
+						{							
+							foreach(ProductCalendar k in newProductCalendar){
+								k.idParentProduct = product.id;
+								session.Save(k);
+							}
 						}
 					}					
 					
@@ -1252,6 +1346,7 @@ namespace com.nemesys.database.repository
 				IList<ProductCategory> newProductCategory = new List<ProductCategory>();
 				IList<ProductField> newProductField = new List<ProductField>();
 				IList<ProductRelation> newProductRelation = new List<ProductRelation>();
+				IList<ProductCalendar> newProductCalendar = new List<ProductCalendar>();
 				IDictionary<int,IList<ProductFieldsValue>> newProductFieldsValues = new Dictionary<int,IList<ProductFieldsValue>>();
 							
 				// ** insert attachments copy
@@ -1339,6 +1434,20 @@ namespace com.nemesys.database.repository
 						newProductRelation.Add(ncr);
 					}
 				}
+
+				// ** insert prod relations copy
+				if(original.calendar != null){
+					foreach(ProductCalendar opc in original.calendar)
+					{
+						ProductCalendar npc = new ProductCalendar();	
+						npc.idParentProduct=opc.idParentProduct;
+						npc.startDate=opc.startDate;
+						npc.availability=opc.availability;
+						npc.unit=opc.unit;
+						npc.content=opc.content;
+						newProductCalendar.Add(npc);
+					}
+				}
 				
 				newproduct.insertDate=DateTime.Now;
 				session.Save(newproduct);	
@@ -1411,6 +1520,13 @@ namespace com.nemesys.database.repository
 				if(newProductRelation != null && newProductRelation.Count>0)
 				{							
 					foreach(ProductRelation k in newProductRelation){
+						k.idParentProduct = newproduct.id;
+						session.Save(k);
+					}
+				}	
+				if(newProductCalendar != null && newProductCalendar.Count>0)
+				{							
+					foreach(ProductCalendar k in newProductCalendar){
 						k.idParentProduct = newproduct.id;
 						session.Save(k);
 					}
@@ -1528,7 +1644,12 @@ namespace com.nemesys.database.repository
 				product.relations = session.CreateCriteria(typeof(ProductRelation))
 				.SetFetchMode("Permissions", FetchMode.Join)
 				.Add(Restrictions.Eq("idParentProduct", product.id))
-				.List<ProductRelation>();					
+				.List<ProductRelation>();		
+
+				product.calendar = session.CreateCriteria(typeof(ProductCalendar))
+				.SetFetchMode("Permissions", FetchMode.Join)
+				.Add(Restrictions.Eq("idParentProduct", product.id))
+				.List<ProductCalendar>();				
 
 				NHibernateHelper.closeSession();
 			}
@@ -1545,7 +1666,7 @@ namespace com.nemesys.database.repository
 			return product;
 		}
 
-		public IList<Product> find(string name, string keyword, string status, int userId, string prodType, string qryRotationMode, string publishDate, string deleteDate, int orderBy, IList<int> matchCategories, IList<int> matchLanguages, bool withAttach, bool withLang, bool withCats, bool withFields, bool withProdRel, bool cached)
+		public IList<Product> find(string name, string keyword, string status, int userId, string prodType, string qryRotationMode, string publishDate, string deleteDate, int orderBy, IList<int> matchCategories, IList<int> matchLanguages, bool withAttach, bool withLang, bool withCats, bool withFields, bool withProdRel, bool withProdCal, bool cached)
 		{
 			IList<Product> results = null;
 			List<string> idsCat = new List<string>();
@@ -1761,6 +1882,13 @@ namespace com.nemesys.database.repository
 								.SetFetchMode("Permissions", FetchMode.Join)
 								.Add(Restrictions.Eq("idParentProduct", product.id))
 								.List<ProductRelation>();		
+							}	
+	
+							if(withProdCal){
+								product.calendar = session.CreateCriteria(typeof(ProductCalendar))
+								.SetFetchMode("Permissions", FetchMode.Join)
+								.Add(Restrictions.Eq("idParentProduct", product.id))
+								.List<ProductCalendar>();		
 							}							
 						}
 					}
@@ -1785,7 +1913,7 @@ namespace com.nemesys.database.repository
 			return results;		
 		}
 
-		public IList<Product> find(string name, string keyword, string status, int userId, string prodType, string qryRotationMode, string publishDate, string deleteDate, int orderBy, IList<int> matchCategories, IList<int> matchLanguages, bool withAttach, bool withLang, bool withCats, bool withFields, bool withProdRel, int pageIndex, int pageSize,out long totalCount)
+		public IList<Product> find(string name, string keyword, string status, int userId, string prodType, string qryRotationMode, string publishDate, string deleteDate, int orderBy, IList<int> matchCategories, IList<int> matchLanguages, bool withAttach, bool withLang, bool withCats, bool withFields, bool withProdRel, bool withProdCal, int pageIndex, int pageSize,out long totalCount)
 		{
 			IList<Product> products = null;		
 			totalCount = 0;	
@@ -1978,6 +2106,13 @@ namespace com.nemesys.database.repository
 								.SetFetchMode("Permissions", FetchMode.Join)
 								.Add(Restrictions.Eq("idParentProduct", product.id))
 								.List<ProductRelation>();		
+							}	
+	
+							if(withProdCal){
+								product.calendar = session.CreateCriteria(typeof(ProductCalendar))
+								.SetFetchMode("Permissions", FetchMode.Join)
+								.Add(Restrictions.Eq("idParentProduct", product.id))
+								.List<ProductCalendar>();		
 							}
 						}
 					}

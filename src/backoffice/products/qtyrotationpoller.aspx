@@ -20,7 +20,7 @@ protected void Page_Load(object sender, EventArgs e)
 	IProductRepository prodrep = RepositoryFactory.getInstance<IProductRepository>("IProductRepository");
 	
 	try{
-		IList<Product> products = prodrep.find("","","1",-1,-1,"1,2,3",null,null,-1,null,null,false,false,false,false,false,false);
+		IList<Product> products = prodrep.find("","","1",-1,-1,"1,2,3",null,null,-1,null,null,false,false,false,false,false,false,false);
 		if(products != null && products.Count>0){
 			string rotation_mode_tmp_d ="";
 			string rotation_mode_tmp_w ="";

@@ -252,7 +252,7 @@ public partial class _Detail : Page
 								
 				try
 				{			
-					IList<Product> products = productrep.find(null, null, status, 0, "0,1", null, null, null, orderBy, matchCategories, matchLanguages, true, true, true, true, true, true);
+					IList<Product> products = productrep.find(null, null, status, 0, "0,1", null, null, null, orderBy, matchCategories, matchLanguages, true, true, true, true, true, true, true);
 					
 					//Response.Write("products != null:"+ products!=null +"<br>");
 					

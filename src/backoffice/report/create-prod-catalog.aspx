@@ -59,7 +59,7 @@ protected void Page_Load(Object sender, EventArgs e)
 	}
 	
 	try{
-		products = productrep.find(null,null,null,-1,null,null,null,null,-1,null,null,false,true,true,false,false,false);
+		products = productrep.find(null,null,null,-1,null,null,null,null,-1,null,null,false,true,true,false,false,false,false);
 		if(products == null){				
 			products = new List<Product>();						
 		}

@@ -366,7 +366,7 @@ public partial class _ProductList : Page
 		{
 			//check su userid: se administrator mostro tutti i contenuti
 			if(!login.userLogged.role.isAdmin()){userf=login.userLogged.id;}
-			products = productrep.find(titlef,keywordf,statusf,userf,typef,qtyrtypef,null,null,order_by,matchCategories,matchLanguages,false,true,true,false,false,numPageProd,itemsXpageProd,out totalcount);
+			products = productrep.find(titlef,keywordf,statusf,userf,typef,qtyrtypef,null,null,order_by,matchCategories,matchLanguages,false,true,true,false,false,false,numPageProd,itemsXpageProd,out totalcount);
 			
 			if(products != null && products.Count>0){				
 				bolFoundLista = true;		

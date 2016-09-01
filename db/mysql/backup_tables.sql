@@ -1022,6 +1022,24 @@ CREATE TABLE IF NOT EXISTS `PRODUCT_MAIN_FIELD_TRANSLATION` (
 
 -- --------------------------------------------------------
 -- 
+-- Structure of table `PRODUCT_CALENDAR`
+-- 
+DROP TABLE IF EXISTS `PRODUCT_CALENDAR`;
+CREATE TABLE IF NOT EXISTS `PRODUCT_CALENDAR` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `id_parent_product` int(11) NOT NULL,
+  `start_date` timestamp NOT NULL,
+  `availability` int(10) NOT NULL DEFAULT 0,  
+  `unit` int(10) NOT NULL DEFAULT 0, 
+  `content` text,
+  PRIMARY KEY  (`id`),
+  KEY `Index_1` (`id_parent_product`),
+  KEY `Index_2` (`start_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
+
+
+-- --------------------------------------------------------
+-- 
 -- Structure of table `PRODUCT_ROTATION`
 -- 
 DROP TABLE IF EXISTS `PRODUCT_ROTATION`;

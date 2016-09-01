@@ -24,8 +24,388 @@
 <head>
 <CommonMeta:insert runat="server" />
 <CommonCssJs:insert runat="server" />
+<link href='/common/css/fullcalendar.min.css' rel='stylesheet' />
+<link href='/common/css/fullcalendar.print.css' rel='stylesheet' media='print' />
 <script src="/common/js/hashtable.min.js"></script>
+<script src='/common/js/moment.min.js'></script>
+<script src='/common/js/fullcalendar.min.js'></script>
+<style>
+#calendar {max-width: 900px;margin: 0 auto;}
+#dialog-form fieldset label {width:80px;display: block;float:left;text-align:right;padding-right:5px;}
+#dialog-form fieldset legend {font-weight:bold;}
+</style>
 <script>
+/************      START: GLOBAL PROPERTIES DO NOT DELETE       ****************/
+var isOneEvent4Cell = true; // change to false if you want to set more than one event per day
+var overlap = false;
+var rightTab = "";
+
+if(!isOneEvent4Cell){
+	overlap = true;
+	rightTab = "month,agendaWeek,agendaDay";
+}
+
+var availableWidgetX = 0;
+var availableWidgetY = 0;
+
+/************      END: GLOBAL PROPERTIES DO NOT DELETE       ****************/
+
+function prepareAvailableBox(){		
+	var divbox = document.getElementById("dialog-form");
+	var offsetx   = 250;
+	var offsety   = 50;	
+	  
+	if(ie||mac_ie){
+		divbox.style.left=availableWidgetX-offsetx;
+		divbox.style.top=availableWidgetY-offsety;
+	}else{
+		divbox.style.left=availableWidgetX-offsetx+"px";
+		divbox.style.top=availableWidgetY-offsety+"px";
+	}
+	
+	$("#dialog-form").show();
+	divbox.style.visibility = "visible";
+	divbox.style.display = "block";
+}
+
+
+function retrieveEvent(date, end){
+	var events = $('#calendar').fullCalendar('clientEvents');
+	eventsLoop(events, date, end);
+}
+
+function eventsLoop(events, date, end){
+	//clean all events within the interval if the isOneEvent4Cell property is true
+	if(isOneEvent4Cell){
+		if(end){
+			var future = moment(end);
+			var start = moment(date);  
+			var diff = future.diff(start, 'days');
+			for(var i=0;i<diff;i++){
+				for (var d=0;d<events.length; d++) {
+					if (start.isSame(moment(events[d].start))) {
+						$('#calendar').fullCalendar('removeEvents', events[d]._id);
+						break;
+					}
+				}
+				start = start.add(1,'days');
+			}
+		}else{
+			for (var i = 0; i < events.length; i++) {
+				if (moment(date).isSame(moment(events[i].start))) {
+					$('#calendar').fullCalendar('removeEvents', events[i]._id);
+					break;
+				}
+			}
+		}
+	}
+	
+	if(events.length>0){
+		for (var i=0;i<events.length;i++) {
+			// case single event found, just update
+			if (moment(date).isSame(moment(events[i].start))) {
+				events[i].end=end;
+				addEvent(events[i], 1);
+				break;
+			}
+			
+			// case event not found
+			if (i == events.length-1) {
+				tmpevent = {
+					_id: '',
+					title: '',
+					start: date,
+					end: end,
+					availability: '',
+					unit: '',
+					price: {
+								adult: '',
+								childs_0_2: '',
+								childs_3_11: '',
+								childs_12_17: '',
+								discount: ''
+					},
+					allDay: true,
+					overlap: overlap			
+				};
+				addEvent(tmpevent, 1);
+				break;
+			}
+		}	
+	}else{
+		tmpevent = {
+			_id: '',
+			title: '',
+			start: date,
+			end: end,
+			availability: '',
+			unit: '',
+			price: {
+						adult: '',
+						childs_0_2: '',
+						childs_3_11: '',
+						childs_12_17: '',
+						discount: ''
+			},
+			allDay: true,
+			overlap: overlap			
+		};
+		addEvent(tmpevent, 1);		
+	}
+	
+}
+
+function addEvent(event, type){
+	document.getElementById("addeventbooking").reset();
+	prepareAvailableBox();
+	//$("#dialog-form").show();
+	$("#start").val(event.start.format('YYYY-MM-DD'));
+	var end = "";
+	if(event.end){
+		end = event.end.format('YYYY-MM-DD');
+	}
+	$("#end").val(end);
+	$("#type").val(type);
+	$("#cevent").val(event._id);
+	$('#availability').val(event.availability);
+	$('#unit').val(event.unit);	
+	$('#price_adult').val(event.price.adult);
+	$('#price_0_2').val(event.price.childs_0_2);
+	$('#price_3_11').val(event.price.childs_3_11);
+	$('#price_12_17').val(event.price.childs_12_17);
+	$('#price_discount').val(event.price.discount);
+}
+
+function doAction(theForm){
+	if(!validateEventForm(theForm)){
+		return;
+	}
+
+	if($("#type").val()==1){
+		getValues(theForm);
+	}else{
+		updateValues(theForm);
+	}
+}
+
+function getValues(theForm){
+	var eventData;
+	if (theForm.availability.value) {
+		$("#dialog-form").hide();
+
+		var future = moment(theForm.end.value);
+		var start = moment(theForm.start.value);  
+		var d = future.diff(start, 'days');
+		
+		for(var i=0;i<d;i++){
+			var inners = start.format('YYYY-MM-DD');
+			var innere = start.format('YYYY-MM-DD');
+			start = start.add(1,'days');
+			eventData = {
+				title: '',
+				start: inners,
+				end: innere,
+				availability: theForm.availability.value,
+				unit: theForm.unit.value,
+				price: {
+							adult: theForm.price_adult.value,
+							childs_0_2: theForm.price_0_2.value,
+							childs_3_11: theForm.price_3_11.value,
+							childs_12_17: theForm.price_12_17.value,
+							discount: theForm.price_discount.value
+				},
+				allDay: true,
+				overlap: overlap
+			};
+			$('#calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
+		}
+	}
+	$('#calendar').fullCalendar('unselect');
+}
+
+function updateValues(theForm){
+	var eventData;
+	if (theForm.cevent.value) {
+		$("#dialog-form").hide();
+            
+		var eventup = $('#calendar').fullCalendar( 'clientEvents',theForm.cevent.value);
+		eventup[0].availability = theForm.availability.value;
+		eventup[0].unit = theForm.unit.value;
+		eventup[0].price.adult = theForm.price_adult.value;
+		eventup[0].price.childs_0_2 = theForm.price_0_2.value;
+		eventup[0].price.childs_3_11 = theForm.price_3_11.value;
+		eventup[0].price.childs_12_17 = theForm.price_12_17.value;
+		eventup[0].price.discount = theForm.price_discount.value;
+						
+		$('#calendar').fullCalendar('updateEvent', eventup[0]);
+	}
+	$('#calendar').fullCalendar('unselect');
+}
+
+function renderCustomElement(event){
+	var discountSign = "";
+	if(event.price.discount && Number(event.price.discount.replace(',',''))>0){
+		discountSign = "-";
+	}
+	
+	var render =         
+	"<div class=\"calendar_event_box\"><div style=\"color:#ddd;float:left;margin-right:5px;\"><img src=\"/backoffice/img/rooms.png\" alt=\"<%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.available_rooms")%>\" title=\"<%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.available_rooms")%>\" align=\"absmiddle\" border=\"0\" width=\"25\" heigth=\"25\"><br/>"+event.availability+"</div>"+
+	"<div style=\"color:#ddd;float:left;margin-right:5px;\"><img src=\"/backoffice/img/beds.png\" alt=\"<%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.beds_rooms")%>\" title=\"<%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.beds_rooms")%>\" align=\"absmiddle\" border=\"0\" width=\"25\" heigth=\"25\"><br/>"+event.unit+"</div>"+
+	"<div style=\"float:top;text-align:right;\"><img src=\"/backoffice/img/rooms_discount.png\" alt=\"<%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.price_discount")%>\" title=\"<%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.price_discount")%>\" align=\"absmiddle\" border=\"0\" width=\"25\" heigth=\"25\"><br/>"+discountSign+addSeparatorsNF(round(Number(event.price.discount.replace(',','')),4).toFixed(2),'.',',','.')+"</div><div style=\"clear:both;border-bottom:1px solid #C9C9C9;\"></div>"+
+	"<div style=\"width:40px;float:left;margin-left:0px;margin-right:5px;text-align:right;\"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.price_adult")%></div><div style=\"width:8px;float:left;margin-right:1px;\">&euro;</div><div style=\"width:58px;float:left;margin-right:0px;text-align:right;\">"+addSeparatorsNF(round(Number(event.price.adult.replace(',','')),4).toFixed(2),'.',',','.')+"</div>"+
+	"<div style=\"width:40px;float:left;margin-left:0px;margin-right:5px;text-align:right;\"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.price_0_2")%></div><div style=\"width:8px;float:left;margin-right:1px;\">&euro;</div><div style=\"width:58px;float:left;margin-right:0px;text-align:right;\">"+addSeparatorsNF(round(Number(event.price.childs_0_2.replace(',','')),4).toFixed(2),'.',',','.')+"</div>"+
+	"<div style=\"width:40px;float:left;margin-left:0px;margin-right:5px;text-align:right;\"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.price_3_11")%></div><div style=\"width:8px;float:left;margin-right:1px;\">&euro;</div><div style=\"width:58px;float:left;margin-right:0px;text-align:right;\">"+addSeparatorsNF(round(Number(event.price.childs_3_11.replace(',','')),4).toFixed(2),'.',',','.')+"</div>"+
+	"<div style=\"width:40px;float:left;margin-left:0px;margin-right:5px;text-align:right;\"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.price_12_17")%></div><div style=\"width:8px;float:left;margin-right:1px;\">&euro;</div><div style=\"width:58px;float:left;margin-right:0px;text-align:right;\">"+addSeparatorsNF(round(Number(event.price.childs_12_17.replace(',','')),4).toFixed(2),'.',',','.')+"</div><div style=\"clear:both;\"></div></div>";
+	
+	return render;
+}
+
+function parseEventObjects(events){
+	var result = "";
+	
+	if(events && events.length>0){
+		for (var i=0;i<events.length;i++) {
+			var tmpend = null;
+			if(events[i].end != null){
+				tmpend = events[i].end.format('YYYY-MM-DD');
+			}else{
+				if(events[i].allDay){
+					tmpend = events[i].start.format('YYYY-MM-DD');
+				}
+			}
+			
+			tmpevent = {
+				_id: events[i]._id,
+				title: events[i].title,
+				start: events[i].start.format('YYYY-MM-DD'),
+				end: tmpend,
+				availability: events[i].availability,
+				unit: events[i].unit,
+				price: {
+							adult: events[i].price.adult,
+							childs_0_2: events[i].price.childs_0_2,
+							childs_3_11: events[i].price.childs_3_11,
+							childs_12_17: events[i].price.childs_12_17,
+							discount: events[i].price.discount
+						
+				},
+				allDay: events[i].allDay,
+				overlap: events[i].overlap			
+			};		
+				
+			result+=JSON.stringify(tmpevent)+",";
+		}	
+	}
+	
+	if(result.length>0){
+		result = result.substring(0, result.length -1);
+	}
+	
+	return result;
+}
+
+function validateEventForm(eForm){
+	if(eForm.availability.value == ""){
+		alert("<%=lang.getTranslated("backend.currency.detail.js.alert.insert_valore_value")%>");
+		eForm.availability.focus();
+		return false;
+	}	
+	
+	if(eForm.unit.value == ""){
+		eForm.unit.value =0;
+	}
+	
+	if(eForm.price_adult.value == ""){
+		alert("<%=lang.getTranslated("backend.currency.detail.js.alert.insert_valore_value")%>");
+		eForm.price_adult.focus();
+		return false;
+	}	
+	
+	if(eForm.price_0_2.value == ""){
+		alert("<%=lang.getTranslated("backend.currency.detail.js.alert.insert_valore_value")%>");
+		eForm.price_0_2.focus();
+		return false;
+	}	
+	
+	if(eForm.price_3_11.value == ""){
+		alert("<%=lang.getTranslated("backend.currency.detail.js.alert.insert_valore_value")%>");
+		eForm.price_3_11.focus();
+		return false;
+	}	
+	
+	if(eForm.price_12_17.value == ""){
+		alert("<%=lang.getTranslated("backend.currency.detail.js.alert.insert_valore_value")%>");
+		eForm.price_12_17.focus();
+		return false;
+	}	
+	
+	if(eForm.price_discount.value == ""){
+		eForm.price_discount.value =0;
+	}	
+	
+	return true;
+}
+
+$(document).ready(function() {
+	$(document).mousemove(function(e){
+		availableWidgetX = e.pageX;
+		availableWidgetY = e.pageY;
+	}); 
+	 
+	 
+	$('#calendar').fullCalendar({
+		header: {
+			left: 'prev,next today',
+			center: 'title',
+			right: rightTab
+		},
+		businessHours: {
+			// days of week. an array of zero-based day of week integers (0=Sunday)
+			dow: [ 1, 2, 3, 4 ,5], // Monday - Thursday
+			start: '08:00', // a start time (10am in this example)
+			end: '18:00' // an end time (6pm in this example)
+		},		
+		defaultDate: moment(new Date()).format('YYYY-MM-DD'),
+		firstDay: 1,
+		selectable: true,
+		selectHelper: true,
+		select: function(start, end) {
+			retrieveEvent(start, end);
+		},
+		editable: true,
+		eventLimit: true, // allow "more" link when too many events
+		<%if(product.id>-1 && !String.IsNullOrEmpty(calendarEvents)){%>
+		events: [
+			<%=calendarEvents%>
+		], 
+		<%}%>
+		eventRender: function(event, element) {
+			var render = renderCustomElement(event);
+			element.html(render);
+		},
+		contentHeight: 720,
+		eventClick: function(event, element) {
+			addEvent(event,2);
+		}
+	});
+	
+});
+
+function addSeparatorsNF(nStr, inD, outD, sep){
+	nStr += '';
+	var dpos = nStr.indexOf(inD);
+	var nStrEnd = '';
+	if (dpos != -1) {
+		nStrEnd = outD + nStr.substring(dpos + 1, nStr.length);
+		nStr = nStr.substring(0, dpos);
+	}
+	var rgx = /(\d+)(\d{3})/;
+	while (rgx.test(nStr)) {
+		nStr = nStr.replace(rgx, '$1' + sep + '$2');
+	}
+	return nStr + nStrEnd;
+} 
+
 var curr_qta_val;
 
 var listPreviewGerProduct = new Hashtable();
@@ -463,7 +843,21 @@ function controllaCampiInput(){
 		strProdRels = strProdRels.substring(0, strProdRels.length -1);
 	}	
 	document.form_inserisci.list_prod_relations.value = strProdRels;	
-	
+
+	// se il prodotto e' di tipo booking, valorizzo il campo booking_calendar con il contenuto del calendario
+	if(document.form_inserisci.prod_type.value == 3){	
+		try {
+			var obj = $('#calendar').fullCalendar('clientEvents');
+			var res = parseEventObjects(obj);
+			if(res != ""){
+				document.form_inserisci.booking_calendar.value = res;
+				//alert(document.form_inserisci.booking_calendar.value);
+			}
+		}
+		catch(err) {
+			//alert(err.message);
+		}
+	}
 	
 	//set file attached and filed to download
 	var numMaxImgs = $("#numMaxImgs").val();
@@ -2288,65 +2682,6 @@ function changeQtaStato(){
 }
 
 function reloadNumQtaType(qtaType) {
-	/*
-	*************  versione ajax (non funziona: il server aggiorna gli id field ma in pagina rimangono quelli vecchi) **********
-	if(controllaCampiInput()){
-		$("#form_inserisci #savesc").val("2");
-		// prepare Options Object 
-		var options = { 
-			type: "POST", 
-			dataType: "xml",
-			url: '/backoffice/products/insertproduct.aspx',
-			iframe:true,
-			success: function(data){
-				var new_prodid= $(data).find('prodid').text();
-				//alert(new_prodid);
-				if($("#form_inserisci #id").val()=="-1"){
-					$("select[name*='select_field_value_']").each( function(){
-						if($(this).children().length>0){		
-							$(this).children().each( function(){
-								var tmpval = $(this).val();
-								var myRegExp = new RegExp("-1\\|","ig");
-								tmpval = tmpval.replace(myRegExp, new_prodid+"|");								
-								$(this).val(tmpval);
-							});
-						}
-					});					
-				}
-				$("#form_inserisci #id").val(new_prodid);
-				$("#form_inserisci #pre_el_id").val('');
-				$("#form_create_field #id_product").val(new_prodid);
-				$("#form_create_field #pre_el_id").val('');
-				$("#select_qty_mode").show();
-				$("#ins_esc_but").show();
-				$("#ins_but").show();
-				$("#del_but").show();
-				$(".loading_autosave_prod").hide();
-			},
-			error: function(response) {
-				//alert(response.responseText);
-				$("#select_qty_mode").show();				
-				$("#ins_esc_but").show();
-				$("#ins_but").show();
-				$("#del_but").show();
-				$(".loading_autosave_prod").hide();
-				alert("<%=lang.getTranslated("portal.commons.js.label.loading_error")%>");
-			}
-		}; 
-		
-		$("#ins_esc_but").hide();
-		$("#ins_but").hide();
-		$("#del_but").hide();
-		$("#select_qty_mode").hide();
-		$(".loading_autosave_prod").show();
-		 
-		// pass options to ajaxForm 
-		$("#form_inserisci").ajaxSubmit(options);
-		return false;
-	}
-	*/
-
-	
 	$("#ins_esc_but").hide();
 	$("#ins_but").hide();
 	$("#del_but").hide();
@@ -3069,19 +3404,51 @@ function fieldValueSlideToggle(idsuffix){
 					  <input type="hidden" value="" name="list_product_fields_values">
 					  <input type="hidden" value="" name="list_product_fields_values_qty">			
 					</form>
+					
+					<!-- ************* START: BOOKING CALENDAR ************** -->
+					<div id="dialog-form" style="width:253px;display:none;position:absolute;left:272px;top:84px;z-index:10000;background-color:#fff;font-family:Lucida Grande,Helvetica,Arial,Verdana,sans-serif;">
+						<div style="text-align:right;padding:5px;cursor: pointer;cursor: hand;" onclick="$('#dialog-form').hide();"><span style="border:1px solid grey;color:red;padding:0px;margin:0px;">x</span></div>
+						<form name="addeventbooking" id="addeventbooking">
+						<input type="hidden" name="start" id="start" value="">
+						<input type="hidden" name="end" id="end" value="">
+						<input type="hidden" name="type" id="type" value="">
+						<input type="hidden" name="cevent" id="cevent" value="">                                                                   
+						<fieldset>
+						<legend><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.availability")%></legend>
+						<label for="availability"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.available_rooms")%></label>
+						<input type="text" name="availability" id="availability" class="text" onkeypress="javascript:return isInteger(event);"><br>
+						<label for="unit"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.beds_rooms")%></label>
+						<input type="text" name="unit" id="unit" class="text" onkeypress="javascript:return isInteger(event);"><br><br>
+						<label for="price_adult"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.price_adult")%> &euro;</label>
+						<input type="text" name="price_adult" id="price_adult" value="" class="text" onkeypress="javascript:return isDecimal(event);"><br>
+						<label for="price_0_2"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.price_0_2")%> &euro;</label>
+						<input type="text" name="price_0_2" id="price_0_2" value="" class="text" onkeypress="javascript:return isDecimal(event);"><br>
+						<label for="price_3_11"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.price_3_11")%> &euro;</label>
+						<input type="text" name="price_3_11" id="price_3_11" value="" class="text" onkeypress="javascript:return isDecimal(event);"><br>
+						<label for="price_12_17"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.price_12_17")%> &euro;</label>
+						<input type="text" name="price_12_17" id="price_12_17" value="" class="text" onkeypress="javascript:return isDecimal(event);"><br>
+						<label for="price_discount"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.price_discount")%> %</label>
+						<input type="text" name="price_discount" id="price_discount" value="" class="text" onkeypress="javascript:return isDecimal(event);"><br>
+						<div style="text-align:right;margin-top:5px;margin-right:10px;"><input type="button" value="<%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.insert")%>" onclick="javascript:doAction(document.addeventbooking);"></div>
+						</fieldset>
+						</form>
+					</div>	
+					<!-- ************* END: BOOKING CALENDAR ************** -->
+					
 					<form action="/backoffice/products/insertproduct.aspx" method="post" id="form_inserisci" name="form_inserisci" enctype="multipart/form-data" accept-charset="UTF-8">
 					<input type="hidden" value="<%=product.id%>" name="id"  id="id">
 					<input type="hidden" value="<%=pre_el_id%>" name="pre_el_id" id="pre_el_id">
 					<input type="hidden" value="insert" name="operation">
 					<input type="hidden" value="1" id="savesc" name="savesc">			 	
 		  			<input type="hidden" value="<%=Request["cssClass"]%>" name="cssClass">	
+					<input type="hidden" value="" name="booking_calendar">
 		
 					<div class="labelForm" align="left"><%=lang.getTranslated("backend.prodotti.detail.table.label.nome_prod")%></div>
 					<div style="display:none;position:absolute;" id="loading_zoom_trans_prod_name">
 						<img src="/common/img/loading_icon3.gif" alt="" width="16" height="16" hspace="2" vspace="0" border="0">
 					</div>
 					<div id="divTitle" align="left">
-					<textarea name="name" class="formFieldTXTAREAAbstract"><%=HttpUtility.HtmlEncode(product.name)%></textarea>
+					<textarea name="name" id="prod_name" class="formFieldTXTAREAAbstract"><%=HttpUtility.HtmlEncode(product.name)%></textarea>
 					</div>			
 					<div id="trans_prod_name">
 						<textarea id="nome_prod_trans" class="formFieldTXTAREAAbstract"></textarea>
@@ -3190,7 +3557,7 @@ function fieldValueSlideToggle(idsuffix){
 					
 					<div id="divCodLabel" class="labelForm" align="left"><%=lang.getTranslated("backend.prodotti.detail.table.label.cod_prod")%></div>
 					<div id="divCod" align="left">
-					<input type="text" name="keyword" value="<%=HttpUtility.HtmlEncode(product.keyword)%>" class="formFieldTXTLong" />
+					<input type="text" name="keyword" id="keyword" value="<%=HttpUtility.HtmlEncode(product.keyword)%>" class="formFieldTXTLong" />
 					</div>
 					
 					<div id="divCod4Ads" align="left" style="display:none;">
@@ -3239,36 +3606,118 @@ function fieldValueSlideToggle(idsuffix){
 
 
 					<!-- ************************************START PROD DEDICATED COMPONENT ***************************************** -->
+					
 					<div style="margin-bottom:10px">
 						<span class="labelForm"><%=lang.getTranslated("backend.prodotti.detail.table.label.prod_type")%></span><br/>
 						<select name="prod_type" id="prod_type" class="formFieldTXTSelect">
 						<option value="0" <%if (product.prodType == 0){Response.Write("selected");}%>><%=lang.getTranslated("backend.prodotti.detail.table.label.type_portable")%></option>
 						<option value="1" <%if (product.prodType == 1){Response.Write("selected");}%>><%=lang.getTranslated("backend.prodotti.detail.table.label.type_download")%></option>
 						<option value="2" <%if (product.prodType == 2){Response.Write("selected");}%>><%=lang.getTranslated("backend.prodotti.detail.table.label.type_ads")%></option>
+						<option value="3" <%if (product.prodType == 3){Response.Write("selected");}%>><%=lang.getTranslated("backend.prodotti.detail.table.label.type_booking")%></option>
 						</select>
 					</div>
 					
 					<script type="text/javascript">		
-						$(document).ready(function(){										
+						$(document).ready(function(){	
+							// check if prod code is empty
+							if($("#prod_name").val() == "" || $("#keyword").val()== ""){
+								$("#prod_type").prop('disabled','disabled');
+							}	
+							
 							// if prod_type==2 (ads) change product code element, from input to double select for ads type and expire date
 							if($("#prod_type").val()==2){
 								$("#divCodLabel").hide();
 								$("#divCod").hide();
 								$("#divCod4Ads").show();
+								$("#sel_qta_prod").show();
+								$("#select_qty_mode_title").show();
+								$("#edit_buy_qty_title").show();
+								$("#edit_buy_qtysel").show();
+								$("#prod_price").attr("style","color:#000000;");
+								$("#prod_discount").attr("style","color:#000000;");
 							}else{
+								if($("#prod_type").val()==3){
+									$("#sel_qta_prod").val('0');
+									$("#sel_qta_prod").hide();
+									$("#select_qty_mode_title").hide();
+									$("#prod_price").val('0,00');
+									$("#prod_price").attr("readonly","true");
+									$("#prod_price").attr("style","color:#CCCCCC;");
+									$("#prod_discount").val('0,00');
+									$("#prod_discount").attr("readonly","true");
+									$("#prod_discount").attr("style","color:#CCCCCC;");
+									$("#edit_buy_qtysel").val('0');
+									$("#edit_buy_qty_title").hide();
+									$("#edit_buy_qtysel").hide();
+								}else{
+									$("#sel_qta_prod").show();
+									$("#select_qty_mode_title").show();
+									$("#edit_buy_qty_title").show();
+									$("#edit_buy_qtysel").show();
+									$("#prod_price").attr("style","color:#000000;");
+									$("#prod_discount").attr("style","color:#000000;");
+								}
 								$("#divCod4Ads").hide();
 								$("#divCodLabel").show();
 								$("#divCod").show();
 							}
 						});					
+
 					
+						$("#keyword").blur(function(){
+							if($(this).val()=='' || $("#prod_name").val() == ""){
+								$("#prod_type").prop('disabled','disabled');
+							}else{
+								$("#prod_type").prop('disabled',false);
+							}
+						});						
+
+					
+						$("#prod_name").blur(function(){
+							if($(this).val()=='' || $("#keyword").val() == ""){
+								$("#prod_type").prop('disabled','disabled');
+							}else{
+								$("#prod_type").prop('disabled',false);
+							}
+						});					
+						
+						
 						$("#prod_type").change(function(){
 							// if prod_type==2 (ads) change product code element, from input to double select for ads type and expire date
 							if($("#prod_type").val()==2){
 								$("#divCodLabel").hide();
 								$("#divCod").hide();
 								$("#divCod4Ads").show();
+								$("#sel_qta_prod").show();
+								$("#select_qty_mode_title").show();
+								$("#edit_buy_qty_title").show();
+								$("#edit_buy_qtysel").show();
+								$("#prod_price").attr("style","color:#000000;");
+								$("#prod_discount").attr("style","color:#000000;");
 							}else{
+								if($("#prod_type").val()==3){
+									$("#sel_qta_prod").val('0');
+									quantityRotationChange(document.form_inserisci.sel_qta_prod);
+									reloadNumQtaType(document.form_inserisci.sel_qta_prod);
+									$("#sel_qta_prod").hide();
+									$("#select_qty_mode_title").hide();
+									$("#prod_price").val('0,00');
+									$("#prod_price").attr("readonly","true");
+									$("#prod_price").attr("style","color:#CCCCCC;");
+									$("#prod_discount").val('0,00');
+									$("#prod_discount").attr("readonly","true");
+									$("#prod_discount").attr("style","color:#CCCCCC;");
+									$("#edit_buy_qtysel").val('0');
+									$("#edit_buy_qty_title").hide();
+									$("#edit_buy_qtysel").hide();
+								}else{
+									$("#sel_qta_prod").show();
+									$("#select_qty_mode_title").show();
+									$("#edit_buy_qty_title").show();
+									$("#edit_buy_qtysel").show();
+									$("#prod_price").attr("style","color:#000000;");
+									$("#prod_discount").attr("style","color:#000000;");
+								}
 								$("#divCod4Ads").hide();
 								$("#divCodLabel").show();
 								$("#divCod").show();
@@ -3279,7 +3728,7 @@ function fieldValueSlideToggle(idsuffix){
 					<table border="0" cellspacing="0" cellpadding="0">
 					<tr>
 					<td><span class="labelForm"><%=lang.getTranslated("backend.prodotti.detail.table.label.prezzo_prod")%>&nbsp;&nbsp;&nbsp;</span><br/>
-					<input type="text" name="price" value="<%=product.price.ToString("#0.00#")%>" class="formFieldTXTMedium" onkeypress="javascript:return isDouble(event);">
+					<input type="text" name="price" id="prod_price" value="<%=product.price.ToString("#0.00#")%>" class="formFieldTXTMedium" onkeypress="javascript:return isDouble(event);">
 					</td>	
 					<td><span class="labelForm"><%=lang.getTranslated("backend.prodotti.detail.table.label.tassa_applicata")%></span><br/>
 					<select name="id_supplement" class="formFieldTXT">
@@ -3308,10 +3757,10 @@ function fieldValueSlideToggle(idsuffix){
 					<tr>
 					<td>&nbsp;</td>	
 					<td valign="top"><span class="labelForm"><%=lang.getTranslated("backend.prodotti.detail.table.label.sconto_prod")%></span><br/>
-					<input type="text" value="<%=product.discount.ToString("#0.00#")%>" name="discount" class="formFieldTXTShort" onkeypress="javascript:return isDouble(event);">%
+					<input type="text" value="<%=product.discount.ToString("#0.00#")%>" name="discount" id="prod_discount" class="formFieldTXTShort" onkeypress="javascript:return isDouble(event);">%
 					</td>	
-					<td valign="top"><span class="labelForm"><%=lang.getTranslated("backend.prodotti.detail.table.label.edit_buy_qta")%></span><br/>
-					<select name="edit_buy_qty" class="formFieldTXTShort">
+					<td valign="top"><span class="labelForm" id="edit_buy_qty_title"><%=lang.getTranslated("backend.prodotti.detail.table.label.edit_buy_qta")%><br/></span>
+					<select name="edit_buy_qty" id="edit_buy_qtysel" class="formFieldTXTShort">
 					<option value="0" <%if (!product.setBuyQta){ Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.no")%></option>
 					<option value="1" <%if (product.setBuyQta){ Response.Write("selected");}%>><%=lang.getTranslated("backend.commons.yes")%></option>
 					</select>
@@ -3319,21 +3768,14 @@ function fieldValueSlideToggle(idsuffix){
 					</tr>
 					<tr>
 					<td>
-					<span class="labelForm"><%=lang.getTranslated("backend.prodotti.detail.table.label.qta_prod")%>&nbsp;&nbsp;&nbsp;</span><br/>		  
+					<span class="labelForm" id="select_qty_mode_title"><%=lang.getTranslated("backend.prodotti.detail.table.label.qta_prod")%>&nbsp;&nbsp;&nbsp;<br/></span>		  
 					<div id="select_qty_mode">
 					<select name="sel_qta_prod" id="sel_qta_prod" class="formFieldTXTSelect" onchange="javascript:quantityRotationChange(this);reloadNumQtaType(this);">
 					<option value="0" <%if (product.quantity == -1){ Response.Write("selected");}%>><%=lang.getTranslated("backend.prodotti.detail.table.label.qta_unlimited")%></option>
 					<option value="1" <%if (product.quantity != -1){ Response.Write("selected");}%>><%=lang.getTranslated("backend.prodotti.detail.table.label.define_qta_prod")%></option>
 					</select><br/>
 
-					<!--
-					<input type="radio" name="sel_qta_prod" value="0" <%if (product.quantity == -1){Response.Write("checked='checked'");}%> onclick="javascript:quantityRotationChange(this);/*changeQtaStato();*/reloadNumQtaType(-1);"> <%=lang.getTranslated("backend.prodotti.detail.table.label.qta_unlimited")%><br/>
-					<input type="radio" name="sel_qta_prod" value="1" <%if (product.quantity != -1) {Response.Write("checked='checked'");}%> onclick="javascript:quantityRotationChange(this);/*changeQtaStato();*/reloadNumQtaType(<%if(product.id !=-1 && !(product.quantity == -1)){ Response.Write("document.form_inserisci.quantity.value");}else{Response.Write("0");}%>);"> 
-					-->
 					<input type="text" name="quantity" id="quantity" value="<%=product.quantity%>" class="formFieldTXTShort" <%if (product.quantity == -1){Response.Write("readonly");}%> onkeypress="javascript:return isInteger(event);" onfocus="javascript:setCurrQtaVal(document.form_inserisci.quantity.value);" onchange="javascript:cleanFieldValuesQta();">
-					
-					<!--<span id="define_qta_prod" style="display:none;"><%=lang.getTranslated("backend.prodotti.detail.table.label.define_qta_prod")%></span>-->
-					
 					</div>
 					<script>
 					changeQtaStato();
@@ -3552,21 +3994,43 @@ function fieldValueSlideToggle(idsuffix){
 						  </tr>
 						 <%}%>	 
 						</table>			
-					</div>					
-					 <br/>
+					</div>	
+					
+					
+					<!-- ************* START: BOOKING CALENDAR ************** -->
+					<div id="divBookingCalendar" align="left" style="visibility:hidden;"><div id="calendar"></div></div>	
+					<!-- ************* END: BOOKING CALENDAR ************** -->
+					<br/>
+					
 					<script type="text/javascript">		
 						$(document).ready(function(){										
-							if($("#prod_type").val()==0 || $("#prod_type").val()==2){
+							if($("#prod_type").val()==0 || $("#prod_type").val()==2 || $("#prod_type").val()==3){
 								$("#divAttachmentDownloads").hide();
+								
+								if($("#prod_type").val()==3){
+									$("#divBookingCalendar").attr('style', "visibility:visible;");
+									$("#divBookingCalendar").show();
+								}else{
+									$("#divBookingCalendar").hide();
+								}
 							}else if($("#prod_type").val()==1){
+								$("#divBookingCalendar").hide();
 								$("#divAttachmentDownloads").show();
 							}
 						});					
 					
 						$("#prod_type").change(function(){
-							if($(this).val()==0 || $(this).val()==2){
+							if($(this).val()==0 || $(this).val()==2 || $("#prod_type").val()==3){
 								$("#divAttachmentDownloads").hide();
+								
+								if($("#prod_type").val()==3){
+									$("#divBookingCalendar").attr('style', "visibility:visible;");
+									$("#divBookingCalendar").show();
+								}else{
+									$("#divBookingCalendar").hide();
+								}
 							}else if($(this).val()==1){
+								$("#divBookingCalendar").hide();
 								$("#divAttachmentDownloads").show();
 							}
 						});

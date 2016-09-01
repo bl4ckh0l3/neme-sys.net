@@ -158,7 +158,7 @@ public partial class _FeAds : Page
 
 		try
 		{			
-			products = productrep.find(null, null, "1", 0, "2", null, null, null, 1, null, null, false, false, false, false, false, true);
+			products = productrep.find(null, null, "1", 0, "2", null, null, null, 1, null, null, false, false, false, false, false, false, true);
 			
 			if(products != null && products.Count>0){				
 				bolFoundLista = true;	

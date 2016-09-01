@@ -276,7 +276,7 @@ public partial class _List : Page
 						
 		try
 		{			
-			products = productrep.find(null, null, status, 0, "0,1", null, null, null, orderBy, matchCategories, matchLanguages, true, true, true, true, true, true);
+			products = productrep.find(null, null, status, 0, "0,1", null, null, null, orderBy, matchCategories, matchLanguages, true, true, true, true, true, true, true);
 			
 			if(products != null && products.Count>0){				
 				bolFoundLista = true;	

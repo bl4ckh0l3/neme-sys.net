@@ -64,6 +64,7 @@ public partial class _Product : Page
 	protected string rotation_mode_tmp_d;
 	protected string rotation_mode_tmp_w;
 	protected string rotation_mode_tmp_h;
+	protected string calendarEvents;
 	
 	protected void Page_Init(Object sender, EventArgs e)
 	{
@@ -118,6 +119,8 @@ public partial class _Product : Page
 		rotation_mode_tmp_d = "";
 		rotation_mode_tmp_w = "";
 		rotation_mode_tmp_h = "";
+		
+		calendarEvents = "";
 
 		product = new Product();		
 		product.id = -1;
@@ -265,7 +268,7 @@ public partial class _Product : Page
 			supplementsg = new List<SupplementGroup>();
 		}
 		try{				
-			productRelations = prodrep.find("","","",-1,"","",null,null,-1,null,null,false,false,true,false,false,false);
+			productRelations = prodrep.find("","","",-1,"","",null,null,-1,null,null,false,false,true,false,false,false,false);
 			hasRelations = true;				
 			if(productRelations == null){				
 				productRelations = new List<Product>();	
@@ -338,6 +341,17 @@ public partial class _Product : Page
 								}
 							}
 						}
+					}
+				}
+				
+				//check for calendar events (only for booking products)
+				if(product.calendar != null){
+					foreach(ProductCalendar pc in product.calendar){
+						calendarEvents+=pc.content+",";
+					}
+					
+					if(calendarEvents.Length>0){
+						calendarEvents.Substring(0,calendarEvents.Length-1);
 					}
 				}
 				
@@ -440,6 +454,7 @@ public partial class _Product : Page
 				IList<Geolocalization> listOfPoints = new List<Geolocalization>();	
 				IList<ProductMainFieldTranslation> mainFieldsTrans = new List<ProductMainFieldTranslation>();	
 				IDictionary<string, string> qtyFieldValues = new Dictionary<string, string>();
+				string bookingCalendar = "";
 				string prodName = Request["name"];
 				
 				string summary = Request["summaryp"];					
@@ -494,7 +509,12 @@ public partial class _Product : Page
 				//Response.Write("listProdFieldsValuesQty:"+listProdFieldsValuesQty+"<br>");
 				
 				//Response.Write("publishDate by request:"+publishDate+"<br>");
-				//Response.Write("deleteDate by request:"+publishDate+"<br>");				
+				//Response.Write("deleteDate by request:"+publishDate+"<br>");	
+				
+				if(prodType==3){
+					bookingCalendar = Request["booking_calendar"];
+				}
+				//Response.Write("bookingCalendar:"+bookingCalendar+"<br>");
 				
 				product.name = prodName;
 				product.summary = summary;
@@ -641,6 +661,27 @@ public partial class _Product : Page
 							}
 						}
 					}
+				}
+				
+				product.calendar.Clear();
+				// check if product is booking for calendar event
+				if(prodType==3 && !String.IsNullOrEmpty(bookingCalendar)){
+					//Response.Write("prodType:"+prodType+"<br>");
+					bookingCalendar="["+bookingCalendar+"]";
+					
+					List<ProductCalendarEventData> test = JsonConvert.DeserializeObject<List<ProductCalendarEventData>>(bookingCalendar);
+					foreach(ProductCalendarEventData p in test)
+					{
+						//Response.Write(p.ToString()+"<br>");
+						ProductCalendar pc = new ProductCalendar();
+						pc.idParentProduct = product.id;
+						pc.startDate=p.start;
+						pc.availability=p.availability;
+						pc.unit=p.unit;
+						pc.content=JsonConvert.SerializeObject(p, Formatting.Indented);
+						product.calendar.Add(pc);
+					}
+					
 				}
 
 				HttpFileCollection MyFileCollection;			

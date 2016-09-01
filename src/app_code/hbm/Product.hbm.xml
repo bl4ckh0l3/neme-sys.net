@@ -59,6 +59,10 @@
 		<bag name="fields" table="PRODUCT_FIELDS" inverse="true" lazy="true" cascade="all">
 			<key column="id_parent_product"/>
 			<one-to-many class="ProductField"/>
+		</bag>	
+		<bag name="calendar" table="PRODUCT_CALENDAR" inverse="true" lazy="true" cascade="all">
+			<key column="id_parent_product"/>
+			<one-to-many class="ProductCalendar"/>
 		</bag>
     </class>
 
@@ -116,6 +120,20 @@
 			<key-property name="idCategory" column="id_category" type="Int32" />
 		</composite-id>
 	</class>
+
+    <class name="ProductCalendar" table="PRODUCT_CALENDAR">
+        <id name="id">
+            <column name="id" sql-type="int(11)" not-null="true"/>
+            <generator class="native" />
+        </id>
+		<property name="idParentProduct" column="id_parent_product" not-null="true" />
+		<property name="startDate">
+			<column name="start_date" sql-type="timestamp" />
+		</property>	
+		<property name="availability" column="availability" not-null="true" />
+		<property name="unit" column="unit" not-null="true" />
+		<property name="content" column="content" />
+    </class>
 
 	<class name="ProductRotation" table="PRODUCT_ROTATION">
 		<composite-id>

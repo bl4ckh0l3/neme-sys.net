@@ -20,9 +20,9 @@ namespace com.nemesys.database.repository
 		
 		void saveCompleteProduct(Product product, IList<Geolocalization> listOfPoints, IList<ProductMainFieldTranslation> mainFieldsTrans, IDictionary<string,string> qtyFieldValues, IList<MultiLanguage> newtranslactions, IList<MultiLanguage> updtranslactions, IList<MultiLanguage> deltranslactions);
 		
-		IList<Product> find(string name, string keyword, string status, int userId, string prodType, string qryRotationMode, string publishDate, string deleteDate, int orderBy, IList<int> matchCategories, IList<int> matchLanguages, bool withAttach, bool withLang, bool withCats, bool withFields, bool withProdRel, bool cached);
+		IList<Product> find(string name, string keyword, string status, int userId, string prodType, string qryRotationMode, string publishDate, string deleteDate, int orderBy, IList<int> matchCategories, IList<int> matchLanguages, bool withAttach, bool withLang, bool withCats, bool withFields, bool withProdRel, bool withProdCal, bool cached);
 		
-		IList<Product> find(string name, string keyword, string status, int userId, string prodType, string qryRotationMode, string publishDate, string deleteDate, int orderBy, IList<int> matchCategories, IList<int> matchLanguages, bool withAttach, bool withLang, bool withCats, bool withFields, bool withProdRel, int pageIndex, int pageSize,out long totalCount);
+		IList<Product> find(string name, string keyword, string status, int userId, string prodType, string qryRotationMode, string publishDate, string deleteDate, int orderBy, IList<int> matchCategories, IList<int> matchLanguages, bool withAttach, bool withLang, bool withCats, bool withFields, bool withProdRel, bool withProdCal, int pageIndex, int pageSize,out long totalCount);
 
 		void changeQuantity(int idProduct, int quantity);
 		

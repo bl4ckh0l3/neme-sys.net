@@ -26,6 +26,7 @@ protected IList<Country> countries;
 protected IList<Country> stateRegions;
 protected string supplement;
 protected string supplementg;
+protected string bookingStyle;
 
 protected void Page_Init(Object sender, EventArgs e)
 {
@@ -50,6 +51,7 @@ protected void Page_Load(Object sender, EventArgs e)
 	comments = new List<Comment>();
 	supplement = "";
 	supplementg = "";
+	bookingStyle = "";
 
 	try{				
 		countries = countryrep.findAllCountries("1");		
@@ -101,6 +103,10 @@ protected void Page_Load(Object sender, EventArgs e)
 					supplementg = supg.description;						
 				}
 			}catch (Exception ex){}
+		}
+		
+		if(product.prodType==3){
+			bookingStyle=" style=\"color:#CCCCCC;\"";
 		}
 	}
 	catch(Exception ex)
@@ -207,15 +213,17 @@ $(function() {
 		Response.Write(lang.getTranslated("backend.product.detail.table.label.type_download"));
 	}else if(product.prodType==2){
 		Response.Write(lang.getTranslated("backend.product.detail.table.label.type_ads"));
+	}else if(product.prodType==3){
+		Response.Write(lang.getTranslated("backend.product.detail.table.label.type_booking"));
 	}%></td>
 	<td class="separator">&nbsp;</td>
-	<td><%if(product.quantity<0){
+	<td <%=bookingStyle%>><%if(product.quantity<0){
 		Response.Write(lang.getTranslated("backend.product.detail.table.label.qta_unlimited"));
 	}else{
 		Response.Write(product.quantity);
 	}%></td>
 	<td class="separator">&nbsp;</td>
-	<td><%if(product.setBuyQta){
+	<td <%=bookingStyle%>><%if(product.setBuyQta){
 		Response.Write(lang.getTranslated("backend.commons.no"));
 	}else{
 		Response.Write(lang.getTranslated("backend.commons.yes"));
@@ -230,7 +238,7 @@ $(function() {
 	<th><%=lang.getTranslated("backend.prodotti.view.table.label.taxs_group")%></th>
 	</tr>
 	<tr>
-	<td>&euro;&nbsp;<%=product.price.ToString("###0.00")%></td>
+	<td <%=bookingStyle%>>&euro;&nbsp;<%=product.price.ToString("###0.00")%></td>
 	<td class="separator">&nbsp;</td>
 	<td><%=supplement%></td>
 	<td class="separator">&nbsp;</td>
@@ -245,7 +253,7 @@ $(function() {
 	<th><%=lang.getTranslated("portal.templates.commons.label.see_comments_news")%></th>
 	</tr>
 	<tr>
-	<td><%=product.discount.ToString("##0.00")%>%</td>
+	<td <%=bookingStyle%>><%=product.discount.ToString("##0.00")%>%</td>
 	<td class="separator">&nbsp;</td>
 	<td><%
 	if (product.attachments!=null) {

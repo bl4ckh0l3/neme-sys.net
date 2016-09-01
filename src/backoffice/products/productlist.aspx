@@ -186,6 +186,7 @@ jQuery(document).ready(function(){
 					<option value="0" <%if ("0".Equals(typef)) { Response.Write("selected");}%>><%=lang.getTranslated("backend.product.detail.table.label.type_portable")%></option>
 					<option value="1" <%if ("1".Equals(typef)) { Response.Write("selected");}%>><%=lang.getTranslated("backend.product.detail.table.label.type_download")%></option>
 					<option value="2" <%if ("2".Equals(typef)) { Response.Write("selected");}%>><%=lang.getTranslated("backend.product.detail.table.label.type_ads")%></option>
+					<option value="3" <%if ("3".Equals(typef)) { Response.Write("selected");}%>><%=lang.getTranslated("backend.product.detail.table.label.type_booking")%></option>
 					</SELECT>
 					</div>
 					<div style="float:left;padding-right:10px;">
@@ -285,6 +286,8 @@ jQuery(document).ready(function(){
 									Response.Write(lang.getTranslated("backend.product.detail.table.label.type_download"));
 								}else if(k.prodType==2){
 									Response.Write(lang.getTranslated("backend.product.detail.table.label.type_ads"));
+								}else if(k.prodType==3){
+									Response.Write(lang.getTranslated("backend.product.detail.table.label.type_booking"));
 								}
 								%>
 								</td>

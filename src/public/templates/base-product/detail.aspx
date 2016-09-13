@@ -60,7 +60,10 @@ function addToCarrello(theFrom, checkqtafields){
 		var key = $(this).attr('name');
 		key = key.substring(key.lastIndexOf('_')+1); 
 		var myRegExp = new RegExp(/"/g);
-		var thisval = $(this).val();			
+		var thisval = $(this).val();
+		if(thisval instanceof Array){
+			thisval = thisval.toString();
+		}
 		thisval = thisval.replace(myRegExp, '\&quot;');				
 		jsonfields += "\""+fieldscounter+"-"+key+"\":\""+encodeURIComponent(thisval)+"\",";	
 		hasfield4prod = true;
@@ -72,7 +75,10 @@ function addToCarrello(theFrom, checkqtafields){
 		key = key.substring(key.lastIndexOf('_')+1); 
 		if($(this).is(':checked')){
 			var myRegExp = new RegExp(/"/g);
-			var thisval = $(this).val();			
+			var thisval = $(this).val();
+			if(thisval instanceof Array){
+				thisval = thisval.toString();
+			}			
 			thisval = thisval.replace(myRegExp, '\&quot;');				
 			jsonfields += "\""+fieldscounter+"-"+key+"\":\""+encodeURIComponent(thisval)+"\",";	
 			hasfield4prod = true;
@@ -85,7 +91,10 @@ function addToCarrello(theFrom, checkqtafields){
 		key = key.substring(key.lastIndexOf('_')+1); 
 		if($(this).is(':checked')){
 			var myRegExp = new RegExp(/"/g);
-			var thisval = $(this).val();			
+			var thisval = $(this).val();	
+			if(thisval instanceof Array){
+				thisval = thisval.toString();
+			}		
 			thisval = thisval.replace(myRegExp, '\&quot;');				
 			jsonfields += "\""+fieldscounter+"-"+key+"\":\""+encodeURIComponent(thisval)+"\",";	
 			hasfield4prod = true;
@@ -368,7 +377,7 @@ function openRelatedProdPage(actionurl, hierarchy, idProduct, numPageNum){
 					
 					<%
 					if(productFields.Count>0){ 
-						Response.Write(ProductService.renderField(productFields, null, "", "", lang.currentLangCode, lang.defaultLangCode, product.keyword));
+						Response.Write(ProductService.renderField(productFields, null, "", "", lang.currentLangCode, lang.defaultLangCode, ProductService.getMapProductFieldsTranslations(product.id)));
 					}%>
 					
 

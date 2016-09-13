@@ -43,6 +43,8 @@ public partial class _List : Page
 	protected bool userIsCompanyClient = false;
 	protected bool logged;
 	protected IDictionary<int, IList<string>> prodsData;
+	protected IDictionary<string,string> objListPairKeyValue;
+	protected bool bolHasFilterSearchActive;
 	
 	private int _totalCPages;	
 	public int totalCPages {
@@ -137,6 +139,17 @@ public partial class _List : Page
 		userIsCompanyClient = false;
 		prodsData = new Dictionary<int, IList<string>>();
 		points = new List<Geolocalization>();
+		objListPairKeyValue = new Dictionary<string,string>();
+		objListPairKeyValue.Add("city","");
+		objListPairKeyValue.Add("country","");
+		objListPairKeyValue.Add("place_name","");
+		bolHasFilterSearchActive = false;
+		
+		string search_text = "";
+		string checkin = "";
+		string checkout = "";
+		string adults = "0";
+		string childs = "0";
 		
 		if (!String.IsNullOrEmpty(Request["page"])) {
 			numPage = Convert.ToInt32(Request["page"]);
@@ -273,13 +286,84 @@ public partial class _List : Page
 		if(!String.IsNullOrEmpty(Request["order_by"])){
 			orderBy = Convert.ToInt32(Request["order_by"]);	
 		}
-						
+		
+		if(!String.IsNullOrEmpty(Request["search_text"]) &&
+		   !String.IsNullOrEmpty(Request["checkin"]) &&
+	       !String.IsNullOrEmpty(Request["checkout"]) &&
+	       !String.IsNullOrEmpty(Request["adults"])
+		  ){
+			search_text = Request["search_text"];	
+			checkin = Request["checkin"];
+			checkout = Request["checkout"];
+			adults = Request["adults"];
+			childs = Request["childs"];
+			
+			bolHasFilterSearchActive = true;
+		}		
+			
+		
 		try
 		{			
 			products = productrep.find(null, null, status, 0, "3", null, null, null, orderBy, matchCategories, matchLanguages, true, true, true, true, true, true, true);
 			
 			if(products != null && products.Count>0){				
-				bolFoundLista = true;	
+				bolFoundLista = true;			
+				
+				bool keepContent = true;
+				IDictionary<int,Product> keeped = new Dictionary<int,Product>();
+				
+				foreach(Product p in products){
+					keeped.Add(p.id, p);
+				}
+				
+				foreach(Product p in products){
+					keepContent=true;
+					
+					if(p.fields != null && p.fields.Count>0){	
+						IDictionary<string,ProductField> fieldsDict = new Dictionary<string,ProductField>();							
+						foreach(ProductField pf in p.fields){
+							if(pf.enabled){
+								fieldsDict[pf.description] = pf;
+							}
+						}
+						
+						foreach(string key in objListPairKeyValue.Keys){
+							if(!fieldsDict.ContainsKey(key)){
+								keepContent=false;
+								keeped.Remove(p.id);
+								break;
+							}
+
+							if("city".Equals(key)){	
+								string fval = fieldsDict["city"].value;	
+								//Response.Write("fval:"+ fval+"<br>");	
+								if(!String.IsNullOrEmpty(fval)){
+									Response.Write("fval:"+ fval+"<br>");
+								}								
+							}
+
+							if("country".Equals(key)){	
+								
+							}
+
+							if("place_name".Equals(key)){	
+								
+							}
+						}
+						
+					}
+				}
+				
+
+				if(keeped.Count>0 && bolHasFilterSearchActive){
+					//Response.Write("keeped.Count:"+ keeped.Count+"<br>");				
+					bolFoundLista = true;
+					products = new List<Product>(keeped.Values);
+				}else{		
+					bolFoundLista = false;
+					products = new List<Product>();
+					points = new List<Geolocalization>();
+				}				
 				
 				foreach(Product c in products){				
 					decimal discountperc = 0.00M;

@@ -203,4 +203,17 @@
 		<property name="langCode" column="lang_code" />
 		<property name="value" column="value" />
     </class>
+  
+    <class name="ProductFieldTranslation" table="PRODUCT_FIELD_TRANSLATION">
+		<id name="id">
+		    <column name="id" sql-type="int(11)" not-null="true"/>
+		    <generator class="native" />
+		</id>	
+		<property name="idParentProduct" column="id_prod" type="Int32" />
+		<property name="idField" column="id_field" type="Int32" />
+		<property name="type" column="type" not-null="true" />
+		<property name="baseVal" column="base_val" />
+		<property name="langCode" column="lang_code" />
+		<property name="value" column="value" />
+    </class>
 </hibernate-mapping>

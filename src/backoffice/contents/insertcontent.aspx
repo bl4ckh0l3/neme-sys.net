@@ -1563,7 +1563,7 @@ $(document).ready(function(){
 										</select>
 										<a href="javascript:showHideDiv('field_description_<%=cf.id%>_ml');" class="labelForm"><img id="descmultilang_<%=cf.id%>" width="25" height="25" border="0" style="padding-left:0px;padding-right:0px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" title="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" src="/backoffice/img/multilanguages5.jpeg"></a>
 										<br/>
-										<div style="visibility:hidden;position:relative;left:+165px;width:240px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="field_description_<%=cf.id%>_ml">
+										<div style="visibility:hidden;position:relative;left:+165px;width:242px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="field_description_<%=cf.id%>_ml">
 										<%foreach (Language x in languages){%>
 											<input type="text" hspace="2" vspace="2" name="field_description_<%=cf.id%>_<%=x.label%>" id="field_description_<%=cf.id%>_<%=x.label%>" value="" class="formFieldTXTInternationalization">
 											&nbsp;<img width="16" height="11" border="0" style="padding-left:5px;padding-right:5px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" title="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" src="/backoffice/img/flag/flag-<%=x.label%>.png"><br/>
@@ -1856,7 +1856,7 @@ $(document).ready(function(){
 								</select>
 								<a href="javascript:showHideDiv('field_description_0_ml');" class="labelForm"><img width="25" height="25" border="0" style="padding-left:0px;padding-right:0px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" title="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" src="/backoffice/img/multilanguages5.jpeg"></a>
 								<br/>
-								<div style="visibility:hidden;position:relative;left:+165px;width:240px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="field_description_0_ml">
+								<div style="visibility:hidden;position:relative;left:+165px;width:242px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="field_description_0_ml">
 								<%foreach (Language x in languages){%>
 									<input type="text" hspace="2" vspace="2" name="field_description_0_<%=x.label%>" id="field_description_0_<%=x.label%>" value="" class="formFieldTXTInternationalization">
 									&nbsp;<img width="16" height="11" border="0" style="padding-left:5px;padding-right:5px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" title="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" src="/backoffice/img/flag/flag-<%=x.label%>.png"><br/>
@@ -2120,7 +2120,7 @@ $(document).ready(function(){
 										</select>
 										<a href="javascript:showHideDiv('field_description_<%=cf.id%>_ml');" class="labelForm"><img width="25" height="25" border="0" style="padding-left:0px;padding-right:0px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" title="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" src="/backoffice/img/multilanguages5.jpeg"></a>
 										<br/>
-										<div style="visibility:hidden;position:relative;left:+165px;width:240px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="field_description_<%=cf.id%>_ml">
+										<div style="visibility:hidden;position:relative;left:+165px;width:242px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="field_description_<%=cf.id%>_ml">
 										<%foreach (Language x in languages){%>
 											<input type="text" hspace="2" vspace="2" name="field_description_<%=cf.id%>_<%=x.label%>" id="field_description_<%=cf.id%>_<%=x.label%>" value="<%=mlangrep.translate("backend.contenuti.detail.table.label.field_description_"+cf.description, x.label, lang.defaultLangCode)%>" class="formFieldTXTInternationalization">
 											&nbsp;<img width="16" height="11" border="0" style="padding-left:5px;padding-right:5px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" title="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" src="/backoffice/img/flag/flag-<%=x.label%>.png"><br/>

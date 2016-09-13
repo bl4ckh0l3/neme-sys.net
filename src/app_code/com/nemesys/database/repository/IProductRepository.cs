@@ -18,7 +18,7 @@ namespace com.nemesys.database.repository
 		Product getById(int id);
 		Product getByIdCached(int id, bool cached);
 		
-		void saveCompleteProduct(Product product, IList<Geolocalization> listOfPoints, IList<ProductMainFieldTranslation> mainFieldsTrans, IDictionary<string,string> qtyFieldValues, IList<MultiLanguage> newtranslactions, IList<MultiLanguage> updtranslactions, IList<MultiLanguage> deltranslactions);
+		void saveCompleteProduct(Product product, IList<Geolocalization> listOfPoints, IList<ProductMainFieldTranslation> mainFieldsTrans, IList<ProductFieldTranslation> fieldsTrans, IDictionary<string,string> qtyFieldValues, IList<MultiLanguage> newtranslactions, IList<MultiLanguage> updtranslactions, IList<MultiLanguage> deltranslactions);
 		
 		IList<Product> find(string name, string keyword, string status, int userId, string prodType, string qryRotationMode, string publishDate, string deleteDate, int orderBy, IList<int> matchCategories, IList<int> matchLanguages, bool withAttach, bool withLang, bool withCats, bool withFields, bool withProdRel, bool withProdCal, bool cached);
 		
@@ -66,7 +66,7 @@ namespace com.nemesys.database.repository
 		void insertProductFieldRelValue(int idProduct, int idField, string fieldValue, int idFieldRel, string fieldRelValue, int quantity, string fieldDesc);
 		void deleteProductFieldRelValue(int idProduct, int idField, string fieldValue, int idFieldRel, string fieldRelValue);
 
-		void saveCompleteProductField(ProductField field, IList<ProductFieldsValue> fieldValues, IList<MultiLanguage> newtranslactions, IList<MultiLanguage> updtranslactions, IList<MultiLanguage> deltranslactions);
+		void saveCompleteProductField(ProductField field, IList<ProductFieldsValue> fieldValues, IList<MultiLanguage> newtranslactions, IList<MultiLanguage> updtranslactions, IList<MultiLanguage> deltranslactions, IList<ProductFieldTranslation> fieldsTrans);
 				
 		void updateProductField(ProductField field);
 		
@@ -87,6 +87,18 @@ namespace com.nemesys.database.repository
 		IList<ProductMainFieldTranslation> getProductMainFieldsTranslationCached(int idProd, int mainField , string langCode, bool cached);
 		
 		void saveMainFieldTranslation(ProductMainFieldTranslation pmft, int idProd, int mainField, string langCode);
+		
+		ProductFieldTranslation getFieldTranslation(int idProd, int idField, string type, string baseVal, string langCode, bool useDef, string defValue);
+		
+		ProductFieldTranslation getFieldTranslationCached(int idProd, int idField, string type, string baseVal, string langCode, bool useDef, string defValue, bool cached);
+		
+		IList<ProductFieldTranslation> getProductFieldsTranslation(int idProd, int idField, string type, string baseVal, string langCode);
+		
+		IList<ProductFieldTranslation> getProductFieldsTranslationCached(int idProd, int idField, string type, string baseVal, string langCode, bool cached);
+		
+		void saveFieldTranslation(ProductFieldTranslation pmft, int idProd, int idField, string type, string baseVal, string langCode);
+		
+		void deleteProductFieldsTranslation(int idProd);
 		
 		ProductRotation getProductRotation(int idProd, int rotationMode);
 		

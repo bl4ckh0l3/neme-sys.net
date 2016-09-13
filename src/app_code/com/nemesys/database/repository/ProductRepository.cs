@@ -292,6 +292,22 @@ namespace com.nemesys.database.repository
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}
+				else if(cacheKey.Contains("list-mainfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	 
+				else if(cacheKey.Contains("mainfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	 
+				else if(cacheKey.Contains("transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
 			}
 		}
 		
@@ -597,6 +613,22 @@ namespace com.nemesys.database.repository
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}
+				else if(cacheKey.Contains("list-mainfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	 
+				else if(cacheKey.Contains("mainfield-fproduct-"+product.id))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	 
+				else if(cacheKey.Contains("transfield-fproduct-"+product.id))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
 			}	
 		}
 		
@@ -681,11 +713,27 @@ namespace com.nemesys.database.repository
 				else if(cacheKey.Contains("list-field-name-values-"))
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
-				}  
+				} 
+				else if(cacheKey.Contains("list-mainfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				} 	 
+				else if(cacheKey.Contains("mainfield-fproduct-"+product.id))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	 
+				else if(cacheKey.Contains("transfield-fproduct-"+product.id))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
 			}					
 		}
 
-		public void saveCompleteProduct(Product product, IList<Geolocalization> listOfPoints, IList<ProductMainFieldTranslation> mainFieldsTrans, IDictionary<string,string> qtyFieldValues, IList<MultiLanguage> newtranslactions, IList<MultiLanguage> updtranslactions, IList<MultiLanguage> deltranslactions)
+		public void saveCompleteProduct(Product product, IList<Geolocalization> listOfPoints, IList<ProductMainFieldTranslation> mainFieldsTrans, IList<ProductFieldTranslation> fieldsTrans, IDictionary<string,string> qtyFieldValues, IList<MultiLanguage> newtranslactions, IList<MultiLanguage> updtranslactions, IList<MultiLanguage> deltranslactions)
 		{
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			using (ITransaction tx = session.BeginTransaction())
@@ -841,7 +889,7 @@ namespace com.nemesys.database.repository
 							session.CreateQuery(string.Format("delete from ProductFieldsRelValue where idParentField in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();
 							session.CreateQuery(string.Format("delete from ProductFieldsValue where idParentField in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();
 						}
-						//session.CreateQuery("delete from ProductField where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();		
+						session.CreateQuery("delete from ProductFieldTranslation where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();		
 						
 						if(newProductAttachment != null && newProductAttachment.Count>0)
 						{							
@@ -1109,6 +1157,7 @@ namespace com.nemesys.database.repository
 							session.CreateQuery(string.Format("delete from ProductFieldsRelValue where idParentField in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();
 							session.CreateQuery(string.Format("delete from ProductFieldsValue where idParentField in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();	
 						}
+						session.CreateQuery("delete from ProductFieldTranslation where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
 						
 						if(newProductAttachment != null && newProductAttachment.Count>0)
 						{							
@@ -1248,7 +1297,18 @@ namespace com.nemesys.database.repository
 						m.idParentProduct=product.id;
 						session.Update(m);
 						//session.Save(m);
-					}										
+					}			
+					
+					//*
+					//* aggiorno i campi multilingu dei field
+					//*					
+					foreach(ProductFieldTranslation m in fieldsTrans)
+					{	
+						//session.Delete(m);
+						m.idParentProduct=product.id;
+						session.Save(m);
+					}
+					
 					// ************** AGGIUNGO TGUTTE LE CHIAVI MULTILINGUA PER LE TRADUZIONI DI descrizione, meta_xxx ecc
 					foreach (MultiLanguage mu in deltranslactions){
 						session.Delete(mu);
@@ -1300,6 +1360,22 @@ namespace com.nemesys.database.repository
 					HttpContext.Current.Cache.Remove(cacheKey);
 				} 
 				else if(cacheKey.Contains("list-field-name-values-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-mainfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	 
+				else if(cacheKey.Contains("mainfield-fproduct-"+product.id))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	 
+				else if(cacheKey.Contains("transfield-fproduct-"+product.id))
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}
@@ -1571,6 +1647,27 @@ namespace com.nemesys.database.repository
 					}
 				}
 				
+				// ** insert all field trans copy
+				IList<ProductFieldTranslation> fieldtrans = null;
+				IQuery o = session.CreateQuery("from ProductFieldTranslation where idParentProduct=:idParentProduct");	
+				o.SetInt32("idParentProduct", original.id);
+				fieldtrans = o.List<ProductFieldTranslation>();			
+				
+				if(fieldtrans!=null)
+				{
+					foreach(ProductFieldTranslation mfl in fieldtrans)
+					{
+						ProductFieldTranslation pt = new ProductFieldTranslation();
+						pt.idParentProduct = newproduct.id;
+						pt.idField = mfl.idField;
+						pt.type = mfl.type;
+						pt.baseVal = mfl.baseVal;
+						pt.langCode = mfl.langCode;
+						pt.value = mfl.value;
+						session.Save(pt);						
+					}
+				}				
+				
 				tx.Commit();
 				NHibernateHelper.closeSession();
 			}
@@ -1589,6 +1686,22 @@ namespace com.nemesys.database.repository
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}  
+				else if(cacheKey.Contains("list-mainfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	 
+				else if(cacheKey.Contains("mainfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	 
+				else if(cacheKey.Contains("transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
 			}	
 			
 			return newproduct;
@@ -2210,6 +2323,22 @@ namespace com.nemesys.database.repository
 					else if(cacheKey.Contains("list-field-name-values-"))
 					{
 						HttpContext.Current.Cache.Remove(cacheKey);
+					} 
+					else if(cacheKey.Contains("list-mainfield-fproduct-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}	 
+					else if(cacheKey.Contains("mainfield-fproduct-"+idProduct))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}
+					else if(cacheKey.Contains("list-transfield-fproduct-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}	 
+					else if(cacheKey.Contains("transfield-fproduct-"+idProduct))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
 					}
 				}
 			}catch(Exception ex){
@@ -2618,7 +2747,7 @@ namespace com.nemesys.database.repository
 			return results;	
 		}
 
-		public void saveCompleteProductField(ProductField field, IList<ProductFieldsValue> fieldValues, IList<MultiLanguage> newtranslactions, IList<MultiLanguage> updtranslactions, IList<MultiLanguage> deltranslactions)
+		public void saveCompleteProductField(ProductField field, IList<ProductFieldsValue> fieldValues, IList<MultiLanguage> newtranslactions, IList<MultiLanguage> updtranslactions, IList<MultiLanguage> deltranslactions, IList<ProductFieldTranslation> fieldsTrans)
 		{
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			using (ITransaction tx = session.BeginTransaction())
@@ -2627,8 +2756,23 @@ namespace com.nemesys.database.repository
 					if(field.id != -1){
 						session.Update(field);
 						session.CreateQuery("delete from ProductFieldsValue where idParentField=:idParentField").SetInt32("idParentField",field.id).ExecuteUpdate();
+						session.CreateQuery("delete from ProductFieldTranslation where idField=:idField").SetInt32("idField",field.id).ExecuteUpdate();					
+						foreach(ProductFieldTranslation m in fieldsTrans)
+						{	
+							//session.Delete(m);
+							m.idParentProduct=field.idParentProduct;
+							m.idField=field.id;
+							session.Save(m);
+						}
 					}else{
-						session.Save(field);
+						session.Save(field);				
+						foreach(ProductFieldTranslation m in fieldsTrans)
+						{	
+							//session.Delete(m);
+							m.idParentProduct=field.idParentProduct;
+							m.idField=field.id;
+							session.Save(m);
+						}
 					}											
 					// ************** AGGIUNGO i values se presenti
 					foreach (ProductFieldsValue cfv in fieldValues){
@@ -2684,6 +2828,22 @@ namespace com.nemesys.database.repository
 				else if(cacheKey.Contains("list-field-name-values-"))
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
+				} 
+				else if(cacheKey.Contains("list-mainfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	 
+				else if(cacheKey.Contains("mainfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	 
+				else if(cacheKey.Contains("transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
 				}
 			}				
 		}
@@ -2727,7 +2887,23 @@ namespace com.nemesys.database.repository
 				else if(cacheKey.Contains("list-field-name-values-"))
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
-				}   
+				}  
+				else if(cacheKey.Contains("list-mainfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				} 	 
+				else if(cacheKey.Contains("mainfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				} 
+				else if(cacheKey.Contains("list-transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	 
+				else if(cacheKey.Contains("transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
 			}
 		}
 		
@@ -2738,6 +2914,7 @@ namespace com.nemesys.database.repository
 			{	session.CreateQuery("delete from ProductFieldsRelValue where idParentField=:idParentField").SetInt32("idParentField",idField).ExecuteUpdate();
 				session.CreateQuery("delete from ProductFieldsRelValue where idParentRelField=:idParentRelField").SetInt32("idParentRelField",idField).ExecuteUpdate();
 				session.CreateQuery("delete from ProductFieldsValue where idParentField=:idParentField").SetInt32("idParentField",idField).ExecuteUpdate();
+				session.CreateQuery("delete from ProductFieldTranslation where idField=:idField").SetInt32("idField",idField).ExecuteUpdate();	
 				session.CreateQuery("delete from ProductField where id=:id").SetInt32("id",idField).ExecuteUpdate();	
 				tx.Commit();
 				NHibernateHelper.closeSession();
@@ -2776,7 +2953,23 @@ namespace com.nemesys.database.repository
 				else if(cacheKey.Contains("list-fieldres-values-"))
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
-				} 
+				}  
+				else if(cacheKey.Contains("list-mainfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	 
+				else if(cacheKey.Contains("mainfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	 
+				else if(cacheKey.Contains("transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
 			}
 		}
 		
@@ -2826,6 +3019,22 @@ namespace com.nemesys.database.repository
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}  
+				else if(cacheKey.Contains("list-mainfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				} 	 
+				else if(cacheKey.Contains("mainfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	 
+				else if(cacheKey.Contains("transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
 			}
 		}
 
@@ -2932,6 +3141,18 @@ namespace com.nemesys.database.repository
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
 				} 
+				else if(cacheKey.Contains("list-mainfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	 
+				else if(cacheKey.Contains("transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
 			}		
 		}		
 		
@@ -2985,6 +3206,18 @@ namespace com.nemesys.database.repository
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
 				} 
+				else if(cacheKey.Contains("list-mainfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	 
+				else if(cacheKey.Contains("transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
 			}			
 		}
 		
@@ -3196,9 +3429,283 @@ namespace com.nemesys.database.repository
 				else if(cacheKey.Contains("list-mainfield-fproduct-"+idProd))
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
-				}				
+				}	
+				else if(cacheKey.Contains("list-transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	 
+				else if(cacheKey.Contains("transfield-fproduct-"+idProd))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}			
 			}				
 		}	
+		
+		/*FIELDS TRANSACTION*/
+		
+		public ProductFieldTranslation getFieldTranslation(int idProd, int idField, string type, string baseVal, string langCode, bool useDef, string defVal)
+		{
+			return getFieldTranslationCached(idProd, idField, type, baseVal, langCode, useDef, defVal, false);
+		}
+	
+		public ProductFieldTranslation getFieldTranslationCached(int idProd, int idField, string type, string baseVal, string langCode, bool useDef, string defVal, bool cached)
+		{
+			ProductFieldTranslation result = null;
+			StringBuilder cacheKey = new StringBuilder("transfield-fproduct-").Append(idProd).Append("-").Append(idField).Append("-").Append(type).Append("-").Append(baseVal).Append("-").Append(langCode);
+				
+			if(cached)
+			{
+				result = (ProductFieldTranslation)HttpContext.Current.Cache.Get(cacheKey.ToString());
+				if(result != null){
+					//HttpContext.Current.Response.Write("cache result.value: ###"+result.value+"###<br>");	
+					return result;
+				}
+			}
+			
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			{
+				string sqlQuery = "from ProductFieldTranslation where idParentProduct=:idParentProduct and idField=:idField and type=:type and langCode=:langCode and baseVal=:baseVal";
+				
+				IQuery q = session.CreateQuery(sqlQuery);
+				q.SetInt32("idParentProduct",idProd);	
+				q.SetInt32("idField",idField);
+				q.SetString("type",type);
+				q.SetString("langCode",langCode);
+				q.SetString("baseVal",baseVal);
+				result = q.UniqueResult<ProductFieldTranslation>();
+				NHibernateHelper.closeSession();
+			}
+			
+			if(result == null){
+				result = new ProductFieldTranslation();
+			}
+			
+			if(cached)
+			{
+				HttpContext.Current.Cache.Insert(cacheKey.ToString(), result, null, DateTime.Now.AddHours(24), System.Web.Caching.Cache.NoSlidingExpiration, CacheItemPriority.High, null);
+			}
+			
+			// check for using default value
+			if(String.IsNullOrEmpty(result.value) && useDef){
+				result.value = defVal;					
+			}
+			//HttpContext.Current.Response.Write("get result.value: ###"+result.value+"###<br>");
+			return result;		
+		}
+	
+		public IList<ProductFieldTranslation> getProductFieldsTranslation(int idProd, int idField, string type, string baseVal, string langCode)
+		{
+			return getProductFieldsTranslationCached(idProd, idField, type, baseVal, langCode, false);
+		}
+	
+		public IList<ProductFieldTranslation> getProductFieldsTranslationCached(int idProd, int idField, string type, string baseVal, string langCode, bool cached)
+		{
+			IList<ProductFieldTranslation> results = null;	
+
+			StringBuilder cacheKey = new StringBuilder("list-transfield-fproduct-").Append(idProd).Append("-").Append(idField).Append("-").Append(type).Append("-").Append(baseVal).Append("-").Append(langCode);
+				
+			if(cached)
+			{
+				results = (IList<ProductFieldTranslation>)HttpContext.Current.Cache.Get(cacheKey.ToString());
+				if(results != null){
+					return results;
+				}
+			}
+			
+			string strSQL = "from ProductFieldTranslation where idParentProduct=:idParentProduct";			
+			
+			if(idField >0){
+			strSQL += " and idField= :idField";
+			}			
+			if(!String.IsNullOrEmpty(langCode)){
+			strSQL += " and langCode= :langCode";
+			}
+			if(!String.IsNullOrEmpty(type)){
+				strSQL+=" and type=:type";
+			}
+			if(!String.IsNullOrEmpty(baseVal)){
+				strSQL+=" and baseVal=:baseVal";
+			}
+			strSQL += " order by idField asc";
+				
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			{
+				IQuery q = session.CreateQuery(strSQL);
+				q.SetInt32("idParentProduct",idProd);
+				if(idField >0){
+				q.SetInt32("idField",idField);
+				}	
+				if(!String.IsNullOrEmpty(langCode)){
+				q.SetString("langCode",langCode);
+				}
+				if(!String.IsNullOrEmpty(type)){
+					q.SetString("type",type);
+				}
+				if(!String.IsNullOrEmpty(baseVal)){
+					q.SetString("baseVal",baseVal);
+				}			
+				results = q.List<ProductFieldTranslation>();			
+				NHibernateHelper.closeSession();
+			}
+			
+			if(cached)
+			{
+				if(results == null){
+					results = new List<ProductFieldTranslation>();
+				}
+				HttpContext.Current.Cache.Insert(cacheKey.ToString(), results, null, DateTime.Now.AddHours(24), System.Web.Caching.Cache.NoSlidingExpiration, CacheItemPriority.High, null);
+			}
+			
+			return results;	
+		}
+
+		public void saveFieldTranslation(ProductFieldTranslation pmft, int idProd, int idField, string type, string baseVal, string langCode)
+		{
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			using (ITransaction tx = session.BeginTransaction())
+			{					
+				try{
+					string sqlQuery = "delete from ProductFieldTranslation where idParentProduct=:idParentProduct and idField=:idField and langCode=:langCode";
+					if(!String.IsNullOrEmpty(type)){
+						sqlQuery+=" and type=:type";
+					}
+					if(!String.IsNullOrEmpty(baseVal)){
+						sqlQuery+=" and baseVal=:baseVal";
+					}
+					
+					IQuery q = session.CreateQuery(sqlQuery);
+					q.SetInt32("idParentProduct",idProd);
+					q.SetInt32("idField",idField);
+					q.SetString("langCode",langCode);
+					if(!String.IsNullOrEmpty(type)){
+						q.SetString("type",type);
+					}
+					if(!String.IsNullOrEmpty(baseVal)){
+						q.SetString("baseVal",baseVal);
+					}	
+					q.ExecuteUpdate();
+					session.Save(pmft);
+					tx.Commit();
+					NHibernateHelper.closeSession();
+				}catch(Exception exx){
+					//Response.Write("An inner error occured: " + exx.Message);
+					tx.Rollback();
+					NHibernateHelper.closeSession();
+					throw;					
+				}
+			}	
+			
+			//rimuovo cache		
+			IDictionaryEnumerator CacheEnum = HttpContext.Current.Cache.GetEnumerator();
+			while (CacheEnum.MoveNext())
+			{		  
+				string cacheKey = HttpContext.Current.Server.HtmlEncode(CacheEnum.Key.ToString()); 
+				if(cacheKey.Contains("fproduct-"+idProd))
+				{ 
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-field-fproduct-"+idProd))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				} 
+				else if(cacheKey.Contains("list-fproduct"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				} 
+				else if(cacheKey.Contains("field-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}     
+				else if(cacheKey.Contains("field-value-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}  
+				else if(cacheKey.Contains("list-field-values-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				} 
+				else if(cacheKey.Contains("list-field-name-values-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				} 
+				else if(cacheKey.Contains("mainfield-fproduct-"+idProd))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-mainfield-fproduct-"+idProd))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	
+				else if(cacheKey.Contains("list-transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	 
+				else if(cacheKey.Contains("transfield-fproduct-"+idProd))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}			
+			}				
+		}
+		
+		public void deleteProductFieldsTranslation(int idProduct)
+		{
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			using (ITransaction tx = session.BeginTransaction())
+			{
+				session.CreateQuery("delete from ProductFieldTranslation where idParentProduct=:idParentProduct").SetInt32("idParentProduct",idProduct).ExecuteUpdate();	
+				tx.Commit();
+				NHibernateHelper.closeSession();
+			}
+			
+			//rimuovo cache		
+			IDictionaryEnumerator CacheEnum = HttpContext.Current.Cache.GetEnumerator();
+			while (CacheEnum.MoveNext())
+			{		  
+				string cacheKey = HttpContext.Current.Server.HtmlEncode(CacheEnum.Key.ToString()); 
+				if(cacheKey.Contains("list-fproduct"))
+				{ 
+					//HttpContext.Current.Response.Write(cacheKey+"<br>");		
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}  
+				else if(cacheKey.Contains("list-field-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}  
+				else if(cacheKey.Contains("field-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}      
+				else if(cacheKey.Contains("field-value-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				} 
+				else if(cacheKey.Contains("list-field-values-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				} 
+				else if(cacheKey.Contains("list-field-name-values-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-fieldres-values-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				} 
+				else if(cacheKey.Contains("list-mainfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}	 
+				else if(cacheKey.Contains("transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+			}			
+		}
+		
 		
 		//*********** Manage product quantity rotation
 		public ProductRotation getProductRotation(int idProd, int rotationMode)
@@ -3293,6 +3800,22 @@ namespace com.nemesys.database.repository
 						HttpContext.Current.Cache.Remove(cacheKey);
 					} 
 					else if(cacheKey.Contains("list-field-name-values-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}
+					else if(cacheKey.Contains("list-mainfield-fproduct-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}	 
+					else if(cacheKey.Contains("mainfield-fproduct-"+idParent))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}
+					else if(cacheKey.Contains("list-transfield-fproduct-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}	 
+					else if(cacheKey.Contains("transfield-fproduct-"+idParent))
 					{
 						HttpContext.Current.Cache.Remove(cacheKey);
 					}

@@ -1906,12 +1906,13 @@ function changeRowListData(counter,row,refreshrow, modify, newidfield, subcounte
 				
 					var valcounter = key.substring(key.indexOf("field_values")+12,key.length);	
 					
-					$('[name*="field_values_ml_'+valcounter+'_"]').each( function(){
-							var thisname = $(this).attr('name');	
+					$('[id*="field_values_ml_'+valcounter+'_"]').each( function(){
+							var thisname = $(this).attr('id');	
 							//alert("\n- thisname:"+ thisname+"\n- value:"+$(this).val()+ "\n- id:"+$(this).attr('id')+ "\n- newidfield:"+newidfield+ "\n- valcounter:"+valcounter);							
 							thisname = thisname.substring(thisname.indexOf("field_values_ml_"+valcounter+"_")+16,thisname.length);
 							thisname = thisname.substring(thisname.indexOf("_")+1,thisname.length);							
-							//alert("thisname: "+thisname);							
+							//alert("thisname: "+thisname);		
+							//alert("thisname2: "+$(this).attr('id').substring($(this).attr('id').indexOf("field_values_ml"+valcounter+"_")+18+valcounter.toString().length,$(this).attr('id').length));					
 							//alert("value set on field id:#field_values_ml_"+newidfield+"_"+thisname);							
 							$('#field_values_ml_'+newidfield+"_"+thisname).val($(this).val());
 					});	
@@ -2122,46 +2123,46 @@ function addFieldValues(fieldValCounter){
 	});	
 
 	counter++;
-	counter=fieldValCounter+"_"+counter;
-	$("#add_field_values_div_"+fieldValCounter).append('<span id="field_values_container'+counter+'"></span>');
+	var composedCounter = fieldValCounter+"_"+counter;
+	$("#add_field_values_div_"+fieldValCounter).append('<span id="field_values_container'+composedCounter+'"></span>');
 
 	var currtypeval = $('#id_type_'+fieldValCounter).val();
 	
 	//alert("fieldValCounter:"+fieldValCounter+" - currtypeval:"+currtypeval);
 	
 	if(currtypeval==3 || currtypeval==6){
-		$("#field_values_container"+counter).append($('<input type="checkbox"/>').attr('id', "field_checkedvaluesc"+counter).attr('name', "field_checkedvalues"+fieldValCounter).attr('value', "").attr('style', "display:none;"));
-		$("#field_values_container"+counter).append($('<input type="radio"/>').attr('id', "field_checkedvaluesr"+counter).attr('name', "field_checkedvalues"+fieldValCounter).attr('value', ""));	
+		$("#field_values_container"+composedCounter).append($('<input type="checkbox"/>').attr('id', "field_checkedvaluesc"+composedCounter).attr('name', "field_checkedvalues"+fieldValCounter).attr('value', "").attr('style', "display:none;"));
+		$("#field_values_container"+composedCounter).append($('<input type="radio"/>').attr('id', "field_checkedvaluesr"+composedCounter).attr('name', "field_checkedvalues"+fieldValCounter).attr('value', ""));	
 	}else{
-		$("#field_values_container"+counter).append($('<input type="radio"/>').attr('id', "field_checkedvaluesr"+counter).attr('name', "field_checkedvalues"+fieldValCounter).attr('value', "").attr('style', "display:none;"));	
-		$("#field_values_container"+counter).append($('<input type="checkbox"/>').attr('id', "field_checkedvaluesc"+counter).attr('name', "field_checkedvalues"+fieldValCounter).attr('value', ""));						
+		$("#field_values_container"+composedCounter).append($('<input type="radio"/>').attr('id', "field_checkedvaluesr"+composedCounter).attr('name', "field_checkedvalues"+fieldValCounter).attr('value', "").attr('style', "display:none;"));	
+		$("#field_values_container"+composedCounter).append($('<input type="checkbox"/>').attr('id', "field_checkedvaluesc"+composedCounter).attr('name', "field_checkedvalues"+fieldValCounter).attr('value', ""));						
 	}
 		
-	$("#field_values_container"+counter).append('&nbsp;').append($('<input type="text"/>').attr('id', "field_values"+counter).attr('name', "field_values"+counter).attr('class', "formFieldTXT").attr('value', "").keypress(function(event) {return notSpecialCharButUnderscore(event); }));
+	$("#field_values_container"+composedCounter).append('&nbsp;').append($('<input type="text"/>').attr('id', "field_values"+composedCounter).attr('name', "field_values"+composedCounter).attr('class', "formFieldTXT").attr('value', "").keypress(function(event) {return notSpecialCharButUnderscore(event); }));
 	
 	/*
 	var render='&nbsp;<a href="';
-	render+="javascript:delFieldValues('"+counter+"','"+fieldValCounter+"',' ','field_values_container"+counter+"',0);";
+	render+="javascript:delFieldValues('"+composedCounter+"','"+fieldValCounter+"',' ','field_values_container"+composedCounter+"',0);";
 	render+='"><img src="/backoffice/img/delete.png" title="<%=lang.getTranslated("backend.contenuti.detail.table.alt.del_field_value")%>" alt="<%=lang.getTranslated("backend.contenuti.detail.table.alt.del_field_value")%>" hspace="5" vspace="0" border="0"></a><br/>';
 	*/
 
 	
 	var render='&nbsp;<a class="labelForm" href="';
-	render+="javascript:showHideDiv('field_values"+counter+"_ml');";
+	render+="javascript:showHideDiv('field_values"+composedCounter+"_ml');";
 	render+='">';
 	render+='<img width="25" height="25" border="0" style="padding-left:0px;padding-right:0px;vertical-align:top;" alt="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" title="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" src="/backoffice/img/multilanguages5.jpeg"></a>';
 	render+='&nbsp;<a href="';
-	render+="javascript:delFieldValues('"+counter+"','"+fieldValCounter+"','','field_values_container"+counter+"',0);";
+	render+="javascript:delFieldValues('"+composedCounter+"','"+fieldValCounter+"','','field_values_container"+composedCounter+"',0);";
 	render+='">';
 	render+='<img src="/backoffice/img/delete.png" title="<%=lang.getTranslated("backend.contenuti.detail.table.alt.del_field_value")%>" alt="<%=lang.getTranslated("backend.contenuti.detail.table.alt.del_field_value")%>" hspace="5" vspace="0" border="0"></a><br/>';
-	render+='<div style="visibility:hidden;position:absolute;margin-left:24px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="field_values'+counter+'_ml">';
+	render+='<div style="visibility:hidden;position:absolute;margin-left:24px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="field_values'+composedCounter+'_ml">';
 	<%foreach (Language x in languages){%>
-	render+='<input type="text" hspace="2" vspace="2" name="field_values_ml_'+counter+'_<%=x.label%>" id="field_values_ml_'+counter+'_<%=x.label%>" value="" class="formFieldTXTInternationalization">';
+	render+='<input type="text" hspace="2" vspace="2" name="field_values_ml_'+fieldValCounter+'_<%=x.label%>_'+counter+'" id="field_values_ml_'+composedCounter+'_<%=x.label%>" value="" class="formFieldTXTInternationalization">';
 	render+='&nbsp;<img width="16" height="11" border="0" style="padding-left:5px;padding-right:5px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" title="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" src="/backoffice/img/flag/flag-<%=x.label%>.png"><br/>';
 	<%}%>					
 	render+='</div>';
 
-	$("#field_values_container"+counter).append(render);
+	$("#field_values_container"+composedCounter).append(render);
 } 
 
 function delFieldValues(counter,id_element, value, field, remove){	
@@ -3639,6 +3640,7 @@ function fieldValueSlideToggle(idsuffix){
 								if($("#prod_type").val()==3){
 									$("#sel_qta_prod").val('0');
 									$("#sel_qta_prod").hide();
+									$("#rotation_mode").val('0');
 									$("#select_qty_mode_title").hide();
 									$("#prod_price").val('0,00');
 									$("#prod_price").attr("readonly","true");
@@ -3697,6 +3699,7 @@ function fieldValueSlideToggle(idsuffix){
 							}else{
 								if($("#prod_type").val()==3){
 									$("#sel_qta_prod").val('0');
+									$("#rotation_mode").val('0');
 									quantityRotationChange(document.form_inserisci.sel_qta_prod);
 									reloadNumQtaType(document.form_inserisci.sel_qta_prod);
 									$("#sel_qta_prod").hide();
@@ -4142,9 +4145,9 @@ function fieldValueSlideToggle(idsuffix){
 										<%}%>
 										</table>	
 									<%}									
-								}/*else{
+								}else if(cf.type==1){
 									Response.Write(cf.value);
-								}*/%>
+								}%>
 							</td>					
 							 </tr>
 							 
@@ -4170,7 +4173,7 @@ function fieldValueSlideToggle(idsuffix){
 										</select>
 										<a href="javascript:showHideDiv('group_value_<%=cf.id%>_ml');" class="labelForm"><img id="descgmultilang_<%=cf.id%>" width="25" height="25" border="0" style="padding-left:0px;padding-right:0px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" title="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" src="/backoffice/img/multilanguages5.jpeg"></a>
 										<br/>
-										<div style="visibility:hidden;position:absolute;width:240px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="group_value_<%=cf.id%>_ml">
+										<div style="visibility:hidden;position:absolute;width:242px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="group_value_<%=cf.id%>_ml">
 										<%foreach (Language x in languages){%>
 											<input type="text" hspace="2" vspace="2" name="group_value_<%=cf.id%>_<%=x.label%>" id="group_value_<%=cf.id%>_<%=x.label%>" value="<%=mlangrep.translate("backend.prodotti.detail.table.label.id_group_"+cf.groupDescription, x.label, lang.defaultLangCode)%>" class="formFieldTXTInternationalization">
 											&nbsp;<img width="16" height="11" border="0" style="padding-left:5px;padding-right:5px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" title="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" src="/backoffice/img/flag/flag-<%=x.label%>.png"><br/>
@@ -4189,7 +4192,7 @@ function fieldValueSlideToggle(idsuffix){
 										</select>
 										<a href="javascript:showHideDiv('field_description_<%=cf.id%>_ml');" class="labelForm"><img id="descmultilang_<%=cf.id%>" width="25" height="25" border="0" style="padding-left:0px;padding-right:0px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" title="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" src="/backoffice/img/multilanguages5.jpeg"></a>
 										<br/>
-										<div style="visibility:hidden;position:absolute;width:240px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="field_description_<%=cf.id%>_ml">
+										<div style="visibility:hidden;position:absolute;width:242px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="field_description_<%=cf.id%>_ml">
 										<%foreach (Language x in languages){%>
 											<input type="text" hspace="2" vspace="2" name="field_description_<%=cf.id%>_<%=x.label%>" id="field_description_<%=cf.id%>_<%=x.label%>" value="<%=mlangrep.translate("backend.prodotti.detail.table.label.description_"+cf.description, x.label, lang.defaultLangCode)%>" class="formFieldTXTInternationalization">
 											&nbsp;<img width="16" height="11" border="0" style="padding-left:5px;padding-right:5px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" title="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" src="/backoffice/img/flag/flag-<%=x.label%>.png"><br/>
@@ -4306,7 +4309,7 @@ function fieldValueSlideToggle(idsuffix){
 														<a href="javascript:delFieldValues('<%=cf.id+"_"+valuesCounterCommon%>','<%=cf.id%>','<%=j.value%>','field_values_container<%=cf.id+"_"+valuesCounterCommon%>',1);"><img id="imgdelfieldvalue_<%=cf.id+"_"+valuesCounterCommon%>" src="/backoffice/img/delete.png" title="<%=lang.getTranslated("backend.contenuti.detail.table.alt.del_field_value")%>" alt="<%=lang.getTranslated("backend.contenuti.detail.table.alt.del_field_value")%>" hspace="5" vspace="0" border="0"></a>
 														<div style="visibility:hidden;position:absolute;margin-left: 24px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="field_values<%=cf.id+"_"+valuesCounterCommon%>_ml">
 														<%foreach (Language x in languages){%>
-														<input type="text" hspace="2" vspace="2" name="field_values_ml_<%=cf.id+"_"+valuesCounterCommon%>_<%=x.label%>" id="field_values_ml_<%=cf.id+"_"+valuesCounterCommon%>_<%=x.label%>" value="<%=mlangrep.translate("backend.prodotti.detail.table.label.field_values_"+cf.description+"_"+j.value, x.label, lang.defaultLangCode)%>" class="formFieldTXTInternationalization">
+														<input type="text" hspace="2" vspace="2" name="field_values_ml_<%=cf.id+"_"+x.label+"_"+valuesCounterCommon%>" id="field_values_ml_<%=cf.id+"_"+valuesCounterCommon%>_<%=x.label%>" value="<%=mlangrep.translate("backend.prodotti.detail.table.label.field_values_"+cf.description+"_"+j.value, x.label, lang.defaultLangCode)%>" class="formFieldTXTInternationalization">
 														&nbsp;<img width="16" height="11" border="0" style="padding-left:5px;padding-right:5px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" title="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" src="/backoffice/img/flag/flag-<%=x.label%>.png"><br/>
 														<%}%>					
 														</div>
@@ -4330,7 +4333,7 @@ function fieldValueSlideToggle(idsuffix){
 													<a href="javascript:delFieldValues('<%=cf.id+"_"+valuesCounterCommon%>','<%=cf.id%>','','field_values_container<%=cf.id+"_"+valuesCounterCommon%>',0);"><img id="imgdelfieldvalue_<%=cf.id+"_"+valuesCounterCommon%>" src="/backoffice/img/delete.png" title="<%=lang.getTranslated("backend.contenuti.detail.table.alt.del_field_value")%>" alt="<%=lang.getTranslated("backend.contenuti.detail.table.alt.del_field_value")%>" hspace="5" vspace="0" border="0"></a>
 													<div style="visibility:hidden;position:absolute;margin-left: 24px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="field_values<%=cf.id+"_"+valuesCounterCommon%>_ml">
 													<%foreach (Language x in languages){%>
-													<input type="text" hspace="2" vspace="2" name="field_values_ml_<%=cf.id+"_"+valuesCounterCommon%>_<%=x.label%>" id="field_values_ml_<%=cf.id+"_"+valuesCounterCommon%>_<%=x.label%>" value="" class="formFieldTXTInternationalization">
+													<input type="text" hspace="2" vspace="2" name="field_values_ml_<%=cf.id+"_"+x.label+"_"+valuesCounterCommon%>" id="field_values_ml_<%=cf.id+"_"+valuesCounterCommon%>_<%=x.label%>" value="" class="formFieldTXTInternationalization">
 													&nbsp;<img width="16" height="11" border="0" style="padding-left:5px;padding-right:5px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" title="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" src="/backoffice/img/flag/flag-<%=x.label%>.png"><br/>
 													<%}%>					
 													</div>
@@ -4549,7 +4552,7 @@ function fieldValueSlideToggle(idsuffix){
 								</select>									
 								<a href="javascript:showHideDiv('group_value_0_ml');" class="labelForm"><img width="25" height="25" border="0" style="padding-left:0px;padding-right:0px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" title="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" src="/backoffice/img/multilanguages5.jpeg"></a>
 								<br/>
-								<div style="visibility:hidden;position:absolute;width:240px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="group_value_0_ml">
+								<div style="visibility:hidden;position:absolute;width:242px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="group_value_0_ml">
 								<%foreach (Language x in languages){%>
 									<input type="text" hspace="2" vspace="2" name="group_value_0_<%=x.label%>" id="group_value_0_<%=x.label%>" value="" class="formFieldTXTInternationalization">
 									&nbsp;<img width="16" height="11" border="0" style="padding-left:5px;padding-right:5px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" title="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" src="/backoffice/img/flag/flag-<%=x.label%>.png"><br/>
@@ -4568,7 +4571,7 @@ function fieldValueSlideToggle(idsuffix){
 								</select>											
 								<a href="javascript:showHideDiv('field_description_0_ml');" class="labelForm"><img width="25" height="25" border="0" style="padding-left:0px;padding-right:0px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" title="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" src="/backoffice/img/multilanguages5.jpeg"></a>
 								<br/>
-								<div style="visibility:hidden;position:absolute;width:240px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="field_description_0_ml">
+								<div style="visibility:hidden;position:absolute;width:242px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="field_description_0_ml">
 								<%foreach (Language x in languages){%>
 									<input type="text" hspace="2" vspace="2" name="field_description_0_<%=x.label%>" id="field_description_0_<%=x.label%>" value="" class="formFieldTXTInternationalization">
 									&nbsp;<img width="16" height="11" border="0" style="padding-left:5px;padding-right:5px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" title="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" src="/backoffice/img/flag/flag-<%=x.label%>.png"><br/>
@@ -4662,7 +4665,7 @@ function fieldValueSlideToggle(idsuffix){
 								<a href="javascript:delFieldValues('0','0',' ','field_values_container0_0',0);"><img src="/backoffice/img/delete.png" title="<%=lang.getTranslated("backend.contenuti.detail.table.alt.del_field_value")%>" alt="<%=lang.getTranslated("backend.contenuti.detail.table.alt.del_field_value")%>" hspace="5" vspace="0" border="0"></a>
 								<div style="visibility:hidden;position:absolute;margin-left: 24px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="field_values0_0_ml">
 								<%foreach (Language x in languages){%>
-								<input type="text" hspace="2" vspace="2" name="field_values_ml_0_0_<%=x.label%>" id="field_values_ml_0_0_<%=x.label%>" value="" class="formFieldTXTInternationalization">
+								<input type="text" hspace="2" vspace="2" name="field_values_ml_0_<%=x.label%>_0" id="field_values_ml_0_0_<%=x.label%>" value="" class="formFieldTXTInternationalization">
 								&nbsp;<img width="16" height="11" border="0" style="padding-left:5px;padding-right:5px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" title="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" src="/backoffice/img/flag/flag-<%=x.label%>.png"><br/>
 								<%}%>					
 								</div>								
@@ -4988,9 +4991,9 @@ function fieldValueSlideToggle(idsuffix){
 										<%}%>
 										</script>
 									<%}								
-								}/*else{
+								}else if(cf.type==1){
 									Response.Write(cf.value);
-								}*/%>								
+								}%>								
 							</td>					
 							 </tr>
 
@@ -5019,9 +5022,14 @@ function fieldValueSlideToggle(idsuffix){
 										</select>										
 										<a href="javascript:showHideDiv('group_value_<%=cf.id%>_ml');" class="labelForm"><img width="25" height="25" border="0" style="padding-left:0px;padding-right:0px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" title="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" src="/backoffice/img/multilanguages5.jpeg"></a>
 										<br/>
-										<div style="visibility:hidden;position:absolute;width:240px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="group_value_<%=cf.id%>_ml">
-										<%foreach (Language x in languages){%>
-											<input type="text" hspace="2" vspace="2" name="group_value_<%=cf.id%>_<%=x.label%>" id="group_value_<%=cf.id%>_<%=x.label%>" value="<%=mlangrep.translate("backend.prodotti.detail.table.label.id_group_"+cf.description+"_"+product.keyword, x.label, lang.defaultLangCode)%>" class="formFieldTXTInternationalization">
+										<div style="visibility:hidden;position:absolute;width:242px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="group_value_<%=cf.id%>_ml">
+										<%foreach (Language x in languages){
+											string tmpMl = "";
+											ProductFieldTranslation pftv = null;		
+											if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("group").Append("-").Append("").Append("-").Append(x.label).ToString(), out pftv)){
+												tmpMl = pftv.value;
+											}%>
+											<input type="text" hspace="2" vspace="2" name="group_value_<%=cf.id%>_<%=x.label%>" id="group_value_<%=cf.id%>_<%=x.label%>" value="<%=tmpMl%>" class="formFieldTXTInternationalization">
 											&nbsp;<img width="16" height="11" border="0" style="padding-left:5px;padding-right:5px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" title="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" src="/backoffice/img/flag/flag-<%=x.label%>.png"><br/>
 										<%}%>									
 										</div>										
@@ -5038,9 +5046,14 @@ function fieldValueSlideToggle(idsuffix){
 										</select>
 										<a href="javascript:showHideDiv('field_description_<%=cf.id%>_ml');" class="labelForm"><img width="25" height="25" border="0" style="padding-left:0px;padding-right:0px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" title="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" src="/backoffice/img/multilanguages5.jpeg"></a>
 										<br/>
-										<div style="visibility:hidden;position:absolute;width:240px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="field_description_<%=cf.id%>_ml">
-										<%foreach (Language x in languages){%>
-											<input type="text" hspace="2" vspace="2" name="field_description_<%=cf.id%>_<%=x.label%>" id="field_description_<%=cf.id%>_<%=x.label%>" value="<%=mlangrep.translate("backend.prodotti.detail.table.label.field_description_"+cf.description+"_"+product.keyword, x.label, lang.defaultLangCode)%>" class="formFieldTXTInternationalization">
+										<div style="visibility:hidden;position:absolute;width:242px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="field_description_<%=cf.id%>_ml">
+										<%foreach (Language x in languages){
+											string tmpMl = "";
+											ProductFieldTranslation pftv = null;		
+											if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("desc").Append("-").Append("").Append("-").Append(x.label).ToString(), out pftv)){
+												tmpMl = pftv.value;
+											}%>
+											<input type="text" hspace="2" vspace="2" name="field_description_<%=cf.id%>_<%=x.label%>" id="field_description_<%=cf.id%>_<%=x.label%>" value="<%=tmpMl%>" class="formFieldTXTInternationalization">
 											&nbsp;<img width="16" height="11" border="0" style="padding-left:5px;padding-right:5px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" title="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" src="/backoffice/img/flag/flag-<%=x.label%>.png"><br/>
 										<%}%>									
 										</div>
@@ -5156,8 +5169,13 @@ function fieldValueSlideToggle(idsuffix){
 														<a href="javascript:showHideDiv('field_values<%=cf.id+"_"+valuesCounter%>_ml');" class="labelForm"><img width="25" height="25" border="0" style="padding-left:0px;padding-right:0px;vertical-align:top;" alt="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" title="<%=lang.getTranslated("portal.header.label.desc_lang.translate_ml")%>" src="/backoffice/img/multilanguages5.jpeg"></a>
 														<a href="javascript:delFieldValues('<%=cf.id+"_"+valuesCounter%>','<%=cf.id%>','<%=j.value%>','field_values_container<%=cf.id+"_"+valuesCounter%>',1);"><img src="/backoffice/img/delete.png" title="<%=lang.getTranslated("backend.contenuti.detail.table.alt.del_field_value")%>" alt="<%=lang.getTranslated("backend.contenuti.detail.table.alt.del_field_value")%>" hspace="5" vspace="0" border="0"></a>
 														<div style="visibility:hidden;position:absolute;margin-left: 24px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="field_values<%=cf.id+"_"+valuesCounter%>_ml">
-														<%foreach (Language x in languages){%>
-														<input type="text" hspace="2" vspace="2" name="field_values_ml_<%=cf.id+"_"+valuesCounter%>_<%=x.label%>" id="field_values_ml_<%=cf.id+"_"+valuesCounter%>_<%=x.label%>" value="<%=mlangrep.translate("backend.prodotti.detail.table.label.field_values_"+cf.description+"_"+j.value+"_"+product.keyword, x.label, lang.defaultLangCode)%>" class="formFieldTXTInternationalization">
+														<%foreach (Language x in languages){
+														string tmpMl = "";
+														ProductFieldTranslation pftv = null;		
+														if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("values").Append("-").Append(j.value).Append("-").Append(x.label).ToString(), out pftv)){
+															tmpMl = pftv.value;
+														}%>
+														<input type="text" hspace="2" vspace="2" name="field_values_ml_<%=cf.id+"_"+x.label+"_"+valuesCounter%>" id="field_values_ml_<%=cf.id+"_"+valuesCounter%>_<%=x.label%>" value="<%=tmpMl%>" class="formFieldTXTInternationalization">
 														&nbsp;<img width="16" height="11" border="0" style="padding-left:5px;padding-right:5px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" title="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" src="/backoffice/img/flag/flag-<%=x.label%>.png"><br/>
 														<%}%>					
 														</div>														
@@ -5181,7 +5199,7 @@ function fieldValueSlideToggle(idsuffix){
 													<a href="javascript:delFieldValues('<%=cf.id+"_"+valuesCounter%>','<%=cf.id%>','','field_values_container<%=cf.id+"_"+valuesCounter%>',0);"><img src="/backoffice/img/delete.png" title="<%=lang.getTranslated("backend.contenuti.detail.table.alt.del_field_value")%>" alt="<%=lang.getTranslated("backend.contenuti.detail.table.alt.del_field_value")%>" hspace="5" vspace="0" border="0"></a>
 													<div style="visibility:hidden;position:absolute;margin-left: 24px;background-color: #DEE4E8;border:1px solid #000;padding:2px;" id="field_values<%=cf.id+"_"+valuesCounter%>_ml">
 													<%foreach (Language x in languages){%>
-													<input type="text" hspace="2" vspace="2" name="field_values_ml_<%=cf.id+"_"+valuesCounter%>_<%=x.label%>" id="field_values_ml_<%=cf.id+"_"+valuesCounter%>_<%=x.label%>" value="" class="formFieldTXTInternationalization">
+													<input type="text" hspace="2" vspace="2" name="field_values_ml_<%=cf.id+"_"+x.label+"_"+valuesCounter%>" id="field_values_ml_<%=cf.id+"_"+valuesCounter%>_<%=x.label%>" value="" class="formFieldTXTInternationalization">
 													&nbsp;<img width="16" height="11" border="0" style="padding-left:5px;padding-right:5px;vertical-align:middle;" alt="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" title="<%=lang.getTranslated("portal.header.label.desc_lang."+x.label)%>" src="/backoffice/img/flag/flag-<%=x.label%>.png"><br/>
 													<%}%>					
 													</div>													
@@ -5225,8 +5243,13 @@ function fieldValueSlideToggle(idsuffix){
 											</div>
 											<div id="field_value_t_<%=cf.id%>trans" style="display:none;"><%
 												foreach (Language l in languages){
-													if(LanguageService.checkUserLanguage(login.userLogged, l)){%>
-													<input type="text" style="display:none;" name="field_value_t_<%=cf.id%>_<%=l.label%>" id="field_value_t_<%=cf.id%>_<%=l.label%>" value="<%=mlangrep.translate("backend.prodotti.detail.table.label.field_value_t_"+cf.description+"_"+product.keyword, l.label, lang.defaultLangCode)%>" onblur="showHideTransProdField('field_value_t_<%=cf.id%>trans', 'field_value_t_<%=cf.id%>container', 'field_value_t_<%=cf.id%>', '',0,0);" class="formFieldTXTLong">
+													if(LanguageService.checkUserLanguage(login.userLogged, l)){
+													string tmpMl = "";
+													ProductFieldTranslation pftv = null;		
+													if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("value").Append("-").Append("").Append("-").Append(l.label).ToString(), out pftv)){
+														tmpMl = pftv.value;
+													}%>
+													<input type="text" style="display:none;" name="field_value_t_<%=cf.id%>_<%=l.label%>" id="field_value_t_<%=cf.id%>_<%=l.label%>" value="<%=tmpMl%>" onblur="showHideTransProdField('field_value_t_<%=cf.id%>trans', 'field_value_t_<%=cf.id%>container', 'field_value_t_<%=cf.id%>', '',0,0);" class="formFieldTXTLong">
 													<%}
 												}%>
 											</div>
@@ -5244,8 +5267,13 @@ function fieldValueSlideToggle(idsuffix){
 											</div>
 											<div id="field_value_ta_<%=cf.id%>trans" style="display:none;"><%
 												foreach (Language l in languages){
-													if(LanguageService.checkUserLanguage(login.userLogged, l)){%>
-													<textarea style="display:none;" name="field_value_ta_<%=cf.id%>_<%=l.label%>" id="field_value_ta_<%=cf.id%>_<%=l.label%>" onblur="showHideTransProdField('field_value_ta_<%=cf.id%>trans', 'field_value_ta_<%=cf.id%>container', 'field_value_ta_<%=cf.id%>', '',0,0);" class="formFieldTXTAREAAbstract"><%=HttpUtility.HtmlEncode(mlangrep.translate("backend.prodotti.detail.table.label.field_value_ta_"+cf.description+"_"+product.keyword, l.label, lang.defaultLangCode))%></textarea>
+													if(LanguageService.checkUserLanguage(login.userLogged, l)){
+													string tmpMl = "";
+													ProductFieldTranslation pftv = null;		
+													if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("value").Append("-").Append("").Append("-").Append(l.label).ToString(), out pftv)){
+														tmpMl = pftv.value;
+													}%>
+													<textarea style="display:none;" name="field_value_ta_<%=cf.id%>_<%=l.label%>" id="field_value_ta_<%=cf.id%>_<%=l.label%>" onblur="showHideTransProdField('field_value_ta_<%=cf.id%>trans', 'field_value_ta_<%=cf.id%>container', 'field_value_ta_<%=cf.id%>', '',0,0);" class="formFieldTXTAREAAbstract"><%=HttpUtility.HtmlEncode(tmpMl)%></textarea>
 													<%}
 												}%>
 											</div>
@@ -5305,8 +5333,13 @@ function fieldValueSlideToggle(idsuffix){
 											$("#field_value_e_<%=cf.id%>_ml").cleditor();
 											<%
 											foreach (Language l in languages){
-												if(LanguageService.checkUserLanguage(login.userLogged, l)){%>
-												$("#field_value_e_<%=cf.id%>_<%=l.label%>").val('<%=mlangrep.translate("backend.prodotti.detail.table.label.field_value_e_"+cf.description+"_"+product.keyword, l.label, lang.defaultLangCode)%>');
+												if(LanguageService.checkUserLanguage(login.userLogged, l)){
+													string tmpMl = "";
+													ProductFieldTranslation pftv = null;		
+													if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("value").Append("-").Append("").Append("-").Append(l.label).ToString(), out pftv)){
+														tmpMl = pftv.value;
+													}%>
+												$("#field_value_e_<%=cf.id%>_<%=l.label%>").val('<%=tmpMl%>');
 												<%}
 											}%>
 										});										

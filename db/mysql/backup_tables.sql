@@ -1022,6 +1022,28 @@ CREATE TABLE IF NOT EXISTS `PRODUCT_MAIN_FIELD_TRANSLATION` (
 
 -- --------------------------------------------------------
 -- 
+-- Structure of table `PRODUCT_FIELD_TRANSLATION`
+-- 
+DROP TABLE IF EXISTS `PRODUCT_FIELD_TRANSLATION`;
+CREATE TABLE IF NOT EXISTS `PRODUCT_FIELD_TRANSLATION` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `id_prod` int(10) NOT NULL,
+  `id_field` int(3) NOT NULL,
+  `type` varchar(10) NOT NULL,
+  `base_val` varchar(250) default NULL,
+  `lang_code` varchar(2) NOT NULL,
+  `value` text,
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `Index_Pmft` (`id_prod`,`id_field`,`type`,`base_val`,`lang_code`),
+  INDEX `Index_Pmfti`(`id_prod`),
+  INDEX `Index_Pmftm`(`id_field`),
+  INDEX `Index_Pmftt`(`type`),
+  INDEX `Index_Pmftl`(`lang_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- --------------------------------------------------------
+-- 
 -- Structure of table `PRODUCT_CALENDAR`
 -- 
 DROP TABLE IF EXISTS `PRODUCT_CALENDAR`;

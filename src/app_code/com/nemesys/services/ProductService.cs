@@ -122,6 +122,19 @@ namespace com.nemesys.services
 
 			return deleted;			
 		}
+		
+		public static IDictionary<string,ProductFieldTranslation> getMapProductFieldsTranslations(int productId){
+			IDictionary<string,ProductFieldTranslation> prodFieldsTrans = new Dictionary<string,ProductFieldTranslation>();
+			
+			IList<ProductFieldTranslation> tmpProdFieldsTrans = prodrep.getProductFieldsTranslationCached(productId, -1, null, null, null, true);
+			if(tmpProdFieldsTrans!=null && tmpProdFieldsTrans.Count>0){
+				foreach(ProductFieldTranslation pft in tmpProdFieldsTrans){
+					prodFieldsTrans.Add(new StringBuilder().Append(pft.idParentProduct).Append("-").Append(pft.idField).Append("-").Append(pft.type).Append("-").Append(pft.baseVal).Append("-").Append(pft.langCode).ToString(),pft);
+				}
+			}
+			
+			return prodFieldsTrans;
+		}
 
 		public static string renderTargetBox(string resJsVar, string idBoxSx, string idBoxDx, string labelSx, string labelDx, IList<Language> arrSx, IList<Language> arrDx, bool bolCheckAutoT, bool bolAddDescTrans, string langcode, string defLangCode)
 		{		
@@ -217,11 +230,19 @@ namespace com.nemesys.services
 			return renderTargetBox;			
 		}
 
-		public static string renderField(IList<ProductField> fieldList, IDictionary<int,string> jsFunctions, string style, string cssClass, string langcode, string defLangCode, string productKeyword)
+		public static string renderField(IList<ProductField> fieldList, IDictionary<int,string> jsFunctions, string style, string cssClass, string langcode, string defLangCode, IDictionary<string,ProductFieldTranslation> prodFieldsTrans)
 		{
 			string renderField="";
 			string jsFunction = "";
 
+			//foreach(string keyword in prodFieldsTrans.Keys){
+			//	ProductFieldTranslation p = prodFieldsTrans[keyword];
+				
+			//	HttpContext.Current.Response.Write("keyword:"+keyword+"<br>");
+			//	HttpContext.Current.Response.Write("value:"+p.ToString()+"<br><br>");
+			//}			
+			
+			
 			try
 			{
 				string currentGroup = "";
@@ -229,6 +250,8 @@ namespace com.nemesys.services
 				{
 					if(cf.enabled)
 					{
+						ProductFieldTranslation pftv = null;
+						
 						string maxLenght = "";	
 						if (cf.maxLenght>0) {
 							maxLenght = " maxlength='"+cf.maxLenght+"'";
@@ -248,20 +271,37 @@ namespace com.nemesys.services
 						
 						if(currentGroup!=cf.groupDescription)
 						{
-							renderField+="<h1>"+cf.groupDescription+"</h1>";
-							currentGroup = cf.groupDescription;
+							string tmpgroupDesc = cf.groupDescription;
+							//tmpgroupDesc = translate("backend.prodotti.detail.table.label.field_description_"+cf.groupDescription+"_"+productKeyword, tmpgroupDesc, langcode, defLangCode);
+							if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("group").Append("-").Append("").Append("-").Append(langcode).ToString(), out pftv)){
+								tmpgroupDesc = pftv.value;
+							}
+							
+							renderField+="<h1>"+tmpgroupDesc+"</h1>";
+							currentGroup = tmpgroupDesc;
 						}					
 											
 						renderField+="<div id='fe_container_product_field_"+cf.id+"' style='"+style+"' class='"+cssClass+"'>";
 						
 						string tmpDescription = cf.description;
-						tmpDescription = translate("backend.prodotti.detail.table.label.field_description_"+tmpDescription+"_"+productKeyword, tmpDescription, langcode, defLangCode);
+						//tmpDescription = translate("backend.prodotti.detail.table.label.field_description_"+cf.description+"_"+productKeyword, tmpDescription, langcode, defLangCode);		
+						if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("desc").Append("-").Append("").Append("-").Append(langcode).ToString(), out pftv)){
+							tmpDescription = pftv.value;
+						}
+
+						string[] tmpvalues;
 						
 						switch (cf.type)
 						{
 							case 1:
 								if(cf.editable){
-									renderField+=cf.value;								
+									string tmpValue = cf.value;
+									//tmpValue = translate("backend.prodotti.detail.table.label.field_value_t_"+cf.description+"_"+productKeyword, tmpValue, langcode, defLangCode);
+									if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("value").Append("-").Append("").Append("-").Append(langcode).ToString(), out pftv)){
+										tmpValue = pftv.value;
+									}
+									renderField+=tmpValue;	
+									
 								}else{
 									renderField+="<span>"+tmpDescription+isrequired+"</span>&nbsp;";
 									
@@ -304,7 +344,12 @@ namespace com.nemesys.services
 								break;
 							case 2:
 								if(cf.editable){
-									renderField+=cf.value;								
+									string tmpValue = cf.value;
+									//tmpValue = translate("backend.prodotti.detail.table.label.field_value_ta_"+cf.description+"_"+productKeyword, tmpValue, langcode, defLangCode);
+									if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("value").Append("-").Append("").Append("-").Append(langcode).ToString(), out pftv)){
+										tmpValue = pftv.value;
+									}
+									renderField+=tmpValue;								
 								}else{
 									renderField+="<span>"+tmpDescription+isrequired+"</span>&nbsp;";
 									
@@ -316,7 +361,12 @@ namespace com.nemesys.services
 								break;
 							case 3:
 								if(cf.editable){
-									renderField+=cf.value;								
+									string tmpValue = cf.value;
+									//tmpValue = translate("backend.prodotti.detail.table.label.field_values_"+cf.description+"_"+cf.value+"_"+productKeyword, tmpValue, langcode, defLangCode);
+									if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("values").Append("-").Append(cf.value).Append("-").Append(langcode).ToString(), out pftv)){
+										tmpValue = pftv.value;
+									}
+									renderField+=tmpValue;	
 								}else{
 									renderField+="<span>"+tmpDescription+isrequired+"</span>&nbsp;";
 									
@@ -343,7 +393,7 @@ namespace com.nemesys.services
 												}
 												string tmpcdesc = c.countryDescription;
 												tmpcdesc = translate("portal.commons.select.option.country."+c.countryCode, c.countryDescription, langcode, defLangCode);
-												renderField+="<option value='"+tmpcdesc+"' "+selected+">"+tmpcdesc+"</option>";
+												renderField+="<option value='"+c.countryCode+"' "+selected+">"+tmpcdesc+"</option>";
 											}
 										}	
 										
@@ -362,7 +412,7 @@ namespace com.nemesys.services
 												}
 												string tmpsrdesc = c.stateRegionDescription;
 												tmpsrdesc = translate("portal.commons.select.option.country."+c.stateRegionCode, c.stateRegionDescription, langcode, defLangCode);
-												renderField+="<option value='"+tmpsrdesc+"' "+selected+">"+tmpsrdesc+"</option>";
+												renderField+="<option value='"+c.stateRegionCode+"' "+selected+">"+tmpsrdesc+"</option>";
 											}
 										}										
 									}
@@ -378,7 +428,13 @@ namespace com.nemesys.services
 												{
 													selected = " selected='selected'";
 												}
-												renderField+="<option value='"+cfv.value+"' "+selected+">"+cfv.value+"</option>";
+												string tmpcfvval = cfv.value;
+												//tmpcfvval = translate("backend.prodotti.detail.table.label.field_values_"+cf.description+"_"+cfv.value+"_"+productKeyword, tmpcfvval, langcode, defLangCode);
+												if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("values").Append("-").Append(tmpcfvval).Append("-").Append(langcode).ToString(), out pftv)){
+													tmpcfvval = pftv.value;
+												}
+												
+												renderField+="<option value='"+cfv.value+"' "+selected+">"+tmpcfvval+"</option>";
 											}
 										}
 									}
@@ -386,8 +442,15 @@ namespace com.nemesys.services
 								}
 								break;
 							case 4:
+								tmpvalues = cf.value.Split(',');
+								
 								if(cf.editable){
-									renderField+=cf.value;								
+									foreach(string r in tmpvalues){
+										//renderField+=translate("backend.prodotti.detail.table.label.field_values_"+cf.description+"_"+r+"_"+productKeyword, r, langcode, defLangCode);	
+										if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("values").Append("-").Append(r).Append("-").Append(langcode).ToString(), out pftv)){
+											renderField+=pftv.value+"<br/>";
+										}
+									}		
 								}else{
 									renderField+="<span>"+tmpDescription+isrequired+"</span>&nbsp;";
 									
@@ -410,19 +473,36 @@ namespace com.nemesys.services
 										foreach(ProductFieldsValue cfv in values)
 										{
 											string selected = "";
-											if(cfv.value==cf.value)
+											foreach(string r in tmpvalues)
 											{
-												selected = " selected='selected'";
+												if(cfv.value==r)
+												{
+													selected = " selected='selected'";
+													break;
+												}
 											}
-											renderField+="<option value='"+cfv.value+"' "+selected+">"+cfv.value+"</option>";
+											string tmpcfvval = cfv.value;
+											//tmpcfvval = translate("backend.prodotti.detail.table.label.field_values_"+cf.description+"_"+cfv.value+"_"+productKeyword, tmpcfvval, langcode, defLangCode);
+											if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("values").Append("-").Append(tmpcfvval).Append("-").Append(langcode).ToString(), out pftv)){
+												tmpcfvval = pftv.value;
+											}
+												
+											renderField+="<option value='"+cfv.value+"' "+selected+">"+tmpcfvval+"</option>";
 										}
 									}
 									renderField+="</select>";							
 								}
 								break;
 							case 5:
+								tmpvalues = cf.value.Split(',');
+								
 								if(cf.editable){
-									renderField+=cf.value;								
+									foreach(string r in tmpvalues){
+										//renderField+=translate("backend.prodotti.detail.table.label.field_values_"+cf.description+"_"+r+"_"+productKeyword, r, langcode, defLangCode);		
+										if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("values").Append("-").Append(r).Append("-").Append(langcode).ToString(), out pftv)){
+											renderField+=pftv.value+"<br/>";
+										}
+									}							
 								}else{
 									renderField+="<span>"+tmpDescription+isrequired+"</span>&nbsp;";
 									
@@ -435,18 +515,35 @@ namespace com.nemesys.services
 										foreach(ProductFieldsValue cfv in values)
 										{
 											string vchecked = "";
-											if(cfv.value==cf.value)
+											foreach(string r in tmpvalues)
 											{
-												vchecked = " checked='checked'";
+												if(cfv.value==r)
+												{
+													vchecked = " checked='checked'";
+													break;
+												}
 											}
-											renderField+="<input type='checkbox' "+vchecked+" name='product_field_"+cf.id+"' id='xproduct_field_"+cf.id+"' value='"+cfv.value+"' "+jsFunction+">&nbsp;"+cfv.value;
+											string tmpcfvval = cfv.value;
+											//tmpcfvval = translate("backend.prodotti.detail.table.label.field_values_"+cf.description+"_"+cfv.value+"_"+productKeyword, tmpcfvval, langcode, defLangCode);
+											if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("values").Append("-").Append(tmpcfvval).Append("-").Append(langcode).ToString(), out pftv)){
+												tmpcfvval = pftv.value;
+											}
+											
+											renderField+="<input type='checkbox' "+vchecked+" name='product_field_"+cf.id+"' id='xproduct_field_"+cf.id+"' value='"+cfv.value+"' "+jsFunction+">&nbsp;"+tmpcfvval;
 										}
 									}
 								}
 								break;
 							case 6:
+								tmpvalues = cf.value.Split(',');
+									
 								if(cf.editable){
-									renderField+=cf.value;								
+									foreach(string r in tmpvalues){
+										//renderField+=translate("backend.prodotti.detail.table.label.field_values_"+cf.description+"_"+r+"_"+productKeyword, r, langcode, defLangCode);		
+										if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("values").Append("-").Append(r).Append("-").Append(langcode).ToString(), out pftv)){
+											renderField+=pftv.value+"<br/>";
+										}
+									}							
 								}else{
 									renderField+="<span>"+tmpDescription+isrequired+"</span>&nbsp;";
 									
@@ -459,11 +556,21 @@ namespace com.nemesys.services
 										foreach(ProductFieldsValue cfv in values)
 										{
 											string vchecked = "";
-											if(cfv.value==cf.value)
+											foreach(string r in tmpvalues)
 											{
-												vchecked = " checked='checked'";
+												if(cfv.value==r)
+												{
+													vchecked = " checked='checked'";
+													break;
+												}
 											}
-											renderField+="<input type='radio' "+vchecked+" name='product_field_"+cf.id+"' id='rproduct_field_"+cf.id+"' value='"+cfv.value+"' "+jsFunction+">&nbsp;"+cfv.value;
+											string tmpcfvval = cfv.value;
+											//tmpcfvval = translate("backend.prodotti.detail.table.label.field_values_"+cf.description+"_"+cfv.value+"_"+productKeyword, tmpcfvval, langcode, defLangCode);
+											if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("values").Append("-").Append(tmpcfvval).Append("-").Append(langcode).ToString(), out pftv)){
+												tmpcfvval = pftv.value;
+											}
+											
+											renderField+="<input type='radio' "+vchecked+" name='product_field_"+cf.id+"' id='rproduct_field_"+cf.id+"' value='"+cfv.value+"' "+jsFunction+">&nbsp;"+tmpcfvval;
 										}
 									}
 								}
@@ -478,7 +585,12 @@ namespace com.nemesys.services
 								break;
 							case 9:
 								if(cf.editable){
-									renderField+=cf.value;								
+									string tmpValue = cf.value;
+									//tmpValue = translate("backend.prodotti.detail.table.label.field_value_e_"+cf.description+"_"+productKeyword, tmpValue, langcode, defLangCode);
+									if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("value").Append("-").Append("").Append("-").Append(langcode).ToString(), out pftv)){
+										tmpValue = pftv.value;
+									}
+									renderField+=tmpValue;							
 								}else{
 									renderField+="<span>"+tmpDescription+isrequired+"</span>&nbsp;";
 									

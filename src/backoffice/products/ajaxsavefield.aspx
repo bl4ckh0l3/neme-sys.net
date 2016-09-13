@@ -94,6 +94,8 @@ protected void Page_Load(Object sender, EventArgs e)
 		IList<MultiLanguage> updtranslactions = new List<MultiLanguage>();
 		IList<MultiLanguage> deltranslactions = new List<MultiLanguage>();	
 		
+		IList<ProductFieldTranslation> fieldsTrans = new List<ProductFieldTranslation>();
+		
 		//Response.Write("field_description_ml:"+Request["field_description_ml"]+"<br>");		
 		//Response.Write("prod_code:"+Request["prod_code"]+"<br>");
 		
@@ -109,6 +111,7 @@ protected void Page_Load(Object sender, EventArgs e)
 					Dictionary<string, string> mlvalues = JsonConvert.DeserializeObject<Dictionary<string, string>>(Request["field_description_ml"]);
 					MultiLanguage ml = null;					
 					
+					/*
 					//*** insert description
 					ml = mlangrep.find("backend.prodotti.detail.table.label.field_description_"+newField.description+"_"+prodCode, x.label);					
 					if(ml != null){
@@ -132,14 +135,29 @@ protected void Page_Load(Object sender, EventArgs e)
 							ml.value = tmpval.Replace("&quot;","\"");			
 							newtranslactions.Add(ml);
 						}
-					}							
+					}
+					*/
+					
+					string tmpval = "";
+					mlvalues.TryGetValue(x.label, out tmpval);							
+					if(!String.IsNullOrEmpty(tmpval)){
+						ProductFieldTranslation pft = new ProductFieldTranslation();
+						pft.idParentProduct = newField.idParentProduct;
+						pft.idField = newField.id;
+						pft.type = "desc";
+						pft.baseVal = "";
+						pft.langCode = x.label;
+						pft.value = tmpval.Replace("&quot;","\"");
+						fieldsTrans.Add(pft); 
+					}
 				}
 				
 				if(!String.IsNullOrEmpty(Request["group_value_ml"]))
 				{
 					Dictionary<string, string> mlvalues = JsonConvert.DeserializeObject<Dictionary<string, string>>(Request["group_value_ml"]);
 					MultiLanguage ml = null;
-								
+					
+					/*
 					//*** insert group
 					ml = mlangrep.find("backend.prodotti.detail.table.label.id_group_"+newField.groupDescription+"_"+prodCode, x.label);					
 					if(ml != null){
@@ -163,7 +181,21 @@ protected void Page_Load(Object sender, EventArgs e)
 							ml.value = tmpval.Replace("&quot;","\"");			
 							newtranslactions.Add(ml);
 						}
-					}		
+					}	
+					*/
+					
+					string tmpval = "";
+					mlvalues.TryGetValue(x.label, out tmpval);							
+					if(!String.IsNullOrEmpty(tmpval)){
+						ProductFieldTranslation pft = new ProductFieldTranslation();
+						pft.idParentProduct = newField.idParentProduct;
+						pft.idField = newField.id;
+						pft.type = "group";
+						pft.baseVal = "";
+						pft.langCode = x.label;
+						pft.value = tmpval.Replace("&quot;","\"");
+						fieldsTrans.Add(pft); 
+					}
 				}
 				
 				if((newField.type==3 || newField.type==4 || newField.type==5 || newField.type==6) && (newField.typeContent != 7) && (newField.typeContent != 8))
@@ -183,7 +215,9 @@ protected void Page_Load(Object sender, EventArgs e)
 							{
 								//Response.Write(column+" : "+row[column]+"<br>");
 								//Response.Write("column: "+column.ToString()+"<br>");
+								//Response.Write("row: "+row.ToString()+"<br>");
 								
+								/*
 								//*** insert product fields values	
 								ml = mlangrep.find("backend.prodotti.detail.table.label.field_values_"+newField.description+"_"+table+"_"+prodCode, x.label);
 								if(ml != null){									
@@ -206,6 +240,20 @@ protected void Page_Load(Object sender, EventArgs e)
 										newtranslactions.Add(ml);
 									}
 								}
+								*/											
+								
+								string tmpval = row[x.label].ToString();
+								//Response.Write("tmpval: "+tmpval+"<br>");
+								if(!String.IsNullOrEmpty(tmpval)){	
+									ProductFieldTranslation pft = new ProductFieldTranslation();
+									pft.idParentProduct = newField.idParentProduct;
+									pft.idField = newField.idParentProduct;
+									pft.type = "values";
+									pft.baseVal = table.ToString();
+									pft.langCode = x.label;
+									pft.value = tmpval.Replace("&quot;","\"");
+									fieldsTrans.Add(pft); 
+								}
 							}
 						}	
 					}
@@ -219,6 +267,7 @@ protected void Page_Load(Object sender, EventArgs e)
 						Dictionary<string, string> mlvalues = JsonConvert.DeserializeObject<Dictionary<string, string>>(Request["field_value_t_ml"]);
 						MultiLanguage ml = null;					
 						
+						/*
 						ml = mlangrep.find("backend.prodotti.detail.table.label.field_value_t_"+newField.description+"_"+prodCode, x.label);					
 						if(ml != null){
 							string tmpval = "";
@@ -241,7 +290,22 @@ protected void Page_Load(Object sender, EventArgs e)
 								ml.value = tmpval.Replace("&quot;","\"");			
 								newtranslactions.Add(ml);
 							}
-						}							
+						}
+						*/
+						
+						string tmpval = "";
+						mlvalues.TryGetValue(x.label, out tmpval);	
+						
+						if(!String.IsNullOrEmpty(tmpval)){
+							ProductFieldTranslation pft = new ProductFieldTranslation();
+							pft.idParentProduct = newField.idParentProduct;
+							pft.idField = newField.idParentProduct;
+							pft.type = "value";
+							pft.baseVal = "";
+							pft.langCode = x.label;
+							pft.value = tmpval.Replace("&quot;","\"");
+							fieldsTrans.Add(pft); 
+						}						
 					}
 		
 					//*** insert field_value_ta			
@@ -250,6 +314,7 @@ protected void Page_Load(Object sender, EventArgs e)
 						Dictionary<string, string> mlvalues = JsonConvert.DeserializeObject<Dictionary<string, string>>(Request["field_value_ta_ml"]);
 						MultiLanguage ml = null;					
 						
+						/*
 						ml = mlangrep.find("backend.prodotti.detail.table.label.field_value_ta_"+newField.description+"_"+prodCode, x.label);					
 						if(ml != null){
 							string tmpval = "";
@@ -272,7 +337,22 @@ protected void Page_Load(Object sender, EventArgs e)
 								ml.value = tmpval.Replace("&quot;","\"");			
 								newtranslactions.Add(ml);
 							}
-						}							
+						}
+						*/
+						
+						string tmpval = "";
+						mlvalues.TryGetValue(x.label, out tmpval);	
+						
+						if(!String.IsNullOrEmpty(tmpval)){
+							ProductFieldTranslation pft = new ProductFieldTranslation();
+							pft.idParentProduct = newField.idParentProduct;
+							pft.idField = newField.id;
+							pft.type = "value";
+							pft.baseVal = "";
+							pft.langCode = x.label;
+							pft.value = tmpval.Replace("&quot;","\"");
+							fieldsTrans.Add(pft); 
+						}
 					}
 		
 					//*** insert field_value_e			
@@ -281,6 +361,7 @@ protected void Page_Load(Object sender, EventArgs e)
 						Dictionary<string, string> mlvalues = JsonConvert.DeserializeObject<Dictionary<string, string>>(Request["field_value_e_ml"]);
 						MultiLanguage ml = null;					
 						
+						/*
 						ml = mlangrep.find("backend.prodotti.detail.table.label.field_value_e_"+newField.description+"_"+prodCode, x.label);					
 						if(ml != null){
 							string tmpval = "";
@@ -303,7 +384,23 @@ protected void Page_Load(Object sender, EventArgs e)
 								ml.value = tmpval.Replace("&quot;","\"");			
 								newtranslactions.Add(ml);
 							}
-						}							
+						}	
+						*/
+						
+						
+						string tmpval = "";
+						mlvalues.TryGetValue(x.label, out tmpval);	
+						
+						if(!String.IsNullOrEmpty(tmpval)){
+							ProductFieldTranslation pft = new ProductFieldTranslation();
+							pft.idParentProduct = newField.idParentProduct;
+							pft.idField = newField.id;
+							pft.type = "value";
+							pft.baseVal = "";
+							pft.langCode = x.label;
+							pft.value = tmpval.Replace("&quot;","\"");
+							fieldsTrans.Add(pft); 
+						}
 					}				
 				}
 			}					
@@ -355,7 +452,7 @@ protected void Page_Load(Object sender, EventArgs e)
 						
 		try
 		{
-			prodrep.saveCompleteProductField(newField, newFieldValues, newtranslactions, updtranslactions, deltranslactions);
+			prodrep.saveCompleteProductField(newField, newFieldValues, newtranslactions, updtranslactions, deltranslactions, fieldsTrans);
 
 			foreach(MultiLanguage value in updtranslactions){
 				MultiLanguageRepository.cleanCache(value);

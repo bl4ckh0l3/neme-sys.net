@@ -72,7 +72,10 @@ function addToCarrello(theFrom, counter, checkqtafields){
 		var key = $(this).attr('name');
 		key = key.substring(key.lastIndexOf('_')+1); 
 		var myRegExp = new RegExp(/"/g);
-		var thisval = $(this).val();			
+		var thisval = $(this).val();	
+		if(thisval instanceof Array){
+			thisval = thisval.toString();
+		}		
 		thisval = thisval.replace(myRegExp, '\&quot;');				
 		jsonfields += "\""+fieldscounter+"-"+key+"\":\""+encodeURIComponent(thisval)+"\",";	
 		hasfield4prod = true;
@@ -84,7 +87,10 @@ function addToCarrello(theFrom, counter, checkqtafields){
 		key = key.substring(key.lastIndexOf('_')+1); 
 		if($(this).is(':checked')){
 			var myRegExp = new RegExp(/"/g);
-			var thisval = $(this).val();			
+			var thisval = $(this).val();
+			if(thisval instanceof Array){
+				thisval = thisval.toString();
+			}			
 			thisval = thisval.replace(myRegExp, '\&quot;');				
 			jsonfields += "\""+fieldscounter+"-"+key+"\":\""+encodeURIComponent(thisval)+"\",";	
 			hasfield4prod = true;
@@ -97,7 +103,10 @@ function addToCarrello(theFrom, counter, checkqtafields){
 		key = key.substring(key.lastIndexOf('_')+1); 
 		if($(this).is(':checked')){
 			var myRegExp = new RegExp(/"/g);
-			var thisval = $(this).val();			
+			var thisval = $(this).val();	
+			if(thisval instanceof Array){
+				thisval = thisval.toString();
+			}		
 			thisval = thisval.replace(myRegExp, '\&quot;');				
 			jsonfields += "\""+fieldscounter+"-"+key+"\":\""+encodeURIComponent(thisval)+"\",";	
 			hasfield4prod = true;
@@ -407,7 +416,7 @@ function openDetailContentPage(productid){
 							
 								// gestisco i field per contenuto
 								if(product.fields != null && product.fields.Count>0){
-									Response.Write(ProductService.renderField(product.fields, null, "", "", lang.currentLangCode, lang.defaultLangCode, product.keyword));
+									Response.Write(ProductService.renderField(product.fields, null, "", "", lang.currentLangCode, lang.defaultLangCode, ProductService.getMapProductFieldsTranslations(product.id)));
 								}%>
 								</p>
 							<%}%>						

@@ -1,4 +1,4 @@
-<%@ Page Language="C#" Debug="false" ValidateRequest="false"%>
+<%@ Page Language="C#" Debug="true" ValidateRequest="false"%>
 <%@ import Namespace="System" %>
 <%@ import Namespace="System.Web" %>
 <%@ import Namespace="Newtonsoft.Json" %>
@@ -109,38 +109,10 @@ protected void Page_Load(Object sender, EventArgs e)
 				if(!String.IsNullOrEmpty(Request["field_description_ml"]))
 				{									
 					Dictionary<string, string> mlvalues = JsonConvert.DeserializeObject<Dictionary<string, string>>(Request["field_description_ml"]);
-					MultiLanguage ml = null;					
+					MultiLanguage ml = null;	
 					
-					/*
-					//*** insert description
-					ml = mlangrep.find("backend.prodotti.detail.table.label.field_description_"+newField.description+"_"+prodCode, x.label);					
-					if(ml != null){
-						string tmpval = "";
-						ml.value = "";
-						mlvalues.TryGetValue(x.label, out tmpval);							
-						if(!String.IsNullOrEmpty(tmpval)){
-							ml.value = tmpval.Replace("&quot;","\"");
-							updtranslactions.Add(ml);
-						}else{
-							deltranslactions.Add(ml);									
-						}
-					}else{
-						ml = new MultiLanguage();
-						ml.keyword = "backend.prodotti.detail.table.label.field_description_"+newField.description+"_"+prodCode;
-						ml.langCode = x.label;
-						string tmpval = "";
-						ml.value = "";
-						mlvalues.TryGetValue(x.label, out tmpval);
-						if(!String.IsNullOrEmpty(tmpval)){	
-							ml.value = tmpval.Replace("&quot;","\"");			
-							newtranslactions.Add(ml);
-						}
-					}
-					*/
-					
-					string tmpval = "";
-					mlvalues.TryGetValue(x.label, out tmpval);							
-					if(!String.IsNullOrEmpty(tmpval)){
+					string tmpval = "";							
+					if(mlvalues.TryGetValue(x.label, out tmpval)){
 						ProductFieldTranslation pft = new ProductFieldTranslation();
 						pft.idParentProduct = newField.idParentProduct;
 						pft.idField = newField.id;
@@ -157,36 +129,8 @@ protected void Page_Load(Object sender, EventArgs e)
 					Dictionary<string, string> mlvalues = JsonConvert.DeserializeObject<Dictionary<string, string>>(Request["group_value_ml"]);
 					MultiLanguage ml = null;
 					
-					/*
-					//*** insert group
-					ml = mlangrep.find("backend.prodotti.detail.table.label.id_group_"+newField.groupDescription+"_"+prodCode, x.label);					
-					if(ml != null){
-						string tmpval = "";
-						ml.value = "";
-						mlvalues.TryGetValue(x.label, out tmpval);							
-						if(!String.IsNullOrEmpty(tmpval)){
-							ml.value = tmpval.Replace("&quot;","\"");
-							updtranslactions.Add(ml);
-						}else{
-							deltranslactions.Add(ml);									
-						}
-					}else{
-						ml = new MultiLanguage();
-						ml.keyword = "backend.prodotti.detail.table.label.id_group_"+newField.groupDescription+"_"+prodCode;
-						ml.langCode = x.label;
-						string tmpval = "";
-						ml.value = "";
-						mlvalues.TryGetValue(x.label, out tmpval);
-						if(!String.IsNullOrEmpty(tmpval)){	
-							ml.value = tmpval.Replace("&quot;","\"");			
-							newtranslactions.Add(ml);
-						}
-					}	
-					*/
-					
 					string tmpval = "";
-					mlvalues.TryGetValue(x.label, out tmpval);							
-					if(!String.IsNullOrEmpty(tmpval)){
+					if(mlvalues.TryGetValue(x.label, out tmpval)){
 						ProductFieldTranslation pft = new ProductFieldTranslation();
 						pft.idParentProduct = newField.idParentProduct;
 						pft.idField = newField.id;
@@ -213,46 +157,23 @@ protected void Page_Load(Object sender, EventArgs e)
 								
 							foreach(DataRow row in table.Rows)
 							{
-								//Response.Write(column+" : "+row[column]+"<br>");
-								//Response.Write("column: "+column.ToString()+"<br>");
-								//Response.Write("row: "+row.ToString()+"<br>");
+								//Response.Write("row: "+row.ToString()+"<br>");	
+								//Response.Write("row: "+row[x.label]+"<br>");		
+								//Response.Write("row.IsNull("+x.label+"): "+row.IsNull(x.label)+"<br>");										
 								
-								/*
-								//*** insert product fields values	
-								ml = mlangrep.find("backend.prodotti.detail.table.label.field_values_"+newField.description+"_"+table+"_"+prodCode, x.label);
-								if(ml != null){									
-									string tmpval = row[x.label].ToString();
-									ml.value = "";	
-									if(!String.IsNullOrEmpty(tmpval)){
-										ml.value = tmpval.Replace("&quot;","\"");
-										updtranslactions.Add(ml);
-									}else{
-										deltranslactions.Add(ml);									
+								foreach(DataColumn column in table.Columns){
+									if(x.label.Equals(column.ToString()) && !row.IsNull(column)){	
+										string tmpval = row[x.label].ToString();
+										ProductFieldTranslation pft = new ProductFieldTranslation();
+										pft.idParentProduct = newField.idParentProduct;
+										pft.idField = newField.idParentProduct;
+										pft.type = "values";
+										pft.baseVal = table.ToString();
+										pft.langCode = x.label;
+										pft.value = tmpval.Replace("&quot;","\"");
+										fieldsTrans.Add(pft); 
+										break;
 									}
-								}else{
-									ml = new MultiLanguage();
-									ml.keyword = "backend.prodotti.detail.table.label.field_values_"+newField.description+"_"+table+"_"+prodCode;
-									ml.langCode = x.label;										
-									string tmpval = row[x.label].ToString();
-									ml.value = "";
-									if(!String.IsNullOrEmpty(tmpval)){	
-										ml.value = tmpval.Replace("&quot;","\"");
-										newtranslactions.Add(ml);
-									}
-								}
-								*/											
-								
-								string tmpval = row[x.label].ToString();
-								//Response.Write("tmpval: "+tmpval+"<br>");
-								if(!String.IsNullOrEmpty(tmpval)){	
-									ProductFieldTranslation pft = new ProductFieldTranslation();
-									pft.idParentProduct = newField.idParentProduct;
-									pft.idField = newField.idParentProduct;
-									pft.type = "values";
-									pft.baseVal = table.ToString();
-									pft.langCode = x.label;
-									pft.value = tmpval.Replace("&quot;","\"");
-									fieldsTrans.Add(pft); 
 								}
 							}
 						}	
@@ -262,41 +183,12 @@ protected void Page_Load(Object sender, EventArgs e)
 				if((newField.type==1 || newField.type==2 || newField.type==9) && (newField.typeContent != 7) && (newField.typeContent != 8))
 				{
 					//*** insert field_value_t
-					if(!String.IsNullOrEmpty(Request["field_value_t_ml"]))
+					if(newField.type==1 && !String.IsNullOrEmpty(Request["field_value_t_ml"]))
 					{									
 						Dictionary<string, string> mlvalues = JsonConvert.DeserializeObject<Dictionary<string, string>>(Request["field_value_t_ml"]);
-						MultiLanguage ml = null;					
+						string tmpval = "";	
 						
-						/*
-						ml = mlangrep.find("backend.prodotti.detail.table.label.field_value_t_"+newField.description+"_"+prodCode, x.label);					
-						if(ml != null){
-							string tmpval = "";
-							ml.value = "";
-							mlvalues.TryGetValue(x.label, out tmpval);							
-							if(!String.IsNullOrEmpty(tmpval)){
-								ml.value = tmpval.Replace("&quot;","\"");
-								updtranslactions.Add(ml);
-							}else{
-								deltranslactions.Add(ml);									
-							}
-						}else{
-							ml = new MultiLanguage();
-							ml.keyword = "backend.prodotti.detail.table.label.field_value_t_"+newField.description+"_"+prodCode;
-							ml.langCode = x.label;
-							string tmpval = "";
-							ml.value = "";
-							mlvalues.TryGetValue(x.label, out tmpval);
-							if(!String.IsNullOrEmpty(tmpval)){	
-								ml.value = tmpval.Replace("&quot;","\"");			
-								newtranslactions.Add(ml);
-							}
-						}
-						*/
-						
-						string tmpval = "";
-						mlvalues.TryGetValue(x.label, out tmpval);	
-						
-						if(!String.IsNullOrEmpty(tmpval)){
+						if(mlvalues.TryGetValue(x.label, out tmpval)){
 							ProductFieldTranslation pft = new ProductFieldTranslation();
 							pft.idParentProduct = newField.idParentProduct;
 							pft.idField = newField.idParentProduct;
@@ -309,41 +201,14 @@ protected void Page_Load(Object sender, EventArgs e)
 					}
 		
 					//*** insert field_value_ta			
-					if(!String.IsNullOrEmpty(Request["field_value_ta_ml"]))
+					if(newField.type==2 && !String.IsNullOrEmpty(Request["field_value_ta_ml"]))
 					{									
 						Dictionary<string, string> mlvalues = JsonConvert.DeserializeObject<Dictionary<string, string>>(Request["field_value_ta_ml"]);
 						MultiLanguage ml = null;					
 						
-						/*
-						ml = mlangrep.find("backend.prodotti.detail.table.label.field_value_ta_"+newField.description+"_"+prodCode, x.label);					
-						if(ml != null){
-							string tmpval = "";
-							ml.value = "";
-							mlvalues.TryGetValue(x.label, out tmpval);							
-							if(!String.IsNullOrEmpty(tmpval)){
-								ml.value = tmpval.Replace("&quot;","\"");
-								updtranslactions.Add(ml);
-							}else{
-								deltranslactions.Add(ml);									
-							}
-						}else{
-							ml = new MultiLanguage();
-							ml.keyword = "backend.prodotti.detail.table.label.field_value_ta_"+newField.description+"_"+prodCode;
-							ml.langCode = x.label;
-							string tmpval = "";
-							ml.value = "";
-							mlvalues.TryGetValue(x.label, out tmpval);
-							if(!String.IsNullOrEmpty(tmpval)){	
-								ml.value = tmpval.Replace("&quot;","\"");			
-								newtranslactions.Add(ml);
-							}
-						}
-						*/
-						
 						string tmpval = "";
-						mlvalues.TryGetValue(x.label, out tmpval);	
 						
-						if(!String.IsNullOrEmpty(tmpval)){
+						if(mlvalues.TryGetValue(x.label, out tmpval)){
 							ProductFieldTranslation pft = new ProductFieldTranslation();
 							pft.idParentProduct = newField.idParentProduct;
 							pft.idField = newField.id;
@@ -356,42 +221,14 @@ protected void Page_Load(Object sender, EventArgs e)
 					}
 		
 					//*** insert field_value_e			
-					if(!String.IsNullOrEmpty(Request["field_value_e_ml"]))
+					if(newField.type==9 && !String.IsNullOrEmpty(Request["field_value_e_ml"]))
 					{									
 						Dictionary<string, string> mlvalues = JsonConvert.DeserializeObject<Dictionary<string, string>>(Request["field_value_e_ml"]);
 						MultiLanguage ml = null;					
 						
-						/*
-						ml = mlangrep.find("backend.prodotti.detail.table.label.field_value_e_"+newField.description+"_"+prodCode, x.label);					
-						if(ml != null){
-							string tmpval = "";
-							ml.value = "";
-							mlvalues.TryGetValue(x.label, out tmpval);							
-							if(!String.IsNullOrEmpty(tmpval)){
-								ml.value = tmpval.Replace("&quot;","\"");
-								updtranslactions.Add(ml);
-							}else{
-								deltranslactions.Add(ml);									
-							}
-						}else{
-							ml = new MultiLanguage();
-							ml.keyword = "backend.prodotti.detail.table.label.field_value_e_"+newField.description+"_"+prodCode;
-							ml.langCode = x.label;
-							string tmpval = "";
-							ml.value = "";
-							mlvalues.TryGetValue(x.label, out tmpval);
-							if(!String.IsNullOrEmpty(tmpval)){	
-								ml.value = tmpval.Replace("&quot;","\"");			
-								newtranslactions.Add(ml);
-							}
-						}	
-						*/
-						
-						
 						string tmpval = "";
-						mlvalues.TryGetValue(x.label, out tmpval);	
 						
-						if(!String.IsNullOrEmpty(tmpval)){
+						if(mlvalues.TryGetValue(x.label, out tmpval)){
 							ProductFieldTranslation pft = new ProductFieldTranslation();
 							pft.idParentProduct = newField.idParentProduct;
 							pft.idField = newField.id;
@@ -479,7 +316,7 @@ protected void Page_Load(Object sender, EventArgs e)
 	{
 		errorMsg.Append(Regex.Replace(ex.Message, @"\t|\n|\r", " "));
 		carryOn = false;
-		//Response.Write(ex.Message);
+		Response.Write(ex.Message+"<br><br><br>"+ex.StackTrace);
 	}
 		
 	if(carryOn){

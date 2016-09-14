@@ -941,7 +941,10 @@ public partial class _Product : Page
 						
 						if(hasProductFields){
 							IList<ProductField> tmpPFs = product.fields;
-							foreach(ProductField cf in tmpPFs){						
+							foreach(ProductField cf in tmpPFs){	
+								//Response.Write("- lang: "+x.label+"");
+								//Response.Write(" - cf: "+cf.ToString()+"<br>");
+								
 
 								//******************  START: MULTILANGUAGE FIELDS TRANSLATIONS MANAGER ***************************/
 								
@@ -996,6 +999,7 @@ public partial class _Product : Page
 									pft.baseVal = "";
 									pft.langCode = x.label;
 									pft.value = Request["field_description_"+cf.id+"_"+x.label].Replace("&quot;","\"");
+									//Response.Write(" - found field_description: "+pft.ToString()+"<br>");
 									fieldsTrans.Add(pft); 
 								}
 								
@@ -1007,6 +1011,7 @@ public partial class _Product : Page
 									pft.baseVal = "";
 									pft.langCode = x.label;
 									pft.value = Request["group_value_"+cf.id+"_"+x.label].Replace("&quot;","\"");
+									//Response.Write(" - found group_value: "+pft.ToString()+"<br>");
 									fieldsTrans.Add(pft); 
 								}
 								
@@ -1061,6 +1066,7 @@ public partial class _Product : Page
 												pft.baseVal = cfv.value;
 												pft.langCode = x.label;
 												pft.value = currfmlvalue.Replace("&quot;","\"");
+												//Response.Write(" - found field_values_ml: "+pft.ToString()+"<br>");
 												fieldsTrans.Add(pft); 
 											}											
 											
@@ -1094,7 +1100,7 @@ public partial class _Product : Page
 
 								if((cf.type==1 || cf.type==2 || cf.type==9) && (cf.typeContent != 7) && (cf.typeContent != 8))
 								{
-									if(!String.IsNullOrEmpty(Request["field_value_t_"+cf.id+"_"+x.label])){
+									if(cf.type==1 && !String.IsNullOrEmpty(Request["field_value_t_"+cf.id+"_"+x.label])){
 										ProductFieldTranslation pft = new ProductFieldTranslation();
 										pft.idParentProduct = product.id;
 										pft.idField = cf.id;
@@ -1102,9 +1108,10 @@ public partial class _Product : Page
 										pft.baseVal = "";
 										pft.langCode = x.label;
 										pft.value = Request["field_value_t_"+cf.id+"_"+x.label].Replace("&quot;","\"");
+										//Response.Write(" - found field_value_t: "+pft.ToString()+"<br>");
 										fieldsTrans.Add(pft); 
 									}
-									if(!String.IsNullOrEmpty(Request["field_value_ta_"+cf.id+"_"+x.label])){
+									if(cf.type==2 && !String.IsNullOrEmpty(Request["field_value_ta_"+cf.id+"_"+x.label])){
 										ProductFieldTranslation pft = new ProductFieldTranslation();
 										pft.idParentProduct = product.id;
 										pft.idField = cf.id;
@@ -1112,9 +1119,10 @@ public partial class _Product : Page
 										pft.baseVal = "";
 										pft.langCode = x.label;
 										pft.value = Request["field_value_ta_"+cf.id+"_"+x.label].Replace("&quot;","\"");
+										//Response.Write(" - found field_value_ta: "+pft.ToString()+"<br>");
 										fieldsTrans.Add(pft); 
 									}
-									if(!String.IsNullOrEmpty(Request["field_value_e_"+cf.id+"_"+x.label])){
+									if(cf.type==9 && !String.IsNullOrEmpty(Request["field_value_e_"+cf.id+"_"+x.label])){
 										ProductFieldTranslation pft = new ProductFieldTranslation();
 										pft.idParentProduct = product.id;
 										pft.idField = cf.id;
@@ -1122,6 +1130,7 @@ public partial class _Product : Page
 										pft.baseVal = "";
 										pft.langCode = x.label;
 										pft.value = Request["field_value_e_"+cf.id+"_"+x.label].Replace("&quot;","\"");
+										//Response.Write(" - found field_value_e: "+pft.ToString()+"<br>");
 										fieldsTrans.Add(pft); 
 									}
 								
@@ -1224,7 +1233,12 @@ public partial class _Product : Page
 					
 					
 					//Response.Write("qtyFieldValues.Count:"+qtyFieldValues.Count+"<br>");
-
+					
+					//Response.Write("ProductFieldTranslation count before save:"+fieldsTrans.Count+"<br><br>");
+					//foreach(ProductFieldTranslation k in fieldsTrans){
+					//	Response.Write(k.ToString()+"<br>");
+					//}						
+					
 					prodrep.saveCompleteProduct(product, listOfPoints, mainFieldsTrans, fieldsTrans, qtyFieldValues, newtranslactions, updtranslactions, deltranslactions);
 					
 					foreach(MultiLanguage value in updtranslactions){

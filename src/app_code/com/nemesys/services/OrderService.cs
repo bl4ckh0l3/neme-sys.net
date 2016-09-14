@@ -479,20 +479,60 @@ namespace com.nemesys.services
 						string productFields = "";
 						string boproductFields = "";
 						if(opfs != null && opfs.Count>0){
+							IDictionary<string,ProductFieldTranslation> pftMap = ProductService.getMapProductFieldsTranslations(prod.id);
+							ProductFieldTranslation pftv = null;
+									
 							foreach(OrderProductField opf in opfs){
-								string flabel = MultiLanguageService.translate("backend.prodotti.detail.table.label.field_description_"+opf.description+"_"+prod.keyword, langcode, defLangCode);
-								string boflabel = MultiLanguageService.translate("backend.prodotti.detail.table.label.field_description_"+opf.description+"_"+prod.keyword, boLangCode, defLangCode);
-								if(String.IsNullOrEmpty(flabel)){
-									flabel = opf.description;
-									boflabel = opf.description;
+								string flabel = opf.description;
+								string boflabel = opf.description;
+								if(pftMap.TryGetValue(new StringBuilder().Append(prod.id).Append("-").Append(opf.idField).Append("-").Append("desc").Append("-").Append("").Append("-").Append(langcode).ToString(), out pftv)){
+									flabel = pftv.value;
+								}
+								if(pftMap.TryGetValue(new StringBuilder().Append(prod.id).Append("-").Append(opf.idField).Append("-").Append("desc").Append("-").Append("").Append("-").Append(boLangCode).ToString(), out pftv)){
+									boflabel = pftv.value;
 								}
 								
 								if(opf.fieldType==8){
 									productFields+=flabel+":&nbsp;<a target='_blank' href='"+url+"public/upload/files/orders/"+opf.idOrder+"/"+opf.value+"'>"+opf.value+"</a><br/>";
 									boproductFields+=boflabel+":&nbsp;<a target='_blank' href='"+url+"public/upload/files/orders/"+opf.idOrder+"/"+opf.value+"'>"+opf.value+"</a><br/>";
+								}else if(opf.fieldType==3 || opf.fieldType==4 || opf.fieldType==5 || opf.fieldType==6){
+									string fvalue = opf.value;
+									if(pftMap.TryGetValue(new StringBuilder().Append(prod.id).Append("-").Append(opf.idField).Append("-").Append("values").Append("-").Append(fvalue).Append("-").Append(langcode).ToString(), out pftv)){
+										fvalue = pftv.value;
+									}else{
+										if(opf.fieldType==3){
+											string tmpv = MultiLanguageService.translate("portal.commons.select.option.country."+opf.value, langcode, defLangCode);
+											if(!String.IsNullOrEmpty(tmpv)){
+												fvalue = tmpv;
+											}
+										}
+									}
+									productFields+=flabel+":&nbsp;"+fvalue+"<br/>";
+									
+									fvalue = opf.value;
+									if(pftMap.TryGetValue(new StringBuilder().Append(prod.id).Append("-").Append(opf.idField).Append("-").Append("values").Append("-").Append(fvalue).Append("-").Append(boLangCode).ToString(), out pftv)){
+										fvalue = pftv.value;
+									}else{
+										if(opf.fieldType==3){
+											string tmpv = MultiLanguageService.translate("portal.commons.select.option.country."+opf.value, boLangCode, defLangCode);
+											if(!String.IsNullOrEmpty(tmpv)){
+												fvalue = tmpv;
+											}
+										}
+									}
+									boproductFields+=flabel+":&nbsp;"+fvalue+"<br/>";
 								}else{
-									productFields+=flabel+":&nbsp;"+opf.value+"<br/>";
-									boproductFields+=flabel+":&nbsp;"+opf.value+"<br/>";
+									string fvalue = opf.value;
+									if(pftMap.TryGetValue(new StringBuilder().Append(prod.id).Append("-").Append(opf.idField).Append("-").Append("value").Append("-").Append("").Append("-").Append(langcode).ToString(), out pftv)){
+										fvalue = pftv.value;
+									}
+									productFields+=flabel+":&nbsp;"+fvalue+"<br/>";
+									
+									fvalue = opf.value;
+									if(pftMap.TryGetValue(new StringBuilder().Append(prod.id).Append("-").Append(opf.idField).Append("-").Append("value").Append("-").Append("").Append("-").Append(boLangCode).ToString(), out pftv)){
+										fvalue = pftv.value;
+									}
+									boproductFields+=flabel+":&nbsp;"+fvalue+"<br/>";
 								}
 							}
 						}				

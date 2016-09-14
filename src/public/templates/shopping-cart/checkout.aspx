@@ -827,21 +827,40 @@ function selectPayAndBills4Form(applyBills){
 								
 								// gestisco i field per contenuto
 								if(fscpf != null && fscpf.Count>0){
+									IDictionary<string,ProductFieldTranslation> pftMap = ProductService.getMapProductFieldsTranslations(product.id);
+									ProductFieldTranslation pftv = null;
+									
 									foreach(ShoppingCartProductField scpf in fscpf){
-										string flabel = lang.getTranslated("backend.prodotti.detail.table.label.field_description_"+scpf.description+"_"+product.keyword);
-										if(String.IsNullOrEmpty(flabel)){
-											flabel = scpf.description;
+										string flabel = scpf.description;
+										if(pftMap.TryGetValue(new StringBuilder().Append(product.id).Append("-").Append(scpf.idField).Append("-").Append("desc").Append("-").Append("").Append("-").Append(lang.currentLangCode).ToString(), out pftv)){
+											flabel = pftv.value;
 										}
 										
 										if(scpf.fieldType==8){
 											Response.Write(flabel+":&nbsp;<a target='_blank' href='/public/upload/files/shoppingcarts/"+scpf.idCart+"/"+scpf.value+"'>"+scpf.value+"</a><br/>");
-										}else{
-											Response.Write(flabel+":&nbsp;"+scpf.value+"<br/>");
-										}
-										if(scpf.fieldType==3 || scpf.fieldType==4 || scpf.fieldType==5 || scpf.fieldType==6){%>
+										}else if(scpf.fieldType==3 || scpf.fieldType==4 || scpf.fieldType==5 || scpf.fieldType==6){
+											string fvalue = scpf.value;
+											if(pftMap.TryGetValue(new StringBuilder().Append(product.id).Append("-").Append(scpf.idField).Append("-").Append("values").Append("-").Append(fvalue).Append("-").Append(lang.currentLangCode).ToString(), out pftv)){
+												fvalue = pftv.value;
+											}else{
+												if(scpf.fieldType==3){
+													string tmpv = lang.getTranslated("portal.commons.select.option.country."+scpf.value);
+													if(!String.IsNullOrEmpty(tmpv)){
+														fvalue = tmpv;
+													}
+												}
+											}
+											Response.Write(flabel+":&nbsp;"+fvalue+"<br/>");%>
 											<input type="hidden" name="product_field_<%=scpf.idField%>" value="<%=HttpUtility.HtmlEncode(scpf.value)%>">	
-										<%}
+										<%}else{
+											string fvalue = scpf.value;
+											if(pftMap.TryGetValue(new StringBuilder().Append(product.id).Append("-").Append(scpf.idField).Append("-").Append("value").Append("-").Append("").Append("-").Append(lang.currentLangCode).ToString(), out pftv)){
+												fvalue = pftv.value;
+											}
+											Response.Write(flabel+":&nbsp;"+fvalue+"<br/>");
+										}
 									}
+									Response.Write("<br/>");
 								}%>									
 								
 								<strong><%=lang.getTranslated("frontend.carrello.table.label.quantita")%>: </strong>

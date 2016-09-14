@@ -235,14 +235,6 @@ namespace com.nemesys.services
 			string renderField="";
 			string jsFunction = "";
 
-			//foreach(string keyword in prodFieldsTrans.Keys){
-			//	ProductFieldTranslation p = prodFieldsTrans[keyword];
-				
-			//	HttpContext.Current.Response.Write("keyword:"+keyword+"<br>");
-			//	HttpContext.Current.Response.Write("value:"+p.ToString()+"<br><br>");
-			//}			
-			
-			
 			try
 			{
 				string currentGroup = "";

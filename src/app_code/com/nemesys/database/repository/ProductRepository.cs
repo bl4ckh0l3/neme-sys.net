@@ -1302,10 +1302,12 @@ namespace com.nemesys.database.repository
 					//*
 					//* aggiorno i campi multilingu dei field
 					//*					
+					HttpContext.Current.Response.Write("ProductFieldTranslation count before save:"+fieldsTrans.Count+"<br>");
 					foreach(ProductFieldTranslation m in fieldsTrans)
 					{	
 						//session.Delete(m);
 						m.idParentProduct=product.id;
+						HttpContext.Current.Response.Write("ProductFieldTranslation before save:"+m.ToString()+"<br>");
 						session.Save(m);
 					}
 					

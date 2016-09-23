@@ -31,6 +31,8 @@ namespace com.nemesys.database.repository
 
 		MultiLanguage find(string keyword, string langCode);
 		
+		IList<MultiLanguage> find(string keyword);
+		
 		IDictionary<string, MultiLanguage> find(string find_key_value, int pageIndex, int pageSize, int langSize, out IList<string> distinctKeys, out long totalCount);
 		
 	}

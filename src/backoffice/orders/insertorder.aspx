@@ -653,7 +653,7 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 							<td>
 							<%// gestisco i field per contenuto
 							if(p.fields != null && p.fields.Count>0){
-								Response.Write(ProductService.renderField(p.fields, null, "", "", lang.currentLangCode, lang.defaultLangCode, p.keyword));
+								Response.Write(ProductService.renderField(p.fields, null, "", "", lang.currentLangCode, lang.defaultLangCode, p.keyword,false));
 							}%>
 							</td>
 							</form>

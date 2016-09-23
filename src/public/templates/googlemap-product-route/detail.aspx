@@ -466,7 +466,7 @@ function openRelatedProdPage(actionurl, hierarchy, idProduct, numPageNum){
 					
 					<%
 					if(productFields.Count>0){ 
-						Response.Write(ProductService.renderField(productFields, null, "", "", lang.currentLangCode, lang.defaultLangCode, ProductService.getMapProductFieldsTranslations(product.id)));
+						Response.Write(ProductService.renderField(productFields, null, "", "", lang.currentLangCode, lang.defaultLangCode, ProductService.getMapProductFieldsTranslations(product.id),false));
 					}%>
 					
 

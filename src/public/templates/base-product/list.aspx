@@ -416,7 +416,7 @@ function openDetailContentPage(productid){
 							
 								// gestisco i field per contenuto
 								if(product.fields != null && product.fields.Count>0){
-									Response.Write(ProductService.renderField(product.fields, null, "", "", lang.currentLangCode, lang.defaultLangCode, ProductService.getMapProductFieldsTranslations(product.id)));
+									Response.Write(ProductService.renderField(product.fields, null, "", "", lang.currentLangCode, lang.defaultLangCode, ProductService.getMapProductFieldsTranslations(product.id),false));
 								}%>
 								</p>
 							<%}%>						

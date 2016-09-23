@@ -1,4 +1,4 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeFile="list.aspx.cs" Inherits="_List" Debug="false"%>
+<%@ Page Language="C#" AutoEventWireup="true" CodeFile="list.aspx.cs" Inherits="_List" Debug="true"%>
 <%@ import Namespace="System" %>
 <%@ import Namespace="System.Collections" %>
 <%@ import Namespace="System.Collections.Generic" %>
@@ -361,6 +361,121 @@ function openDetailContentPage(productid){
     document.form_detail_link_news.submit();
 	<%}%>
 }
+
+function sendBookSearch(){
+	if(document.form_book_search.search_text.value== ""){
+		alert("<%=lang.getTranslated("frontend.template.booking.js.alert.empty")%>");
+		document.form_book_search.search_text.focus();
+		return;
+	}
+	if(document.form_book_search.checkin.value== ""){
+		alert("<%=lang.getTranslated("frontend.template.booking.js.alert.empty")%>");
+		document.form_book_search.checkin.focus();
+		return;
+	}
+	if(document.form_book_search.checkout.value== ""){
+		alert("<%=lang.getTranslated("frontend.template.booking.js.alert.empty")%>");
+		document.form_book_search.checkout.focus();
+		return;
+	}
+	
+	if(document.form_book_search.adults.value!= "" && document.form_book_search.adults.value!= "0"){
+		var cnum = document.form_book_search.adults.value;
+
+		if(isNaN(cnum)){
+			alert("<%=lang.getTranslated("frontend.template_prodotto.js.alert.only_integer_value")%>");
+			document.form_book_search.adults.value = "1";
+			return;
+		}
+	}else{
+		alert("<%=lang.getTranslated("frontend.template.booking.js.alert.empty")%>");
+		document.form_book_search.adults.value = "1";
+		return;	
+	}
+	
+	if(document.form_book_search.childs.value!= ""){
+		var cnum = document.form_book_search.childs.value;
+
+		if(isNaN(cnum)){
+			alert("<%=lang.getTranslated("frontend.template_prodotto.js.alert.only_integer_value")%>");
+			document.form_book_search.childs.value = "0";
+			return;
+		}
+		
+		for(var i=0;i<cnum;i++){
+			var tmpn = $('#childs_age_'+i).val();
+			if(tmpn==""){
+				alert("<%=lang.getTranslated("frontend.template.booking.js.alert.empty")%>");
+				$('#childs_age_'+i).val('');
+				$('#childs_age_'+i).focus();
+				return;
+			}
+		}
+	}
+
+	form_book_search.submit();
+}
+
+function resetBookSearch(){
+	document.form_book_search.reset_search.value=1;
+	form_book_search.submit();
+}
+
+function childAges(){
+	var num = $('#childs_num').val();
+	
+	if(Number(num)>0){
+		var fieldsRender = '<span style="font-weight:bold;"><%=lang.getTranslated("frontend.template_prodotto.label.child_age_at_checkout")%></span><br/>'; 
+		
+		var selectF ='<option value=""></option>';
+		for(var k=0;k<18;k++){				
+			selectF += '<option value="'+k+'">'+k+'</option>';
+		}		
+
+		$('#child_booking_search_age').empty();
+		
+		// old version input style: <input type="text" name="childs_age" id="childs_age_'+i+'" value="0" onkeypress="javascript:return isInteger(event);" class="formFieldTXTShort" style="margin-right:5px;">
+		
+		for(var i=0;i<num;i++){
+			fieldsRender+='<select name="childs_age" id="childs_age_'+i+'" class="formFieldTXTShort" style="margin-right:5px;">';
+			fieldsRender+=selectF;
+			fieldsRender+='</select>';
+		}
+		$('#child_booking_search_age').html(fieldsRender);
+		$('#child_booking_search_age').show();
+	}else{
+		$('#child_booking_search_age').hide();
+		$('#child_booking_search_age').empty();
+	}
+}
+
+$(function() {
+	$('#checkin').datepicker({
+		dateFormat: 'dd/mm/yy',
+		changeMonth: true,
+		changeYear: true
+	});
+	$('#ui-datepicker-div').hide();	
+});
+
+$(function() {
+	$('#checkout').datepicker({
+		dateFormat: 'dd/mm/yy',
+		changeMonth: true,
+		changeYear: true
+	});
+	$('#ui-datepicker-div').hide();	
+});
+
+jQuery(document).ready(function(){
+	<%
+	if(childAgesArr!=null&&childAgesArr.Length>0){%>
+		childAges();
+		<%for(int count=0;count<childAgesArr.Length;count++){
+			Response.Write("$('#childs_age_"+count+"').val("+childAgesArr[count]+");");
+		}
+	}%>
+});
 </script>
 </head>
 <body>
@@ -408,6 +523,52 @@ function openDetailContentPage(productid){
 						</form>
 					</div>
 				<%}%>
+				
+				
+				<form action="<%=currentURL%>" method="post" name="form_book_search">	
+					<input type="hidden" value="<%=modelPageNum%>" name="modelPageNum">	
+					<input type="hidden" value="<%=hierarchy%>" name="hierarchy">	
+					<input type="hidden" value="<%=categoryid%>" name="categoryid">	
+					<input type="hidden" value="<%=numPage%>" name="page">
+					<input type="hidden" value="<%=orderBy%>" name="order_by"> 
+					<input type="hidden" value="" name="reset_search"> 					
+					
+					<div id="full_booking_search" style="margin-top:20px;">
+						<span style="font-weight:bold;"><%=lang.getTranslated("frontend.template.booking.label.search_title")%></span><br/>
+						<input type="text" style="width:300px;" name="search_text" id="search_text" value="<%=search_text%>">						
+					</div>
+
+					<div id="adults_booking_search" style="margin-top:10px;float:left;margin-right:20px;">
+						<span style="font-weight:bold;"><%=lang.getTranslated("frontend.template.booking.label.adults")%></span><br/>
+						<input type="text" name="adults" value="<%=adults%>" onkeypress="javascript:return isInteger(event);" class="formFieldTXTShort">						
+					</div>
+
+					<div id="child_booking_search" style="margin-top:10px;float:top;">
+						<span style="font-weight:bold;"><%=lang.getTranslated("frontend.template.booking.label.childs")%></span><br/>
+						<input type="text" name="childs" id="childs_num" value="<%=childs%>" onchange="childAges();" onkeypress="javascript:return isInteger(event);" class="formFieldTXTShort">						
+					</div>
+					
+					<div id="child_booking_search_age" style="margin-top:10px;float:top;display:none;">
+						
+					</div>
+
+					<div id="checkin_booking_search" style="margin-top:10px;float:left;margin-right:20px;">
+						<span style="font-weight:bold;"><%=lang.getTranslated("frontend.template.booking.label.checkin")%></span><br/>
+						<input type="text" name="checkin" id="checkin" value="<%=checkin%>" class="formFieldTXT">						
+					</div>
+
+					<div id="checkout_booking_search" style="margin-top:10px;float:top;">
+						<span style="font-weight:bold;"><%=lang.getTranslated("frontend.template.booking.label.checkout")%></span><br/>
+						<input type="text" name="checkout" id="checkout" value="<%=checkout%>" class="formFieldTXT">						
+					</div>
+					
+					<div id="booksearchbuttons" style="float:top;margin-top:10px;">
+					<input type="button" value="<%=lang.getTranslated("frontend.template.booking.label.search")%>" onclick="javascript:sendBookSearch();"/>&nbsp;&nbsp;
+					<input type="button" value="<%=lang.getTranslated("frontend.template.booking.label.reset")%>" onclick="javascript:resetBookSearch();"/>
+					</div>
+				</form>
+				
+				
 					
 				<%int counter = 0;
 				if(bolFoundLista) {%>
@@ -463,7 +624,7 @@ function openDetailContentPage(productid){
 							</div>						
 							<div class="prodotto-testo">
 							<h2><a href="javascript:openDetailContentPage(<%=product.id%>);"><%=productrep.getMainFieldTranslationCached(product.id, 1 , lang.currentLangCode, true,  product.name, true).value%></a></h2>
-							<p><%=productrep.getMainFieldTranslationCached(product.id, 2 , lang.currentLangCode, true,  product.summary, true).value%></p>
+							<%=productrep.getMainFieldTranslationCached(product.id, 2 , lang.currentLangCode, true,  product.summary, true).value%>
 							
 							<%if (!"2".Equals(confservice.get("disable_ecommerce").value)) {%>
 								<p>
@@ -477,7 +638,7 @@ function openDetailContentPage(productid){
 							
 								// gestisco i field per contenuto
 								if(product.fields != null && product.fields.Count>0){
-									Response.Write(ProductService.renderField(product.fields, null, "", "", lang.currentLangCode, lang.defaultLangCode, ProductService.getMapProductFieldsTranslations(product.id)));
+									Response.Write(ProductService.renderField(product.fields, null, "", "", lang.currentLangCode, lang.defaultLangCode, ProductService.getMapProductFieldsTranslations(product.id),true));
 								}%>
 								</p>
 							<%}%>						

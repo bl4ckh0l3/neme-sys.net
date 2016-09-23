@@ -230,7 +230,7 @@ namespace com.nemesys.services
 			return renderTargetBox;			
 		}
 
-		public static string renderField(IList<ProductField> fieldList, IDictionary<int,string> jsFunctions, string style, string cssClass, string langcode, string defLangCode, IDictionary<string,ProductFieldTranslation> prodFieldsTrans)
+		public static string renderField(IList<ProductField> fieldList, IDictionary<int,string> jsFunctions, string style, string cssClass, string langcode, string defLangCode, IDictionary<string,ProductFieldTranslation> prodFieldsTrans, bool forceViewOnly)
 		{
 			string renderField="";
 			string jsFunction = "";
@@ -243,6 +243,10 @@ namespace com.nemesys.services
 					if(cf.enabled)
 					{
 						ProductFieldTranslation pftv = null;
+						bool isEditable = cf.editable;
+						if(forceViewOnly){
+							isEditable = true;
+						}
 						
 						string maxLenght = "";	
 						if (cf.maxLenght>0) {
@@ -286,7 +290,7 @@ namespace com.nemesys.services
 						switch (cf.type)
 						{
 							case 1:
-								if(cf.editable){
+								if(isEditable){
 									string tmpValue = cf.value;
 									//tmpValue = translate("backend.prodotti.detail.table.label.field_value_t_"+cf.description+"_"+productKeyword, tmpValue, langcode, defLangCode);
 									if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("value").Append("-").Append("").Append("-").Append(langcode).ToString(), out pftv)){
@@ -335,7 +339,7 @@ namespace com.nemesys.services
 								}
 								break;
 							case 2:
-								if(cf.editable){
+								if(isEditable){
 									string tmpValue = cf.value;
 									//tmpValue = translate("backend.prodotti.detail.table.label.field_value_ta_"+cf.description+"_"+productKeyword, tmpValue, langcode, defLangCode);
 									if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("value").Append("-").Append("").Append("-").Append(langcode).ToString(), out pftv)){
@@ -352,11 +356,20 @@ namespace com.nemesys.services
 								}
 								break;
 							case 3:
-								if(cf.editable){
+								if(isEditable){
 									string tmpValue = cf.value;
-									//tmpValue = translate("backend.prodotti.detail.table.label.field_values_"+cf.description+"_"+cf.value+"_"+productKeyword, tmpValue, langcode, defLangCode);
-									if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("values").Append("-").Append(cf.value).Append("-").Append(langcode).ToString(), out pftv)){
-										tmpValue = pftv.value;
+									if(cf.typeContent==7)
+									{
+										if (!String.IsNullOrEmpty(tmpValue) && tmpValue.LastIndexOf('_') > -1){
+											tmpValue = tmpValue.Substring(0,tmpValue.LastIndexOf('_'));
+										}
+										tmpValue = translate("portal.commons.select.option.country."+tmpValue, tmpValue, langcode, defLangCode);
+									}else if(cf.typeContent==8){
+										tmpValue = translate("portal.commons.select.option.country."+tmpValue, tmpValue, langcode, defLangCode);
+									}else{
+										if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("values").Append("-").Append(cf.value).Append("-").Append(langcode).ToString(), out pftv)){
+											tmpValue = pftv.value;
+										}
 									}
 									renderField+=tmpValue;	
 								}else{
@@ -436,7 +449,7 @@ namespace com.nemesys.services
 							case 4:
 								tmpvalues = cf.value.Split(',');
 								
-								if(cf.editable){
+								if(isEditable){
 									foreach(string r in tmpvalues){
 										//renderField+=translate("backend.prodotti.detail.table.label.field_values_"+cf.description+"_"+r+"_"+productKeyword, r, langcode, defLangCode);	
 										if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("values").Append("-").Append(r).Append("-").Append(langcode).ToString(), out pftv)){
@@ -488,7 +501,7 @@ namespace com.nemesys.services
 							case 5:
 								tmpvalues = cf.value.Split(',');
 								
-								if(cf.editable){
+								if(isEditable){
 									foreach(string r in tmpvalues){
 										//renderField+=translate("backend.prodotti.detail.table.label.field_values_"+cf.description+"_"+r+"_"+productKeyword, r, langcode, defLangCode);		
 										if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("values").Append("-").Append(r).Append("-").Append(langcode).ToString(), out pftv)){
@@ -529,7 +542,7 @@ namespace com.nemesys.services
 							case 6:
 								tmpvalues = cf.value.Split(',');
 									
-								if(cf.editable){
+								if(isEditable){
 									foreach(string r in tmpvalues){
 										//renderField+=translate("backend.prodotti.detail.table.label.field_values_"+cf.description+"_"+r+"_"+productKeyword, r, langcode, defLangCode);		
 										if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("values").Append("-").Append(r).Append("-").Append(langcode).ToString(), out pftv)){
@@ -576,7 +589,7 @@ namespace com.nemesys.services
 								renderField+="<input type='file' name='product_field_"+cf.id+"' id='fproduct_field_"+cf.id+"'>";
 								break;
 							case 9:
-								if(cf.editable){
+								if(isEditable){
 									string tmpValue = cf.value;
 									//tmpValue = translate("backend.prodotti.detail.table.label.field_value_e_"+cf.description+"_"+productKeyword, tmpValue, langcode, defLangCode);
 									if(prodFieldsTrans.TryGetValue(new StringBuilder().Append(cf.idParentProduct).Append("-").Append(cf.id).Append("-").Append("value").Append("-").Append("").Append("-").Append(langcode).ToString(), out pftv)){
@@ -598,7 +611,7 @@ namespace com.nemesys.services
 								}
 								break;
 							case 10:
-								if(cf.editable){
+								if(isEditable){
 									renderField+=cf.value;								
 								}else{
 									renderField+="<span>"+tmpDescription+isrequired+"</span>&nbsp;";

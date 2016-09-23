@@ -118,7 +118,9 @@ function eventsLoop(events, date, end){
 					end: end,
 					availability: '',
 					unit: '',
+					price_type: '',
 					price: {
+								room: '',
 								adult: '',
 								childs_0_2: '',
 								childs_3_11: '',
@@ -140,7 +142,9 @@ function eventsLoop(events, date, end){
 			end: end,
 			availability: '',
 			unit: '',
+			price_type: '',
 			price: {
+						room: '',
 						adult: '',
 						childs_0_2: '',
 						childs_3_11: '',
@@ -169,11 +173,27 @@ function addEvent(event, type){
 	$("#cevent").val(event._id);
 	$('#availability').val(event.availability);
 	$('#unit').val(event.unit);	
+	$('#price_type').val(event.price_type);	
+	$('#price_room').val(event.price.room);
 	$('#price_adult').val(event.price.adult);
 	$('#price_0_2').val(event.price.childs_0_2);
 	$('#price_3_11').val(event.price.childs_3_11);
 	$('#price_12_17').val(event.price.childs_12_17);
 	$('#price_discount').val(event.price.discount);
+	
+	if($("#price_type").val()==0){
+		$('#price_pax_container').hide();
+		$('#price_room_container').show();
+		$('#price_adult').val('0');
+		$('#price_0_2').val('0');
+		$('#price_3_11').val('0');
+		$('#price_12_17').val('0');
+		$('#price_discount').val('0');
+	}else{
+		$('#price_pax_container').show();
+		$('#price_room_container').hide();
+		$('#price_room').val('0');
+	}	
 }
 
 function doAction(theForm){
@@ -207,7 +227,9 @@ function getValues(theForm){
 				end: innere,
 				availability: theForm.availability.value,
 				unit: theForm.unit.value,
+				price_type: theForm.price_type.value,
 				price: {
+							room: theForm.price_room.value,
 							adult: theForm.price_adult.value,
 							childs_0_2: theForm.price_0_2.value,
 							childs_3_11: theForm.price_3_11.value,
@@ -231,6 +253,8 @@ function updateValues(theForm){
 		var eventup = $('#calendar').fullCalendar( 'clientEvents',theForm.cevent.value);
 		eventup[0].availability = theForm.availability.value;
 		eventup[0].unit = theForm.unit.value;
+		eventup[0].price_type = theForm.price_type.value;
+		eventup[0].price.room = theForm.price_room.value;
 		eventup[0].price.adult = theForm.price_adult.value;
 		eventup[0].price.childs_0_2 = theForm.price_0_2.value;
 		eventup[0].price.childs_3_11 = theForm.price_3_11.value;
@@ -249,13 +273,22 @@ function renderCustomElement(event){
 	}
 	
 	var render =         
-	"<div class=\"calendar_event_box\"><div style=\"color:#ddd;float:left;margin-right:5px;\"><img src=\"/backoffice/img/rooms.png\" alt=\"<%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.available_rooms")%>\" title=\"<%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.available_rooms")%>\" align=\"absmiddle\" border=\"0\" width=\"25\" heigth=\"25\"><br/>"+event.availability+"</div>"+
-	"<div style=\"color:#ddd;float:left;margin-right:5px;\"><img src=\"/backoffice/img/beds.png\" alt=\"<%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.beds_rooms")%>\" title=\"<%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.beds_rooms")%>\" align=\"absmiddle\" border=\"0\" width=\"25\" heigth=\"25\"><br/>"+event.unit+"</div>"+
-	"<div style=\"float:top;text-align:right;\"><img src=\"/backoffice/img/rooms_discount.png\" alt=\"<%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.price_discount")%>\" title=\"<%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.price_discount")%>\" align=\"absmiddle\" border=\"0\" width=\"25\" heigth=\"25\"><br/>"+discountSign+addSeparatorsNF(round(Number(event.price.discount.replace(',','')),4).toFixed(2),'.',',','.')+"</div><div style=\"clear:both;border-bottom:1px solid #C9C9C9;\"></div>"+
-	"<div style=\"width:40px;float:left;margin-left:0px;margin-right:5px;text-align:right;\"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.price_adult")%></div><div style=\"width:8px;float:left;margin-right:1px;\">&euro;</div><div style=\"width:58px;float:left;margin-right:0px;text-align:right;\">"+addSeparatorsNF(round(Number(event.price.adult.replace(',','')),4).toFixed(2),'.',',','.')+"</div>"+
-	"<div style=\"width:40px;float:left;margin-left:0px;margin-right:5px;text-align:right;\"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.price_0_2")%></div><div style=\"width:8px;float:left;margin-right:1px;\">&euro;</div><div style=\"width:58px;float:left;margin-right:0px;text-align:right;\">"+addSeparatorsNF(round(Number(event.price.childs_0_2.replace(',','')),4).toFixed(2),'.',',','.')+"</div>"+
-	"<div style=\"width:40px;float:left;margin-left:0px;margin-right:5px;text-align:right;\"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.price_3_11")%></div><div style=\"width:8px;float:left;margin-right:1px;\">&euro;</div><div style=\"width:58px;float:left;margin-right:0px;text-align:right;\">"+addSeparatorsNF(round(Number(event.price.childs_3_11.replace(',','')),4).toFixed(2),'.',',','.')+"</div>"+
-	"<div style=\"width:40px;float:left;margin-left:0px;margin-right:5px;text-align:right;\"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.price_12_17")%></div><div style=\"width:8px;float:left;margin-right:1px;\">&euro;</div><div style=\"width:58px;float:left;margin-right:0px;text-align:right;\">"+addSeparatorsNF(round(Number(event.price.childs_12_17.replace(',','')),4).toFixed(2),'.',',','.')+"</div><div style=\"clear:both;\"></div></div>";
+				"<div class=\"calendar_event_box\">"+
+				"<div style=\"color:#ddd;float:left;margin-right:5px;\"><img src=\"/backoffice/img/rooms.png\" alt=\"<%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.available_rooms")%>\" title=\"<%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.available_rooms")%>\" align=\"absmiddle\" border=\"0\" width=\"25\" heigth=\"25\"><br/>"+event.availability+"</div>"+
+				"<div style=\"color:#ddd;float:left;margin-right:5px;\"><img src=\"/backoffice/img/beds.png\" alt=\"<%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.beds_rooms")%>\" title=\"<%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.beds_rooms")%>\" align=\"absmiddle\" border=\"0\" width=\"25\" heigth=\"25\"><br/>"+event.unit+"</div>"+
+				"<div style=\"float:top;text-align:right;\"><img src=\"/backoffice/img/rooms_discount.png\" alt=\"<%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.price_discount")%>\" title=\"<%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.price_discount")%>\" align=\"absmiddle\" border=\"0\" width=\"25\" heigth=\"25\"><br/>"+discountSign+addSeparatorsNF(round(Number(event.price.discount.replace(',','')),4).toFixed(2),'.',',','.')+"</div>"+
+				"<div style=\"clear:both;border-bottom:1px solid #C9C9C9;\"></div>";
+	if(event.price_type=="1"){			
+	render+=	"<div style=\"width:40px;float:left;margin-left:0px;margin-right:5px;text-align:right;\"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.price_adult")%></div><div style=\"width:8px;float:left;margin-right:1px;\">&euro;</div><div style=\"width:58px;float:left;margin-right:0px;text-align:right;\">"+addSeparatorsNF(round(Number(event.price.adult.replace(',','')),4).toFixed(2),'.',',','.')+"</div>"+
+				"<div style=\"width:40px;float:left;margin-left:0px;margin-right:5px;text-align:right;\"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.price_0_2")%></div><div style=\"width:8px;float:left;margin-right:1px;\">&euro;</div><div style=\"width:58px;float:left;margin-right:0px;text-align:right;\">"+addSeparatorsNF(round(Number(event.price.childs_0_2.replace(',','')),4).toFixed(2),'.',',','.')+"</div>"+
+				"<div style=\"width:40px;float:left;margin-left:0px;margin-right:5px;text-align:right;\"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.price_3_11")%></div><div style=\"width:8px;float:left;margin-right:1px;\">&euro;</div><div style=\"width:58px;float:left;margin-right:0px;text-align:right;\">"+addSeparatorsNF(round(Number(event.price.childs_3_11.replace(',','')),4).toFixed(2),'.',',','.')+"</div>"+
+				"<div style=\"width:40px;float:left;margin-left:0px;margin-right:5px;text-align:right;\"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.price_12_17")%></div><div style=\"width:8px;float:left;margin-right:1px;\">&euro;</div><div style=\"width:58px;float:left;margin-right:0px;text-align:right;\">"+addSeparatorsNF(round(Number(event.price.childs_12_17.replace(',','')),4).toFixed(2),'.',',','.')+"</div>";
+	}else{
+	render+=	"<div style=\"width:40px;float:left;margin-left:0px;margin-right:5px;text-align:right;\"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.label.price_room")%></div><div style=\"width:8px;float:left;margin-right:1px;\">&euro;</div><div style=\"width:58px;float:left;margin-right:0px;text-align:right;\">"+addSeparatorsNF(round(Number(event.price.room.replace(',','')),4).toFixed(2),'.',',','.')+"</div>";
+	}
+				
+	render+=	"<div style=\"clear:both;\"></div>"+
+				"</div>";
 	
 	return render;
 }
@@ -281,7 +314,9 @@ function parseEventObjects(events){
 				end: tmpend,
 				availability: events[i].availability,
 				unit: events[i].unit,
+				price_type: events[i].price_type,
 				price: {
+							room: events[i].price.room,
 							adult: events[i].price.adult,
 							childs_0_2: events[i].price.childs_0_2,
 							childs_3_11: events[i].price.childs_3_11,
@@ -315,29 +350,42 @@ function validateEventForm(eForm){
 		eForm.unit.value =0;
 	}
 	
-	if(eForm.price_adult.value == ""){
-		alert("<%=lang.getTranslated("backend.currency.detail.js.alert.insert_valore_value")%>");
-		eForm.price_adult.focus();
-		return false;
-	}	
-	
-	if(eForm.price_0_2.value == ""){
-		alert("<%=lang.getTranslated("backend.currency.detail.js.alert.insert_valore_value")%>");
-		eForm.price_0_2.focus();
-		return false;
-	}	
-	
-	if(eForm.price_3_11.value == ""){
-		alert("<%=lang.getTranslated("backend.currency.detail.js.alert.insert_valore_value")%>");
-		eForm.price_3_11.focus();
-		return false;
-	}	
-	
-	if(eForm.price_12_17.value == ""){
-		alert("<%=lang.getTranslated("backend.currency.detail.js.alert.insert_valore_value")%>");
-		eForm.price_12_17.focus();
-		return false;
-	}	
+	if(eForm.price_type.value == "0"){
+		if(eForm.price_room.value == ""){
+			alert("<%=lang.getTranslated("backend.currency.detail.js.alert.insert_valore_value")%>");
+			eForm.price_room.focus();
+			return false;
+		}	
+		eForm.price_adult.value = 0;
+		eForm.price_0_2.value = 0;
+		eForm.price_3_11.value = 0;
+		eForm.price_12_17.value = 0;
+	}else{
+		if(eForm.price_adult.value == ""){
+			alert("<%=lang.getTranslated("backend.currency.detail.js.alert.insert_valore_value")%>");
+			eForm.price_adult.focus();
+			return false;
+		}	
+		
+		if(eForm.price_0_2.value == ""){
+			alert("<%=lang.getTranslated("backend.currency.detail.js.alert.insert_valore_value")%>");
+			eForm.price_0_2.focus();
+			return false;
+		}	
+		
+		if(eForm.price_3_11.value == ""){
+			alert("<%=lang.getTranslated("backend.currency.detail.js.alert.insert_valore_value")%>");
+			eForm.price_3_11.focus();
+			return false;
+		}	
+		
+		if(eForm.price_12_17.value == ""){
+			alert("<%=lang.getTranslated("backend.currency.detail.js.alert.insert_valore_value")%>");
+			eForm.price_12_17.focus();
+			return false;
+		}
+		eForm.price_room.value = 0;	
+	}
 	
 	if(eForm.price_discount.value == ""){
 		eForm.price_discount.value =0;
@@ -3420,20 +3468,69 @@ function fieldValueSlideToggle(idsuffix){
 						<input type="text" name="availability" id="availability" class="text" onkeypress="javascript:return isInteger(event);"><br>
 						<label for="unit"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.beds_rooms")%></label>
 						<input type="text" name="unit" id="unit" class="text" onkeypress="javascript:return isInteger(event);"><br><br>
-						<label for="price_adult"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.price_adult")%> &euro;</label>
-						<input type="text" name="price_adult" id="price_adult" value="" class="text" onkeypress="javascript:return isDecimal(event);"><br>
-						<label for="price_0_2"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.price_0_2")%> &euro;</label>
-						<input type="text" name="price_0_2" id="price_0_2" value="" class="text" onkeypress="javascript:return isDecimal(event);"><br>
-						<label for="price_3_11"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.price_3_11")%> &euro;</label>
-						<input type="text" name="price_3_11" id="price_3_11" value="" class="text" onkeypress="javascript:return isDecimal(event);"><br>
-						<label for="price_12_17"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.price_12_17")%> &euro;</label>
-						<input type="text" name="price_12_17" id="price_12_17" value="" class="text" onkeypress="javascript:return isDecimal(event);"><br>
+						
+						<label for="price_type"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.price_type")%></label>
+						<select name="price_type" id="price_type" class="formFieldSelect">
+							<option value="0"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.price_type_room")%></option>
+							<option value="1"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.price_type_pax")%></option>		  
+						</select>
+						
+						<div id="price_room_container">
+							<label for="price_room"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.price_room")%> &euro;</label>
+							<input type="text" name="price_room" id="price_room" value="" class="text" onkeypress="javascript:return isDecimal(event);"><br>
+						</div>
+						<div id="price_pax_container">
+							<label for="price_adult"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.price_adult")%> &euro;</label>
+							<input type="text" name="price_adult" id="price_adult" value="" class="text" onkeypress="javascript:return isDecimal(event);"><br>
+							<label for="price_0_2"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.price_0_2")%> &euro;</label>
+							<input type="text" name="price_0_2" id="price_0_2" value="" class="text" onkeypress="javascript:return isDecimal(event);"><br>
+							<label for="price_3_11"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.price_3_11")%> &euro;</label>
+							<input type="text" name="price_3_11" id="price_3_11" value="" class="text" onkeypress="javascript:return isDecimal(event);"><br>
+							<label for="price_12_17"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.price_12_17")%> &euro;</label>
+							<input type="text" name="price_12_17" id="price_12_17" value="" class="text" onkeypress="javascript:return isDecimal(event);"><br>
+						</div>
 						<label for="price_discount"><%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.price_discount")%> %</label>
 						<input type="text" name="price_discount" id="price_discount" value="" class="text" onkeypress="javascript:return isDecimal(event);"><br>
 						<div style="text-align:right;margin-top:5px;margin-right:10px;"><input type="button" value="<%=lang.getTranslated("backend.prodotti.detail.booking_calendar.form.insert")%>" onclick="javascript:doAction(document.addeventbooking);"></div>
 						</fieldset>
 						</form>
 					</div>	
+					<script>
+					/*$(document).ready(function(){	
+						var ptype = $("#price_type").val();
+						if(ptype==0){
+							$('#price_pax_container').hide();
+							$('#price_room_container').show();
+							$('#price_adult').val('0');
+							$('#price_0_2').val('0');
+							$('#price_3_11').val('0');
+							$('#price_12_17').val('0');
+							$('#price_discount').val('0');
+						}else{
+							$('#price_pax_container').show();
+							$('#price_room_container').hide();
+							$('#price_room').val('0');
+						}						
+					});*/
+					
+					
+					$("#price_type").change(function() {
+						var value = $(this).val();
+						if(value==0){
+							$('#price_pax_container').hide();
+							$('#price_room_container').show();
+							$('#price_adult').val('0');
+							$('#price_0_2').val('0');
+							$('#price_3_11').val('0');
+							$('#price_12_17').val('0');
+							$('#price_discount').val('0');
+						}else{
+							$('#price_pax_container').show();
+							$('#price_room_container').hide();
+							$('#price_room').val('0');
+						}
+					});				
+					</script>
 					<!-- ************* END: BOOKING CALENDAR ************** -->
 					
 					<form action="/backoffice/products/insertproduct.aspx" method="post" id="form_inserisci" name="form_inserisci" enctype="multipart/form-data" accept-charset="UTF-8">

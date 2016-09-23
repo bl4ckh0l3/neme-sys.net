@@ -147,6 +147,17 @@ namespace com.nemesys.database.repository
 			}
 			return result;		
 		}
+
+		public IList<MultiLanguage> find(string keyword)
+		{
+			IList<MultiLanguage> results = null;
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			{			
+				results = session.CreateQuery("from MultiLanguage as multiLanguage where keyword= :keyword").SetString("keyword",keyword).List<MultiLanguage>();
+				NHibernateHelper.closeSession();
+			}
+			return results;		
+		}
 		
 		public string translate(string keyword, string currentLangCode, string defaultLangCode)
 		{

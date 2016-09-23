@@ -3,7 +3,7 @@ using System.Text;
 
 namespace com.nemesys.model
 {
-	public class ProductCalendar
+	public class ProductCalendar : IComparable<ProductCalendar>
 	{	
 		private int _id;
 		private int _idParentProduct;
@@ -14,6 +14,10 @@ namespace com.nemesys.model
 
 		
 		public ProductCalendar(){}
+		
+		public ProductCalendar(DateTime startDate){
+			this._startDate=startDate;
+		}
 
 		public virtual int id {
 			get { return _id; }
@@ -44,6 +48,12 @@ namespace com.nemesys.model
 			get { return _content; }
 			set { _content = value; }
 		}
+		
+		public virtual int CompareTo(ProductCalendar other)
+		{
+			int val = this._startDate.Date.CompareTo(other.startDate.Date);
+			return val;
+		}		
 
 		public virtual string ToString() {
 			StringBuilder builder = new StringBuilder("ProductCalendar id: ")

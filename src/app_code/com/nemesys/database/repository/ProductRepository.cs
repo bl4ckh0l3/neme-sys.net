@@ -2003,7 +2003,7 @@ namespace com.nemesys.database.repository
 								product.calendar = session.CreateCriteria(typeof(ProductCalendar))
 								.SetFetchMode("Permissions", FetchMode.Join)
 								.Add(Restrictions.Eq("idParentProduct", product.id))
-								.List<ProductCalendar>();		
+								.List<ProductCalendar>();	
 							}							
 						}
 					}
@@ -2227,7 +2227,7 @@ namespace com.nemesys.database.repository
 								product.calendar = session.CreateCriteria(typeof(ProductCalendar))
 								.SetFetchMode("Permissions", FetchMode.Join)
 								.Add(Restrictions.Eq("idParentProduct", product.id))
-								.List<ProductCalendar>();		
+								.List<ProductCalendar>();
 							}
 						}
 					}

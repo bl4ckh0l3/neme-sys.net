@@ -16,7 +16,9 @@ namespace com.nemesys.model
 		private int _unit;
 		private bool _allDay;
 		private bool _overlap;
+		private int _price_type;
 		private IDictionary<string,string> _price;
+		//room:
 		//adult:
 		//childs_0_2:
 		//childs_3_11:
@@ -66,6 +68,11 @@ namespace com.nemesys.model
 			set { _overlap = value; }
 		}
 		
+		public virtual int price_type {
+			get { return _price_type; }
+			set { _price_type = value; }
+		}
+		
 		public virtual IDictionary<string,string> price {
 			get { return _price; }
 			set { _price = value; }
@@ -81,7 +88,8 @@ namespace com.nemesys.model
 			.Append(" - unit: ").Append(this._unit)
 			.Append(" - allDay: ").Append(this._allDay)
 			.Append(" - overlap: ").Append(this._overlap)
-			.Append(" - price: ").Append(this._price.ToString());
+			.Append(" - price_type: ").Append(this._availability)
+			.Append(" - price: ").Append(this._price_type.ToString());
 			
 			return builder.ToString();			
 		}

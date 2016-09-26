@@ -112,7 +112,7 @@ function eventsLoop(events, date, end){
 			// case event not found
 			if (i == events.length-1) {
 				tmpevent = {
-					_id: '',
+					//_id: '',
 					title: '',
 					start: date,
 					end: end,
@@ -136,7 +136,7 @@ function eventsLoop(events, date, end){
 		}	
 	}else{
 		tmpevent = {
-			_id: '',
+			//_id: '',
 			title: '',
 			start: date,
 			end: end,
@@ -308,7 +308,7 @@ function parseEventObjects(events){
 			}
 			
 			tmpevent = {
-				_id: events[i]._id,
+				//_id: events[i]._id,
 				title: events[i].title,
 				start: events[i].start.format('YYYY-MM-DD'),
 				end: tmpend,

@@ -8,7 +8,7 @@ namespace com.nemesys.model
 {
 	public class ProductCalendarEventData
 	{	
-		private string __id;
+		//private string __id;
 		private string _title;
 		private DateTime _start;
 		private DateTime _end;
@@ -28,10 +28,10 @@ namespace com.nemesys.model
 		
 		public ProductCalendarEventData(){}
 
-		public virtual string _id {
+		/*public virtual string _id {
 			get { return __id; }
 			set { __id = value; }
-		}
+		}*/
 
 		public virtual string title {
 			get { return _title; }
@@ -79,8 +79,8 @@ namespace com.nemesys.model
 		}
 		
 		public virtual string ToString() {
-			StringBuilder builder = new StringBuilder("ProductCalendarEventData _id: ")
-			.Append(this.__id)
+			StringBuilder builder = new StringBuilder("ProductCalendarEventData: ")
+			//.Append(" - _id: ").Append(this.__id)
 			.Append(" - title: ").Append(this._title)
 			.Append(" - start: ").Append(this._start)
 			.Append(" - end: ").Append(this._end)

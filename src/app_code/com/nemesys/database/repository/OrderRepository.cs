@@ -69,10 +69,13 @@ namespace com.nemesys.database.repository
 		{		
 			IDictionary<int,int> productQtyCheck = new Dictionary<int,int>();
 			IDictionary<string,int> productFieldsQtyCheck = new Dictionary<string,int>();
+			IDictionary<string,int> productCalendarsQtyCheck = new Dictionary<string,int>();
 			
 			IDictionary<int,int> productQtyToUpdate = new Dictionary<int,int>();
 			IDictionary<string,int> productFieldsQtyToUpdate = new Dictionary<string,int>();
 			IDictionary<string,int> productFieldsRelQtyToUpdate = new Dictionary<string,int>();
+			IDictionary<string,int> productCalendarsQtyToUpdate = new Dictionary<string,int>();
+			IDictionary<string,string> productCalendarsContentToUpdate = new Dictionary<string,string>();
 			
 			if(order.products != null && order.products.Count>0){
 				foreach(OrderProduct op in order.products.Values){
@@ -111,6 +114,27 @@ namespace com.nemesys.database.repository
 									productFieldsQtyCheck.Add(key, opf.productQuantity);
 								}
 							}
+						}
+					}
+					
+					IList<OrderProductCalendar> productCalendars = session.CreateQuery("from OrderProductCalendar where idOrder=:idOrder")
+					.SetInt32("idOrder",order.id)					
+					.List<OrderProductCalendar>();	
+					
+					if(productCalendars != null && productCalendars.Count>0){
+						foreach(OrderProductCalendar opc in productCalendars){
+							int pfqty = 0;
+							string key = new StringBuilder().Append(opc.idProduct).Append("|").Append(opc.date).ToString();
+							bool foundpfqty = productCalendarsQtyCheck.TryGetValue(key, out pfqty);
+							if(foundpfqty){
+								pfqty+=opc.rooms;
+								productCalendarsQtyCheck[key]=pfqty;
+							}else{
+								productCalendarsQtyCheck.Add(key, opc.rooms);
+							}
+							
+							//HttpContext.Current.Response.Write("OrderProductCalendar: " + opc.ToString()+"<br>");
+							//HttpContext.Current.Response.Write("key: " + key+" - productCalendarsQtyCheck[key]: " + productCalendarsQtyCheck[key]+"<br>");
 						}
 					}
 					
@@ -165,6 +189,29 @@ namespace com.nemesys.database.repository
 						}	
 					}
 					
+					foreach(KeyValuePair<string, int> pcqc in productCalendarsQtyCheck)
+					{
+						string[] keyEl = pcqc.Key.Split('|');
+						int idp = Convert.ToInt32(keyEl[0]);
+						string idd = keyEl[1];	
+						
+						//HttpContext.Current.Response.Write("idProd: " + idp+" - date: " + idd+" - qty to check: "+pcqc.Value+"<br>");						
+						
+						IQuery qpCount2 = session.CreateSQLQuery("select availability from PRODUCT_CALENDAR where id_parent_product=:idProd and start_date=:date").AddScalar("availability", NHibernateUtil.Int32);
+						qpCount2.SetInt32("idProd",idp);
+						qpCount2.SetDateTime("date", Convert.ToDateTime(idd));
+						int result = qpCount2.UniqueResult<int>();							
+
+						//HttpContext.Current.Response.Write("result: " + result+" - result-pcqc.Value: "+(result-pcqc.Value)+"<br>");
+						
+						productCalendarsQtyToUpdate.Add(pcqc.Key, result+pcqc.Value);
+						
+						//HttpContext.Current.Response.Write("productCalendarsQtyToUpdate[pcqc.Key]: " + productCalendarsQtyToUpdate[pcqc.Key]+"<br>");	
+						
+						ProductCalendar p = session.CreateQuery("from ProductCalendar where idParentProduct=:idProd and startDate=:date").SetInt32("idProd",idp).SetDateTime("date", Convert.ToDateTime(idd)).UniqueResult<ProductCalendar>();
+						productCalendarsContentToUpdate.Add(pcqc.Key, p.content);
+					}					
+					
 					foreach(KeyValuePair<int, int> pqc in productQtyCheck)
 					{			
 						int pqty = 0;
@@ -217,8 +264,38 @@ namespace com.nemesys.database.repository
 								}
 							}
 						}							
-					}					
-				
+					}									
+						
+					foreach(KeyValuePair<string, int> pcqc in productCalendarsQtyCheck)
+					{	
+						string[] keyEl = pcqc.Key.Split('|');
+						int idp = Convert.ToInt32(keyEl[0]);
+						string date = keyEl[1];
+						
+						//HttpContext.Current.Response.Write("update calendar - idp: " + idp+"<br>");
+						//HttpContext.Current.Response.Write("update calendar - date: " + date+"<br>");
+						
+						int pfqty = 0;
+						string content = "";
+						bool foundpf = productCalendarsQtyToUpdate.TryGetValue(pcqc.Key, out pfqty);
+						bool foundpc = productCalendarsContentToUpdate.TryGetValue(pcqc.Key, out content);
+						//HttpContext.Current.Response.Write("foundpf: " + foundpf+" - foundpc: "+foundpc+" - pfqty: "+pfqty+"<br>");
+						if(foundpf && foundpc){
+							ProductCalendarEventData pced = JsonConvert.DeserializeObject<ProductCalendarEventData>(content);
+							pced.availability=pfqty;
+							//HttpContext.Current.Response.Write("pced modified: " + pced.ToString()+"<br>");
+							content = JsonConvert.SerializeObject(pced);
+							//HttpContext.Current.Response.Write("content serialized: " + content+"<br>");
+							
+							session.CreateQuery("update ProductCalendar set availability=:availability, content=:content where idParentProduct=:idProd and startDate=:date")
+							.SetInt32("availability",pfqty)
+							.SetString("content",content)
+							.SetInt32("idProd",idp)
+							.SetDateTime("date", Convert.ToDateTime(date))
+							.ExecuteUpdate();
+						}							
+					}
+						
 					session.CreateQuery("delete from OrderProduct where idOrder=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
 					session.CreateQuery("delete from OrderProductField where idOrder=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
 					session.CreateQuery("delete from OrderProductCalendar where idOrder=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();

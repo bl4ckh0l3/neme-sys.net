@@ -328,10 +328,14 @@ jQuery(document).ready(function(){
 								
 								</td>
 								<td width="100"><%
-								if(k.quantity<0){
-									Response.Write(lang.getTranslated("backend.product.detail.table.label.qta_unlimited"));
+								if(k.prodType==3){
+									Response.Write(lang.getTranslated("backend.product.detail.table.label.qta_calendar"));
 								}else{
-									Response.Write(k.quantity);
+									if(k.quantity<0){
+										Response.Write(lang.getTranslated("backend.product.detail.table.label.qta_unlimited"));
+									}else{
+										Response.Write(k.quantity);
+									}
 								}%></td>
 								<td width="90">
 								<div class="ajax" id="view_stato_news_<%=intCount%>" onmouseover="javascript:showHide('view_stato_news_<%=intCount%>','edit_stato_news_<%=intCount%>','stato_news_<%=intCount%>',500, true);">

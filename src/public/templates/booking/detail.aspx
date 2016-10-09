@@ -399,7 +399,13 @@ function openRelatedProdPage(actionurl, hierarchy, idProduct, numPageNum){
 							<input type="hidden" value="<%=categoryid%>" name="categoryid">	
 							<input type="hidden" value="<%=numPage%>" name="page">
 							<input type="hidden" value="<%=orderBy%>" name="order_by">  
-							
+							<input type="hidden" name="search_text" value="<%=search_text%>">						
+							<input type="hidden" name="adults" value="<%=adults%>">						
+							<input type="hidden" name="childs" value="<%=childs%>">			
+							<input type="hidden" name="childs_age" value="<%=childAgesReq%>">						
+							<input type="hidden" name="checkin" value="<%=checkin%>">			
+							<input type="hidden" name="checkout" value="<%=checkout%>">	
+			
 							<!-- &nbsp;|&nbsp; --><span class="prodotto_select_label"><%=lang.getTranslated("frontend.template.currency.label")%></span>&nbsp;<select class="prodotto_select" name="currency" onchange="javascript:changeCurrency();">
 							<option value=""></option>
 							<%foreach(Currency x in currencyList){%>
@@ -418,13 +424,18 @@ function openRelatedProdPage(actionurl, hierarchy, idProduct, numPageNum){
 					<asp:Literal id="cdescription" runat="server" />		
 					
 					<form action="<%=shoppingcardURL%>" method="post" name="form_add_to_carrello" id="form_add_to_carrello" enctype="multipart/form-data">
-					<!--<input type="hidden" value="<%//=price%>" name="price">-->
 					<input type="hidden" value="<%=product.id%>" name="productid">
 					<input type="hidden" value="<%=product.prodType%>" name="prod_type">
 					<input type="hidden" value="<%=hierarchy%>" name="hierarchy">
 					<input type="hidden" value="<%=categoryid%>" name="categoryid">
 					<input type="hidden" value="additem" name="operation">
 					<input type="hidden" value="<%=product.quantity%>" name="max_prod_qta">	
+					<input type="hidden" name="search_text" value="<%=search_text%>">						
+					<input type="hidden" name="adults" value="<%=adults%>">						
+					<input type="hidden" name="childs" value="<%=childs%>">			
+					<input type="hidden" name="childs_age" value="<%=childAgesReq%>">						
+					<input type="hidden" name="checkin" value="<%=checkin%>">			
+					<input type="hidden" name="checkout" value="<%=checkout%>">	
 		   
 					<%if (!"2".Equals(confservice.get("disable_ecommerce").value)) {%>
 						<h3>
@@ -439,7 +450,7 @@ function openRelatedProdPage(actionurl, hierarchy, idProduct, numPageNum){
 					
 					<%
 					if(productFields.Count>0){ 
-						Response.Write(ProductService.renderField(productFields, null, "", "", lang.currentLangCode, lang.defaultLangCode, ProductService.getMapProductFieldsTranslations(product.id),true));
+						Response.Write(ProductService.renderField(productFields, null, "", "", lang.currentLangCode, lang.defaultLangCode, ProductService.getMapProductFieldsTranslations(product.id),false));
 					}%>
 					
 

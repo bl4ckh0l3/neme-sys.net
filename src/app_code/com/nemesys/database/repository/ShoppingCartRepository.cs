@@ -59,6 +59,7 @@ namespace com.nemesys.database.repository
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			using (ITransaction tx = session.BeginTransaction())
 			{
+				session.CreateQuery("delete from ShoppingCartProductCalendar where idCart=:idCart").SetInt32("idCart",shoppingCart.id).ExecuteUpdate();
 				session.CreateQuery("delete from ShoppingCartProductField where idCart=:idCart").SetInt32("idCart",shoppingCart.id).ExecuteUpdate();
 				session.CreateQuery("delete FROM ShoppingCartProduct WHERE idCart=:idCart").SetInt32("idCart", shoppingCart.id).ExecuteUpdate();	
 				session.Delete(shoppingCart);
@@ -83,6 +84,7 @@ namespace com.nemesys.database.repository
 					foreach(int cid in cartIds){
 						ids.Add(cid.ToString());
 					}
+					session.CreateQuery(string.Format("delete from ShoppingCartProductCalendar where idCart in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();
 					session.CreateQuery(string.Format("delete from ShoppingCartProductField where idCart in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();
 					session.CreateQuery(string.Format("delete from ShoppingCartProduct where idCart in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();
 				}				
@@ -108,12 +110,32 @@ namespace com.nemesys.database.repository
 			return shoppingCart;
 		}
 
-		public void saveCompleteShoppingCartItem(ShoppingCartProduct newitem, IList<ShoppingCartProductField> newScpfs)
+		public void saveCompleteShoppingCartItem(ShoppingCartProduct newitem, IList<ShoppingCartProductField> newScpfs, IList<ShoppingCartProductCalendar> newScpcal)
 		{
+			//System.Web.HttpContext.Current.Response.Write("start saveCompleteShoppingCartItem:<br><br>");
+			
+			//foreach(ShoppingCartProductField scpf in newScpfs){
+			//	System.Web.HttpContext.Current.Response.Write("ShoppingCartProductField: " + scpf.ToString()+"<br>");
+			//}
+			
+			//foreach(ShoppingCartProductCalendar scpc in newScpcal){
+			//	System.Web.HttpContext.Current.Response.Write("ShoppingCartProductCalendar: " + scpc.ToString()+"<br>");
+			//}			
+			
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			using (ITransaction tx = session.BeginTransaction())
 			{					
 				try{
+					if(newScpcal != null && newScpcal.Count>0){
+						foreach(ShoppingCartProductCalendar sp in newScpcal){
+							session.CreateQuery("delete from ShoppingCartProductCalendar where idCart=:idCart and idProduct=:idProduct and productCounter=:productCounter and date=:date")
+							.SetInt32("idCart",newitem.idCart)
+							.SetInt32("idProduct",newitem.idProduct)
+							.SetInt32("productCounter",newitem.productCounter)
+							.SetDateTime("date", sp.date)
+							.ExecuteUpdate();
+						}
+					}
 					
 					session.CreateQuery("delete from ShoppingCartProductField where idCart=:idCart and idProduct=:idProduct and productCounter=:productCounter")
 					.SetInt32("idCart",newitem.idCart)
@@ -132,14 +154,22 @@ namespace com.nemesys.database.repository
 					if(newScpfs != null && newScpfs.Count>0)
 					{							
 						foreach(ShoppingCartProductField scpf in newScpfs){
+							//System.Web.HttpContext.Current.Response.Write("Saving ShoppingCartProductField: " + scpf.ToString()+"<br>");
 							session.Save(scpf);
+						}
+					}
+					
+					if(newScpcal != null && newScpcal.Count>0){
+						foreach(ShoppingCartProductCalendar sp in newScpcal){
+							//System.Web.HttpContext.Current.Response.Write("Saving ShoppingCartProductCalendar: " + sp.ToString()+"<br>");
+							session.Save(sp);
 						}
 					}
 					
 					tx.Commit();
 					NHibernateHelper.closeSession();
 				}catch(Exception exx){
-					//Response.Write("An inner error occured: " + exx.Message);
+					//System.Web.HttpContext.Current.Response.Write("An inner error occured: " + exx.Message);
 					tx.Rollback();
 					NHibernateHelper.closeSession();
 					throw;					
@@ -405,6 +435,12 @@ namespace com.nemesys.database.repository
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			using (ITransaction tx = session.BeginTransaction())
 			{
+				session.CreateQuery("delete from ShoppingCartProductCalendar where idCart=:idCart and idProduct=:idProduct and productCounter=:prodCounter")
+				.SetInt32("idCart",idCart)
+				.SetInt32("idProduct",idProd)
+				.SetInt32("prodCounter",prodCounter)
+				.ExecuteUpdate();
+				
 				session.CreateQuery("delete from ShoppingCartProductField where idCart=:idCart and idProduct=:idProduct and productCounter=:prodCounter")
 				.SetInt32("idCart",idCart)
 				.SetInt32("idProduct",idProd)
@@ -427,9 +463,13 @@ namespace com.nemesys.database.repository
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			using (ITransaction tx = session.BeginTransaction())
 			{
+				session.CreateSQLQuery("DELETE FROM SHOPPING_CART_PRODUCT_CALENDAR WHERE id_cart=:idCart and id_prod IN(SELECT id_prod FROM SHOPPING_CART_PRODUCT WHERE id_cart=:idCart2 and prod_type=:productType)")
+				.SetInt32("idCart",idCart)
+				.SetInt32("idCart2",idCart)
+				.SetInt32("productType",type)
+				.ExecuteUpdate();
 
-				string strSQL = "DELETE FROM SHOPPING_CART_PRODUCT_FIELD WHERE id_cart=:idCart and id_prod IN(SELECT id_prod FROM SHOPPING_CART_PRODUCT WHERE id_cart=:idCart2 and prod_type=:productType)";
-				session.CreateSQLQuery(strSQL)
+				session.CreateSQLQuery("DELETE FROM SHOPPING_CART_PRODUCT_FIELD WHERE id_cart=:idCart and id_prod IN(SELECT id_prod FROM SHOPPING_CART_PRODUCT WHERE id_cart=:idCart2 and prod_type=:productType)")
 				.SetInt32("idCart",idCart)
 				.SetInt32("idCart2",idCart)
 				.SetInt32("productType",type)
@@ -659,6 +699,47 @@ namespace com.nemesys.database.repository
 				.ExecuteUpdate();	
 				NHibernateHelper.closeSession();
 			}				
+		}	
+		
+		/************** CALENDAR METHODS **************/
+		
+		public ShoppingCartProductCalendar getItemCalendar(int idCart, int idProd, int prodCounter, string date)
+		{
+			ShoppingCartProductCalendar result = null;
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			{
+				string strSQL = "from ShoppingCartProductCalendar where idCart=:idCart and idProduct=:idProduct and productCounter=:prodCounter and date=:date order by productCounter, date asc";
+				
+				IQuery q = session.CreateQuery(strSQL);
+				q.SetInt32("idCart",idCart);
+				q.SetInt32("idProduct",idProd);
+				q.SetInt32("prodCounter",prodCounter);	
+				q.SetDateTime("date", Convert.ToDateTime(date));
+				
+				result = q.UniqueResult<ShoppingCartProductCalendar>();				
+				
+				NHibernateHelper.closeSession();					
+			}	
+			return result;				
+		}
+		
+		public IList<ShoppingCartProductCalendar> getListItemCalendar(int idCart, int idProd, int prodCounter)
+		{
+			IList<ShoppingCartProductCalendar> results = null;
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			{
+				string strSQL = "from ShoppingCartProductCalendar where idCart=:idCart and idProduct=:idProduct and productCounter=:prodCounter order by productCounter, date asc";
+				
+				IQuery q = session.CreateQuery(strSQL);
+				q.SetInt32("idCart",idCart);
+				q.SetInt32("idProduct",idProd);
+				q.SetInt32("prodCounter",prodCounter);	
+				
+				results = q.List<ShoppingCartProductCalendar>();				
+				
+				NHibernateHelper.closeSession();					
+			}	
+			return results;				
 		}
 	}
 }

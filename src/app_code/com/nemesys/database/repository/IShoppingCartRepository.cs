@@ -17,7 +17,7 @@ namespace com.nemesys.database.repository
 		
 		void deleteByIdUser(int idUser);
 		
-		void saveCompleteShoppingCartItem(ShoppingCartProduct newitem, IList<ShoppingCartProductField> newScpfs);
+		void saveCompleteShoppingCartItem(ShoppingCartProduct newitem, IList<ShoppingCartProductField> newScpfs, IList<ShoppingCartProductCalendar> newScpcal);
 		
 		ShoppingCart getById(int id);
 		
@@ -56,5 +56,9 @@ namespace com.nemesys.database.repository
 		void updateItemField(ShoppingCartProductField shoppingCartProductField);
 		
 		void deleteItemField(int idCart, int idProd, int prodCounter);
+		
+		ShoppingCartProductCalendar getItemCalendar(int idCart, int idProd, int prodCounter, string date);
+		
+		IList<ShoppingCartProductCalendar> getListItemCalendar(int idCart, int idProd, int prodCounter);
 	}
 }

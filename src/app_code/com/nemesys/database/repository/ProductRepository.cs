@@ -629,6 +629,10 @@ namespace com.nemesys.database.repository
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}
+				else if(cacheKey.Contains("list-calendar-fproduct-"+product.id))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
 			}	
 		}
 		
@@ -727,6 +731,10 @@ namespace com.nemesys.database.repository
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}	 
 				else if(cacheKey.Contains("transfield-fproduct-"+product.id))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-calendar-fproduct-"+product.id))
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}
@@ -1378,6 +1386,10 @@ namespace com.nemesys.database.repository
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}	 
 				else if(cacheKey.Contains("transfield-fproduct-"+product.id))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-calendar-fproduct-"+product.id))
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}
@@ -2342,6 +2354,10 @@ namespace com.nemesys.database.repository
 					{
 						HttpContext.Current.Cache.Remove(cacheKey);
 					}
+					else if(cacheKey.Contains("list-calendar-fproduct-"+idProduct))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}
 				}
 			}catch(Exception ex){
 				//System.Web.HttpContext.Current.Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
@@ -2353,8 +2369,8 @@ namespace com.nemesys.database.repository
 			IList<ProductAttachment> attachments = null;
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			{
-				IQuery q = session.CreateQuery("from ProductAttachment where id_parent_product= :id_product");
-				q.SetInt32("id_product",idProduct);	
+				IQuery q = session.CreateQuery("from ProductAttachment where idParentProduct= :idProduct");
+				q.SetInt32("idProduct",idProduct);	
 				attachments = q.List<ProductAttachment>();
 				NHibernateHelper.closeSession();					
 			}	
@@ -2392,7 +2408,7 @@ namespace com.nemesys.database.repository
 			IList<ProductAttachmentDownload> attachments = null;
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			{
-				IQuery q = session.CreateQuery("from ProductAttachmentDownload where id_parent_product= :id_product");
+				IQuery q = session.CreateQuery("from ProductAttachmentDownload where idParentProduct= :id_product");
 				q.SetInt32("id_product",idProduct);	
 				attachments = q.List<ProductAttachmentDownload>();
 				NHibernateHelper.closeSession();					
@@ -2493,7 +2509,7 @@ namespace com.nemesys.database.repository
 			IList<ProductLanguage> languages = null;
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			{
-				IQuery q = session.CreateQuery("from ProductLanguage where id_parent_product= :id_product");
+				IQuery q = session.CreateQuery("from ProductLanguage where idParentProduct= :id_product");
 				q.SetInt32("id_product",idProduct);	
 				languages = q.List<ProductLanguage>();
 				NHibernateHelper.closeSession();					
@@ -2506,7 +2522,7 @@ namespace com.nemesys.database.repository
 			IList<ProductCategory> categories = null;
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			{
-				IQuery q = session.CreateQuery("from ProductCategory where id_parent_product= :id_product");
+				IQuery q = session.CreateQuery("from ProductCategory where idParentProduct= :id_product");
 				q.SetInt32("id_product",idProduct);	
 				categories = q.List<ProductCategory>();
 				NHibernateHelper.closeSession();					
@@ -2573,7 +2589,7 @@ namespace com.nemesys.database.repository
 			{
 				string sql = "from ProductField  where 1=1";
 				if(idProduct!=-1){
-				sql += " and id_parent_product= :id_product";
+				sql += " and idParentProduct= :idProduct";
 				}
 				if(active != null){
 				sql += " and enabled= :enabled";
@@ -2584,7 +2600,7 @@ namespace com.nemesys.database.repository
 				sql += " order by sorting, groupDescription, description asc";
 				IQuery q = session.CreateQuery(sql);
 				if(idProduct!=-1){
-				q.SetInt32("id_product",idProduct);	
+				q.SetInt32("idProduct",idProduct);	
 				}
 				if(active != null){
 				q.SetBoolean("enabled",Convert.ToBoolean(active));	
@@ -2847,6 +2863,10 @@ namespace com.nemesys.database.repository
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}
+				else if(cacheKey.Contains("list-calendar-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
 			}				
 		}
 		
@@ -2903,6 +2923,10 @@ namespace com.nemesys.database.repository
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}	 
 				else if(cacheKey.Contains("transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-calendar-fproduct-"))
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}
@@ -2972,6 +2996,10 @@ namespace com.nemesys.database.repository
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}
+				else if(cacheKey.Contains("list-calendar-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
 			}
 		}
 		
@@ -3034,6 +3062,10 @@ namespace com.nemesys.database.repository
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}	 
 				else if(cacheKey.Contains("transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-calendar-fproduct-"))
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}
@@ -3155,6 +3187,10 @@ namespace com.nemesys.database.repository
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}
+				else if(cacheKey.Contains("list-calendar-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
 			}		
 		}		
 		
@@ -3217,6 +3253,10 @@ namespace com.nemesys.database.repository
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}	 
 				else if(cacheKey.Contains("transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-calendar-fproduct-"))
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}
@@ -3439,6 +3479,10 @@ namespace com.nemesys.database.repository
 				else if(cacheKey.Contains("transfield-fproduct-"+idProd))
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-calendar-fproduct-"+idProd))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
 				}			
 			}				
 		}	
@@ -3645,7 +3689,11 @@ namespace com.nemesys.database.repository
 				else if(cacheKey.Contains("transfield-fproduct-"+idProd))
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
-				}			
+				}	
+				else if(cacheKey.Contains("list-calendar-fproduct-"+idProd))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}		
 			}				
 		}
 		
@@ -3702,6 +3750,10 @@ namespace com.nemesys.database.repository
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}	 
 				else if(cacheKey.Contains("transfield-fproduct-"))
+				{
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
+				else if(cacheKey.Contains("list-calendar-fproduct-"))
 				{
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}
@@ -3821,10 +3873,77 @@ namespace com.nemesys.database.repository
 					{
 						HttpContext.Current.Cache.Remove(cacheKey);
 					}
+					else if(cacheKey.Contains("list-calendar-fproduct-"+idParent))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}
 				}
 			}catch(Exception ex){
 				//System.Web.HttpContext.Current.Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
 			}		
+		}
+		
+		//******** PRODUCT CALENDAR METHODS
+		
+		public ProductCalendar getProductCalendar(int idProduct, string date)
+		{
+			ProductCalendar result = null;
+			
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			{
+				IQuery q = session.CreateQuery("from ProductCalendar where idParentProduct=:idProduct and startDate=:date order by idParentProduct, startDate asc");
+				q.SetInt32("idProduct",idProduct);
+				q.SetDateTime("date", Convert.ToDateTime(date));
+				
+				result = q.UniqueResult<ProductCalendar>();
+				NHibernateHelper.closeSession();
+			}
+			
+			return result;		
+		}
+		
+		public IList<ProductCalendar> getProductCalendars(int idProduct)
+		{
+			return getProductCalendarsCached(idProduct, false);
+		}
+	
+		public IList<ProductCalendar> getProductCalendarsCached(int idProduct, bool cached)
+		{
+			IList<ProductCalendar> results = null;
+			StringBuilder cacheKey = new StringBuilder("list-calendar-fproduct-").Append(idProduct);
+				
+			if(cached)
+			{
+				results = (IList<ProductCalendar>)HttpContext.Current.Cache.Get(cacheKey.ToString());
+				if(results != null){
+					return results;
+				}
+			}
+			
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			{
+				string sql = "from ProductCalendar  where 1=1";
+				if(idProduct!=-1){
+				sql += " and idParentProduct= :idProduct";
+				}
+				sql += " order by idParentProduct, startDate asc";
+				IQuery q = session.CreateQuery(sql);
+				if(idProduct!=-1){
+				q.SetInt32("idProduct",idProduct);	
+				}
+				results = q.List<ProductCalendar>();
+				NHibernateHelper.closeSession();
+			}
+			
+			if(cached)
+			{
+				if(results == null){
+					results = new List<ProductCalendar>();
+				}
+				HttpContext.Current.Cache.Insert(cacheKey.ToString(), results, null, DateTime.Now.AddHours(24), System.Web.Caching.Cache.NoSlidingExpiration, CacheItemPriority.High, null);
+			}
+			
+			return results;		
 		}		
 	}
 }

@@ -15,7 +15,7 @@ namespace com.nemesys.database.repository
 		
 		void deleteWithUpdate(FOrder order);
 		
-		void saveCompleteOrder(FOrder order, IList<OrderProduct> ops, IList<OrderProductField> opfs, IList<OrderProductAttachmentDownload> opads, IList<OrderFee> ofs, BillsAddress billsAddress, OrderBillsAddress orderBillsAddress, ShippingAddress shippingAddress, OrderShippingAddress orderShippingAddress, IList<OrderBusinessRule> obrs, IList<OrderVoucher> ovs, int voucherCodeId);
+		void saveCompleteOrder(FOrder order, IList<OrderProduct> ops, IList<OrderProductField> opfs, IList<OrderProductCalendar> opfc, IList<OrderProductAttachmentDownload> opads, IList<OrderFee> ofs, BillsAddress billsAddress, OrderBillsAddress orderBillsAddress, ShippingAddress shippingAddress, OrderShippingAddress orderShippingAddress, IList<OrderBusinessRule> obrs, IList<OrderVoucher> ovs, int voucherCodeId);
 		
 		FOrder getById(int id);
 		
@@ -30,6 +30,8 @@ namespace com.nemesys.database.repository
 		IList<OrderFee> findFeesByOrderId(int idOrder);
 		
 		IList<OrderProductField> findItemFields(int idOrder, int idProd, int prodCounter);
+		
+		IList<OrderProductCalendar> findItemCalendars(int idOrder, int idProd, int prodCounter);
 		
 		IList<OrderProductAttachmentDownload> getAttachmentDownload(int idOrder, int idProd);
 		

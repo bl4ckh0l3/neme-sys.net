@@ -368,16 +368,6 @@ function sendBookSearch(){
 		document.form_book_search.search_text.focus();
 		return;
 	}
-	if(document.form_book_search.checkin.value== ""){
-		alert("<%=lang.getTranslated("frontend.template.booking.js.alert.empty")%>");
-		document.form_book_search.checkin.focus();
-		return;
-	}
-	if(document.form_book_search.checkout.value== ""){
-		alert("<%=lang.getTranslated("frontend.template.booking.js.alert.empty")%>");
-		document.form_book_search.checkout.focus();
-		return;
-	}
 	
 	if(document.form_book_search.adults.value!= "" && document.form_book_search.adults.value!= "0"){
 		var cnum = document.form_book_search.adults.value;
@@ -411,6 +401,26 @@ function sendBookSearch(){
 				return;
 			}
 		}
+	}
+	
+	if(document.form_book_search.checkin.value== ""){
+		alert("<%=lang.getTranslated("frontend.template.booking.js.alert.empty")%>");
+		document.form_book_search.checkin.focus();
+		return;
+	}
+	if(document.form_book_search.checkout.value== ""){
+		alert("<%=lang.getTranslated("frontend.template.booking.js.alert.empty")%>");
+		document.form_book_search.checkout.focus();
+		return;
+	}
+	
+	var ckin = $.datepicker.parseDate("dd/mm/yy",  document.form_book_search.checkin.value);
+	var ckout = $.datepicker.parseDate("dd/mm/yy",  document.form_book_search.checkout.value);
+	
+	if(ckin>ckout){
+		alert("<%=lang.getTranslated("frontend.template.booking.js.alert.wrong_date")%>");
+		document.form_book_search.checkout.focus();
+		return;
 	}
 
 	form_book_search.submit();
@@ -453,7 +463,8 @@ $(function() {
 	$('#checkin').datepicker({
 		dateFormat: 'dd/mm/yy',
 		changeMonth: true,
-		changeYear: true
+		changeYear: true,
+		minDate:0
 	});
 	$('#ui-datepicker-div').hide();	
 });
@@ -462,7 +473,8 @@ $(function() {
 	$('#checkout').datepicker({
 		dateFormat: 'dd/mm/yy',
 		changeMonth: true,
-		changeYear: true
+		changeYear: true,
+		minDate:0
 	});
 	$('#ui-datepicker-div').hide();	
 });
@@ -494,7 +506,14 @@ jQuery(document).ready(function(){
 				<input type="hidden" value="<%=modelPageNum%>" name="modelPageNum">	
 				<input type="hidden" value="<%=hierarchy%>" name="hierarchy">	
 				<input type="hidden" value="<%=categoryid%>" name="categoryid">	
-				<input type="hidden" value="<%=numPage%>" name="page">			
+				<input type="hidden" value="<%=numPage%>" name="page">		
+				<input type="hidden" name="search_text" value="<%=search_text%>">						
+				<input type="hidden" name="adults" value="<%=adults%>">						
+				<input type="hidden" name="childs" value="<%=childs%>">			
+				<input type="hidden" name="childs_age" value="<%=childAgesReq%>">						
+				<input type="hidden" name="checkin" value="<%=checkin%>">			
+				<input type="hidden" name="checkout" value="<%=checkout%>">					
+				
 				<span class="prodotto_select_label"><%=lang.getTranslated("frontend.template_prodotto.order.label")%></span>&nbsp;<select class="prodotto_select" name="order_by" onchange="javascript:changeOrder();">
 				<option value=""></option>
 				<option value="1" <%if(orderBy==1){Response.Write("selected");}%>><%=lang.getTranslated("frontend.template_prodotto.label.orderby_name_asc")%></option>
@@ -513,6 +532,12 @@ jQuery(document).ready(function(){
 							<input type="hidden" value="<%=categoryid%>" name="categoryid">	
 							<input type="hidden" value="<%=numPage%>" name="page">
 							<input type="hidden" value="<%=orderBy%>" name="order_by">  
+							<input type="hidden" name="search_text" value="<%=search_text%>">						
+							<input type="hidden" name="adults" value="<%=adults%>">						
+							<input type="hidden" name="childs" value="<%=childs%>">			
+							<input type="hidden" name="childs_age" value="<%=childAgesReq%>">						
+							<input type="hidden" name="checkin" value="<%=checkin%>">			
+							<input type="hidden" name="checkout" value="<%=checkout%>">	
 							
 							&nbsp;|&nbsp;<span class="prodotto_select_label"><%=lang.getTranslated("frontend.template.currency.label")%></span>&nbsp;<select class="prodotto_select" name="currency" onchange="javascript:changeCurrency();">
 							<option value=""></option>
@@ -599,7 +624,13 @@ jQuery(document).ready(function(){
 						<input type="hidden" value="additem" name="operation">
 						<input type="hidden" value="<%=counter%>" name="form_counter">
 						<input type="hidden" value="<%=product.quantity%>" name="max_prod_qta">	
-						
+						<input type="hidden" name="search_text" value="<%=search_text%>">						
+						<input type="hidden" name="adults" value="<%=adults%>">						
+						<input type="hidden" name="childs" value="<%=childs%>">			
+						<input type="hidden" name="childs_age" value="<%=childAgesReq%>">						
+						<input type="hidden" name="checkin" value="<%=checkin%>">			
+						<input type="hidden" name="checkout" value="<%=checkout%>">	
+			
 						<div>
 							<div class="prodotto-immagine">
 							<%if (product.attachments != null && product.attachments.Count>0) {	
@@ -638,7 +669,7 @@ jQuery(document).ready(function(){
 							
 								// gestisco i field per contenuto
 								if(product.fields != null && product.fields.Count>0){
-									Response.Write(ProductService.renderField(product.fields, null, "", "", lang.currentLangCode, lang.defaultLangCode, ProductService.getMapProductFieldsTranslations(product.id),true));
+									Response.Write(ProductService.renderField(product.fields, null, "", "", lang.currentLangCode, lang.defaultLangCode, ProductService.getMapProductFieldsTranslations(product.id),false));
 								}%>
 								</p>
 							<%}%>						
@@ -695,7 +726,13 @@ jQuery(document).ready(function(){
 			<input type="hidden" value="<%=categoryid%>" name="categoryid">	
 			<input type="hidden" value="<%=numPage%>" name="page">
 			<input type="hidden" value="<%=orderBy%>" name="order_by">  
-			<input type="hidden" value="<%=Request["product_preview"]%>" name="product_preview">          
+			<input type="hidden" value="<%=Request["product_preview"]%>" name="product_preview">    
+			<input type="hidden" name="search_text" value="<%=search_text%>">						
+			<input type="hidden" name="adults" value="<%=adults%>">						
+			<input type="hidden" name="childs" value="<%=childs%>">			
+			<input type="hidden" name="childs_age" value="<%=childAgesReq%>">						
+			<input type="hidden" name="checkin" value="<%=checkin%>">			
+			<input type="hidden" name="checkout" value="<%=checkout%>">		
 			</form>	
 		</div>
 		<br style="clear: left" />

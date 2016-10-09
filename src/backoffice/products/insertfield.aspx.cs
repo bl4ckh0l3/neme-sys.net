@@ -147,6 +147,9 @@ public partial class _ProductField : Page
 				IList<MultiLanguage> newtranslactions = new List<MultiLanguage>();
 				IList<MultiLanguage> updtranslactions = new List<MultiLanguage>();
 				IList<MultiLanguage> deltranslactions = new List<MultiLanguage>();
+				
+				IList<ProductFieldTranslation> fieldsTrans = new List<ProductFieldTranslation>();
+		
 				MultiLanguage ml;
 				if(languages!=null){
 					foreach (Language x in languages){
@@ -251,7 +254,7 @@ public partial class _ProductField : Page
 				
 				try
 				{
-					productrep.saveCompleteProductField(field, newFieldValues, newtranslactions, updtranslactions, deltranslactions);
+					productrep.saveCompleteProductField(field, newFieldValues, newtranslactions, updtranslactions, deltranslactions, fieldsTrans);
 		
 					foreach(MultiLanguage value in updtranslactions){
 						MultiLanguageRepository.cleanCache(value);

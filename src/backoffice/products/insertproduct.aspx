@@ -2296,8 +2296,8 @@ function onloadFieldsTypes(){
 				$('#max_lenght_container_'+type_counter).hide();
 				$("#field_values_div_"+type_counter).show();
 				$('#field_value_box_'+type_counter).hide();
-				$("#product_field_editable_"+type_counter).attr('checked',false);
-				$("#product_field_editable_"+type_counter).attr('disabled',true);
+				//$("#product_field_editable_"+type_counter).attr('checked',false);
+				//$("#product_field_editable_"+type_counter).attr('disabled',true);
 			}	
 					
 			if(type_val!=3){
@@ -2403,8 +2403,8 @@ function onChangeFieldsType(counter){
 		var currentceditor = $("#field_value_e_"+counter).cleditor()[0];	
 		currentceditor.refresh();
 		$('#max_lenght_container_'+counter).hide();
-		$("#product_field_editable_"+counter).attr('checked',false);
-		$("#product_field_editable_"+counter).attr('disabled',true);
+		//$("#product_field_editable_"+counter).attr('checked',false);
+		//$("#product_field_editable_"+counter).attr('disabled',true);
 	}
 	
 	if(type_val_ch!=3){
@@ -2477,8 +2477,9 @@ function onClickFieldEditable(counter){
 			$('#baseFieldHtmlEditor_e_'+counter).hide();
 			$('#baseFieldHidden_h_'+counter).show();
 		}
-		
-		$('#field_value_box_'+counter).show();
+		if(type_val_ch != 3 && type_val_ch != 4 && type_val_ch != 5 && type_val_ch != 6){
+			$('#field_value_box_'+counter).show();
+		}
 	}else{
 		$('#field_value_box_'+counter).hide();
 		$("[name*='field_value_"+counter+"']").val('');

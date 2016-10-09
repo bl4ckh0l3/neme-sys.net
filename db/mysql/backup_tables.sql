@@ -1137,6 +1137,25 @@ CREATE TABLE IF NOT EXISTS `SHOPPING_CART_PRODUCT_FIELD` (
 
 -- --------------------------------------------------------
 -- 
+-- Structure of table `SHOPPING_CART_PRODUCT_CALENDAR`
+-- 
+DROP TABLE IF EXISTS `SHOPPING_CART_PRODUCT_CALENDAR`;
+CREATE TABLE IF NOT EXISTS `SHOPPING_CART_PRODUCT_CALENDAR` (
+  `id_cart` int(11) NOT NULL,
+  `id_prod` int(11) NOT NULL,
+  `prod_counter` INTEGER UNSIGNED NOT NULL,
+  `date` timestamp NOT NULL,
+  `adults` int(11) NOT NULL DEFAULT '0',
+  `children` int(11) NOT NULL DEFAULT '0',
+  `rooms` int(11) NOT NULL DEFAULT '0',
+  `children_age` varchar(100) NOT NULL,
+  `search_text` varchar(250) NOT NULL,
+  PRIMARY KEY  (`id_cart`,`id_prod`,`prod_counter`,`date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- --------------------------------------------------------
+-- 
 -- Structure of table `ORDERS`
 -- 
 DROP TABLE IF EXISTS `ORDERS`;
@@ -1203,6 +1222,25 @@ CREATE TABLE IF NOT EXISTS `ORDER_PRODUCT_FIELDS` (
   `prod_quantity` int(11) NOT NULL,
   `description` varchar(250) NOT NULL,
   PRIMARY KEY  (`id_order`,`id_prod`,`prod_counter`,`id_field`,`field_type`,`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- --------------------------------------------------------
+-- 
+-- Structure of table `ORDER_PRODUCT_CALENDAR`
+-- 
+DROP TABLE IF EXISTS `ORDER_PRODUCT_CALENDAR`;
+CREATE TABLE IF NOT EXISTS `ORDER_PRODUCT_CALENDAR` (
+  `id_order` int(11) NOT NULL,
+  `id_prod` int(11) NOT NULL,
+  `prod_counter` INTEGER UNSIGNED NOT NULL,
+  `date` timestamp NOT NULL,
+  `adults` int(11) NOT NULL DEFAULT '0',
+  `children` int(11) NOT NULL DEFAULT '0',
+  `rooms` int(11) NOT NULL DEFAULT '0',
+  `children_age` varchar(100) NOT NULL,
+  `search_text` varchar(250) NOT NULL,
+  PRIMARY KEY  (`id_order`,`id_prod`,`prod_counter`,`date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

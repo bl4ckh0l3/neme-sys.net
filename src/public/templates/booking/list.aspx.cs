@@ -50,7 +50,7 @@ public partial class _List : Page
 	protected string search_text,checkin,checkout,adultsReq,childsReq,childAgesReq;
 	protected int adults,childs,travellers,rooms;
 	protected string[] childAgesArr;
-	protected IDictionary<int, IList<ProductCalendar>> calendarData;
+	protected IDictionary<int, IList<ProductCalendarVO>> calendarData;
 	
 	private int _totalCPages;	
 	public int totalCPages {
@@ -152,7 +152,7 @@ public partial class _List : Page
 		objListPairKeyValue.Add("country","");
 		objListPairKeyValue.Add("place_name","");
 		bolHasFilterSearchActive = false;
-		calendarData = new Dictionary<int, IList<ProductCalendar>>();
+		calendarData = new Dictionary<int, IList<ProductCalendarVO>>();
 		
 		search_text = "";
 		checkin = DateTime.Now.ToString("dd/MM/yyyy");
@@ -522,7 +522,7 @@ public partial class _List : Page
 							}
 							
 							int dayCounter = 0;
-							IList<ProductCalendar> daysNum = new List<ProductCalendar>();
+							IList<ProductCalendarVO> daysNum = new List<ProductCalendarVO>();
 							for(int i=0;i<=diffDays;i++){
 								DateTime countD = chkin.AddDays(i);
 								//Response.Write("<br>countD:"+ countD.ToString("dd/MM/yyyy")+"<br>");
@@ -532,13 +532,18 @@ public partial class _List : Page
 								if(calD.TryGetValue(countD.ToString("dd/MM/yyyy"), out p)
 									 &&
 									(
-										(travellers==1 && p.availability>0 && (p.unit-travellers<2)) || // un solo traveller e solo stanze singole o doppie (ad uso singola)
-										(p.availability>0 && p.unit>=travellers && ((travellers%p.unit==0) || (p.unit-(travellers%p.unit))<2)) || //c'e almeno un posto e tutti stanno in una sola stanza e al massimo rimane solo un posto vuoto in una stanza
+										//(travellers==1 && p.availability>0 && (p.unit-travellers<2)) || // un solo traveller e solo stanze singole o doppie (ad uso singola)
+										//(p.availability>0 && p.unit>=travellers && ((travellers%p.unit==0) || (p.unit-(travellers%p.unit))<2)) || //c'e almeno un posto e tutti stanno in una sola stanza e al massimo rimane solo un posto vuoto in una stanza
 										(p.availability*p.unit>=travellers && ((travellers%p.unit==0) || (p.unit-(travellers%p.unit))<2)) //ci sono abbastanza camere per tutti e al massimo rimane solo un posto vuoto in una stanza
 									)
 								){
 									dayCounter++;
-									daysNum.Add(p);
+									int tmprooms = travellers/p.unit;
+									if(travellers%p.unit!=0){
+										tmprooms+=1;
+									}
+									//Response.Write("tmprooms: "+tmprooms+"<br>");									
+									daysNum.Add(new ProductCalendarVO(p, tmprooms));
 								}
 							}
 									
@@ -552,7 +557,9 @@ public partial class _List : Page
 						}
 						//Response.Write("calendarData.Count:"+calendarData.Count+"<br>");
 					}
-					
+
+					//Response.Write("keeped.Count:"+keeped.Count+"<br>");
+						
 					// ciclo per test, da cancellare finito il template
 					//foreach (KeyValuePair<int, IList<ProductCalendar>> pair in calendarData)
 					//{
@@ -565,6 +572,10 @@ public partial class _List : Page
 					if(keeped.Count>0){
 						bolFoundLista = true;
 						products = new List<Product>(keeped.Values);
+					}else{
+						bolFoundLista = false;
+						products = new List<Product>();
+						points = new List<Geolocalization>();
 					}
 				}else{		
 					bolFoundLista = false;
@@ -573,14 +584,16 @@ public partial class _List : Page
 				}				
 				
 				foreach(Product c in products){	
+					//Response.Write("c.id:"+c.id+"<br>");
+					
 					Supplement prodsup = null;	
 					string suppdesc = "";			
 					decimal discountperc = 0.00M;
-					//decimal price = c.price;// sostituire con la formula corretta in base al numero e tipo di travellers, con il calcolo in base all'eta e allo sconto del giorno e per i differenti giorni
 					decimal price = 0.00M;
 					decimal prevprice = 0.00M;
-					foreach(ProductCalendar pc in calendarData[c.id]){
-						ProductCalendarEventData pced = JsonConvert.DeserializeObject<ProductCalendarEventData>(pc.content);
+					
+					foreach(ProductCalendarVO pc in calendarData[c.id]){
+						ProductCalendarEventData pced = JsonConvert.DeserializeObject<ProductCalendarEventData>(pc.calendar.content);
 						string proom = pced.price["room"];
 						string padult = pced.price["adult"];
 						string childs_0_2 = pced.price["childs_0_2"];
@@ -623,27 +636,45 @@ public partial class _List : Page
 								}
 							}
 							
-							subprice = adultPrice+childPrice;
+							//********* add the price for the empty bed (if any) as adult
+							decimal emptyBedPrice = 0.00M;
+							//Response.Write("emptyBedPrice - travellers: "+travellers+"<br>");
+							//Response.Write("emptyBedPrice - pc.rooms: "+pc.rooms+"<br>");
+							//Response.Write("emptyBedPrice - pc.calendar.unit: "+pc.calendar.unit+"<br>");
+							int emptyCheck = (pc.rooms*pc.calendar.unit)-travellers;
+							//Response.Write("emptyBedPrice - emptyCheck: "+emptyCheck+"<br>");
+							if(emptyCheck>0){
+								emptyBedPrice = emptyCheck*pcedadval;
+							}
+							//Response.Write("emptyBedPrice: "+emptyBedPrice.ToString("###0.00")+"<br>");
 							
+							subprice = adultPrice+childPrice+emptyBedPrice;
+							//Response.Write("subprice pax: "+subprice.ToString("###0.00")+"<br>");
 							//Response.Write("childPrice: "+childPrice.ToString("###0.00")+"<br>");
 							prevprice+=subprice;
-							//Response.Write("prevprice: "+prevprice.ToString("###0.00")+"<br>");
+							//Response.Write("prevprice pax: "+prevprice.ToString("###0.00")+"<br><br>");
 						}else{
 							decimal pcedroomval = Convert.ToDecimal(proom.Replace(".",","));
-							int tmprooms = travellers/pc.unit;
-							Response.Write("tmprooms: "+tmprooms+"<br>");
-							if(travellers%pc.unit!=0){
-								tmprooms+=1;
-							}
-							
-							subprice = pcedroomval*tmprooms;
-							prevprice+=subprice;							
+							subprice = pcedroomval*pc.rooms;
+							//Response.Write("subprice room: "+subprice.ToString("###0.00")+"<br>");
+							prevprice+=subprice;	
+							//Response.Write("prevprice room: "+prevprice.ToString("###0.00")+"<br><br>");						
 						}
+						
+						//Response.Write("price before discount: "+price.ToString("###0.00")+"<br>");
 						
 						// gestione sconto
 						if(ug != null){
+							//Response.Write("ug.discount: "+ug.discount.ToString("###0.00")+"<br>");
+							//Response.Write("proddiscountperc: "+proddiscountperc+"<br>");
+							//Response.Write("usrdiscountperc: "+usrdiscountperc+"<br>");
+							//Response.Write("ug.applyProdDiscount: "+ug.applyProdDiscount+"<br>");
+							//Response.Write("ug.applyUserDiscount: "+ug.applyUserDiscount+"<br>");
+							//Response.Write("ug.margin: "+ug.margin.ToString("###0.00")+"<br>");
 							discountperc = ProductService.getDiscountPercentage(ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
 							price+= ProductService.getAmount(subprice, ug.margin, ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
+							//Response.Write("partial discountperc: "+discountperc.ToString("###0.00")+"<br>");
+							//Response.Write("price: "+price.ToString("###0.00")+"<br><br>");
 						}else{
 							if("1".Equals(confservice.get("manage_sconti").value)){// sconto prodotto + sconto cliente
 								discountperc = proddiscountperc+usrdiscountperc;
@@ -658,14 +689,16 @@ public partial class _List : Page
 							}
 							
 							price+= ProductService.getDiscountedAmount(subprice, discountperc);
+							//Response.Write("price: "+price.ToString("###0.00")+"<br>");
+							//Response.Write("partial discountperc: "+discountperc.ToString("###0.00")+"<br><br>");
 						}
-						//Response.Write("price: "+price.ToString("###0.00")+"<br>");
-						//Response.Write("partial discountperc: "+discountperc.ToString("###0.00")+"<br>");
 					}
 					
 					//Calculate the real discount based on the (real price and original price) with the formula: 100-(price*100/prevprice)
 					discountperc=100-(price*100/prevprice);
 					//Response.Write("final discountperc: "+discountperc.ToString("###0.00")+"<br>");
+					//Response.Write("final price: "+price.ToString("###0.00")+"<br>");
+					//Response.Write("final prevprice: "+prevprice.ToString("###0.00")+"<br>");
 					
 					
 					// gestione supplements
@@ -811,7 +844,7 @@ public partial class _List : Page
 			}	
 		}
 		catch (Exception ex){
-			Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
+			//Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
 			products = new List<Product>();
 			points = new List<Geolocalization>();
 		}

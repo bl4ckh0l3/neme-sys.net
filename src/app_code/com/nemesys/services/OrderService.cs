@@ -399,6 +399,12 @@ namespace com.nemesys.services
 					foreach(OrderProduct op in order.products.Values){
 						Product prod = productrep.getByIdCached(op.idProduct, true);
 						IList<OrderProductField> opfs = orderep.findItemFields(order.id, op.idProduct, op.productCounter);
+						
+						IList<OrderProductCalendar> opfc = null;
+						
+						if(prod.prodType==3){
+							opfc = orderep.findItemCalendars(order.id, op.idProduct, op.productCounter);
+						}
 					
 						string adsRefTitle = "";
 						string boadsRefTitle = "";
@@ -535,7 +541,44 @@ namespace com.nemesys.services
 									boproductFields+=flabel+":&nbsp;"+fvalue+"<br/>";
 								}
 							}
-						}				
+						}	
+						
+						//****** MANAGE FIELDS FOR PRODUCT
+						string productCalendars = "";
+						string boproductCalendars = "";
+						if(opfc != null && opfc.Count>0){
+							//MultiLanguageService.translate("portal.commons.select.option.country."+opf.value, langcode, defLangCode);
+							
+							OrderProductCalendar opcStart = opfc[0];
+							OrderProductCalendar opcEnd = opfc[opfc.Count-1];
+							StringBuilder sb = new StringBuilder("")
+							.Append(MultiLanguageService.translate("backend.ordini.view.table.label.adults", langcode, defLangCode)).Append(":&nbsp;").Append(opcStart.adults).Append("<br/>")
+							.Append(MultiLanguageService.translate("backend.ordini.view.table.label.childs", langcode, defLangCode)).Append(":&nbsp;").Append(opcStart.children);
+							if(!String.IsNullOrEmpty(opcStart.childrenAge)){
+								sb.Append("&nbsp;(")
+								.Append(opcStart.childrenAge)
+								.Append(")");
+							}
+							sb.Append("<br/>");
+							
+							productCalendars = sb.ToString();
+							productCalendars+=MultiLanguageService.translate("backend.ordini.view.table.label.checkin", langcode, defLangCode)+":&nbsp;"+opcStart.date.ToString("dd/MM/yyyy")+"<br/>";	
+							productCalendars+=MultiLanguageService.translate("backend.ordini.view.table.label.checkout", langcode, defLangCode)+":&nbsp;"+opcEnd.date.ToString("dd/MM/yyyy")+"<br/>";						
+							
+							boproductCalendars = sb.ToString();
+							boproductCalendars+=MultiLanguageService.translate("backend.ordini.view.table.label.checkin", langcode, defLangCode)+":&nbsp;"+opcStart.date.ToString("dd/MM/yyyy")+"&nbsp;("+MultiLanguageService.translate("backend.ordini.view.table.label.rooms", langcode, defLangCode)+":&nbsp;"+opcStart.rooms+")<br/>";	
+							
+							int counterCal = 0;
+							if(opfc.Count>2){
+								foreach(OrderProductCalendar opc in opfc){
+									if(counterCal>0 && counterCal<opfc.Count-1){
+										boproductCalendars+=MultiLanguageService.translate("backend.ordini.view.table.label.date", langcode, defLangCode)+":&nbsp;"+opc.date.ToString("dd/MM/yyyy")+"&nbsp;("+MultiLanguageService.translate("backend.ordini.view.table.label.rooms", langcode, defLangCode)+":&nbsp;"+opc.rooms+")<br/>";	
+									}
+									counterCal++;
+								}
+							}
+							boproductCalendars+=MultiLanguageService.translate("backend.ordini.view.table.label.checkout", langcode, defLangCode)+":&nbsp;"+opcEnd.date.ToString("dd/MM/yyyy")+"&nbsp;("+MultiLanguageService.translate("backend.ordini.view.table.label.rooms", langcode, defLangCode)+":&nbsp;"+opcEnd.rooms+")<br/>";	
+						}
 					
 						orderProducts.Append("<tr>")
 						.Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">")
@@ -559,6 +602,7 @@ namespace com.nemesys.services
 						.Append("</td>")
 						.Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">").Append(op.productQuantity).Append("</td>")	
 						.Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">")
+							.Append(productCalendars)
 							.Append(productFields)
 						.Append("</td>")					
 						.Append("</tr>");				
@@ -585,6 +629,7 @@ namespace com.nemesys.services
 						.Append("</td>")
 						.Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">").Append(op.productQuantity).Append("</td>")	
 						.Append("<td style=\"border:1px solid #C9C9C9;vertical-align:top;\">")
+							.Append(boproductCalendars)
 							.Append(boproductFields)
 						.Append("</td>")					
 						.Append("</tr>");

@@ -429,11 +429,21 @@ function changeOrder(){
 	document.change_order.submit();
 }
 
-function openRelatedProdPage(strAction, hierarchy, numIdProd, numPageNum){
+function openRelatedProdPage(strAction, hierarchy, numIdProd, numPageNum, externalParams){
     document.form_cart_rel_prod.action=strAction;
     document.form_cart_rel_prod.hierarchy.value=hierarchy;
     document.form_cart_rel_prod.productid.value=numIdProd;
     document.form_cart_rel_prod.modelPageNum.value=numPageNum;
+    
+    if(externalParams != ""){
+		$('<input>', {type: 'hidden',name: 'search_text',value: externalParams.search_text}).appendTo('#form_cart_rel_prod');	
+		$('<input>', {type: 'hidden',name: 'adults',value: externalParams.adults}).appendTo('#form_cart_rel_prod');	
+		$('<input>', {type: 'hidden',name: 'childs',value: externalParams.childs}).appendTo('#form_cart_rel_prod');	
+		$('<input>', {type: 'hidden',name: 'childs_age',value: externalParams.childs_age}).appendTo('#form_cart_rel_prod');	
+		$('<input>', {type: 'hidden',name: 'checkin',value: externalParams.checkin}).appendTo('#form_cart_rel_prod');	
+		$('<input>', {type: 'hidden',name: 'checkout',value: externalParams.checkout}).appendTo('#form_cart_rel_prod');	
+    }
+    
     document.form_cart_rel_prod.submit();
 }
   
@@ -762,7 +772,10 @@ function selectPayAndBills4Form(applyBills){
 						string numPageTempl = "";
 						string hierarchyRelProd = "";
 						IList<ShoppingCartProductField> fscpf = null;
+						IList<ShoppingCartProductCalendar> fscpc = null;
 						string adsTitle = "";
+						string backToProdParams = "";
+						IList<string> calendarSearch = new List<string>();
 						
 						if(foundpel){
 							margin = Convert.ToDecimal(pelements[1]);
@@ -779,6 +792,27 @@ function selectPayAndBills4Form(applyBills){
 							}
 							adsTitle = Convert.ToString(pelements[13]);
 							discount = Convert.ToDecimal(pelements[14]);
+							if(pelements[16] != null){
+								fscpc = (IList<ShoppingCartProductCalendar>)pelements[16];
+								if(fscpc != null && fscpc.Count>0){
+									ShoppingCartProductCalendar scpcStart = fscpc[0];
+									ShoppingCartProductCalendar scpcEnd = fscpc[fscpc.Count-1];
+									StringBuilder sb = new StringBuilder("{")
+									.Append("'search_text'").Append(":'").Append(scpcStart.searchText.Replace("'","\'")).Append("',")
+									.Append("'adults'").Append(":'").Append(scpcStart.adults).Append("',")
+									.Append("'childs'").Append(":'").Append(scpcStart.children).Append("',")
+									.Append("'childs_age'").Append(":'").Append(scpcStart.childrenAge).Append("',")
+									.Append("'checkin'").Append(":'").Append(scpcStart.date.ToString("dd/MM/yyyy")).Append("',")
+									.Append("'checkout'").Append(":'").Append(scpcEnd.date.ToString("dd/MM/yyyy")).Append("'")
+									.Append("}");
+									backToProdParams = sb.ToString();
+									
+									calendarSearch.Add(scpcStart.adults.ToString());
+									calendarSearch.Add(scpcStart.children.ToString());
+									calendarSearch.Add(scpcStart.date.ToString("dd/MM/yyyy"));
+									calendarSearch.Add(scpcEnd.date.ToString("dd/MM/yyyy"));
+								}
+							}
 						}
 						%>
 						<form action="<%=shoppingcardURL%>" method="post" name="form_carrello_<%=counter%>" id="form_carrello_<%=counter%>" enctype="multipart/form-data" accept-charset="UTF-8">
@@ -815,13 +849,21 @@ function selectPayAndBills4Form(applyBills){
 							<%}%>
 							</div>						
 							<div class="prodotto-carrello">
-								<h2><a href="javascript:openRelatedProdPage('<%=urlRelProd%>', '<%=hierarchyRelProd%>', <%=product.id%>, <%=numPageTempl%>);"><%=productrep.getMainFieldTranslationCached(product.id, 1 , lang.currentLangCode, true,  product.name, true).value%></a></h2>
+								<h2><a href="javascript:openRelatedProdPage('<%=urlRelProd%>', '<%=hierarchyRelProd%>', <%=product.id%>, <%=numPageTempl%>, <%=backToProdParams%>);"><%=productrep.getMainFieldTranslationCached(product.id, 1 , lang.currentLangCode, true,  product.name, true).value%></a></h2>
 								
 								<p>
 								<%	
-								// gestisco il riferimento all'ads se presente
+								// managing ads reference if present
 								if(!String.IsNullOrEmpty(adsTitle)){
 									Response.Write("<b>"+lang.getTranslated("frontend.carrello.table.label.ads_title")+"</b>&nbsp;"+adsTitle+"<br/>");
+								}
+								
+								// manage booking data if present
+								if(calendarSearch.Count==4){
+									Response.Write("<b>"+lang.getTranslated("frontend.template.booking.label.adults")+"</b>&nbsp;"+calendarSearch[0]+"<br/>");
+									Response.Write("<b>"+lang.getTranslated("frontend.template.booking.label.childs")+"</b>&nbsp;"+calendarSearch[1]+"<br/>");
+									Response.Write("<b>"+lang.getTranslated("frontend.template.booking.label.checkin")+"</b>&nbsp;"+calendarSearch[2]+"<br/>");
+									Response.Write("<b>"+lang.getTranslated("frontend.template.booking.label.checkout")+"</b>&nbsp;"+calendarSearch[3]+"<br/>");
 								}
 								
 								
@@ -863,7 +905,7 @@ function selectPayAndBills4Form(applyBills){
 									Response.Write("<br/>");
 								}%>									
 								
-								<strong><%=lang.getTranslated("frontend.carrello.table.label.quantita")%>: </strong>
+								<strong><%if(scp.productType==3){Response.Write(lang.getTranslated("frontend.carrello.table.label.rooms"));}else{Response.Write(lang.getTranslated("frontend.carrello.table.label.quantita"));}%>: </strong>
 									<%//GESTISCO LA QUANTITA' SELEZIONABILE	
 									if(product.status== 1 && product.quantity!=0 && product.setBuyQta){
 										int checkqtafields = 1;
@@ -1461,7 +1503,7 @@ function selectPayAndBills4Form(applyBills){
 				<%}%>
 			</div>
 			
-			<form action="" method="post" name="form_cart_rel_prod">	
+			<form action="" method="post" name="form_cart_rel_prod" id="form_cart_rel_prod">	
 			<input type="hidden" value="" name="productid">	
 			<input type="hidden" value="" name="modelPageNum">	
 			<input type="hidden" value="" name="hierarchy">            

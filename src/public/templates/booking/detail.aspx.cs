@@ -10,6 +10,7 @@ using com.nemesys.database.repository;
 using com.nemesys.services;
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 public partial class _Detail : Page 
 {
@@ -45,6 +46,12 @@ public partial class _Detail : Page
 	protected Supplement prodsup;
 	protected string suppdesc;
 	protected UserGroup ug;
+	
+	protected string search_text,checkin,checkout,adultsReq,childsReq,childAgesReq;
+	protected int adults,childs,travellers,rooms;
+	protected string[] childAgesArr;
+	protected IList<ProductCalendarVO> calendarData;
+	protected IDictionary<string,string> objListPairKeyValue;
 	
 	private string _pageTitle;	
 	public string pageTitle {
@@ -84,6 +91,7 @@ public partial class _Detail : Page
 		IShippingAddressRepository shiprep = RepositoryFactory.getInstance<IShippingAddressRepository>("IShippingAddressRepository");
 		currrep = RepositoryFactory.getInstance<ICurrencyRepository>("ICurrencyRepository");
 		IGeolocalizationRepository georep = RepositoryFactory.getInstance<IGeolocalizationRepository>("IGeolocalizationRepository");
+		IMultiLanguageRepository mlangrep = RepositoryFactory.getInstance<IMultiLanguageRepository>("IMultiLanguageRepository");
 		confservice = new ConfigurationService();
 
 		//se il sito � offline rimando a pagina default
@@ -139,6 +147,56 @@ public partial class _Detail : Page
 		ug = null;
 		prodsup = null;
 		suppdesc = "";
+		
+		objListPairKeyValue = new Dictionary<string,string>();
+		objListPairKeyValue.Add("city","");
+		objListPairKeyValue.Add("country","");
+		objListPairKeyValue.Add("place_name","");
+		calendarData = new List<ProductCalendarVO>();
+		
+		search_text = "";
+		checkin = DateTime.Now.ToString("dd/MM/yyyy");
+		checkout = DateTime.Now.AddDays(3).ToString("dd/MM/yyyy");
+		adultsReq = "";
+		childsReq = "";
+		adults = 1;
+		childs = 0;
+		travellers = 0;
+		rooms = 0;
+		
+		childAgesReq = "";
+		childAgesArr=null;
+		
+		if(!String.IsNullOrEmpty(Request["search_text"]) && !String.IsNullOrEmpty(Request["checkin"]) && !String.IsNullOrEmpty(Request["checkout"]) && !String.IsNullOrEmpty(Request["adults"])){
+			search_text  = Request["search_text"];	
+			checkin      = Request["checkin"];
+			checkout     = Request["checkout"];
+			adultsReq    = Request["adults"];
+			childsReq    = Request["childs"];
+			childAgesReq = Request["childs_age"];
+			
+			Session["search_text"] = search_text;
+			Session["checkin"] = checkin;
+			Session["checkout"] = checkout;
+			Session["adults"] = adultsReq;
+			Session["childs"] = childsReq;
+			Session["childs_age"] = childAgesReq;
+			
+			if(!String.IsNullOrEmpty(adultsReq)){
+				adults = Convert.ToInt32(adultsReq);
+				travellers+=adults;
+			}
+			if(!String.IsNullOrEmpty(childsReq)){
+				childs = Convert.ToInt32(childsReq);
+				travellers+=childs;
+				
+				//Response.Write("childAgesReq:"+childAgesReq+"<br>");
+				if(!String.IsNullOrEmpty(childAgesReq)){
+					childAgesArr = childAgesReq.Split(',');
+				}
+			}			
+		}		
+		
 		
 		if (!String.IsNullOrEmpty(Request["page"])) {
 			numPage = Convert.ToInt32(Request["page"]);
@@ -276,6 +334,171 @@ public partial class _Detail : Page
 			Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
 			product = null;
 		}
+
+		
+		if(product != null){
+			if(product.fields != null && product.fields.Count>0){	
+				IDictionary<string,ProductField> fieldsDict = new Dictionary<string,ProductField>();							
+				foreach(ProductField pf in product.fields){
+					if(pf.enabled){
+						fieldsDict[pf.description] = pf;
+					}
+				}
+				
+				foreach(string key in objListPairKeyValue.Keys){
+					if(!fieldsDict.ContainsKey(key)){
+						product=null;
+						break;
+					}
+				}
+				
+				//Response.Write("fieldsDict.Count:"+ fieldsDict.Count+"<br>");
+				//Response.Write("keepContent:"+ keepContent+"<br>");
+
+				bool keepContent = false;
+					
+				if(product != null){
+					foreach(ProductField subpf in fieldsDict.Values){
+						//Response.Write("subpf:"+ subpf.ToString()+"<br>");
+						
+						if("city".Equals(subpf.description)){	
+							string fval = subpf.value;	
+							if(!String.IsNullOrEmpty(fval)){
+								//Response.Write("city fval:"+ fval+"<br>");
+								if(search_text.ToLower().Equals(fval.ToLower())){
+									keepContent=true;
+									break;
+								}
+								
+								IList<ProductFieldTranslation> lpft = productrep.getProductFieldsTranslationCached(product.id, subpf.id, "value", null, null, true);
+								if(lpft != null && lpft.Count>0){
+									IList<string> values = new List<string>();
+									foreach(ProductFieldTranslation k in lpft){
+										//Response.Write("city ml fval:"+ k.value+"<br>");
+										values.Add(k.value.ToLower());
+									}
+									
+									if(values.Contains(search_text.ToLower())){
+										keepContent=true;
+										break;
+									}
+								}									
+							}								
+						}else if("country".Equals(subpf.description)){	
+							string fval = subpf.value;	
+							if(!String.IsNullOrEmpty(fval)){
+								if (fval.LastIndexOf('_') > -1){
+									fval = fval.Substring(0,fval.LastIndexOf('_'));
+								}
+								//Response.Write("country fval:"+ fval+"<br>");
+								
+								IList<MultiLanguage> mlCountries = mlangrep.find("portal.commons.select.option.country."+fval);
+								
+								if(mlCountries != null && mlCountries.Count>0){
+									IList<string> values = new List<string>();
+									foreach(MultiLanguage k in mlCountries){
+										//Response.Write("country ml fval:"+ k.value+"<br>");
+										values.Add(k.value.ToLower());
+									}
+									
+									if(values.Contains(search_text.ToLower())){
+										keepContent=true;
+										break;
+									}
+								}									
+							}
+						}else if("place_name".Equals(subpf.description)){		
+							string fval = subpf.value;	
+							if(!String.IsNullOrEmpty(fval)){
+								//Response.Write("place_name fval:"+ fval+"<br>");
+								if(search_text.ToLower().Equals(fval.ToLower())){
+									keepContent=true;
+									break;
+								}
+								
+								IList<ProductFieldTranslation> lpft = productrep.getProductFieldsTranslationCached(product.id, subpf.id, "value", null, null, true);
+								if(lpft != null && lpft.Count>0){
+									IList<string> values = new List<string>();
+									foreach(ProductFieldTranslation k in lpft){
+										//Response.Write("place_name ml fval:"+ k.value+"<br>");
+										values.Add(k.value.ToLower());
+									}
+									
+									if(values.Contains(search_text.ToLower())){
+										keepContent=true;
+										break;
+									}
+								}									
+							}
+						}
+					}
+				}
+					
+				if(!keepContent){
+					product=null;
+				}
+			}else{
+				product=null;
+			}		
+		}
+		
+
+		if(product != null){
+			DateTime chkin = DateTime.ParseExact(checkin, "dd/MM/yyyy", null);
+			DateTime chkout = DateTime.ParseExact(checkout, "dd/MM/yyyy", null);
+			System.TimeSpan diffResult;
+			
+			int diffDays = Convert.ToInt32(chkout.Subtract(chkin).TotalDays);
+			
+			//Response.Write("chkin:"+ chkin.ToString()+"<br>");
+			//Response.Write("chkout:"+ chkout.ToString()+"<br>");
+			//Response.Write("diffDays:"+ diffDays+"<br>");
+					
+			if(product.calendar != null && product.calendar.Count>0){
+				IDictionary<string, ProductCalendar> calD = new Dictionary<string, ProductCalendar>();
+				foreach(ProductCalendar p in product.calendar){
+					calD.Add(p.startDate.ToString("dd/MM/yyyy"),p);
+					//Response.Write(calD[p.startDate.ToString("dd/MM/yyyy")].ToString()+"<br>");
+				}
+				
+				int dayCounter = 0;
+				IList<ProductCalendarVO> daysNum = new List<ProductCalendarVO>();
+				for(int i=0;i<=diffDays;i++){
+					DateTime countD = chkin.AddDays(i);
+					//Response.Write("<br>countD:"+ countD.ToString("dd/MM/yyyy")+"<br>");
+					
+					ProductCalendar p = null;
+					//Response.Write("founded: "+countD.ToString("dd/MM/yyyy")+" - "+founded+"<br>");
+					if(calD.TryGetValue(countD.ToString("dd/MM/yyyy"), out p)
+						 &&
+						(
+							//(travellers==1 && p.availability>0 && (p.unit-travellers<2)) || // un solo traveller e solo stanze singole o doppie (ad uso singola)
+							//(p.availability>0 && p.unit>=travellers && ((travellers%p.unit==0) || (p.unit-(travellers%p.unit))<2)) || //c'e almeno un posto e tutti stanno in una sola stanza e al massimo rimane solo un posto vuoto in una stanza
+							(p.availability*p.unit>=travellers && ((travellers%p.unit==0) || (p.unit-(travellers%p.unit))<2)) //ci sono abbastanza camere per tutti e al massimo rimane solo un posto vuoto in una stanza
+						)
+					){
+						dayCounter++;
+						int tmprooms = travellers/p.unit;
+						if(travellers%p.unit!=0){
+							tmprooms+=1;
+						}
+						//Response.Write("tmprooms: "+tmprooms+"<br>");									
+						daysNum.Add(new ProductCalendarVO(p, tmprooms));
+					}
+				}
+						
+				if(dayCounter<(diffDays+1)){
+					product=null;
+				}else{
+					foreach(ProductCalendarVO tpc in daysNum){
+						calendarData.Add(tpc);
+					}
+				}
+			}else{
+				product=null;
+			}
+		}		
+		
 		
 		//gestisco attachment
 		if(product != null)
@@ -393,33 +616,101 @@ public partial class _Detail : Page
 				}
 			}
 			
-			price = product.price;
-			prevprice = price;
-			
-			decimal proddiscountperc = 0;
-			if(product.discount != null && product.discount >0){
-				proddiscountperc = product.discount;
-			}
-			
-			// gestione sconto
-			if(ug != null){
-				discountperc = ProductService.getDiscountPercentage(ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
-				price = ProductService.getAmount(price, ug.margin, ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
-			}else{
-				if("1".Equals(confservice.get("manage_sconti").value)){// sconto prodotto + sconto cliente
-					discountperc = proddiscountperc+usrdiscountperc;
-				}else if("2".Equals(confservice.get("manage_sconti").value)){// solo sconto prodotto
-					discountperc = proddiscountperc;
-				}else{// solo sconto cliente
-					if(logged && usrdiscountperc>0){
-						discountperc = usrdiscountperc;
-					}else{
-						discountperc = proddiscountperc;
-					};
+
+			foreach(ProductCalendarVO pc in calendarData){
+				ProductCalendarEventData pced = JsonConvert.DeserializeObject<ProductCalendarEventData>(pc.calendar.content);
+				string proom = pced.price["room"];
+				string padult = pced.price["adult"];
+				string childs_0_2 = pced.price["childs_0_2"];
+				string childs_3_11 = pced.price["childs_3_11"];
+				string childs_12_17 = pced.price["childs_12_17"];
+				string pdiscount = pced.price["discount"];
+				
+				decimal subprice = 0.00M;
+				
+				decimal proddiscountperc = 0;
+				if(!String.IsNullOrEmpty(pdiscount)){
+					proddiscountperc = Convert.ToDecimal(pdiscount.Replace(".",","));
 				}
 				
-				price = ProductService.getDiscountedAmount(price, discountperc);
+				
+				if(pced.price_type==1){
+					decimal pcedadval = 0.00M;
+					//Response.Write("padult before: "+padult+"<br>");
+					pcedadval = Convert.ToDecimal(padult.Replace(".",","));
+					//Response.Write("pcedadval after: "+pcedadval.ToString("###0.00")+"<br>");
+					decimal adultPrice = adults*pcedadval;
+					decimal childPrice = 0.00M;
+					
+					//Response.Write("adultPrice: "+adultPrice.ToString("###0.00")+"<br>");
+					
+					if(childs>0){
+						if(childAgesArr.Length==childs){
+							foreach(string s in childAgesArr){
+								int t = Convert.ToInt32(s);
+								if(t>-1&&t<3){
+									childPrice+=Convert.ToDecimal(childs_0_2.Replace(".",","));
+								}else if(t>2&&t<12){
+									childPrice+=Convert.ToDecimal(childs_3_11.Replace(".",","));
+								}else if(t>11&&t<18){
+									childPrice+=Convert.ToDecimal(childs_12_17.Replace(".",","));
+								}
+							}
+						}else{
+							throw new Exception("Error calculating price");
+						}
+					}					
+					
+					//********* add the price for the empty bed (if any) as adult
+					decimal emptyBedPrice = 0.00M;
+					//Response.Write("emptyBedPrice - travellers: "+travellers+"<br>");
+					//Response.Write("emptyBedPrice - pc.rooms: "+pc.rooms+"<br>");
+					//Response.Write("emptyBedPrice - pc.calendar.unit: "+pc.calendar.unit+"<br>");
+					int emptyCheck = (pc.rooms*pc.calendar.unit)-travellers;
+					//Response.Write("emptyBedPrice - emptyCheck: "+emptyCheck+"<br>");
+					if(emptyCheck>0){
+						emptyBedPrice = emptyCheck*pcedadval;
+					}
+					//Response.Write("emptyBedPrice: "+emptyBedPrice.ToString("###0.00")+"<br>");
+					subprice = adultPrice+childPrice+emptyBedPrice;	
+					
+					//Response.Write("childPrice: "+childPrice.ToString("###0.00")+"<br>");
+					prevprice+=subprice;
+					//Response.Write("prevprice: "+prevprice.ToString("###0.00")+"<br>");
+				}else{
+					decimal pcedroomval = Convert.ToDecimal(proom.Replace(".",","));
+					subprice = pcedroomval*pc.rooms;
+					
+					prevprice+=subprice;							
+				}
+				
+				// gestione sconto
+				if(ug != null){
+					discountperc = ProductService.getDiscountPercentage(ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
+					price+= ProductService.getAmount(subprice, ug.margin, ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
+				}else{
+					if("1".Equals(confservice.get("manage_sconti").value)){// sconto prodotto + sconto cliente
+						discountperc = proddiscountperc+usrdiscountperc;
+					}else if("2".Equals(confservice.get("manage_sconti").value)){// solo sconto prodotto
+						discountperc = proddiscountperc;
+					}else{// solo sconto cliente
+						if(logged && usrdiscountperc>0){
+							discountperc = usrdiscountperc;
+						}else{
+							discountperc = proddiscountperc;
+						}
+					}
+					
+					price+= ProductService.getDiscountedAmount(subprice, discountperc);
+				}
+				//Response.Write("price: "+price.ToString("###0.00")+"<br>");
+				//Response.Write("partial discountperc: "+discountperc.ToString("###0.00")+"<br>");
 			}
+			
+			//Calculate the real discount based on the (real price and original price) with the formula: 100-(price*100/prevprice)
+			discountperc=100-(price*100/prevprice);
+			//Response.Write("final discountperc: "+discountperc.ToString("###0.00")+"<br>");			
+			
 			
 			// gestione supplements
 			if(product.idSupplement != null && product.idSupplement >0){
@@ -507,6 +798,9 @@ public partial class _Detail : Page
 				}
 			}
 			
+			// assing the real calculated price to manage sorting
+			product.price=price;
+					
 			if(defCurrency != null && userCurrency != null){
 				prevprice = currrep.convertCurrency(prevprice, defCurrency.currency, userCurrency.currency);
 				price = currrep.convertCurrency(price, defCurrency.currency, userCurrency.currency);

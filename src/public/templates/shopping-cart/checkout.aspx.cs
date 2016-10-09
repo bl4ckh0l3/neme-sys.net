@@ -12,6 +12,7 @@ using com.nemesys.exception;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using Newtonsoft.Json;
 
 public partial class _Checkout : Page 
 {
@@ -355,6 +356,7 @@ public partial class _Checkout : Page
 				}
 				
 				IDictionary<int,IList<string>> requestFields = new Dictionary<int,IList<string>>();
+				IDictionary<string,string> requestCalendar = new Dictionary<string,string>();
 
 				foreach (string key in Request.Form.AllKeys)
 				{
@@ -387,7 +389,17 @@ public partial class _Checkout : Page
 					}
 				}
 				
-				executed = ShoppingCartService.addItem(userItem, -1, Math.Abs(Session.SessionID.GetHashCode()), acceptDate, requestFields, MyFileCollection, idProduct, quantity, maxProdQty, resetQtyByCart, idAds, lang.currentLangCode, lang.defaultLangCode);
+				// manage booking products
+				if("3".Equals(Request["prod_type"])){
+					requestCalendar.Add("search_text",Request["search_text"]);
+					requestCalendar.Add("checkin",Request["checkin"]);
+					requestCalendar.Add("checkout",Request["checkout"]);
+					requestCalendar.Add("adults",Request["adults"]);
+					requestCalendar.Add("childs",Request["childs"]);
+					requestCalendar.Add("childsAge",Request["childs_age"]);
+				}
+				
+				executed = ShoppingCartService.addItem(userItem, -1, Math.Abs(Session.SessionID.GetHashCode()), acceptDate, requestFields, requestCalendar, MyFileCollection, idProduct, quantity, maxProdQty, resetQtyByCart, idAds, lang.currentLangCode, lang.defaultLangCode);
 			}
 			catch(Exception ex)
 			{
@@ -707,17 +719,140 @@ public partial class _Checkout : Page
 					
 					IDictionary<int,Product> uniqueProducts = new Dictionary<int,Product>();
 					
+					//**** set Dictionary for ProductCalendar, in case of product type booking
+					IDictionary<string,IList<ShoppingCartProductCalendar>> productsCal = new Dictionary<string,IList<ShoppingCartProductCalendar>>();
+					IDictionary<string,IList<decimal>> productsCalAmounts = new Dictionary<string,IList<decimal>>();
+					
 					//*** PREPARE PRODUCT BUSINESS RULES
 					foreach(ShoppingCartProduct scp in shoppingCart.products.Values){
+						decimal pPrice = 0.00M;
+						decimal pPrevPrice = 0.00M;
+						decimal pDiscountPerc = 0.00M;
+						
+						// check if prod type == booking to manage calendar and price
+						if(scp.productType==3){
+							IList<ShoppingCartProductCalendar> foundCals = shoprep.getListItemCalendar(shoppingCart.id, scp.idProduct, scp.productCounter);
+							if(foundCals != null){
+								productsCal.Add(scp.idProduct+"|"+scp.productCounter, foundCals);
+								
+								foreach(ShoppingCartProductCalendar c in foundCals){
+									ProductCalendar pc = productrep.getProductCalendar(scp.idProduct, c.date.ToString("dd/MM/yyyy"));
+									
+									if(pc != null){
+										ProductCalendarEventData pced = JsonConvert.DeserializeObject<ProductCalendarEventData>(pc.content);
+										string proom = pced.price["room"];
+										string padult = pced.price["adult"];
+										string childs_0_2 = pced.price["childs_0_2"];
+										string childs_3_11 = pced.price["childs_3_11"];
+										string childs_12_17 = pced.price["childs_12_17"];
+										string pdiscount = pced.price["discount"];
+										
+										decimal subprice = 0.00M;
+										decimal proddiscountperc = 0.00M;
+										decimal discountperc = 0.00M;
+										
+										if(!String.IsNullOrEmpty(pdiscount)){
+											proddiscountperc = Convert.ToDecimal(pdiscount.Replace(".",","));
+										}
+										
+										
+										if(pced.price_type==1){
+											decimal pcedadval = 0.00M;
+											//Response.Write("padult before: "+padult+"<br>");
+											pcedadval = Convert.ToDecimal(padult.Replace(".",","));
+											//Response.Write("pcedadval after: "+pcedadval.ToString("###0.00")+"<br>");
+											decimal adultPrice = c.adults*pcedadval;
+											decimal childPrice = 0.00M;
+											
+											//Response.Write("adultPrice: "+adultPrice.ToString("###0.00")+"<br>");
+											
+											if(c.children>0){
+												string[] childAgesArr = c.childrenAge.Split(',');
+												if(childAgesArr.Length==c.children){
+													foreach(string s in childAgesArr){
+														int t = Convert.ToInt32(s);
+														if(t>-1&&t<3){
+															childPrice+=Convert.ToDecimal(childs_0_2.Replace(".",","));
+														}else if(t>2&&t<12){
+															childPrice+=Convert.ToDecimal(childs_3_11.Replace(".",","));
+														}else if(t>11&&t<18){
+															childPrice+=Convert.ToDecimal(childs_12_17.Replace(".",","));
+														}
+													}
+												}else{
+													throw new Exception("Error calculating price");
+												}
+											}
+											
+											//********* add the price for the empty bed (if any) as adult
+											decimal emptyBedPrice = 0.00M;
+											//Response.Write("emptyBedPrice - travellers: "+travellers+"<br>");
+											//Response.Write("emptyBedPrice - pc.rooms: "+pc.rooms+"<br>");
+											//Response.Write("emptyBedPrice - pc.calendar.unit: "+pc.calendar.unit+"<br>");
+											int emptyCheck = (c.rooms*pc.unit)-(c.adults+c.children);
+											//Response.Write("emptyBedPrice - emptyCheck: "+emptyCheck+"<br>");
+											if(emptyCheck>0){
+												emptyBedPrice = emptyCheck*pcedadval;
+											}
+											//Response.Write("emptyBedPrice: "+emptyBedPrice.ToString("###0.00")+"<br>");
+											
+											subprice = adultPrice+childPrice+emptyBedPrice;
+											//Response.Write("subprice pax: "+subprice.ToString("###0.00")+"<br>");
+											
+											//Response.Write("childPrice: "+childPrice.ToString("###0.00")+"<br>");
+											//Response.Write("prevprice pax: "+prevprice.ToString("###0.00")+"<br>");
+										}else{
+											decimal pcedroomval = Convert.ToDecimal(proom.Replace(".",","));
+											subprice = pcedroomval*c.rooms;
+											//Response.Write("subprice room: "+subprice.ToString("###0.00")+"<br>");
+											//Response.Write("prevprice room: "+prevprice.ToString("###0.00")+"<br>");						
+										}				
+										pPrevPrice+=subprice;
+										
+										// gestione sconto
+										if(ug != null){
+											discountperc = ProductService.getDiscountPercentage(ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
+											pPrice+= ProductService.getAmount(subprice, ug.margin, ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
+										}else{
+											if("1".Equals(confservice.get("manage_sconti").value)){// sconto prodotto + sconto cliente
+												discountperc = proddiscountperc+usrdiscountperc;
+											}else if("2".Equals(confservice.get("manage_sconti").value)){// solo sconto prodotto
+												discountperc = proddiscountperc;
+											}else{// solo sconto cliente
+												if(logged && usrdiscountperc>0){
+													discountperc = usrdiscountperc;
+												}else{
+													discountperc = proddiscountperc;
+												}
+											}
+											
+											pPrice+= ProductService.getDiscountedAmount(subprice, discountperc);
+										}										
+									}
+								}
+								
+								pDiscountPerc=100-(pPrice*100/pPrevPrice);
+								
+								IList<decimal> amounts = new List<decimal>();
+								amounts.Add(pPrice);
+								amounts.Add(pDiscountPerc);
+								productsCalAmounts.Add(scp.idProduct+"|"+scp.productCounter, amounts);
+							}
+						}									
+						
 						if(!uniqueProducts.ContainsKey(scp.idProduct)){
 							Product c = productrep.getByIdCached(scp.idProduct, true);
-							uniqueProducts.Add(scp.idProduct,c);
+							uniqueProducts.Add(scp.idProduct,c);								
 							
 							BusinessRuleProductVO vo = new BusinessRuleProductVO();
 							vo.productId = scp.idProduct;
 							vo.productCounter = scp.productCounter;
 							vo.quantity = scp.productQuantity;
-							vo.price = c.price;
+							if(scp.productType==3){
+								vo.price = pPrevPrice;
+							}else{
+								vo.price = c.price;
+							}
 							productsVO[scp.idProduct] = vo;
 						}else{
 							productsVO[scp.idProduct].quantity+=scp.productQuantity;
@@ -736,9 +871,22 @@ public partial class _Checkout : Page
 					foreach(ShoppingCartProduct scp in shoppingCart.products.Values){	
 						Product c = uniqueProducts[scp.idProduct];
 						decimal discountperc = 0.00M;
+						decimal proddiscountperc = 0.00M;
 						decimal price = c.price;
+						if(c.prodType==3){
+							IList<decimal> amounts = null;
+							if(productsCalAmounts.TryGetValue(scp.idProduct+"|"+scp.productCounter, out amounts)){
+								price = amounts[0];
+								proddiscountperc = amounts[1];
+							}
+						}
 						decimal margin = 0.00M;
-						decimal discount = 0.00M;
+						decimal discount = 0.00M;	
+						
+						if(c.prodType!=3 && c.discount != null && c.discount >0){
+							proddiscountperc = c.discount;
+						}
+						
 						decimal supplement = 0.00M;
 						decimal amount = 0.00M;
 						Supplement prodsup = null;	
@@ -793,40 +941,48 @@ public partial class _Checkout : Page
 									detailURL = "#";
 								}								
 							}
-						}						
-						
-						
-						decimal proddiscountperc = 0;
-						if(c.discount != null && c.discount >0){
-							proddiscountperc = c.discount;
 						}
 						
 						// gestione sconto
-						if(ug != null){
-							price = price*scp.productQuantity;
-							discountperc = ProductService.getDiscountPercentage(ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
-							margin = ProductService.getMarginAmount(price, ug.margin);
-							totalMarginAmount+=margin;
-							discount = ProductService.getDiscountAmount(price, ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
-							totalDiscountAmount+=discount;
-							price = ProductService.getAmount(price, ug.margin, ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
-						}else{
-							if("1".Equals(confservice.get("manage_sconti").value)){// sconto prodotto + sconto cliente
-								discountperc = proddiscountperc+usrdiscountperc;
-							}else if("2".Equals(confservice.get("manage_sconti").value)){// solo sconto prodotto
-								discountperc = proddiscountperc;
-							}else{// solo sconto cliente
-								if(logged && usrdiscountperc>0){
-									discountperc = usrdiscountperc;
-								}else{
+						if(c.prodType!=3){
+							if(ug != null){
+								price = price*scp.productQuantity;
+								discountperc = ProductService.getDiscountPercentage(ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
+								margin = ProductService.getMarginAmount(price, ug.margin);
+								totalMarginAmount+=margin;
+								discount = ProductService.getDiscountAmount(price, ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
+								totalDiscountAmount+=discount;
+								price = ProductService.getAmount(price, ug.margin, ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
+							}else{
+								if("1".Equals(confservice.get("manage_sconti").value)){// sconto prodotto + sconto cliente
+									discountperc = proddiscountperc+usrdiscountperc;
+								}else if("2".Equals(confservice.get("manage_sconti").value)){// solo sconto prodotto
 									discountperc = proddiscountperc;
-								};
+								}else{// solo sconto cliente
+									if(logged && usrdiscountperc>0){
+										discountperc = usrdiscountperc;
+									}else{
+										discountperc = proddiscountperc;
+									};
+								}
+								
+								price = price*scp.productQuantity;
+								discount = ProductService.getDiscountedValue(price, discountperc);
+								totalDiscountAmount+=discount;
+								price-= discount;
 							}
-							
-							price = price*scp.productQuantity;
-							discount = ProductService.getDiscountedValue(price, discountperc);
-							totalDiscountAmount+=discount;
-							price-= discount;
+						}else{
+							if(ug != null){
+								margin = ProductService.getMarginAmount(price, ug.margin);
+								totalMarginAmount+=margin;
+								discount = ProductService.getDiscountAmount(price, ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
+								totalDiscountAmount+=discount;
+								discountperc = proddiscountperc;
+							}else{
+								discount = ProductService.getDiscountedValue(price, proddiscountperc);
+								totalDiscountAmount+=discount;
+								discountperc = proddiscountperc;
+							}						
 						}
 
 
@@ -858,7 +1014,7 @@ public partial class _Checkout : Page
 												
 						//*** se dopo l'applicazione degli sconti e delle business rule per prodotto l'imponibile e' inferiore a 0, elimino la componente negativa
 						if(price<0){
-							price=0.00M;;
+							price=0.00M;
 						}
 						
 						// gestione supplements
@@ -1007,6 +1163,13 @@ public partial class _Checkout : Page
 						prodElements.Add(adsRefTitle);	
 						prodElements.Add(discount);	
 						prodElements.Add(margin);
+						
+						IList<ShoppingCartProductCalendar> cals = null;
+						if(productsCal.TryGetValue(scp.idProduct+"|"+scp.productCounter, out cals)){
+							prodElements.Add(cals);
+						}else{
+							prodElements.Add(null);
+						}
 						
 						prodsData.Add(scp.idProduct+"|"+scp.productCounter, prodElements);     
 
@@ -1352,6 +1515,7 @@ public partial class _Checkout : Page
 					decimal orderPaymentCommission=0.00M;
 					
 					IList<OrderProductField> opfs =  new List<OrderProductField>();
+					IList<OrderProductCalendar> opfc =  new List<OrderProductCalendar>();
 					IList<OrderProductAttachmentDownload> opads =  new List<OrderProductAttachmentDownload>();
 					IList<OrderFee> ofs =  new List<OrderFee>();
 					IList<OrderBusinessRule> obrs =  new List<OrderBusinessRule>();
@@ -1372,6 +1536,7 @@ public partial class _Checkout : Page
 						Product product = null;
 						ShoppingCartProduct scp = null;
 						IList<ShoppingCartProductField> fscpf = null;
+						IList<ShoppingCartProductCalendar> fscpc = null;
 						
 						if(foundpel){
 							price = Convert.ToDecimal(pelements[0]);
@@ -1385,6 +1550,9 @@ public partial class _Checkout : Page
 							suppdesc = Convert.ToString(pelements[12]);
 							discount = Convert.ToDecimal(pelements[14]);
 							margin = Convert.ToDecimal(pelements[15]);
+							if(pelements[16] != null){
+								fscpc = (IList<ShoppingCartProductCalendar>)pelements[16];
+							}
 						}
 					
 						OrderProduct op = new OrderProduct();
@@ -1439,6 +1607,22 @@ public partial class _Checkout : Page
 								opf.productQuantity=scpf.productQuantity;
 								opf.description=scpf.description;
 								opfs.Add(opf);
+							}
+						}
+						
+						if(fscpc != null && fscpc.Count>0){
+							foreach(ShoppingCartProductCalendar scpc in fscpc){
+								OrderProductCalendar opc = new OrderProductCalendar();
+								opc.idOrder=-1;
+								opc.idProduct=scpc.idProduct;
+								opc.productCounter=scpc.productCounter;
+								opc.date=scpc.date;      
+								opc.adults=scpc.adults;
+								opc.children=scpc.children;
+								opc.rooms=scpc.rooms;
+								opc.childrenAge=scpc.childrenAge;
+								opc.searchText=scpc.searchText;								
+								opfc.Add(opc);
 							}
 						}
 						
@@ -1620,7 +1804,7 @@ public partial class _Checkout : Page
 					
 					
 					//******************* SALVO ORDINE COMPLETO (VERIFICO SE LE QUANTITA DEI PRODOTTI E FIELDS CORRISPONDONO E AGGIORNO LE QUANTITA DI OGNI PRODOTTO E FIELDS)
-					orderep.saveCompleteOrder(newOrder, ops, opfs, opads, ofs, userBillsaddr, orderBillsaddr, userShipaddr, orderShipaddr, obrs, ovs, voucherCodeId);
+					orderep.saveCompleteOrder(newOrder, ops, opfs, opfc, opads, ofs, userBillsaddr, orderBillsaddr, userShipaddr, orderShipaddr, obrs, ovs, voucherCodeId);
 					finalOrderId=newOrder.id;
 				}catch(QuantityException ex){
 					orderCompleted = false;

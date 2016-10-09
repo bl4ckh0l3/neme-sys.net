@@ -109,5 +109,10 @@ namespace com.nemesys.database.repository
 		void deleteProductRotationByProd(int idParent);
 		
 		void saveCompleteProductRotation(int idParent, int reloadQuantity, ProductRotation rotation);
+		
+		ProductCalendar getProductCalendar(int idProduct, string date);
+		
+		IList<ProductCalendar> getProductCalendars(int idProduct);
+		IList<ProductCalendar> getProductCalendarsCached(int idProduct, bool cached);
 	}
 }

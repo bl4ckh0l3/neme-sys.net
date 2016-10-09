@@ -36,4 +36,20 @@
 		<property name="productQuantity" column="prod_quantity" not-null="true" type="Int32" />
 		<property name="description" column="description" />
 	</class>
+
+	<class name="ShoppingCartProductCalendar" table="SHOPPING_CART_PRODUCT_CALENDAR">
+		<composite-id>
+			<key-property name="idCart" column="id_cart" type="Int32" />
+			<key-property name="idProduct" column="id_prod" type="Int32" />
+			<key-property name="productCounter" column="prod_counter" type="Int32" />
+			<key-property name="date">
+				<column name="date" sql-type="timestamp" />
+			</key-property>
+		</composite-id>
+		<property name="adults" column="adults" not-null="true" type="Int32" />
+		<property name="children" column="children" not-null="true" type="Int32" />
+		<property name="rooms" column="rooms" not-null="true" type="Int32" />
+		<property name="childrenAge" column="children_age" />
+		<property name="searchText" column="search_text" />
+	</class>
 </hibernate-mapping>

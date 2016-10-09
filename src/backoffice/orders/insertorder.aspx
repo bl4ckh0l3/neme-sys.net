@@ -653,7 +653,7 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 							<td>
 							<%// gestisco i field per contenuto
 							if(p.fields != null && p.fields.Count>0){
-								Response.Write(ProductService.renderField(p.fields, null, "", "", lang.currentLangCode, lang.defaultLangCode, p.keyword,false));
+								Response.Write(ProductService.renderField(p.fields, null, "", "", lang.currentLangCode, lang.defaultLangCode, ProductService.getMapProductFieldsTranslations(p.id),false));
 							}%>
 							</td>
 							</form>
@@ -764,16 +764,36 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 							<td>
 							<%// gestisco i field per prodotto
 							if(fscpf != null && fscpf.Count>0){
+								IDictionary<string,ProductFieldTranslation> pftMap = ProductService.getMapProductFieldsTranslations(product.id);
+								ProductFieldTranslation pftv = null;
+								
 								foreach(ShoppingCartProductField scpf in fscpf){
-									string flabel = lang.getTranslated("backend.prodotti.detail.table.label.field_description_"+scpf.description+"_"+product.keyword);
-									if(String.IsNullOrEmpty(flabel)){
-										flabel = scpf.description;
+									string flabel = scpf.description;
+									if(pftMap.TryGetValue(new StringBuilder().Append(product.id).Append("-").Append(scpf.idField).Append("-").Append("desc").Append("-").Append("").Append("-").Append(lang.currentLangCode).ToString(), out pftv)){
+										flabel = pftv.value;
 									}
 									
 									if(scpf.fieldType==8){
 										Response.Write(flabel+":&nbsp;<a target='_blank' href='/public/upload/files/shoppingcarts/"+scpf.idCart+"/"+scpf.value+"'>"+scpf.value+"</a><br/>");
+									}else if(scpf.fieldType==3 || scpf.fieldType==4 || scpf.fieldType==5 || scpf.fieldType==6){
+										string fvalue = scpf.value;
+										if(pftMap.TryGetValue(new StringBuilder().Append(product.id).Append("-").Append(scpf.idField).Append("-").Append("values").Append("-").Append(fvalue).Append("-").Append(lang.currentLangCode).ToString(), out pftv)){
+											fvalue = pftv.value;
+										}else{
+											if(scpf.fieldType==3){
+												string tmpv = lang.getTranslated("portal.commons.select.option.country."+scpf.value);
+												if(!String.IsNullOrEmpty(tmpv)){
+													fvalue = tmpv;
+												}
+											}
+										}
+										Response.Write(flabel+":&nbsp;"+fvalue+"<br/>");	
 									}else{
-										Response.Write(flabel+":&nbsp;"+scpf.value+"<br/>");
+										string fvalue = scpf.value;
+										if(pftMap.TryGetValue(new StringBuilder().Append(product.id).Append("-").Append(scpf.idField).Append("-").Append("value").Append("-").Append("").Append("-").Append(lang.currentLangCode).ToString(), out pftv)){
+											fvalue = pftv.value;
+										}
+										Response.Write(flabel+":&nbsp;"+fvalue+"<br/>");
 									}
 								}
 							}%>	
@@ -785,7 +805,13 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 					foreach(OrderProduct op in order.products.Values){
 						Product prod = productrep.getByIdCached(op.idProduct, false);
 						IList<OrderProductField> opfs = orderep.findItemFields(order.id, op.idProduct, op.productCounter);
-					
+
+						IList<OrderProductCalendar> opfc = null;
+						
+						if(prod.prodType==3){
+							opfc = orderep.findItemCalendars(order.id, op.idProduct, op.productCounter);
+						}						
+						
 						string adsRefTitle = "";
 						if(op.idAds != null && op.idAds>-1){
 							Ads a = adsrep.getById(op.idAds);
@@ -849,18 +875,68 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 						//****** MANAGE FIELDS FOR PRODUCT
 						string productFields = "";
 						if(opfs != null && opfs.Count>0){
+							IDictionary<string,ProductFieldTranslation> pftMap = ProductService.getMapProductFieldsTranslations(prod.id);
+							ProductFieldTranslation pftv = null;
+									
 							foreach(OrderProductField opf in opfs){
-								string flabel = lang.getTranslated("backend.prodotti.detail.table.label.field_description_"+opf.description+"_"+prod.keyword);
-								if(String.IsNullOrEmpty(flabel)){
-									flabel = opf.description;
-								}
+								string flabel = opf.description;
+								if(pftMap.TryGetValue(new StringBuilder().Append(prod.id).Append("-").Append(opf.idField).Append("-").Append("desc").Append("-").Append("").Append("-").Append(lang.currentLangCode).ToString(), out pftv)){
+									flabel = pftv.value;
+								}	
 								
 								if(opf.fieldType==8){
 									productFields+=flabel+":&nbsp;<a target='_blank' href='"+builder.ToString()+"public/upload/files/orders/"+opf.idOrder+"/"+opf.value+"'>"+opf.value+"</a><br/>";
+								}else if(opf.fieldType==3 || opf.fieldType==4 || opf.fieldType==5 || opf.fieldType==6){
+									string fvalue = opf.value;
+									if(pftMap.TryGetValue(new StringBuilder().Append(prod.id).Append("-").Append(opf.idField).Append("-").Append("values").Append("-").Append(fvalue).Append("-").Append(lang.currentLangCode).ToString(), out pftv)){
+										fvalue = pftv.value;
+									}else{
+										if(opf.fieldType==3){
+											string tmpv = lang.getTranslated("portal.commons.select.option.country."+opf.value);
+											if(!String.IsNullOrEmpty(tmpv)){
+												fvalue = tmpv;
+											}
+										}
+									}
+									productFields+=flabel+":&nbsp;"+fvalue+"<br/>";
 								}else{
-									productFields+=flabel+":&nbsp;"+opf.value+"<br/>";
+									string fvalue = opf.value;
+									if(pftMap.TryGetValue(new StringBuilder().Append(prod.id).Append("-").Append(opf.idField).Append("-").Append("value").Append("-").Append("").Append("-").Append(lang.currentLangCode).ToString(), out pftv)){
+										fvalue = pftv.value;
+									}
+									productFields+=flabel+":&nbsp;"+fvalue+"<br/>";
 								}
 							}
+						}
+						
+						
+						string boproductCalendars = "";
+						if(opfc != null && opfc.Count>0){
+							OrderProductCalendar opcStart = opfc[0];
+							OrderProductCalendar opcEnd = opfc[opfc.Count-1];
+							StringBuilder sb = new StringBuilder("")
+							.Append(lang.getTranslated("backend.ordini.view.table.label.adults")).Append(":&nbsp;").Append(opcStart.adults).Append("<br/>")
+							.Append(lang.getTranslated("backend.ordini.view.table.label.childs")).Append(":&nbsp;").Append(opcStart.children);
+							if(!String.IsNullOrEmpty(opcStart.childrenAge)){
+								sb.Append("&nbsp;(")
+								.Append(opcStart.childrenAge)
+								.Append(")");
+							}
+							sb.Append("<br/>");
+							
+							boproductCalendars = sb.ToString();
+							boproductCalendars+=lang.getTranslated("backend.ordini.view.table.label.checkin")+":&nbsp;"+opcStart.date.ToString("dd/MM/yyyy")+"&nbsp;("+lang.getTranslated("backend.ordini.view.table.label.rooms")+":&nbsp;"+opcStart.rooms+")<br/>";	
+							
+							int counterCal = 0;
+							if(opfc.Count>2){
+								foreach(OrderProductCalendar opc in opfc){
+									if(counterCal>0 && counterCal<opfc.Count-1){
+										boproductCalendars+=lang.getTranslated("backend.ordini.view.table.label.date")+":&nbsp;"+opc.date.ToString("dd/MM/yyyy")+"&nbsp;("+lang.getTranslated("backend.ordini.view.table.label.rooms")+":&nbsp;"+opc.rooms+")<br/>";	
+									}
+									counterCal++;
+								}
+							}
+							boproductCalendars+=lang.getTranslated("backend.ordini.view.table.label.checkout")+":&nbsp;"+opcEnd.date.ToString("dd/MM/yyyy")+"&nbsp;("+lang.getTranslated("backend.ordini.view.table.label.rooms")+":&nbsp;"+opcEnd.rooms+")<br/>";	
 						}%>				
 					
 						<tr class="<%if(orderProdCounter % 2 == 0){Response.Write("table-list-on");}else{Response.Write("table-list-off");}%>">
@@ -873,7 +949,7 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 							</td>
 							<td>&euro;&nbsp;<%=op.supplement.ToString("#,###0.00")+suppdesc%></td>
 							<td><%=op.productQuantity%></td>	
-							<td><%=productFields%></td>	
+							<td><%=boproductCalendars+productFields%></td>	
 						</tr>
 						<%orderProdCounter++;
 					} 

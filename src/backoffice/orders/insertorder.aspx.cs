@@ -632,6 +632,10 @@ public partial class _InsertOrder : Page
 					
 					IDictionary<int,Product> uniqueProducts = new Dictionary<int,Product>();
 					
+					//**** set Dictionary for ProductCalendar, in case of product type booking
+					IDictionary<string,IList<ShoppingCartProductCalendar>> productsCal = new Dictionary<string,IList<ShoppingCartProductCalendar>>();
+					IDictionary<string,IList<decimal>> productsCalAmounts = new Dictionary<string,IList<decimal>>();
+					
 					//*** PREPARE PRODUCT BUSINESS RULES
 					foreach(ShoppingCartProduct scp in shoppingCart.products.Values){
 						if(!uniqueProducts.ContainsKey(scp.idProduct)){
@@ -882,6 +886,13 @@ public partial class _InsertOrder : Page
 						prodElements.Add(adsRefTitle);	
 						prodElements.Add(discount);	
 						prodElements.Add(margin);
+
+						IList<ShoppingCartProductCalendar> cals = null;
+						if(productsCal.TryGetValue(scp.idProduct+"|"+scp.productCounter, out cals)){
+							prodElements.Add(cals);
+						}else{
+							prodElements.Add(null);
+						}						
 						
 						prodsData.Add(scp.idProduct+"|"+scp.productCounter, prodElements);     
 
@@ -979,6 +990,7 @@ public partial class _InsertOrder : Page
 					}
 					
 					IDictionary<int,IList<string>> requestFields = new Dictionary<int,IList<string>>();
+					IDictionary<string,string> requestCalendar = new Dictionary<string,string>();
 	
 					foreach (string key in Request.Form.AllKeys)
 					{
@@ -1025,7 +1037,7 @@ public partial class _InsertOrder : Page
 						cartid = shoppingCart.id;
 					}
 					
-					executed = ShoppingCartService.addItem(user, cartid, Math.Abs(Session.SessionID.GetHashCode()), null, requestFields, MyFileCollection, idProduct, quantity, maxProdQty, resetQtyByCart, idAds, lang.currentLangCode, lang.defaultLangCode);
+					executed = ShoppingCartService.addItem(user, cartid, Math.Abs(Session.SessionID.GetHashCode()), null, requestFields, requestCalendar, MyFileCollection, idProduct, quantity, maxProdQty, resetQtyByCart, idAds, lang.currentLangCode, lang.defaultLangCode);
 				}
 				catch(Exception ex)
 				{
@@ -1419,6 +1431,7 @@ public partial class _InsertOrder : Page
 				decimal orderPaymentCommission=0.00M;
 				
 				IList<OrderProductField> opfs =  new List<OrderProductField>();
+				IList<OrderProductCalendar> opfc =  new List<OrderProductCalendar>();
 				IList<OrderProductAttachmentDownload> opads =  new List<OrderProductAttachmentDownload>();
 				IList<OrderFee> ofs =  new List<OrderFee>();
 				IList<OrderBusinessRule> obrs =  new List<OrderBusinessRule>();
@@ -1440,6 +1453,7 @@ public partial class _InsertOrder : Page
 						Product product = null;
 						ShoppingCartProduct scp = null;
 						IList<ShoppingCartProductField> fscpf = null;
+						IList<ShoppingCartProductCalendar> fscpc = null;
 						
 						if(foundpel){
 							price = Convert.ToDecimal(pelements[0]);
@@ -1453,6 +1467,9 @@ public partial class _InsertOrder : Page
 							suppdesc = Convert.ToString(pelements[12]);
 							discount = Convert.ToDecimal(pelements[14]);
 							margin = Convert.ToDecimal(pelements[15]);
+							if(pelements[16] != null){
+								fscpc = (IList<ShoppingCartProductCalendar>)pelements[16];
+							}
 						}
 					
 						OrderProduct op = new OrderProduct();
@@ -1512,6 +1529,22 @@ public partial class _InsertOrder : Page
 								opf.productQuantity=scpf.productQuantity;
 								opf.description=scpf.description;
 								opfs.Add(opf);
+							}
+						}
+						
+						if(fscpc != null && fscpc.Count>0){
+							foreach(ShoppingCartProductCalendar scpc in fscpc){
+								OrderProductCalendar opc = new OrderProductCalendar();
+								opc.idOrder=finalOrderId;
+								opc.idProduct=scpc.idProduct;
+								opc.productCounter=scpc.productCounter;
+								opc.date=scpc.date;      
+								opc.adults=scpc.adults;
+								opc.children=scpc.children;
+								opc.rooms=scpc.rooms;
+								opc.childrenAge=scpc.childrenAge;
+								opc.searchText=scpc.searchText;								
+								opfc.Add(opc);
 							}
 						}
 						
@@ -1780,7 +1813,7 @@ public partial class _InsertOrder : Page
 				
 				
 				//******************* SALVO ORDINE COMPLETO (VERIFICO SE LE QUANTITA DEI PRODOTTI E FIELDS CORRISPONDONO E AGGIORNO LE QUANTITA DI OGNI PRODOTTO E FIELDS)
-				orderep.saveCompleteOrder(newOrder, ops, opfs, opads, ofs, userBillsaddr, orderBillsaddr, userShipaddr, orderShipaddr, obrs, ovs, voucherCodeId);
+				orderep.saveCompleteOrder(newOrder, ops, opfs, opfc, opads, ofs, userBillsaddr, orderBillsaddr, userShipaddr, orderShipaddr, obrs, ovs, voucherCodeId);
 				finalOrderId=newOrder.id;
 			}catch(QuantityException ex){
 				orderCompleted = false;

@@ -106,15 +106,7 @@ public partial class _FeAds : Page
 		ubuilder.Query = "";
 
 		StringBuilder shoppingcardPath = new StringBuilder();
-		/*if(confservice.get("url_with_langcode_prefix").value=="1")
-		{	
-			shoppingcardPath.Append(lang.currentLangCode.ToLower()).Append("/");
-		}*/
-		shoppingcardPath.Append("public/templates/shopping-cart/checkout");
-		if(confservice.get("url_rewrite_file_ext").value=="1")
-		{	
-			shoppingcardPath.Append(".aspx");
-		}
+		shoppingcardPath.Append("public/templates/shopping-cart/checkout.aspx"); 
 		
 		UriBuilder shoppingcardBuilder = new UriBuilder(Request.Url);
 		if(confservice.get("use_https").value=="1")
@@ -409,7 +401,7 @@ public partial class _FeAds : Page
 							WebResponse response = request.GetResponse ();
 							*/
 							
-							ShoppingCartService.addItem(login.userLogged, -1, Math.Abs(Session.SessionID.GetHashCode()), acceptDate, null, null, k.elementId, 1, -1, "1", ads.id, lang.currentLangCode, lang.defaultLangCode);
+							ShoppingCartService.addItem(login.userLogged, -1, Math.Abs(Session.SessionID.GetHashCode()), acceptDate, null, null, null, k.elementId, 1, -1, "1", ads.id, lang.currentLangCode, lang.defaultLangCode);
 						}
 						redirectURL = shoppingcardURL;
 					}

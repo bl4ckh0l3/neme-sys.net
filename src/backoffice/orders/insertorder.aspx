@@ -907,8 +907,7 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 									productFields+=flabel+":&nbsp;"+fvalue+"<br/>";
 								}
 							}
-						}
-						
+						}					
 						
 						string boproductCalendars = "";
 						if(opfc != null && opfc.Count>0){

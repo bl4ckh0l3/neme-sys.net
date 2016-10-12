@@ -54,7 +54,7 @@ protected void Page_Load(Object sender, EventArgs e)
 	bookingStyle = "";
 
 	try{				
-		countries = countryrep.findAllCountries("1");		
+		countries = countryrep.findAllCountries("2,3");		
 		if(countries == null){				
 			countries = new List<Country>();						
 		}
@@ -62,7 +62,7 @@ protected void Page_Load(Object sender, EventArgs e)
 		countries = new List<Country>();
 	}
 	try{				
-		stateRegions = countryrep.findStateRegionByCountry(null,"1,3");	
+		stateRegions = countryrep.findStateRegionByCountry(null,"2,3");	
 		if(stateRegions == null){				
 			stateRegions = new List<Country>();						
 		}
@@ -129,7 +129,7 @@ protected void Page_Load(Object sender, EventArgs e)
 <script type="text/javascript" src="/common/js/jquery-ui-latest.custom.min.js"></script>
 <script>
 function previewComments<%=product.id%>(){
-	var query_string = "id_element=<%=product.id%>&element_type=1&mode=view&container=commentsContainer<%=product.id%>";	
+	var query_string = "id_element=<%=product.id%>&element_type=2&mode=view&container=commentsContainer<%=product.id%>";	
 	//alert(query_string);
 
 	$('#commentsContainer<%=product.id%>').empty();
@@ -326,10 +326,6 @@ $(function() {
 			</tr>		
 			<%foreach(ProductField cf in product.fields){			
 				string labelForm = cf.description;
-				
-				if(!String.IsNullOrEmpty(lang.getTranslated("backend.contenuti.detail.table.label.field_description_"+labelForm))){
-					 labelForm = lang.getTranslated("backend.contenuti.detail.table.label.field_description_"+labelForm);
-				}
 
 				string currtype = "";
 				foreach(SystemFieldsType x in systemFieldsType){
@@ -341,8 +337,10 @@ $(function() {
 				
 				string currvalue = cf.value;
 				if(cf.type==3){
+					int indexOfVal = 0;
 					if(cf.typeContent==7 && !String.IsNullOrEmpty(cf.value)){
-						string tmpcfval = cf.value.Substring(0,cf.value.IndexOf('_'));
+						if(cf.value.IndexOf('_')>=0){indexOfVal=cf.value.IndexOf('_');}
+						string tmpcfval = cf.value.Substring(0,indexOfVal);
 						foreach(Country c in countries){
 							if(tmpcfval == c.countryCode){
 								currvalue = c.countryDescription;
@@ -350,14 +348,15 @@ $(function() {
 							}
 						}
 					}else if(cf.typeContent==8 && !String.IsNullOrEmpty(cf.value)){
-						string tmpcfval = cf.value.Substring(0,cf.value.IndexOf('_'));
+						if(cf.value.IndexOf('_')>=0){indexOfVal=cf.value.IndexOf('_');}
+						string tmpcfval = cf.value.Substring(0,indexOfVal);
 						foreach(Country sr in stateRegions){
 							if(tmpcfval == sr.stateRegionCode){
 								currvalue = sr.countryDescription+" "+sr.stateRegionDescription;
 								break;
 							}
 						}									
-					}
+					}	
 				}				
 				
 				string listvalues = "";

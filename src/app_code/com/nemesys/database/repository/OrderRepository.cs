@@ -27,7 +27,50 @@ namespace com.nemesys.database.repository
 				session.Save(order);	
 				
 				tx.Commit();
-				NHibernateHelper.closeSession();
+				NHibernateHelper.closeSession();		
+					
+				//rimuovo cache		
+				IDictionaryEnumerator CacheEnum = HttpContext.Current.Cache.GetEnumerator();
+				while (CacheEnum.MoveNext())
+				{		  
+					string cacheKey = HttpContext.Current.Server.HtmlEncode(CacheEnum.Key.ToString()); 
+					if(cacheKey.Contains("fproduct-"))
+					{ 
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}
+					else if(cacheKey.Contains("list-field-fproduct-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					} 
+					else if(cacheKey.Contains("list-fproduct"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					} 
+					else if(cacheKey.Contains("field-fproduct-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}   
+					else if(cacheKey.Contains("field-value-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}  
+					else if(cacheKey.Contains("list-field-values-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					} 
+					else if(cacheKey.Contains("list-field-name-values-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					} 
+					else if(cacheKey.Contains("order-shipping-address-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}  
+					else if(cacheKey.Contains("order-bills-address-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}   
+				}
 			}
 		}
 		
@@ -41,6 +84,49 @@ namespace com.nemesys.database.repository
 				
 				tx.Commit();
 				NHibernateHelper.closeSession();
+				
+				//rimuovo cache		
+				IDictionaryEnumerator CacheEnum = HttpContext.Current.Cache.GetEnumerator();
+				while (CacheEnum.MoveNext())
+				{		  
+					string cacheKey = HttpContext.Current.Server.HtmlEncode(CacheEnum.Key.ToString()); 
+					if(cacheKey.Contains("fproduct-"))
+					{ 
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}
+					else if(cacheKey.Contains("list-field-fproduct-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					} 
+					else if(cacheKey.Contains("list-fproduct"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					} 
+					else if(cacheKey.Contains("field-fproduct-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}   
+					else if(cacheKey.Contains("field-value-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}  
+					else if(cacheKey.Contains("list-field-values-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					} 
+					else if(cacheKey.Contains("list-field-name-values-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					} 
+					else if(cacheKey.Contains("order-shipping-address-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}  
+					else if(cacheKey.Contains("order-bills-address-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}   
+				}
 			}
 		}
 		
@@ -62,6 +148,49 @@ namespace com.nemesys.database.repository
 				
 				tx.Commit();
 				NHibernateHelper.closeSession();
+					
+				//rimuovo cache		
+				IDictionaryEnumerator CacheEnum = HttpContext.Current.Cache.GetEnumerator();
+				while (CacheEnum.MoveNext())
+				{		  
+					string cacheKey = HttpContext.Current.Server.HtmlEncode(CacheEnum.Key.ToString()); 
+					if(cacheKey.Contains("fproduct-"))
+					{ 
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}
+					else if(cacheKey.Contains("list-field-fproduct-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					} 
+					else if(cacheKey.Contains("list-fproduct"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					} 
+					else if(cacheKey.Contains("field-fproduct-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}   
+					else if(cacheKey.Contains("field-value-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}  
+					else if(cacheKey.Contains("list-field-values-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					} 
+					else if(cacheKey.Contains("list-field-name-values-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					} 
+					else if(cacheKey.Contains("order-shipping-address-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}  
+					else if(cacheKey.Contains("order-bills-address-"))
+					{
+						HttpContext.Current.Cache.Remove(cacheKey);
+					}   
+				}
 			}				
 		}
 		
@@ -309,6 +438,49 @@ namespace com.nemesys.database.repository
 					
 					tx.Commit();
 					NHibernateHelper.closeSession();
+					
+					//rimuovo cache		
+					IDictionaryEnumerator CacheEnum = HttpContext.Current.Cache.GetEnumerator();
+					while (CacheEnum.MoveNext())
+					{		  
+						string cacheKey = HttpContext.Current.Server.HtmlEncode(CacheEnum.Key.ToString()); 
+						if(cacheKey.Contains("fproduct-"))
+						{ 
+							HttpContext.Current.Cache.Remove(cacheKey);
+						}
+						else if(cacheKey.Contains("list-field-fproduct-"))
+						{
+							HttpContext.Current.Cache.Remove(cacheKey);
+						} 
+						else if(cacheKey.Contains("list-fproduct"))
+						{
+							HttpContext.Current.Cache.Remove(cacheKey);
+						} 
+						else if(cacheKey.Contains("field-fproduct-"))
+						{
+							HttpContext.Current.Cache.Remove(cacheKey);
+						}   
+						else if(cacheKey.Contains("field-value-"))
+						{
+							HttpContext.Current.Cache.Remove(cacheKey);
+						}  
+						else if(cacheKey.Contains("list-field-values-"))
+						{
+							HttpContext.Current.Cache.Remove(cacheKey);
+						} 
+						else if(cacheKey.Contains("list-field-name-values-"))
+						{
+							HttpContext.Current.Cache.Remove(cacheKey);
+						} 
+						else if(cacheKey.Contains("order-shipping-address-"))
+						{
+							HttpContext.Current.Cache.Remove(cacheKey);
+						}  
+						else if(cacheKey.Contains("order-bills-address-"))
+						{
+							HttpContext.Current.Cache.Remove(cacheKey);
+						}   
+					}
 				}catch(Exception exx){
 					//HttpContext.Current.Response.Write("An inner error occured: " + exx.Message);
 					tx.Rollback();

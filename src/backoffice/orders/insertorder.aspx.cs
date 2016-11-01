@@ -12,6 +12,7 @@ using com.nemesys.services;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using Newtonsoft.Json;
 
 public partial class _InsertOrder : Page 
 {
@@ -102,6 +103,11 @@ public partial class _InsertOrder : Page
 	protected string keywordf;
 	protected string typef;
 	protected int categoryf;
+	protected string[] childAgesArr;
+	protected string search_text,checkinReq,checkoutReq,childAgesReq,adultsReq,childsReq;
+	protected int adults,childs,travellers,rooms;
+	protected IDictionary<string,string> objListPairKeyValue;
+	protected IDictionary<int, IList<ProductCalendarVO>> calendarData;
 	
 	protected void Page_Init(Object sender, EventArgs e)
 	{
@@ -139,6 +145,7 @@ public partial class _InsertOrder : Page
 		countryrep = RepositoryFactory.getInstance<ICountryRepository>("ICountryRepository");
 		IFeeRepository feerep = RepositoryFactory.getInstance<IFeeRepository>("IFeeRepository");
 		IBusinessRuleRepository brulerep = RepositoryFactory.getInstance<IBusinessRuleRepository>("IBusinessRuleRepository");
+		IMultiLanguageRepository mlangrep = RepositoryFactory.getInstance<IMultiLanguageRepository>("IMultiLanguageRepository");
 		confservice = new ConfigurationService();
 		
 		order = null;
@@ -203,10 +210,27 @@ public partial class _InsertOrder : Page
 		voucherCode = null;
 		productsVO = new Dictionary<int,BusinessRuleProductVO>();
 		
+		objListPairKeyValue = new Dictionary<string,string>();
+		objListPairKeyValue.Add("city","");
+		objListPairKeyValue.Add("country","");
+		objListPairKeyValue.Add("place_name","");
+		
 		titlef = "";
 		keywordf = "";
 		categoryf = 0;
 		typef = "0,1";
+		adults = 1;
+		childs = 0;
+		travellers = 0;
+		rooms = 0;
+		search_text = "";
+		childAgesArr=null;
+		adultsReq ="0";
+		childsReq ="0";
+		childAgesReq ="";
+		checkinReq ="";
+		checkoutReq ="";
+		calendarData = new Dictionary<int, IList<ProductCalendarVO>>();
 		
 		builder = new UriBuilder(Request.Url);
 		builder.Scheme = "http";
@@ -241,7 +265,38 @@ public partial class _InsertOrder : Page
 			matchCategories = new List<int>();
 			matchCategories.Add(categoryf);
 		}	
+
+		
+		if("3".Equals(typef)){
+			search_text  = Request["search_text"];	
 			
+			if(!String.IsNullOrEmpty(Request["adults"])){
+				adults = Convert.ToInt32(Request["adults"]);
+				adultsReq = Request["adults"];
+				travellers+=adults;
+			}
+			if(!String.IsNullOrEmpty(Request["childs"])){
+				childs = Convert.ToInt32(Request["childs"]);
+				childsReq = Request["childs"];
+				travellers+=childs;
+				
+				//Response.Write("childAgesReq:"+childAgesReq+"<br>");
+				if(!String.IsNullOrEmpty(Request["childs_age"])){
+					childAgesArr = Request["childs_age"].Split(',');
+					childAgesReq = Request["childs_age"];
+				}
+			}
+			
+			if(!String.IsNullOrEmpty(Request["checkin"])){
+				checkinReq = Request["checkin"];
+			}
+			
+			if(!String.IsNullOrEmpty(Request["checkout"])){
+				checkoutReq = Request["checkout"];
+			}
+		}		
+		
+		
 		if (!String.IsNullOrEmpty(lang.currentLangCode)) {
 			matchLanguages = new List<int>();
 			matchLanguages.Add(langrep.getByLabel(lang.currentLangCode, true).id);
@@ -263,7 +318,213 @@ public partial class _InsertOrder : Page
 		}		
 		
 		try{
-			products = productrep.find(titlef,keywordf, "1", 0, typef, null, null, null, 1, matchCategories, matchLanguages, false, false, false, true, false, false, false);
+			IList<Product> searchres = productrep.find(titlef,keywordf, "1", 0, typef, null, null, null, 1, matchCategories, matchLanguages, false, false, false, true, false, true, false);
+			
+			if(searchres != null && searchres.Count>0){
+				if("3".Equals(typef)){
+					products = new List<Product>(searchres);
+					
+					bool keepContent = true;
+					IDictionary<int,Product> keeped = new Dictionary<int,Product>();
+					
+					foreach(Product p in products){
+						keeped.Add(p.id, p);
+					}
+					
+					//Response.Write("products.Count:"+ products.Count+"<br>");
+					
+					foreach(Product p in products){
+						keepContent=true;
+						
+						if(p.fields != null && p.fields.Count>0){	
+							IDictionary<string,ProductField> fieldsDict = new Dictionary<string,ProductField>();							
+							foreach(ProductField pf in p.fields){
+								if(pf.enabled){
+									fieldsDict[pf.description] = pf;
+								}
+							}
+							
+							foreach(string key in objListPairKeyValue.Keys){
+								if(!fieldsDict.ContainsKey(key)){
+									keepContent=false;
+									keeped.Remove(p.id);
+									break;
+								}
+							}
+							
+							//Response.Write("fieldsDict.Count:"+ fieldsDict.Count+"<br>");
+							//Response.Write("keepContent:"+ keepContent+"<br>");
+							
+							if(keepContent){
+								keepContent=false;
+								
+								foreach(ProductField subpf in fieldsDict.Values){
+									//Response.Write("subpf:"+ subpf.ToString()+"<br>");
+									
+									if("city".Equals(subpf.description)){	
+										string fval = subpf.value;	
+										if(!String.IsNullOrEmpty(fval)){
+											//Response.Write("city fval:"+ fval+"<br>");
+											if(search_text.ToLower().Equals(fval.ToLower())){
+												keepContent=true;
+												break;
+											}
+											
+											IList<ProductFieldTranslation> lpft = productrep.getProductFieldsTranslationCached(p.id, subpf.id, "value", null, null, true);
+											if(lpft != null && lpft.Count>0){
+												IList<string> values = new List<string>();
+												foreach(ProductFieldTranslation k in lpft){
+													//Response.Write("city ml fval:"+ k.value+"<br>");
+													values.Add(k.value.ToLower());
+												}
+												
+												if(values.Contains(search_text.ToLower())){
+													keepContent=true;
+													break;
+												}
+											}									
+										}								
+									}else if("country".Equals(subpf.description)){	
+										string fval = subpf.value;	
+										if(!String.IsNullOrEmpty(fval)){
+											if (fval.LastIndexOf('_') > -1){
+												fval = fval.Substring(0,fval.LastIndexOf('_'));
+											}
+											//Response.Write("country fval:"+ fval+"<br>");
+											
+											IList<MultiLanguage> mlCountries = mlangrep.find("portal.commons.select.option.country."+fval);
+											
+											if(mlCountries != null && mlCountries.Count>0){
+												IList<string> values = new List<string>();
+												foreach(MultiLanguage k in mlCountries){
+													//Response.Write("country ml fval:"+ k.value+"<br>");
+													values.Add(k.value.ToLower());
+												}
+												
+												if(values.Contains(search_text.ToLower())){
+													keepContent=true;
+													break;
+												}
+											}									
+										}
+									}else if("place_name".Equals(subpf.description)){		
+										string fval = subpf.value;	
+										if(!String.IsNullOrEmpty(fval)){
+											//Response.Write("place_name fval:"+ fval+"<br>");
+											if(search_text.ToLower().Equals(fval.ToLower())){
+												keepContent=true;
+												break;
+											}
+											
+											IList<ProductFieldTranslation> lpft = productrep.getProductFieldsTranslationCached(p.id, subpf.id, "value", null, null, true);
+											if(lpft != null && lpft.Count>0){
+												IList<string> values = new List<string>();
+												foreach(ProductFieldTranslation k in lpft){
+													//Response.Write("place_name ml fval:"+ k.value+"<br>");
+													values.Add(k.value.ToLower());
+												}
+												
+												if(values.Contains(search_text.ToLower())){
+													keepContent=true;
+													break;
+												}
+											}									
+										}
+									}
+								}
+							}
+								
+							if(!keepContent){
+								keeped.Remove(p.id);
+							}
+						}else{
+							keeped.Remove(p.id);
+						}
+					}
+					
+	
+					if(keeped.Count>0){
+						//Response.Write("keeped.Count:"+ keeped.Count+"<br>");		
+						products = new List<Product>(keeped.Values);
+	
+						DateTime chkin = DateTime.ParseExact(Request["checkin"], "dd/MM/yyyy", null);
+						DateTime chkout = DateTime.ParseExact(Request["checkout"], "dd/MM/yyyy", null);
+						System.TimeSpan diffResult;
+						
+						int diffDays = Convert.ToInt32(chkout.Subtract(chkin).TotalDays);
+						
+						//Response.Write("chkin:"+ chkin.ToString()+"<br>");
+						//Response.Write("chkout:"+ chkout.ToString()+"<br>");
+						//Response.Write("diffDays:"+ diffDays+"<br>");
+								
+						foreach(Product c in products){	
+							if(c.calendar != null && c.calendar.Count>0){
+								IDictionary<string, ProductCalendar> calD = new Dictionary<string, ProductCalendar>();
+								foreach(ProductCalendar p in c.calendar){
+									calD.Add(p.startDate.ToString("dd/MM/yyyy"),p);
+									//Response.Write(calD[p.startDate.ToString("dd/MM/yyyy")].ToString()+"<br>");
+								}
+								
+								int dayCounter = 0;
+								IList<ProductCalendarVO> daysNum = new List<ProductCalendarVO>();
+								for(int i=0;i<=diffDays;i++){
+									DateTime countD = chkin.AddDays(i);
+									//Response.Write("<br>countD:"+ countD.ToString("dd/MM/yyyy")+"<br>");
+									
+									ProductCalendar p = null;
+									//Response.Write("founded: "+countD.ToString("dd/MM/yyyy")+" - "+founded+"<br>");
+									if(calD.TryGetValue(countD.ToString("dd/MM/yyyy"), out p)
+										 &&
+										(
+											//(travellers==1 && p.availability>0 && (p.unit-travellers<2)) || // un solo traveller e solo stanze singole o doppie (ad uso singola)
+											//(p.availability>0 && p.unit>=travellers && ((travellers%p.unit==0) || (p.unit-(travellers%p.unit))<2)) || //c'e almeno un posto e tutti stanno in una sola stanza e al massimo rimane solo un posto vuoto in una stanza
+											(p.availability*p.unit>=travellers && ((travellers%p.unit==0) || (p.unit-(travellers%p.unit))<2)) //ci sono abbastanza camere per tutti e al massimo rimane solo un posto vuoto in una stanza
+										)
+									){
+										dayCounter++;
+										int tmprooms = travellers/p.unit;
+										if(travellers%p.unit!=0){
+											tmprooms+=1;
+										}
+										//Response.Write("tmprooms: "+tmprooms+"<br>");									
+										daysNum.Add(new ProductCalendarVO(p, tmprooms));
+									}
+								}
+										
+								if(dayCounter<(diffDays+1)){
+									keeped.Remove(c.id);
+								}else{
+									calendarData.Add(c.id,daysNum);
+								}
+							}else{
+								keeped.Remove(c.id);
+							}
+							//Response.Write("calendarData.Count:"+calendarData.Count+"<br>");
+						}
+	
+						//Response.Write("keeped.Count:"+keeped.Count+"<br>");
+							
+						// ciclo per test, da cancellare finito il template
+						//foreach (KeyValuePair<int, IList<ProductCalendar>> pair in calendarData)
+						//{
+						//	Response.Write("key:"+pair.Key+"<br>");
+						//	foreach(ProductCalendar pc in pair.Value){
+						//		Response.Write(pc.ToString()+"<br>");	
+						//	}
+						//}	
+						
+						if(keeped.Count>0){
+							products = new List<Product>(keeped.Values);
+						}else{
+							products = new List<Product>();
+						}
+					}else{		
+						products = new List<Product>();
+					}
+				}else{
+					products = new List<Product>(searchres);
+				}
+			}
 		}catch (Exception ex){
 			products = new List<Product>();
 		}		
@@ -303,7 +564,7 @@ public partial class _InsertOrder : Page
 				}
 			}
 		}
-		//Response.Write("hasOrderRule: "+hasOrderRule+"<br>");	
+		//Response.Write("hasOrderRule: "+hasOrderRule+"<br>");							
 		
 		
 		if(orderid>0){
@@ -638,6 +899,121 @@ public partial class _InsertOrder : Page
 					
 					//*** PREPARE PRODUCT BUSINESS RULES
 					foreach(ShoppingCartProduct scp in shoppingCart.products.Values){
+						decimal pPrice = 0.00M;
+						decimal pPrevPrice = 0.00M;
+						decimal pDiscountPerc = 0.00M;
+						
+						// check if prod type == booking to manage calendar and price
+						if(scp.productType==3){
+							IList<ShoppingCartProductCalendar> foundCals = shoprep.getListItemCalendar(shoppingCart.id, scp.idProduct, scp.productCounter);
+							if(foundCals != null){
+								productsCal.Add(scp.idProduct+"|"+scp.productCounter, foundCals);
+								
+								foreach(ShoppingCartProductCalendar c in foundCals){
+									ProductCalendar pc = productrep.getProductCalendar(scp.idProduct, c.date.ToString("dd/MM/yyyy"));
+									
+									if(pc != null){
+										ProductCalendarEventData pced = JsonConvert.DeserializeObject<ProductCalendarEventData>(pc.content);
+										string proom = pced.price["room"];
+										string padult = pced.price["adult"];
+										string childs_0_2 = pced.price["childs_0_2"];
+										string childs_3_11 = pced.price["childs_3_11"];
+										string childs_12_17 = pced.price["childs_12_17"];
+										string pdiscount = pced.price["discount"];
+										
+										decimal subprice = 0.00M;
+										decimal proddiscountperc = 0.00M;
+										decimal discountperc = 0.00M;
+										
+										if(!String.IsNullOrEmpty(pdiscount)){
+											proddiscountperc = Convert.ToDecimal(pdiscount.Replace(".",","));
+										}
+										
+										
+										if(pced.price_type==1){
+											decimal pcedadval = 0.00M;
+											//Response.Write("padult before: "+padult+"<br>");
+											pcedadval = Convert.ToDecimal(padult.Replace(".",","));
+											//Response.Write("pcedadval after: "+pcedadval.ToString("###0.00")+"<br>");
+											decimal adultPrice = c.adults*pcedadval;
+											decimal childPrice = 0.00M;
+											
+											//Response.Write("adultPrice: "+adultPrice.ToString("###0.00")+"<br>");
+											
+											if(c.children>0){
+												string[] childAgeArr = c.childrenAge.Split(',');
+												if(childAgeArr.Length==c.children){
+													foreach(string s in childAgeArr){
+														int t = Convert.ToInt32(s);
+														if(t>-1&&t<3){
+															childPrice+=Convert.ToDecimal(childs_0_2.Replace(".",","));
+														}else if(t>2&&t<12){
+															childPrice+=Convert.ToDecimal(childs_3_11.Replace(".",","));
+														}else if(t>11&&t<18){
+															childPrice+=Convert.ToDecimal(childs_12_17.Replace(".",","));
+														}
+													}
+												}else{
+													throw new Exception("Error calculating price");
+												}
+											}
+											
+											//********* add the price for the empty bed (if any) as adult
+											decimal emptyBedPrice = 0.00M;
+											//Response.Write("emptyBedPrice - travellers: "+travellers+"<br>");
+											//Response.Write("emptyBedPrice - pc.rooms: "+pc.rooms+"<br>");
+											//Response.Write("emptyBedPrice - pc.calendar.unit: "+pc.calendar.unit+"<br>");
+											int emptyCheck = (c.rooms*pc.unit)-(c.adults+c.children);
+											//Response.Write("emptyBedPrice - emptyCheck: "+emptyCheck+"<br>");
+											if(emptyCheck>0){
+												emptyBedPrice = emptyCheck*pcedadval;
+											}
+											//Response.Write("emptyBedPrice: "+emptyBedPrice.ToString("###0.00")+"<br>");
+											
+											subprice = adultPrice+childPrice+emptyBedPrice;
+											//Response.Write("subprice pax: "+subprice.ToString("###0.00")+"<br>");
+											
+											//Response.Write("childPrice: "+childPrice.ToString("###0.00")+"<br>");
+											//Response.Write("prevprice pax: "+prevprice.ToString("###0.00")+"<br>");
+										}else{
+											decimal pcedroomval = Convert.ToDecimal(proom.Replace(".",","));
+											subprice = pcedroomval*c.rooms;
+											//Response.Write("subprice room: "+subprice.ToString("###0.00")+"<br>");
+											//Response.Write("prevprice room: "+prevprice.ToString("###0.00")+"<br>");						
+										}				
+										pPrevPrice+=subprice;
+										
+										// gestione sconto
+										if(ug != null){
+											discountperc = ProductService.getDiscountPercentage(ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
+											pPrice+= ProductService.getAmount(subprice, ug.margin, ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
+										}else{
+											if("1".Equals(confservice.get("manage_sconti").value)){// sconto prodotto + sconto cliente
+												discountperc = proddiscountperc+usrdiscountperc;
+											}else if("2".Equals(confservice.get("manage_sconti").value)){// solo sconto prodotto
+												discountperc = proddiscountperc;
+											}else{// solo sconto cliente
+												if(user != null && usrdiscountperc>0){
+													discountperc = usrdiscountperc;
+												}else{
+													discountperc = proddiscountperc;
+												}
+											}
+											
+											pPrice+= ProductService.getDiscountedAmount(subprice, discountperc);
+										}										
+									}
+								}
+								
+								pDiscountPerc=100-(pPrice*100/pPrevPrice);
+								
+								IList<decimal> amounts = new List<decimal>();
+								amounts.Add(pPrice);
+								amounts.Add(pDiscountPerc);
+								productsCalAmounts.Add(scp.idProduct+"|"+scp.productCounter, amounts);
+							}
+						}						
+						
 						if(!uniqueProducts.ContainsKey(scp.idProduct)){
 							Product c = productrep.getByIdCached(scp.idProduct, false);
 							uniqueProducts.Add(scp.idProduct,c);
@@ -646,7 +1022,11 @@ public partial class _InsertOrder : Page
 							vo.productId = scp.idProduct;
 							vo.productCounter = scp.productCounter;
 							vo.quantity = scp.productQuantity;
-							vo.price = c.price;
+							if(scp.productType==3){
+								vo.price = pPrevPrice;
+							}else{
+								vo.price = c.price;
+							}
 							productsVO[scp.idProduct] = vo;
 						}else{
 							productsVO[scp.idProduct].quantity+=scp.productQuantity;
@@ -665,9 +1045,22 @@ public partial class _InsertOrder : Page
 					foreach(ShoppingCartProduct scp in shoppingCart.products.Values){	
 						Product c = uniqueProducts[scp.idProduct];
 						decimal discountperc = 0.00M;
+						decimal proddiscountperc = 0.00M;
 						decimal price = c.price;
+						if(c.prodType==3){
+							IList<decimal> amounts = null;
+							if(productsCalAmounts.TryGetValue(scp.idProduct+"|"+scp.productCounter, out amounts)){
+								price = amounts[0];
+								proddiscountperc = amounts[1];
+							}
+						}
 						decimal margin = 0.00M;
 						decimal discount = 0.00M;
+						
+						if(c.prodType!=3 && c.discount != null && c.discount >0){
+							proddiscountperc = c.discount;
+						}
+												
 						decimal supplement = 0.00M;
 						decimal amount = 0.00M;
 						Supplement prodsup = null;	
@@ -676,39 +1069,48 @@ public partial class _InsertOrder : Page
 						string detailURL = "#";
 						int modelPageNum = 1;
 						string detailHierarchy = "";
-						string adsRefTitle = "";						
-												
-						decimal proddiscountperc = 0;
-						if(c.discount != null && c.discount >0){
-							proddiscountperc = c.discount;
-						}
+						string adsRefTitle = "";
 						
 						// gestione sconto
-						if(ug != null){
-							price = price*scp.productQuantity;
-							discountperc = ProductService.getDiscountPercentage(ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
-							margin = ProductService.getMarginAmount(price, ug.margin);
-							totalMarginAmount+=margin;
-							discount = ProductService.getDiscountAmount(price, ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
-							totalDiscountAmount+=discount;
-							price = ProductService.getAmount(price, ug.margin, ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
-						}else{
-							if("1".Equals(confservice.get("manage_sconti").value)){// sconto prodotto + sconto cliente
-								discountperc = proddiscountperc+usrdiscountperc;
-							}else if("2".Equals(confservice.get("manage_sconti").value)){// solo sconto prodotto
-								discountperc = proddiscountperc;
-							}else{// solo sconto cliente
-								if(user != null && usrdiscountperc>0){
-									discountperc = usrdiscountperc;
-								}else{
+						if(c.prodType!=3){
+							if(ug != null){
+								price = price*scp.productQuantity;
+								discountperc = ProductService.getDiscountPercentage(ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
+								margin = ProductService.getMarginAmount(price, ug.margin);
+								totalMarginAmount+=margin;
+								discount = ProductService.getDiscountAmount(price, ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
+								totalDiscountAmount+=discount;
+								price = ProductService.getAmount(price, ug.margin, ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
+							}else{
+								if("1".Equals(confservice.get("manage_sconti").value)){// sconto prodotto + sconto cliente
+									discountperc = proddiscountperc+usrdiscountperc;
+								}else if("2".Equals(confservice.get("manage_sconti").value)){// solo sconto prodotto
 									discountperc = proddiscountperc;
-								};
+								}else{// solo sconto cliente
+									if(user != null && usrdiscountperc>0){
+										discountperc = usrdiscountperc;
+									}else{
+										discountperc = proddiscountperc;
+									};
+								}
+								
+								price = price*scp.productQuantity;
+								discount = ProductService.getDiscountedValue(price, discountperc);
+								totalDiscountAmount+=discount;
+								price-= discount;
 							}
-							
-							price = price*scp.productQuantity;
-							discount = ProductService.getDiscountedValue(price, discountperc);
-							totalDiscountAmount+=discount;
-							price-= discount;
+						}else{
+							if(ug != null){
+								margin = ProductService.getMarginAmount(price, ug.margin);
+								totalMarginAmount+=margin;
+								discount = ProductService.getDiscountAmount(price, ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
+								totalDiscountAmount+=discount;
+								discountperc = proddiscountperc;
+							}else{
+								discount = ProductService.getDiscountedValue(price, proddiscountperc);
+								totalDiscountAmount+=discount;
+								discountperc = proddiscountperc;
+							}						
 						}
 
 
@@ -929,143 +1331,269 @@ public partial class _InsertOrder : Page
 			catch (Exception ex){
 				//Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
 				bolFoundLista = false;
-			}			
-			
-			
-			//*************************** DELETE ITEM  ***************************
-			
-			if("delitem".Equals(Request["operation"]))
-			{
-				bool executed = false;
-				try
-				{
-					executed = ShoppingCartService.delItem(Convert.ToInt32(Request["cartid"]), Convert.ToInt32(Request["productid"]), Convert.ToInt32(Request["counter_prod"]));
-				}
-				catch(Exception ex)
-				{
-					//Response.Write("An error occured: " + ex.Message);
-					errorUrl.Append(Regex.Replace(ex.Message, @"\t|\n|\r", " "));
-					executed = false;
-				}
-					
-				if(executed){
-					string redirectUrl = Request.Url.AbsolutePath+"?";
-					redirectUrl+=Request.Url.Query;
-					redirectUrl+="&id="+orderid+"&cartid="+cartid+"&voucher_code="+Request["voucher_code"]+"&userid="+orderUserId+"&cssClass="+cssClass+"&titlef="+titlef+"&keywordf="+keywordf+"&typef="+typef+"&categoryf="+categoryf;				
-					redirectUrl+="&payment_method="+Request["payment_method"];
-					if(fees != null && fees.Count>0){
-						foreach(Fee f in fees){
-							string billsReq = Request[f.feeGroup];
-							if(!String.IsNullOrEmpty(billsReq)){
-								redirectUrl+="&"+f.feeGroup+"="+billsReq;
-							}							
-						}
-					}
-					Response.Redirect(redirectUrl);
-				}else{
-					Response.Redirect(errorUrl.ToString());
-				}			
-			}
-	
-	
-			//*************************** ADD ITEM  ***************************
-			
-			if("additem".Equals(Request["operation"]))
-			{
-				bool executed = false;
-				
-				try
-				{	
-					HttpFileCollection MyFileCollection;			
-					MyFileCollection = Request.Files;
-					
-					int idProduct = Convert.ToInt32(Request["productid"]);
-					int quantity = Convert.ToInt32(Request["quantity"]);
-					int maxProdQty = Convert.ToInt32(Request["max_prod_qta"]);
-					string resetQtyByCart = Request["reset_qta"];
-					int idAds = -1;
-		
-					if(maxProdQty>-1 && quantity>maxProdQty){
-						throw new System.InvalidOperationException(lang.getTranslated("frontend.template_prodotto.js.alert.exceed_qta_prod"));
-					}
-					
-					IDictionary<int,IList<string>> requestFields = new Dictionary<int,IList<string>>();
-					IDictionary<string,string> requestCalendar = new Dictionary<string,string>();
-	
-					foreach (string key in Request.Form.AllKeys)
-					{
-						if(key.StartsWith("product_field_"))
-						{
-							string fieldid = key.Substring(key.LastIndexOf('_')+1);
-							string currvalue = Request.Form[key];	
-							if(!String.IsNullOrEmpty(currvalue)){
-								IList<string> values = new List<string>();
-								string[] fvalues = currvalue.Split(',');
-								foreach(string fv in fvalues){
-									values.Add(fv.Trim());
-								}
-								requestFields.Add(Convert.ToInt32(fieldid), values);
-							}						
-						}
-					}				
-	
-					foreach (string key in Request.Files.AllKeys)
-					{
-						if(key.StartsWith("product_field_"))
-						{
-							string fieldid = key.Substring(key.LastIndexOf('_')+1);
-							string currvalue = Path.GetFileName(Request.Files[key].FileName);	
-							if(!String.IsNullOrEmpty(currvalue)){
-								IList<string> values = new List<string>();
-								values.Add(currvalue);
-								requestFields.Add(Convert.ToInt32(fieldid), values);
-							}						
-						}
-					}
-					
-					if(shoppingCart==null || cartid==-1){
-						DateTime insertDate = DateTime.Now;
-						string shopcartcufoff = confservice.get("day_carrello_is_valid").value;
-						if(!String.IsNullOrEmpty(shopcartcufoff)){
-							insertDate = DateTime.Now.AddDays(-Convert.ToInt32(shopcartcufoff)-1);
-						}
-		
-						shoppingCart = new ShoppingCart();
-						shoppingCart.idUser=user.id;
-						shoppingCart.lastUpdate = insertDate;
-						shoprep.insert4Order(shoppingCart);
-						cartid = shoppingCart.id;
-					}
-					
-					executed = ShoppingCartService.addItem(user, cartid, Math.Abs(Session.SessionID.GetHashCode()), null, requestFields, requestCalendar, MyFileCollection, idProduct, quantity, maxProdQty, resetQtyByCart, idAds, lang.currentLangCode, lang.defaultLangCode);
-				}
-				catch(Exception ex)
-				{
-					//Response.Write("An error occured: " + ex.Message);
-					errorUrl.Append(Regex.Replace(ex.Message, @"\t|\n|\r", " "));
-					executed = false;
-				}
-					
-				if(executed){
-					string redirectUrl = Request.Url.AbsolutePath+"?";
-					redirectUrl+=Request.Url.Query;
-					redirectUrl+="&id="+orderid+"&cartid="+cartid+"&voucher_code="+Request["voucher_code"]+"&userid="+orderUserId+"&cssClass="+cssClass+"&titlef="+titlef+"&keywordf="+keywordf+"&typef="+typef+"&categoryf="+categoryf;
-					redirectUrl+="&payment_method="+Request["payment_method"];		
-					if(fees != null && fees.Count>0){
-						foreach(Fee f in fees){
-							string billsReq = Request[f.feeGroup];
-							if(!String.IsNullOrEmpty(billsReq)){
-								redirectUrl+="&"+f.feeGroup+"="+billsReq;
-							}							
-						}
-					}
-					Response.Redirect(redirectUrl);
-				}else{
-					Response.Redirect(errorUrl.ToString());
-				}			
-			}			
+			}		
 		}		
 
+		// calculate price for booking products
+		if("3".Equals(typef)){
+			foreach(Product c in products){	
+				decimal price = 0.00M;
+				
+				foreach(ProductCalendarVO pc in calendarData[c.id]){
+					ProductCalendarEventData pced = JsonConvert.DeserializeObject<ProductCalendarEventData>(pc.calendar.content);
+					string proom = pced.price["room"];
+					string padult = pced.price["adult"];
+					string childs_0_2 = pced.price["childs_0_2"];
+					string childs_3_11 = pced.price["childs_3_11"];
+					string childs_12_17 = pced.price["childs_12_17"];
+					string pdiscount = pced.price["discount"];
+					
+					decimal subprice = 0.00M;
+					
+					decimal discountperc = 0.00M;
+					decimal proddiscountperc = 0;
+					if(!String.IsNullOrEmpty(pdiscount)){
+						proddiscountperc = Convert.ToDecimal(pdiscount.Replace(".",","));
+					}
+					
+					
+					if(pced.price_type==1){
+						decimal pcedadval = 0.00M;
+						//Response.Write("padult before: "+padult+"<br>");
+						pcedadval = Convert.ToDecimal(padult.Replace(".",","));
+						//Response.Write("pcedadval after: "+pcedadval.ToString("###0.00")+"<br>");
+						decimal adultPrice = adults*pcedadval;
+						decimal childPrice = 0.00M;
+						
+						//Response.Write("adultPrice: "+adultPrice.ToString("###0.00")+"<br>");
+						
+						if(childs>0){
+							if(childAgesArr.Length==childs){
+								foreach(string s in childAgesArr){
+									int t = Convert.ToInt32(s);
+									if(t>-1&&t<3){
+										childPrice+=Convert.ToDecimal(childs_0_2.Replace(".",","));
+									}else if(t>2&&t<12){
+										childPrice+=Convert.ToDecimal(childs_3_11.Replace(".",","));
+									}else if(t>11&&t<18){
+										childPrice+=Convert.ToDecimal(childs_12_17.Replace(".",","));
+									}
+								}
+							}else{
+								throw new Exception("Error calculating price");
+							}
+						}
+						
+						//********* add the price for the empty bed (if any) as adult
+						decimal emptyBedPrice = 0.00M;
+						//Response.Write("emptyBedPrice - travellers: "+travellers+"<br>");
+						//Response.Write("emptyBedPrice - pc.rooms: "+pc.rooms+"<br>");
+						//Response.Write("emptyBedPrice - pc.calendar.unit: "+pc.calendar.unit+"<br>");
+						int emptyCheck = (pc.rooms*pc.calendar.unit)-travellers;
+						//Response.Write("emptyBedPrice - emptyCheck: "+emptyCheck+"<br>");
+						if(emptyCheck>0){
+							emptyBedPrice = emptyCheck*pcedadval;
+						}
+						//Response.Write("emptyBedPrice: "+emptyBedPrice.ToString("###0.00")+"<br>");
+						
+						subprice = adultPrice+childPrice+emptyBedPrice;
+						//Response.Write("subprice pax: "+subprice.ToString("###0.00")+"<br>");
+						//Response.Write("childPrice: "+childPrice.ToString("###0.00")+"<br>");
+					}else{
+						decimal pcedroomval = Convert.ToDecimal(proom.Replace(".",","));
+						subprice = pcedroomval*pc.rooms;
+						//Response.Write("subprice room: "+subprice.ToString("###0.00")+"<br>");					
+					}
+					
+					//Response.Write("price before discount: "+price.ToString("###0.00")+"<br>");
+					
+					// gestione sconto
+					if(ug != null){
+						//Response.Write("ug.discount: "+ug.discount.ToString("###0.00")+"<br>");
+						//Response.Write("proddiscountperc: "+proddiscountperc+"<br>");
+						//Response.Write("usrdiscountperc: "+usrdiscountperc+"<br>");
+						//Response.Write("ug.applyProdDiscount: "+ug.applyProdDiscount+"<br>");
+						//Response.Write("ug.applyUserDiscount: "+ug.applyUserDiscount+"<br>");
+						//Response.Write("ug.margin: "+ug.margin.ToString("###0.00")+"<br>");
+						price+= ProductService.getAmount(subprice, ug.margin, ug.discount, proddiscountperc, usrdiscountperc, ug.applyProdDiscount, ug.applyUserDiscount);
+						//Response.Write("partial discountperc: "+discountperc.ToString("###0.00")+"<br>");
+						//Response.Write("price: "+price.ToString("###0.00")+"<br><br>");
+					}else{
+						if("1".Equals(confservice.get("manage_sconti").value)){// sconto prodotto + sconto cliente
+							discountperc = proddiscountperc+usrdiscountperc;
+						}else if("2".Equals(confservice.get("manage_sconti").value)){// solo sconto prodotto
+							discountperc = proddiscountperc;
+						}else{// solo sconto cliente
+							if(user != null && usrdiscountperc>0){
+								discountperc = usrdiscountperc;
+							}else{
+								discountperc = proddiscountperc;
+							}
+						}
+						
+						price+= ProductService.getDiscountedAmount(subprice, discountperc);
+						//Response.Write("price: "+price.ToString("###0.00")+"<br>");
+						//Response.Write("partial discountperc: "+discountperc.ToString("###0.00")+"<br><br>");
+					}
+				}
+				
+				// assing the real calculated price to manage sorting
+				c.price=price;
+			}	
+		}
+		
+			
+		//*************************** DELETE ITEM  ***************************
+		
+		if("delitem".Equals(Request["operation"]))
+		{
+			bool executed = false;
+			try
+			{
+				executed = ShoppingCartService.delItem(Convert.ToInt32(Request["cartid"]), Convert.ToInt32(Request["productid"]), Convert.ToInt32(Request["counter_prod"]));
+			}
+			catch(Exception ex)
+			{
+				//Response.Write("An error occured: " + ex.Message);
+				errorUrl.Append(Regex.Replace(ex.Message, @"\t|\n|\r", " "));
+				executed = false;
+			}
+				
+			if(executed){
+				string redirectUrl = Request.Url.AbsolutePath+"?";
+				redirectUrl+=Request.Url.Query;
+				redirectUrl+="&id="+orderid+"&cartid="+cartid+"&voucher_code="+Request["voucher_code"]+"&userid="+orderUserId+"&cssClass="+cssClass+"&titlef="+titlef+"&keywordf="+keywordf+"&typef="+typef+"&categoryf="+categoryf;				
+				redirectUrl+="&payment_method="+Request["payment_method"];
+				if(fees != null && fees.Count>0){
+					foreach(Fee f in fees){
+						string billsReq = Request[f.feeGroup];
+						if(!String.IsNullOrEmpty(billsReq)){
+							redirectUrl+="&"+f.feeGroup+"="+billsReq;
+						}							
+					}
+				}
+				Response.Redirect(redirectUrl);
+			}else{
+				Response.Redirect(errorUrl.ToString());
+			}			
+		}
+
+
+		//*************************** ADD ITEM  ***************************
+		
+		if("additem".Equals(Request["operation"]))
+		{
+			bool executed = false;
+			
+			try
+			{	
+				HttpFileCollection MyFileCollection;			
+				MyFileCollection = Request.Files;
+				
+				int idProduct = Convert.ToInt32(Request["productid"]);
+				int quantity = Convert.ToInt32(Request["quantity"]);
+				int maxProdQty = Convert.ToInt32(Request["max_prod_qta"]);
+				string resetQtyByCart = Request["reset_qta"];
+				int idAds = -1;
+	
+				if(maxProdQty>-1 && quantity>maxProdQty){
+					throw new System.InvalidOperationException(lang.getTranslated("frontend.template_prodotto.js.alert.exceed_qta_prod"));
+				}
+				
+				IDictionary<int,IList<string>> requestFields = new Dictionary<int,IList<string>>();
+				IDictionary<string,string> requestCalendar = new Dictionary<string,string>();
+
+				foreach (string key in Request.Form.AllKeys)
+				{
+					if(key.StartsWith("product_field_"))
+					{
+						string fieldid = key.Substring(key.LastIndexOf('_')+1);
+						string currvalue = Request.Form[key];	
+						if(!String.IsNullOrEmpty(currvalue)){
+							IList<string> values = new List<string>();
+							string[] fvalues = currvalue.Split(',');
+							foreach(string fv in fvalues){
+								values.Add(fv.Trim());
+							}
+							requestFields.Add(Convert.ToInt32(fieldid), values);
+						}						
+					}
+				}				
+
+				foreach (string key in Request.Files.AllKeys)
+				{
+					if(key.StartsWith("product_field_"))
+					{
+						string fieldid = key.Substring(key.LastIndexOf('_')+1);
+						string currvalue = Path.GetFileName(Request.Files[key].FileName);	
+						if(!String.IsNullOrEmpty(currvalue)){
+							IList<string> values = new List<string>();
+							values.Add(currvalue);
+							requestFields.Add(Convert.ToInt32(fieldid), values);
+						}						
+					}
+				}
+				
+				if(shoppingCart==null || cartid==-1){
+					DateTime insertDate = DateTime.Now;
+					string shopcartcufoff = confservice.get("day_carrello_is_valid").value;
+					if(!String.IsNullOrEmpty(shopcartcufoff)){
+						insertDate = DateTime.Now.AddDays(-Convert.ToInt32(shopcartcufoff)-1);
+					}
+	
+					shoppingCart = new ShoppingCart();
+					shoppingCart.idUser=user.id;
+					shoppingCart.lastUpdate = insertDate;
+					shoprep.insert4Order(shoppingCart);
+					cartid = shoppingCart.id;
+				}
+
+				// manage booking products
+				if("3".Equals(typef)){
+					requestCalendar.Add("search_text",Request["search_text"]);
+					requestCalendar.Add("checkin",Request["checkin"]);
+					requestCalendar.Add("checkout",Request["checkout"]);
+					requestCalendar.Add("adults",Request["adults"]);
+					requestCalendar.Add("childs",Request["childs"]);
+					requestCalendar.Add("childsAge",Request["childs_age"]);
+				}
+				
+				executed = ShoppingCartService.addItem(user, cartid, Math.Abs(Session.SessionID.GetHashCode()), null, requestFields, requestCalendar, MyFileCollection, idProduct, quantity, maxProdQty, resetQtyByCart, idAds, lang.currentLangCode, lang.defaultLangCode);
+			}
+			catch(Exception ex)
+			{
+				//Response.Write("An error occured: " + ex.Message);
+				errorUrl.Append(Regex.Replace(ex.Message, @"\t|\n|\r", " "));
+				executed = false;
+			}
+				
+			if(executed){
+				string redirectUrl = Request.Url.AbsolutePath+"?";
+				redirectUrl+=Request.Url.Query;
+				redirectUrl+="&id="+orderid+"&cartid="+cartid+"&voucher_code="+Request["voucher_code"]+"&userid="+orderUserId+"&cssClass="+cssClass+"&titlef="+titlef+"&keywordf="+keywordf+"&typef="+typef+"&categoryf="+categoryf;
+				redirectUrl+="&payment_method="+Request["payment_method"];		
+				if(fees != null && fees.Count>0){
+					foreach(Fee f in fees){
+						string billsReq = Request[f.feeGroup];
+						if(!String.IsNullOrEmpty(billsReq)){
+							redirectUrl+="&"+f.feeGroup+"="+billsReq;
+						}							
+					}
+				}
+				if("3".Equals(typef)){
+					redirectUrl+="&search_text="+Request["search_text"];
+					redirectUrl+="&checkin="+Request["checkin"];
+					redirectUrl+="&checkout="+Request["checkout"];
+					redirectUrl+="&adults="+Request["adults"];
+					redirectUrl+="&childs="+Request["childs"];
+					redirectUrl+="&childs_age="+Request["childs_age"];
+				}
+				Response.Redirect(redirectUrl);
+			}else{
+				Response.Redirect(errorUrl.ToString());
+			}			
+		}		
+		
 		try{				
 			countries = countryrep.findAllCountries("2,3");		
 			if(countries == null){				

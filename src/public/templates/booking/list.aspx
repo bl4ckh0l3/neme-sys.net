@@ -682,7 +682,6 @@ jQuery(document).ready(function(){
 									if(product.quantity == -1){checkqtafields = 0;}%>
 									<span style="display:none;" id="addtocardloadingimg<%=counter%>"><img src="/common/img/loading_icon.gif" border="0" width="16" height="16" hspace="0" vspace="0"></span>
 									<span id="addtocardloading<%=counter%>"><a href="javascript:addToCarrello(document.form_add_to_carrello_<%=counter%>,<%=counter%>, <%=checkqtafields%>);" title="<%=lang.getTranslated("frontend.template_prodotto.table.alt.put_on_carrello")%>"><img src="/common/img/cart_add.png" hspace="0" vspace="0" border="0"></a></span>
-									<!--<a href="javascript:ajaxCheckQta6Multiple('form_add_to_carrello_<%=counter%>', document.form_add_to_carrello_<%=counter%>.productid.value, document.form_add_to_carrello_<%=counter%>.quantity.value, <%=counter%>, 6, 0),addToCarrello(document.form_add_to_carrello_<%=counter%>,<%=counter%>, <%=checkqtafields%>);" title="<%//=lang.getTranslated("frontend.template_prodotto.table.alt.put_on_carrello")%>"><img src="/common/img/cart_add.png" hspace="0" vspace="0" border="0"></a>-->
 								<%}else{%>
 									<img src="/common/img/ico-carrello.png" hspace="0" vspace="0" border="0" alt="<%=lang.getTranslated("frontend.template_prodotto.table.alt.non_disponibile")%>" title="<%=lang.getTranslated("frontend.template_prodotto.table.alt.non_disponibile")%>">
 								<%}%>
@@ -692,14 +691,12 @@ jQuery(document).ready(function(){
 									if(product.quantity == -1) {
 										if(product.setBuyQta){%>
 											<input type="text" name="quantity" value="" onkeypress="javascript:return isInteger(event);" class="formFieldTXTShort">
-											<!--<input type="text" name="quantity" value="" onkeypress="javascript:return isInteger(event);" onblur="javascript:checkQta6Multiple(this);" class="formFieldTXTShort">-->
 										<%}else{%>
 											<input type="hidden" name="quantity" value="1">
 										<%}
 									}else{
 										if(product.setBuyQta) {%>
 											<input type="text" name="quantity" id="quantity" value="" class="formFieldTXTShort" onkeypress="javascript:return isInteger(event);" onblur="javascript:checkMaxQtaProd(<%=product.quantity%>,this);">
-											<!--<input type="text" name="quantity" id="quantity" value="" class="formFieldTXTShort" onkeypress="javascript:return isInteger(event);" onblur="javascript:checkMaxQtaProd(<%//=product.quantity%>,this),checkQta6Multiple(this);">-->				
 										<%}else{%>
 											<input type="hidden" name="quantity" value="1">
 										<%}%>

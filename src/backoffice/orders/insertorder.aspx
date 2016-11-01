@@ -310,7 +310,69 @@ function filterItems(){
 		if($(this).is(':checked')){
 			$("#form_search").append('<input type="hidden" value="'+$(this).val()+'" name="'+$(this).attr("name")+'"/>');
 		}
-	});		
+	});	
+	
+	if($('#typef_search').val()==3){
+		if(document.form_search.search_text.value== ""){
+			alert("<%=lang.getTranslated("frontend.template.booking.js.alert.empty")%>");
+			document.form_search.search_text.focus();
+			return false;
+		}
+		
+		if(document.form_search.adults.value!= "" && document.form_search.adults.value!= "0"){
+			var cnum = document.form_search.adults.value;
+	
+			if(isNaN(cnum)){
+				alert("<%=lang.getTranslated("frontend.template_prodotto.js.alert.only_integer_value")%>");
+				document.form_search.adults.value = "1";
+				return false;
+			}
+		}else{
+			alert("<%=lang.getTranslated("frontend.template.booking.js.alert.empty")%>");
+			document.form_search.adults.value = "1";
+			return false;	
+		}
+		
+		if(document.form_search.childs.value!= ""){
+			var cnum = document.form_search.childs.value;
+	
+			if(isNaN(cnum)){
+				alert("<%=lang.getTranslated("frontend.template_prodotto.js.alert.only_integer_value")%>");
+				document.form_search.childs.value = "0";
+				return false;
+			}
+			
+			for(var i=0;i<cnum;i++){
+				var tmpn = $('#childs_age_'+i).val();
+				if(tmpn==""){
+					alert("<%=lang.getTranslated("frontend.template.booking.js.alert.empty")%>");
+					$('#childs_age_'+i).val('');
+					$('#childs_age_'+i).focus();
+					return false;
+				}
+			}
+		}
+		
+		if(document.form_search.checkin.value== ""){
+			alert("<%=lang.getTranslated("frontend.template.booking.js.alert.empty")%>");
+			document.form_search.checkin.focus();
+			return false;
+		}
+		if(document.form_search.checkout.value== ""){
+			alert("<%=lang.getTranslated("frontend.template.booking.js.alert.empty")%>");
+			document.form_search.checkout.focus();
+			return false;
+		}
+		
+		var ckin = $.datepicker.parseDate("dd/mm/yy",  document.form_search.checkin.value);
+		var ckout = $.datepicker.parseDate("dd/mm/yy",  document.form_search.checkout.value);
+		
+		if(ckin>ckout){
+			alert("<%=lang.getTranslated("frontend.template.booking.js.alert.wrong_date")%>");
+			document.form_search.checkout.focus();
+			return false;
+		}		
+	}
 }
 
 function insertVoucher(doDelete){
@@ -512,6 +574,64 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 		}
 	});
 }
+
+$(function() {
+	$('#checkin').datepicker({
+		dateFormat: 'dd/mm/yy',
+		changeMonth: true,
+		changeYear: true,
+		minDate:0
+	});
+	$('#ui-datepicker-div').hide();	
+});
+
+$(function() {
+	$('#checkout').datepicker({
+		dateFormat: 'dd/mm/yy',
+		changeMonth: true,
+		changeYear: true,
+		minDate:0
+	});
+	$('#ui-datepicker-div').hide();	
+});
+
+function childAges(){
+	var num = $('#childs_num').val();
+	
+	if(Number(num)>0){
+		var fieldsRender = '<span style="font-weight:bold;"><%=lang.getTranslated("frontend.template_prodotto.label.child_age_at_checkout")%></span><br/>'; 
+		
+		var selectF ='<option value=""></option>';
+		for(var k=0;k<18;k++){				
+			selectF += '<option value="'+k+'">'+k+'</option>';
+		}		
+
+		$('#child_booking_search_age').empty();
+		
+		// old version input style: <input type="text" name="childs_age" id="childs_age_'+i+'" value="0" onkeypress="javascript:return isInteger(event);" class="formFieldTXTShort" style="margin-right:5px;">
+		
+		for(var i=0;i<num;i++){
+			fieldsRender+='<select name="childs_age" id="childs_age_'+i+'" class="formFieldTXTShort" style="margin-right:5px;">';
+			fieldsRender+=selectF;
+			fieldsRender+='</select>';
+		}
+		$('#child_booking_search_age').html(fieldsRender);
+		$('#child_booking_search_age').show();
+	}else{
+		$('#child_booking_search_age').hide();
+		$('#child_booking_search_age').empty();
+	}
+}
+
+jQuery(document).ready(function(){
+	<%
+	if(childAgesArr!=null&&childAgesArr.Length>0){%>
+		childAges();
+		<%for(int count=0;count<childAgesArr.Length;count++){
+			Response.Write("$('#childs_age_"+count+"').val("+childAgesArr[count]+");");
+		}
+	}%>
+});
 </script>
 </head>
 <body>
@@ -561,53 +681,122 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 			
 			<%if(orderid==-1 && user != null){%>
 				<div style="padding-top:30px;padding-bottom:20px;float:top;min-height:40px;border: 1px solid rgb(201, 201, 201);">		
-					<form action="<%=Request.Url.AbsolutePath%>" method="post" name="form_search" id="form_search" accept-charset="UTF-8" onsubmit="javascript:filterItems();">
+					<form action="<%=Request.Url.AbsolutePath%>" method="post" name="form_search" id="form_search" accept-charset="UTF-8" onsubmit="return filterItems();">
 						<input type="hidden" value="<%=orderid%>" name="id">
 						<input type="hidden" value="<%=cartid%>" name="cartid">
 						<input type="hidden" value="<%=orderUserId%>" name="userid">
 						<input type="hidden" value="<%=cssClass%>" name="cssClass">
 						<input type="hidden" value="" name="payment_method" id="search_payment_method">
-						<div style="float:left;padding-right:10px;padding-top:15px;">
+						<div style="float:left;padding-right:10px;padding-top:15px;display:table-cell;">
 						<input type="submit" value="<%=lang.getTranslated("backend.product.lista.label.search")%>" class="buttonForm" hspace="4">
 						</div>
-						<div style="float:left;padding-right:10px;">
-						<span class="labelForm"><%=lang.getTranslated("backend.product.lista.label.title_filter")%></span><br>
-						<input type="text" name="titlef" value="<%=titlef%>" class="formFieldTXT">	
+						<div style="display:table-cell;">
+							<div style="float:left;padding-right:10px;">
+							<span class="labelForm"><%=lang.getTranslated("backend.product.lista.label.title_filter")%></span><br>
+							<input type="text" name="titlef" value="<%=titlef%>" class="formFieldTXT">	
+							</div>
+							<div style="float:left;padding-right:10px;">
+							<span class="labelForm"><%=lang.getTranslated("backend.product.lista.label.keyword_filter")%></span><br>
+							<input type="text" name="keywordf" value="<%=keywordf%>" class="formFieldTXT">	
+							</div>
+							<div style="float:left;padding-right:10px;">
+							<span class="labelForm"><%=lang.getTranslated("backend.product.lista.label.type_filter")%></span><br>
+							<select name="typef" id="typef_search" class="formfieldSelect">
+							<option value=""></option>
+							<option value="0" <%if ("0".Equals(typef)) { Response.Write("selected");}%>><%=lang.getTranslated("backend.product.detail.table.label.type_portable")%></option>
+							<option value="1" <%if ("1".Equals(typef)) { Response.Write("selected");}%>><%=lang.getTranslated("backend.product.detail.table.label.type_download")%></option>
+							<option value="3" <%if ("3".Equals(typef)) { Response.Write("selected");}%>><%=lang.getTranslated("backend.product.detail.table.label.type_booking")%></option>
+							</SELECT>
+							</div>
+							<div style="float:left;padding-right:10px;">
+							<span class="labelForm"><%=lang.getTranslated("backend.product.lista.label.category_filter")%></span><br>
+							<select name="categoryf" class="formfieldSelect">
+							<option value=""></option>
+							<%
+							string catdesc;
+							foreach (Category c in categories){
+								if(CategoryService.checkUserCategory(login.userLogged, c)){
+									catdesc = "-&nbsp;"+c.description;
+									string[] level = c.hierarchy.Split('.');
+									if(level != null){
+										for(int l=1;l<level.Length;l++){
+											catdesc = "&nbsp;&nbsp;&nbsp;"+catdesc;
+										}
+									}%>
+									<OPTION VALUE="<%=c.id%>" <%if (c.id==categoryf) { Response.Write("selected");}%>><%=catdesc%></OPTION>
+								<%}
+							}%>
+							</SELECT>
+							</div>	
+						
+							<div id="booking_search" style="clear:left;padding-top:3px;">
+								<div id="full_booking_search" style="margin-top:20px;">
+									<span style="font-weight:bold;"><%=lang.getTranslated("frontend.template.booking.label.search_title")%></span><br/>
+									<input type="text" style="width:300px;" name="search_text" id="search_text" value="<%=Request["search_text"]%>">						
+								</div>
+			
+								<div id="adults_booking_search" style="margin-top:10px;float:left;margin-right:20px;">
+									<span style="font-weight:bold;"><%=lang.getTranslated("frontend.template.booking.label.adults")%></span><br/>
+									<input type="text" name="adults" id="adults_num" value="<%=Request["adults"]%>" onkeypress="javascript:return isInteger(event);" class="formFieldTXTShort">						
+								</div>
+			
+								<div id="child_booking_search" style="margin-top:10px;float:top;">
+									<span style="font-weight:bold;"><%=lang.getTranslated("frontend.template.booking.label.childs")%></span><br/>
+									<input type="text" name="childs" id="childs_num" value="<%=Request["childs"]%>" onchange="childAges();" onkeypress="javascript:return isInteger(event);" class="formFieldTXTShort">						
+								</div>
+								
+								<div id="child_booking_search_age" style="margin-top:10px;float:top;display:none;">
+									
+								</div>
+			
+								<div id="checkin_booking_search" style="margin-top:10px;float:left;margin-right:20px;">
+									<span style="font-weight:bold;"><%=lang.getTranslated("frontend.template.booking.label.checkin")%></span><br/>
+									<input type="text" name="checkin" id="checkin" value="<%=Request["checkin"]%>" class="formFieldTXT">						
+								</div>
+			
+								<div id="checkout_booking_search" style="margin-top:10px;float:top;">
+									<span style="font-weight:bold;"><%=lang.getTranslated("frontend.template.booking.label.checkout")%></span><br/>
+									<input type="text" name="checkout" id="checkout" value="<%=Request["checkout"]%>" class="formFieldTXT">						
+								</div>
+							</div>
 						</div>
-						<div style="float:left;padding-right:10px;">
-						<span class="labelForm"><%=lang.getTranslated("backend.product.lista.label.keyword_filter")%></span><br>
-						<input type="text" name="keywordf" value="<%=keywordf%>" class="formFieldTXT">	
-						</div>
-						<div style="float:left;padding-right:10px;">
-						<span class="labelForm"><%=lang.getTranslated("backend.product.lista.label.type_filter")%></span><br>
-						<select name="typef" class="formfieldSelect">
-						<option value=""></option>
-						<option value="0" <%if ("0".Equals(typef)) { Response.Write("selected");}%>><%=lang.getTranslated("backend.product.detail.table.label.type_portable")%></option>
-						<option value="1" <%if ("1".Equals(typef)) { Response.Write("selected");}%>><%=lang.getTranslated("backend.product.detail.table.label.type_download")%></option>
-						</SELECT>
-						</div>
-						<div style="float:top;padding-right:10px;">
-						<span class="labelForm"><%=lang.getTranslated("backend.product.lista.label.category_filter")%></span><br>
-						<select name="categoryf" class="formfieldSelect">
-						<option value=""></option>
-						<%
-						string catdesc;
-						foreach (Category c in categories){
-							if(CategoryService.checkUserCategory(login.userLogged, c)){
-								catdesc = "-&nbsp;"+c.description;
-								string[] level = c.hierarchy.Split('.');
-								if(level != null){
-									for(int l=1;l<level.Length;l++){
-										catdesc = "&nbsp;&nbsp;&nbsp;"+catdesc;
-									}
-								}%>
-								<OPTION VALUE="<%=c.id%>" <%if (c.id==categoryf) { Response.Write("selected");}%>><%=catdesc%></OPTION>
-							<%}
-						}%>
-						</SELECT>
-						</div>	
-				</form>
+					</form>
 				</div>
+				
+				<script>
+					jQuery(document).ready(function(){
+						var typfval = $('#typef_search').val();
+						if(typfval==3){
+							$('#booking_search').show();	
+						}else{
+							$('#booking_search').hide();
+							$('#search_text').val('');
+							$('#adults_num').val('');
+							$('#childs_num').val('');
+							$('#checkin').val('');
+							$('#checkout').val('');
+							$('#child_booking_search_age').hide();
+							$('#child_booking_search_age').empty();
+						}
+					});				
+				
+					$('#typef_search').change(function() {
+						var typfval = $(this).val();
+						if(typfval==3){
+							$('#booking_search').show();	
+						}else{
+							$('#booking_search').hide();
+							$('#search_text').val('');
+							$('#adults_num').val('');
+							$('#childs_num').val('');
+							$('#checkin').val('');
+							$('#checkout').val('');
+							$('#child_booking_search_age').hide();
+							$('#child_booking_search_age').empty();
+						}
+					});
+				</script>
+				
 			
 				<%if(products != null && products.Count>0){%>
 					<table border="0" cellpadding="0" cellspacing="0" class="principal">
@@ -641,12 +830,22 @@ function ajaxReloadPaymentList(totale_carrello, tot_and_spese, payment_method){
 							<input type="hidden" value="<%=categoryf%>" name="categoryf">
 							<input type="hidden" value="<%=voucher_code%>" name="voucher_code"> 
 							<input type="hidden" value="" name="payment_method" id="item_payment_method_<%=selProdCounter%>">
+							<input type="hidden" name="search_text" value="<%=search_text%>">						
+							<input type="hidden" name="adults" value="<%=adultsReq%>">						
+							<input type="hidden" name="childs" value="<%=childsReq%>">			
+							<input type="hidden" name="childs_age" value="<%=childAgesReq%>">						
+							<input type="hidden" name="checkin" value="<%=checkinReq%>">			
+							<input type="hidden" name="checkout" value="<%=checkoutReq%>">	
 							<td align="center" width="25"><a href="javascript:addItemToOrder(<%=p.id%>,<%=selProdCounter%>,document.form_add_to_order_<%=selProdCounter%>);"><img src="/backoffice/img/add.png" title="<%=lang.getTranslated("backend.ordini.detail.table.alt.add_prod_combination")%>" alt="<%=lang.getTranslated("backend.ordini.detail.table.alt.add_prod_combination")%>" hspace="2" vspace="0" border="0" align="top"></a></td>
 							<td width="250"><%=p.name%></td>
 							<td width="200">&euro;&nbsp;<%=p.price.ToString("#,###0.00")%></td>
 							<td width="150">
+							<%if(p.prodType==3){%>
+							<input type="hidden" name="quantity" id="quantity_<%=selProdCounter%>" value="1">
+							<%}else{%>
 							<input type="text" name="quantity" id="quantity_<%=selProdCounter%>" value="" class="formFieldTXTQtaProd" onKeyPress="javascript:return isInteger(event);" onblur="javascript:checkMaxQtaProd(<%=p.quantity%>,this);">
-							<%
+							<%}
+							
 							if(p.quantity>-1){%>
 								<br/><%=lang.getTranslated("backend.ordini.detail.table.label.product_disp")+"&nbsp;"+p.quantity%>
 							<%}%></td>

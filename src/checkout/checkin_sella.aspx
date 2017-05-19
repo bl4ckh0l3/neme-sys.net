@@ -36,6 +36,8 @@ protected void Page_Load(object sender, EventArgs e)
 	IOrderRepository orderep = RepositoryFactory.getInstance<IOrderRepository>("IOrderRepository");
 	ILoggerRepository lrep = RepositoryFactory.getInstance<ILoggerRepository>("ILoggerRepository");
 	
+	string secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+	
 	if(!String.IsNullOrEmpty(Request["b"]) && !String.IsNullOrEmpty(Request["a"])){
 		bool carryOn = false;
 		bool verified = false;  
@@ -138,15 +140,15 @@ protected void Page_Load(object sender, EventArgs e)
 			}
 			
 			if(logged && (login.userLogged.role.isEditor() || login.userLogged.role.isAdmin())){
-				Response.Redirect("/backoffice/orders/orderconfirmed.aspx?cssClass=LO&orderid="+finalOrderId);
+				Response.Redirect(secureURL+"backoffice/orders/orderconfirmed.aspx?cssClass=LO&orderid="+finalOrderId);
 			}else{
-				Response.Redirect("/public/templates/shopping-cart/orderconfirmed.aspx?orderid="+finalOrderId);
+				Response.Redirect(secureURL+"public/templates/shopping-cart/orderconfirmed.aspx?orderid="+finalOrderId);
 			}
 		}else{
-			Response.Redirect("/error.aspx?error_code=043");
+			Response.Redirect(secureURL+"error.aspx?error_code=043");
 		}
 	}else{
-		Response.Redirect("/error.aspx?error_code=043");
+		Response.Redirect(secureURL+"error.aspx?error_code=043");
 	}
 }
 </script>

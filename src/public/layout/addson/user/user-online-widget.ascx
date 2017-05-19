@@ -12,9 +12,9 @@
 <script runat="server">  
 public ASP.MultiLanguageControl lang;
 public ASP.UserLoginControl login;
-private ConfigurationService configService;
 private IUserPreferencesRepository preftrep;
 private string action, from;
+protected string secureURL;
 bool logged;
 protected bool usrHasAvatar;
 protected string avatarPath;
@@ -54,8 +54,8 @@ protected void Page_Load(Object sender, EventArgs e)
 	Session.CodePage  = 65001;
 	login.acceptedRoles = "3";
 	logged = login.checkedUser();
-	configService = new ConfigurationService();
 	preftrep = RepositoryFactory.getInstance<IUserPreferencesRepository>("IUserPreferencesRepository");
+	secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
 }
 </script>
 
@@ -68,7 +68,7 @@ protected void Page_Load(Object sender, EventArgs e)
 			 type: "GET",
 			 data: query_string,
 			 cache: false,
-			 url: "/public/layout/addson/user/ajax-user-online-widget.aspx",
+			 url: "<%=secureURL%>public/layout/addson/user/ajax-user-online-widget.aspx",
 			  success: function(html) {
 					//alert("ciao");
 					$("#onlineUsersList").empty();
@@ -94,7 +94,7 @@ protected void Page_Load(Object sender, EventArgs e)
 		  $.ajax({
 			 type: "POST",
 			 cache: false,
-			 url: "/area_user/ajaxcheckfriend.aspx",
+			 url: "<%=secureURL%>area_user/ajaxcheckfriend.aspx",
 			 data: query_string,
 			  success: function(response) {
 				// show friend request icon
@@ -115,7 +115,7 @@ protected void Page_Load(Object sender, EventArgs e)
 			$.ajax({
 				type: "POST",
 				cache: false,
-				url: "/area_user/ajaxcheckfriend.aspx",
+				url: "<%=secureURL%>area_user/ajaxcheckfriend.aspx",
 				data: query_string,
 				success: function(response) {
 				  // show friend request icon
@@ -135,7 +135,7 @@ protected void Page_Load(Object sender, EventArgs e)
 			$.ajax({
 				type: "POST",
 				cache: false,
-				url: "/area_user/ajaxcheckfriend.aspx",
+				url: "<%=secureURL%>area_user/ajaxcheckfriend.aspx",
 				data: query_string,
 				success: function(response) {
 					//alert("response: "+response);
@@ -214,7 +214,7 @@ protected void Page_Load(Object sender, EventArgs e)
 				$("#showprofilew_<%=x.id%>").hide();                  
                 checkAjaxHasFriendActive(<%=x.id%>, '<%=x.username%>');
                 </script>
-		<form action="/area_user/publicprofile.aspx" method="post" name="form_public_profile_<%=x.id%>">
+		<form action="<%=secureURL%>area_user/publicprofile.aspx" method="post" name="form_public_profile_<%=x.id%>">
 		<input type="hidden" value="<%=x.id%>" name="userid">
 		</form>
               <%}else{

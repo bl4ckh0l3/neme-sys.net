@@ -32,6 +32,8 @@ protected void Page_Load(object sender, EventArgs e)
 	IOrderRepository orderep = RepositoryFactory.getInstance<IOrderRepository>("IOrderRepository");
 	ILoggerRepository lrep = RepositoryFactory.getInstance<ILoggerRepository>("ILoggerRepository");
 	
+	string secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+	
 	string apiVersion = "65.0";
 	
 	if(!String.IsNullOrEmpty(Request["TOKEN"])){
@@ -142,11 +144,7 @@ protected void Page_Load(object sender, EventArgs e)
 						}
 				
 						if(order != null){
-							UriBuilder orderUri = new UriBuilder(Request.Url);
-							orderUri.Port = -1;
-							orderUri.Path="";
-							orderUri.Query="";							
-							string notifyURL = orderUri.ToString()+"checkout/notify.aspx";
+							string notifyURL = secureURL+"checkout/notify.aspx";
 
 							postData = new StringBuilder();
 							postData.Append("USER").Append("=").Append(HttpUtility.UrlEncode(user))
@@ -248,15 +246,15 @@ protected void Page_Load(object sender, EventArgs e)
 			}
 			
 			if(logged && (login.userLogged.role.isEditor() || login.userLogged.role.isAdmin())){
-				Response.Redirect("/backoffice/orders/orderconfirmed.aspx?cssClass=LO&orderid="+finalOrderId);
+				Response.Redirect(secureURL+"backoffice/orders/orderconfirmed.aspx?cssClass=LO&orderid="+finalOrderId);
 			}else{
-				Response.Redirect("/public/templates/shopping-cart/orderconfirmed.aspx?orderid="+finalOrderId);
+				Response.Redirect(secureURL+"public/templates/shopping-cart/orderconfirmed.aspx?orderid="+finalOrderId);
 			}
 		}else{
-			Response.Redirect("/error.aspx?error_code=043");
+			Response.Redirect(secureURL+"error.aspx?error_code=043");
 		}
 	}else{
-		Response.Redirect("/error.aspx?error_code=043");
+		Response.Redirect(secureURL+"error.aspx?error_code=043");
 	}
 }
 </script>

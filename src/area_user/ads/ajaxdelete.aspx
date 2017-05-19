@@ -53,7 +53,7 @@ protected void Page_Load(Object sender, EventArgs e)
 		}								
 	}
 										
-	Response.Write("className: " + className+" -repositoryName: " + repositoryName+" -accessoryClass: " + accessoryClass+" -accessoryMethod: " + accessoryMethod+" -accessoryMethodParams: " + accessoryMethodParams+"<br>");
+	//Response.Write("className: " + className+" -repositoryName: " + repositoryName+" -accessoryClass: " + accessoryClass+" -accessoryMethod: " + accessoryMethod+" -accessoryMethodParams: " + accessoryMethodParams+"<br>");
 	
 	try
 	{

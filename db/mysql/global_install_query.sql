@@ -2077,7 +2077,7 @@ INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.contenuti.detail.button.label.preview_contenuti', 'IT', 'preview contenuti');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.contenuti.detail.js.alert.preview_content_disabled', 'IT', 'preview disabilitata!');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.detail.table.label.totale_imp_order', 'IT', 'Totale imponibile');
-INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.config.lista.table.description.use_https', 'IT', 'Abilita l&#39;utilizzo del protocollo HTTPS se previsto dal server:<br/>0 protocollo disabilitato;<br/>1 protocollo abilitato;');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.config.lista.table.description.use_https', 'IT', 'Abilita l&#39;utilizzo del protocollo HTTPS se previsto dal server:<br/>0 protocollo disabilitato;<br/>1 protocollo abilitato parzialmente (login,area utente,backoffice,carrello);<br/>2 protocollo abilitato su tutte le pagine;');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('portal.commons.errors.label.user_already_in_use', 'IT', 'L&#39;utente selezionato &egrave; in uso, impossibile cancellarlo!');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('frontend.registration.manage.label.confirm_registration_with_code', 'IT', 'L&#39;utente verr&agrave;  attivato dopo la conferma registrazione inviata via mail!');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.prodotti.detail.table.label.tassa_applicata', 'IT', 'Supplemento applicato');
@@ -3347,7 +3347,7 @@ INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.contenuti.detail.button.label.preview_contenuti', 'EN', 'contents preview');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.contenuti.detail.js.alert.preview_content_disabled', 'EN', 'preview disabled!');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.detail.table.label.totale_imp_order', 'EN', 'Total taxable amount');
-INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.config.lista.table.description.use_https', 'EN', 'Enables the use of the HTTPS protocol if it is allowed by the server:<br/>0 Protocol disabled;<br/>1 protocol enabled;');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.config.lista.table.description.use_https', 'EN', 'Enables the use of the HTTPS protocol if it is allowed by the server:<br/>0 Protocol disabled;<br/>1 protocol partially enabled (login,user area,backoffice,shopping cart);<br/>2 protocol fully enabled everywhere;');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('portal.commons.errors.label.user_already_in_use', 'EN', 'Selected user it is in use, unable to delete!');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('frontend.registration.manage.label.confirm_registration_with_code', 'EN', 'The user will be activated after the confirmation sent via registered mail!');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.prodotti.detail.table.label.tassa_applicata', 'EN', 'Applied supplement');

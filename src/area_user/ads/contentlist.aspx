@@ -28,7 +28,7 @@
 <script>
 /*<!--nsys-usr-lnews1-->*/
 function createAds(id){
-	location.href='/area_user/ads/insertads.aspx?contentid='+id;
+	location.href='<%=secureURL%>area_user/ads/insertads.aspx?contentid='+id;
 }
 /*<!---nsys-usr-lnews1-->*/
 
@@ -40,7 +40,7 @@ function deleteContent(id_objref, row,refreshrows){
 }
 
 function editContent(id){
-	location.href='/area_user/ads/insertcontent.aspx?cssClass=LN&id='+id;
+	location.href='<%=secureURL%>area_user/ads/insertcontent.aspx?cssClass=LN&id='+id;
 }
 
 function sortContentParam(val){
@@ -57,7 +57,7 @@ function sendAjaxCommand(field_name, field_val, objtype, id_objref, listCounter,
 		async: false,
 		type: "GET",
 		cache: false,
-		url: "/area_user/ads/ajaxupdate.aspx",
+		url: "<%=secureURL%>area_user/ads/ajaxupdate.aspx",
 		data: query_string,
 		success: function(response) {
 			//alert("response: "+response);
@@ -98,7 +98,7 @@ function ajaxDeleteItem(id_objref,objtype,row,refreshrows){
 		async: false,
 		type: "GET",
 		cache: false,
-		url: "/area_user/ads/ajaxdelete.aspx",
+		url: "<%=secureURL%>area_user/ads/ajaxdelete.aspx",
 		data: query_string,
 		success: function(response) {
 			var classon = "table-list-on";
@@ -226,10 +226,10 @@ $(document).ready(function() {
 		<UserMaskWidget:render runat="server" ID="umw1" index="1" style="float:left;clear:both;width:170px;"/>	
 		<div id="backend-content">		
 
-			<!--<a href="/area_user/account.aspx">&lt;&lt;&nbsp;&nbsp;<%=lang.getTranslated("frontend.area_user.manage.label.profile")%></a>-->
+			<!--<a href="<%=secureURL%>area_user/account.aspx">&lt;&lt;&nbsp;&nbsp;<%=lang.getTranslated("frontend.area_user.manage.label.profile")%></a>-->
 
 			<div style="padding-top:20px;padding-bottom:20px;float:top;min-height:40px;">		
-				<form action="<%=Request.Url.AbsolutePath%>" method="post" name="form_search" accept-charset="UTF-8">
+				<form action="<%=currentURL%>" method="post" name="form_search" accept-charset="UTF-8">
 					<input type="hidden" value="1" name="page">
 					<input type="hidden" value="<%=cssClass%>" name="cssClass">
 					<div style="float:left;padding-right:10px;padding-top:15px;">
@@ -293,7 +293,7 @@ $(document).ready(function() {
 					<tr> 
 						<th colspan="8" align="left">
 						<div style="float:left;padding-right:3px;height:15px;">
-						<form action="<%=Request.Url.AbsolutePath%>" method="post" name="item_x_page">
+						<form action="<%=currentURL%>" method="post" name="item_x_page">
 						<input type="hidden" value="<%=cssClass%>" name="cssClass">	
 						<input type="hidden" value="1" name="page">	
 						<input type="text" name="itemsNews" class="formFieldTXTNumXPage" value="<%=itemsXpageNews%>" title="<%=lang.getTranslated("backend.commons.lista.table.alt.item_x_page")%>" onblur="javascript:submit();" onkeypress="javascript:return isInteger(event);">
@@ -412,7 +412,7 @@ $(document).ready(function() {
 					<tr> 
 						<th colspan="8" align="left">
 						<div style="float:left;padding-right:3px;height:15px;">
-						<form action="<%=Request.Url.AbsolutePath%>" method="post" name="item_x_page">
+						<form action="<%=currentURL%>" method="post" name="item_x_page">
 						<input type="hidden" value="<%=cssClass%>" name="cssClass">	
 						<input type="hidden" value="1" name="page">	
 						<input type="text" name="itemsNews" class="formFieldTXTNumXPage" value="<%=itemsXpageNews%>" title="<%=lang.getTranslated("backend.commons.lista.table.alt.item_x_page")%>" onblur="javascript:submit();" onkeypress="javascript:return isInteger(event);">
@@ -426,14 +426,14 @@ $(document).ready(function() {
 				</table>
 				<br/>
 				<div>
-					<form action="/area_user/ads/insertcontent.aspx" method="post" name="form_crea">
+					<form action="<%=secureURL%>area_user/ads/insertcontent.aspx" method="post" name="form_crea">
 						<input type="hidden" value="-1" name="id">
 						<input type="hidden" value="<%=cssClass%>" name="cssClass">	
 						<input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.contenuti.lista.button.inserisci.label")%>" onclick="javascript:document.form_crea.submit();" />
 					</form>
 				</div>
 
-				<form action="/area_user/ads/contentlist.aspx" method="post" name="content_sort">
+				<form action="<%=secureURL%>area_user/ads/contentlist.aspx" method="post" name="content_sort">
 				<input type="hidden" value="<%=cssClass%>" name="cssClass">
 				<input type="hidden" value="<%=itemsXpageNews%>" name="itemsNews">	
 				<input type="hidden" value="<%=numPageNews%>" name="page">	

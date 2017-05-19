@@ -36,11 +36,11 @@ public partial class _FeAds : Page
 	protected ISupplementRepository suprep;
 	protected ISupplementGroupRepository supgrep;
 	protected IAdsRepository adsrep;
-	protected UriBuilder ubuilder = null;
 	protected string shoppingcardURL = "";
 	protected Currency defCurrency;
 	protected bool bolFoundLista = false;
 	protected UserGroup ug;
+	protected string secureURL;
 			
 	protected void Page_Init(Object sender, EventArgs e)
 	{
@@ -54,9 +54,12 @@ public partial class _FeAds : Page
 		Response.Charset="UTF-8";
 		Session.CodePage  = 65001;	
 		cssClass="LN";	
+		
+		secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+		
 		login.acceptedRoles = "3";
 		if(!login.checkedUser()){
-			Response.Redirect("~/login.aspx?error_code=002");
+			Response.Redirect(secureURL+"login.aspx?error_code=002");
 		}
 		contrep = RepositoryFactory.getInstance<IContentRepository>("IContentRepository");
 		adsrep = RepositoryFactory.getInstance<IAdsRepository>("IAdsRepository");
@@ -70,7 +73,7 @@ public partial class _FeAds : Page
 		IShippingAddressRepository shiprep = RepositoryFactory.getInstance<IShippingAddressRepository>("IShippingAddressRepository");
 		ConfigurationService confservice = new ConfigurationService();
 
-		StringBuilder url = new StringBuilder("/error.aspx?error_code=");		
+		StringBuilder url = new StringBuilder(secureURL).Append("error.aspx?error_code=");		
 		Logger log = new Logger();
 		content = null;
 		ads = new Ads();
@@ -98,28 +101,8 @@ public partial class _FeAds : Page
 			userIsCompanyClient = shipaddr.isCompanyClient;					
 		}
 			
-		// recupero elementi della pagina necessari
-		ubuilder = new UriBuilder(Request.Url);
-		ubuilder.Scheme = "http";
-		ubuilder.Port = -1;
-		ubuilder.Path="";
-		ubuilder.Query = "";
-
-		StringBuilder shoppingcardPath = new StringBuilder();
-		shoppingcardPath.Append("public/templates/shopping-cart/checkout.aspx"); 
-		
-		UriBuilder shoppingcardBuilder = new UriBuilder(Request.Url);
-		if(confservice.get("use_https").value=="1")
-		{	
-			shoppingcardBuilder.Scheme = "https";
-		}
-		else
-		{
-			shoppingcardBuilder.Scheme = "http";
-		}
-		shoppingcardBuilder.Port = -1;	
-		shoppingcardBuilder.Path = shoppingcardPath.ToString();		
-		shoppingcardURL = shoppingcardBuilder.ToString();
+		// recupero elementi della pagina necessari	
+		shoppingcardURL = secureURL+"public/templates/shopping-cart/checkout.aspx";
 		
 		bool carryOn;
 		if(!String.IsNullOrEmpty(Request["contentid"]) && Request["contentid"]!= "-1")
@@ -316,7 +299,7 @@ public partial class _FeAds : Page
 		if("insert".Equals(Request["operation"]))
 		{	
 			carryOn = true;	
-			string redirectURL = "/area_user/ads/contentlist.aspx?cssClass="+Request["cssClass"];
+			string redirectURL = secureURL+"area_user/ads/contentlist.aspx?cssClass="+Request["cssClass"];
 			try
 			{	
 				int adsType = Convert.ToInt32(Request["ads_type"]);
@@ -449,7 +432,7 @@ public partial class _FeAds : Page
 			}
 				
 			if(carryOn){
-				Response.Redirect("/area_user/ads/contentlist.aspx?cssClass="+Request["cssClass"]);
+				Response.Redirect(secureURL+"area_user/ads/contentlist.aspx?cssClass="+Request["cssClass"]);
 			}else{
 				Response.Redirect(url.ToString());
 			}		

@@ -26,6 +26,7 @@
 	protected bool foundFriends;
 	protected IUserRepository usrrep;
 	protected int fromFriend, toFriend, itemXpage, numPage,totalPages;
+	protected string baseURL, secureURL;
 	
 	protected void Page_Init(Object sender, EventArgs e)
 	{
@@ -41,12 +42,15 @@
 		login.acceptedRoles = "3";
 		bool loggedin = login.checkedUser();
 		
+		baseURL = Utils.getBaseUrl(Request.Url.ToString(),2).ToString();
+		secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+		
 		if(login.userLogged != null && (login.userLogged.role.isAdmin() || login.userLogged.role.isEditor())){
-			Response.Redirect("~/backoffice/index.aspx");
+			Response.Redirect(secureURL+"backoffice/index.aspx");
 		}
 		
 		if(!loggedin){
-			Response.Redirect("~/login.aspx");
+			Response.Redirect(secureURL+"login.aspx");
 		}
 		
 		ILoggerRepository lrep = RepositoryFactory.getInstance<ILoggerRepository>("ILoggerRepository");
@@ -60,8 +64,8 @@
 			numPage = Convert.ToInt32(Request["page"]);
 		}
 
-		StringBuilder url = new StringBuilder("/error.aspx?error_code=");	
-		StringBuilder happyUrl = new StringBuilder("/area_user/friends.aspx");		
+		StringBuilder url = new StringBuilder(baseURL).Append("error.aspx?error_code=");	
+		StringBuilder happyUrl = new StringBuilder(secureURL).Append("area_user/friends.aspx");		
 		Logger log = new Logger();
 		
 		// recupero elementi della pagina necessari
@@ -198,30 +202,30 @@
 <script language="JavaScript">
 function changeTab(number){
 	if(number==1)
-		location.href='/area_user/profile.aspx';
+		location.href='<%=secureURL%>area_user/profile.aspx';
 	else if(number==2)
-		location.href='/area_user/account.aspx';
+		location.href='<%=secureURL%>area_user/account.aspx';
 	else if(number==3)
-		location.href='/area_user/friends.aspx';
+		location.href='<%=secureURL%>area_user/friends.aspx';
 	else if(number==4)
-		location.href='/area_user/photos.aspx';
+		location.href='<%=secureURL%>area_user/photos.aspx';
 
 }
 
 function deleteFriend(idfriend){
 	if(confirm("<%=lang.getTranslated("frontend.area_user.manage.label.delthis")%>")){
-		location.href='/area_user/friends.aspx?operation=delete&friendid='+idfriend;
+		location.href='<%=secureURL%>area_user/friends.aspx?operation=delete&friendid='+idfriend;
 	}
 }
 
 function confirmFriend(idfriend, active){
 	if(active==1){
 		if(confirm("<%=lang.getTranslated("frontend.area_user.manage.label.confthis")%>")){
-			location.href='/area_user/friends.aspx?operation=confirm&active='+active+'&friendid='+idfriend;
+			location.href='<%=secureURL%>area_user/friends.aspx?operation=confirm&active='+active+'&friendid='+idfriend;
 		}	
 	}else{
 		if(confirm("<%=lang.getTranslated("frontend.area_user.manage.label.deconfthis")%>")){
-			location.href='/area_user/friends.aspx?operation=confirm&active='+active+'&friendid='+idfriend;
+			location.href='<%=secureURL%>area_user/friends.aspx?operation=confirm&active='+active+'&friendid='+idfriend;
 		}
 	}
 }
@@ -232,7 +236,7 @@ function checkAjaxHasFriendActive(id_friend, usrnameCurrUser){
 	$.ajax({
 		type: "POST",
 		cache: false,
-		url: "/area_user/ajaxcheckfriend.aspx",
+		url: "<%=secureURL%>area_user/ajaxcheckfriend.aspx",
 		data: query_string,
 		success: function(response) {
 			//alert("response: "+response);
@@ -368,7 +372,7 @@ jQuery(document).ready(function(){
 									<%}%>
 								<%}%>&nbsp;</td>
 								</tr>
-								<form action="/area_user/publicprofile.aspx" method="post" name="form_public_profile_<%=k.id%>">
+								<form action="<%=secureURL%>area_user/publicprofile.aspx" method="post" name="form_public_profile_<%=k.id%>">
 								<input type="hidden" value="<%=k.id%>" name="userid">
 								</form>				
 							<%}

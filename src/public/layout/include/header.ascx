@@ -1,4 +1,4 @@
-<%@control Language="c#" description="common-header"%>
+<%@control Language="c#" description="common-header" Debug="false"%>
 <%@ import Namespace="com.nemesys.model" %>
 <%@ Register TagPrefix="lang" TagName="getTranslated" Src="~/common/include/multilanguage.ascx" %>
 <%@ Reference Control="~/common/include/multilanguage.ascx" %>
@@ -7,7 +7,8 @@
 <%@ Register TagPrefix="CookiesPolicy" TagName="insert" Src="~/common/include/cookies-policy.ascx" %>
 <script runat="server">
 private ASP.MultiLanguageControl lang;
-private string url = "";
+protected string url;
+
 protected void Page_Init(Object sender, EventArgs e)
 {
     lang = (ASP.MultiLanguageControl)LoadControl("~/common/include/multilanguage.ascx");
@@ -18,13 +19,7 @@ protected void Page_Load(Object sender, EventArgs e)
 	Response.Charset="UTF-8";
 	Session.CodePage  = 65001;	
 	
-	UriBuilder builder = new UriBuilder(Request.Url);
-	builder.Scheme = "http";
-	builder.Port = -1;
-	//builder.Path = "default.aspx";	
-	builder.Path = "";
-	builder.Query="";
-	url = builder.ToString();
+	url = Utils.getBaseUrl(Request.Url.ToString(),0).ToString();
 }
 </script>
 

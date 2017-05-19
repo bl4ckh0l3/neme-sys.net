@@ -34,6 +34,7 @@
 	protected bool usrHasAvatar;
 	protected string avatarPath;
 	protected bool usrHasCookie;
+	protected string baseURL, secureURL;
 	
 	protected void Page_Init(Object sender, EventArgs e)
 	{
@@ -49,8 +50,11 @@
 		login.acceptedRoles = "3";
 		bool loggedin = login.checkedUser();
 		
+		baseURL = Utils.getBaseUrl(Request.Url.ToString(),2).ToString();
+		secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+		
 		if(login.userLogged != null && (login.userLogged.role.isAdmin() || login.userLogged.role.isEditor())){
-			Response.Redirect("~/backoffice/index.aspx");
+			Response.Redirect(secureURL+"backoffice/index.aspx");
 		}
 		
 		ILanguageRepository langrep = RepositoryFactory.getInstance<ILanguageRepository>("ILanguageRepository");
@@ -92,8 +96,8 @@
 		}
 		user.email = (string)Session["s_email"];
 		
-		StringBuilder url = new StringBuilder("/error.aspx?error_code=");	
-		StringBuilder happyUrl = new StringBuilder("/area_user/account.aspx");		
+		StringBuilder url = new StringBuilder(baseURL).Append("error.aspx?error_code=");	
+		StringBuilder happyUrl = new StringBuilder(secureURL).Append("area_user/account.aspx");		
 		Logger log = new Logger();
 		
 		// recupero elementi della pagina necessari
@@ -222,13 +226,9 @@
 			bool carryOn = true;	
 			try
 			{
-				UriBuilder builder = new UriBuilder(Request.Url);
-				builder.Scheme = "http";
-				builder.Port = -1;
-				builder.Path="";			
-			
 				// resolve captcha code
 				UriBuilder errCaptcha = new UriBuilder(Request.Url);
+				errCaptcha.Scheme = Utils.getBaseUrl(Request.Url.ToString(),2).Scheme;
 				errCaptcha.Port = -1;
 				errCaptcha.Query = "captcha_err=1";	
 				if(confservice.get("use_recaptcha").value == "1"){
@@ -455,7 +455,7 @@
 							
 											voucherep.insertVoucherCode(voucher);
 											
-											VoucherService.sendVoucherMail(vcampaign, voucher, null, user.email, lang.currentLangCode, lang.defaultLangCode, builder.ToString());
+											VoucherService.sendVoucherMail(vcampaign, voucher, null, user.email, lang.currentLangCode, lang.defaultLangCode, secureURL);
 										}
 									}
 								}								
@@ -498,8 +498,10 @@
 								{
 									login.updateUserLogged(null);
 									string query = "";
-									if("2" == confservice.get("confirm_registration").value){query="?id="+user.id+"&reg_code=true";}
-									happyUrl = new StringBuilder("/area_user/registration_confirm.aspx").Append(query);
+									if("2" == confservice.get("confirm_registration").value){
+										query="?id="+user.id+"&reg_code=true";
+									}
+									happyUrl = new StringBuilder(secureURL).Append("area_user/registration_confirm.aspx").Append(query);
 								}
 								
 								//if new user send welcome mail
@@ -521,11 +523,11 @@
 										isActivated = lang.getTranslated("portal.commons.no");
 										if("2" == confservice.get("confirm_registration").value){
 											userMessage.Append(lang.getTranslated("frontend.registration.manage.label.confirm_registration_with_code"))
-											.Append(":&nbsp;<a href='").Append(builder.ToString()).Append("area_user/confirmregcode.aspx?id=").Append(user.id).Append("&confirm_reg_code=").Append(confirmationCode).Append("'>")
+											.Append(":&nbsp;<a href='").Append(secureURL).Append("area_user/confirmregcode.aspx?id=").Append(user.id).Append("&confirm_reg_code=").Append(confirmationCode).Append("'>")
 												.Append(lang.getTranslated("backend.utenti.mail.label.confirm_registration"))
 											.Append("</a><br/>")
 											.Append(lang.getTranslated("backend.utenti.mail.label.no_link_confirm")).Append("<br/>")
-											.Append(builder.ToString()).Append("area_user/confirmregcode.aspx?id=").Append(user.id).Append("&confirm_reg_code=").Append(confirmationCode).Append("<br/><br/>");										
+											.Append(secureURL).Append("area_user/confirmregcode.aspx?id=").Append(user.id).Append("&confirm_reg_code=").Append(confirmationCode).Append("<br/><br/>");										
 										}
 									}
 									
@@ -580,8 +582,8 @@
 									replacementsAdmin.Add("<%content%>",Server.HtmlDecode(adminMessage.ToString()));
 									//replacements.Add("mail_subject",Request["mail_subject"]);	
 									
-									MailService.prepareAndSend("user-welcome-mail", lang.currentLangCode, lang.defaultLangCode, "backend.mails.detail.table.label.subject_", replacementsUser, null, builder.ToString());
-									MailService.prepareAndSend("user-welcome-mail", lang.currentLangCode, lang.defaultLangCode, "backend.mails.detail.table.label.subject_", replacementsAdmin, null, builder.ToString());			
+									MailService.prepareAndSend("user-welcome-mail", lang.currentLangCode, lang.defaultLangCode, "backend.mails.detail.table.label.subject_", replacementsUser, null, secureURL);
+									MailService.prepareAndSend("user-welcome-mail", lang.currentLangCode, lang.defaultLangCode, "backend.mails.detail.table.label.subject_", replacementsAdmin, null, secureURL);			
 								}
 							}
 							catch(Exception ex)
@@ -644,7 +646,7 @@
 			}		
 			
 			if(carryOn){
-				Response.Redirect("~/login.aspx?messages=003");
+				Response.Redirect(secureURL+"login.aspx?messages=003");
 			}else{
 				Response.Redirect(url.ToString());
 			}
@@ -676,7 +678,6 @@ var step3ok, step4ok = false;
 
 function deleteUser(){
 	if(confirm("<%=lang.getTranslated("frontend.area_user.manage.label.conf_del")%>")){
-		//location.href = "/area_user/userdelete.aspx";
 		document.form_delete.submit();
 	}
 
@@ -852,13 +853,13 @@ function uncheckNewsletter(){
 
 function changeTab(number){
 	if(number==1)
-		location.href='/area_user/profile.aspx';
+		location.href='<%=secureURL%>area_user/profile.aspx';
 	else if(number==2)
-		location.href='/area_user/account.aspx';
+		location.href='<%=secureURL%>area_user/account.aspx';
 	else if(number==3)
-		location.href='/area_user/friends.aspx';
+		location.href='<%=secureURL%>area_user/friends.aspx';
 	else if(number==4)
-		location.href='/area_user/photos.aspx';
+		location.href='<%=secureURL%>area_user/photos.aspx';
 
 }
   
@@ -919,7 +920,7 @@ jQuery(document).ready(function(){
 		<MenuFrontendControl:insert runat="server" ID="mf1" index="1" model="vertical"/>	
 		<UserMaskWidget:render runat="server" ID="umw1" index="1" style="float:left;clear:both;width:170px;"/>	
 		<div id="backend-content">
-		<form action="/area_user/account.aspx" method="post" name="form_inserisci" enctype="multipart/form-data" accept-charset="UTF-8">		  
+		<form action="<%=secureURL%>area_user/account.aspx" method="post" name="form_inserisci" enctype="multipart/form-data" accept-charset="UTF-8">		  
 		<input type="hidden" value="<%=user.id%>" name="id">	  
 		<input type="hidden" name="operation" value="insert">
 		<input type="hidden" name="newsletter" value="<%=user.hasNewsletter%>">
@@ -958,7 +959,7 @@ jQuery(document).ready(function(){
 			<em style="padding-left:5px;padding-top:10px; font-weight:bold;"><%=user.username%></em>
 			<%if (user.id != -1) {%>&nbsp;&nbsp;<span style="text-decoration:underline;cursor:pointer;" onclick="showPwdBox('change_pwd_box');"><%=lang.getTranslated("frontend.area_user.manage.label.show_pwd_box")%></span><%}%>
 			<%if(usrHasCookie){%>
-				&nbsp;<a href="/area_user/account.aspx?del_autologin=1"><%=lang.getTranslated("frontend.area_user.manage.label.reset_auto_login")%></a>
+				&nbsp;<a href="<%=secureURL%>area_user/account.aspx?del_autologin=1"><%=lang.getTranslated("frontend.area_user.manage.label.reset_auto_login")%></a>
 			<%}%>
 			<input type="hidden" name="username" id="username" value="<%=user.username%>">	
 		<%}else{%>
@@ -1153,7 +1154,7 @@ jQuery(document).ready(function(){
        </div>
 		</form>	
 
-		<form action="/area_user/account.aspx" method="post" name="form_delete" accept-charset="UTF-8">		  
+		<form action="<%=secureURL%>area_user/account.aspx" method="post" name="form_delete" accept-charset="UTF-8">		  
 		<input type="hidden" value="<%=user.id%>" name="id">
 		<input type="hidden" name="operation" value="delete">
 		</form>				

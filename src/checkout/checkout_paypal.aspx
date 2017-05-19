@@ -29,6 +29,8 @@ protected void Page_Load(object sender, EventArgs e)
 	ILoggerRepository lrep = RepositoryFactory.getInstance<ILoggerRepository>("ILoggerRepository");
 	ConfigurationService confservice = new ConfigurationService();
 	
+	string secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+	
 	string apiVersion = "65.0";
 	bool carryOn = false;
 	string ECURL = "";
@@ -40,11 +42,6 @@ protected void Page_Load(object sender, EventArgs e)
 			if(order != null){
 				IDictionary<string,string> checkoutValues = PaymentService.setCheckout(order);
 	
-				UriBuilder orderUri = new UriBuilder(Request.Url);
-				orderUri.Port = -1;
-				orderUri.Path="";
-				orderUri.Query="";	
-				
 				string langCode = lang.currentLangCode;
 				if(!String.IsNullOrEmpty(Request["useLang"])){
 					langCode = Request["useLang"];
@@ -58,8 +55,8 @@ protected void Page_Load(object sender, EventArgs e)
 				string signature = "";
 				string externalURL = "";
 				string endpointURL = "";
-				string returnURL = orderUri.ToString()+"checkout/checkin.aspx";
-				string cancelURL = orderUri.ToString()+"checkout/checkin_failed.aspx";
+				string returnURL = secureURL+"checkout/checkin.aspx";
+				string cancelURL = secureURL+"checkout/checkin_failed.aspx";
 				string amount = order.amount.ToString("0.00").Replace(",",".");
 				string custom = order.id.ToString()+"|"+amount+langCode;
 				custom = Utils.encodeTo64(custom);
@@ -156,7 +153,7 @@ protected void Page_Load(object sender, EventArgs e)
 		if(carryOn){
 			Response.Redirect(ECURL);
 		}else{
-			Response.Redirect("/error.aspx?error_code=043");
+			Response.Redirect(secureURL+"error.aspx?error_code=043");
 		}
 	}
 }

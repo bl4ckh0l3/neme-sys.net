@@ -129,7 +129,7 @@ function renderNumImgsTable(counter){
 		async: true,
 		type: "GET",
 		cache: false,
-		url: "/area_user/ads/ajaxattachlabel.aspx",
+		url: "<%=secureURL%>area_user/ads/ajaxattachlabel.aspx",
 		data: query_string,
 		success: function(response) {
 			$("select[name*='fileupload_label']").each(function(){
@@ -181,7 +181,7 @@ function deleteAttach(id_attach,row, file_path){
 			async: true,
 			type: "POST",
 			cache: false,
-			url: "/area_user/ads/ajaxdeleteattach.aspx",
+			url: "<%=secureURL%>area_user/ads/ajaxdeleteattach.aspx",
 			data: query_string,
 			success: function(response) {
 				//alert(response);	
@@ -208,7 +208,7 @@ function deleteField(id_objref, row,refreshrows){
 			async: true,
 			type: "POST",
 			cache: false,
-			url: "/area_user/ads/ajaxdeletefield.aspx",
+			url: "<%=secureURL%>area_user/ads/ajaxdeletefield.aspx",
 			data: query_string,
 			success: function(response) {
 				//alert(response);	
@@ -522,7 +522,7 @@ function delFieldValues(counter,id_element, value, field, remove){
 		//alert(query_string);
 		$.ajax({
 			type: "POST",
-			url: "/area_user/ads/ajaxdeletefieldvalue.aspx",
+			url: "<%=secureURL%>area_user/ads/ajaxdeletefieldvalue.aspx",
 			data: query_string,
 			success: function() {
 			$("#"+field).remove();
@@ -944,7 +944,7 @@ function saveField(counter,row,refreshrow, modify, subcounter){
 		type: "POST",
 		cache: false,
 		data: $('#form_create_field').serialize(),
-		url: "/area_user/ads/ajaxsavefield.aspx",
+		url: "<%=secureURL%>area_user/ads/ajaxsavefield.aspx",
 		data: query_string,
 		success: function(response) {
 			//alert("response: "+response);
@@ -1246,7 +1246,7 @@ $(document).ready(function(){
 			<table border="0" cellspacing="0" cellpadding="0" class="principal">
 			<tr> 		  		  
 				<td>
-					<form action="/area_user/ads/ajaxsavefield.aspx" method="post" id="form_create_field" name="form_create_field" enctype="multipart/form-data" accept-charset="UTF-8">
+					<form action="<%=secureURL%>area_user/ads/ajaxsavefield.aspx" method="post" id="form_create_field" name="form_create_field" enctype="multipart/form-data" accept-charset="UTF-8">
 					  <input type="hidden" value="addfield" name="operation">		
 					  <input type="hidden" value="<%=content.id%>" name="id_content">
 					  <input type="hidden" value="" name="id_field">
@@ -1265,7 +1265,7 @@ $(document).ready(function(){
 					  <input type="hidden" value="" name="list_content_fields">
 					  <input type="hidden" value="" name="list_content_fields_values">			
 					</form>
-					<form action="/area_user/ads/insertcontent.aspx" method="post" name="form_inserisci" enctype="multipart/form-data" accept-charset="UTF-8">
+					<form action="<%=secureURL%>area_user/ads/insertcontent.aspx" method="post" name="form_inserisci" enctype="multipart/form-data" accept-charset="UTF-8">
 					<input type="hidden" value="<%=content.id%>" name="id"  id="id">
 					<input type="hidden" value="<%=pre_el_id%>" name="pre_el_id">
 					<input type="hidden" value="insert" name="operation">
@@ -2332,18 +2332,18 @@ $(document).ready(function(){
 			</table>
 			<div id="loading" style="visibility:hidden;display:none;padding-top:10px;" align="center"><img src="/backoffice/img/loading.gif" vspace="0" hspace="0" border="0" alt="Loading..." width="200" height="50"></div>
 			<br/>
-			<input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.contenuti.detail.button.inserisci_esci.label")%>" onclick="javascript:sendForm(1);" />&nbsp;&nbsp;<input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.contenuti.detail.button.inserisci.label")%>" onclick="javascript:sendForm(0);" />&nbsp;&nbsp;<input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.commons.back")%>" onclick="javascript:location.href='<%="/area_user/ads/contentlist.aspx?cssClass=LN"%>';" />
+			<input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.contenuti.detail.button.inserisci_esci.label")%>" onclick="javascript:sendForm(1);" />&nbsp;&nbsp;<input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.contenuti.detail.button.inserisci.label")%>" onclick="javascript:sendForm(0);" />&nbsp;&nbsp;<input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.commons.back")%>" onclick="javascript:location.href='<%=secureURL+"area_user/ads/contentlist.aspx?cssClass=LN"%>';" />
 			<br/><br/>
 			
 			<%if(content.id != -1) {%>		
-				<form action="/area_user/ads/insertcontent.aspx" method="post" name="form_cancella_news">
+				<form action="<%=secureURL%>area_user/ads/insertcontent.aspx" method="post" name="form_cancella_news">
 				<input type="hidden" value="<%=content.id%>" name="id">
 				<input type="hidden" value="delete" name="operation">
 				<input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.contenuti.detail.button.elimina.label")%>" onclick="javascript:confirmDelete();" />
 				</form>
 			<%}%>	
 			
-			<form action="/area_user/ads/insertcontent.aspx" method="get" name="form_reload_page">
+			<form action="<%=secureURL%>area_user/ads/insertcontent.aspx" method="get" name="form_reload_page">
 			<input type="hidden" name="id" value="<%=content.id%>">
 			</form>
 		</div>		

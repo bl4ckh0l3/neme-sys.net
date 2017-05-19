@@ -22,6 +22,8 @@ public partial class _FeOrderList : Page
 	protected IDictionary<int,string> paymentTypes;
 	protected IDictionary<int,string> statusOrder;
 	
+	protected string secureURL;
+	
 	private int _totalPages;	
 	public int totalPages {
 		get { return _totalPages; }
@@ -40,8 +42,10 @@ public partial class _FeOrderList : Page
 		Session.CodePage  = 65001;	
 		cssClass="LN";	
 		login.acceptedRoles = "3";
+		secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+		
 		if(!login.checkedUser()){
-			Response.Redirect("~/login.aspx?error_code=002");
+			Response.Redirect(secureURL+"login.aspx?error_code=002");
 		}
 		
 		IPaymentRepository payrep = RepositoryFactory.getInstance<IPaymentRepository>("IPaymentRepository");

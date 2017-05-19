@@ -21,6 +21,6 @@ protected void Page_Load(object sender, EventArgs e)
 	Response.Charset="UTF-8";
 	Session.CodePage  = 65001;	
 	
-	Response.Redirect("/error.aspx?error_code=043");	
+	Response.Redirect(Utils.getBaseUrl(Request.Url.ToString(),1).ToString()+"error.aspx?error_code=043");	
 }
 </script>

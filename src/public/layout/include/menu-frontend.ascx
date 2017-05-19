@@ -16,6 +16,7 @@ public ASP.UserLoginControl login;
 private ConfigurationService configService = new ConfigurationService();
 private ICategoryRepository catrep;
 private ILanguageRepository langrep;
+protected string baseURL, secureURL;
 
 private int _menuNumber;	
 public int menuNumber {
@@ -94,13 +95,15 @@ protected void Page_Load(Object sender, EventArgs e)
 	catrep = RepositoryFactory.getInstance<ICategoryRepository>("ICategoryRepository");
 	langrep = RepositoryFactory.getInstance<ILanguageRepository>("ILanguageRepository");
 	categoryid = "";
+	baseURL = Utils.getBaseUrl(Request.Url.ToString(),2).ToString();
+	secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
 }
 
 protected void renderNotAjax()
 {
 	int clevel = 0;
 	Category category = null;
-	StringBuilder builder = new StringBuilder(Request.Url.Scheme).Append("://");
+	StringBuilder builder = new StringBuilder(Utils.getBaseUrl(Request.Url.ToString(),2).Scheme).Append("://");
 		
 	try
 	{
@@ -185,7 +188,7 @@ function ajaxLoadMenu<%=index%>(){
 	async: true,
 	type: "GET",
 	cache: false,
-	url: "/public/layout/include/ajax-menu-frontend.aspx",
+	url: "<%=baseURL%>public/layout/include/ajax-menu-frontend.aspx",
 	data: query_string,
 	success: function(response) {
 		//alert(response);
@@ -243,7 +246,7 @@ jQuery(document).ready(function(){
 		<!--nsys-inc1-->		
 		<ul>
 			<%if(configService.get("disable_ecommerce").value == "0") {%>
-				<li><a <%if(Request["ext_ger"] == "card") { Response.Write("class=\"link-attivo\"");}%> href="/public/templates/shopping-cart/checkout.aspx?ext_ger=card"><%=lang.getTranslated("frontend.menu.label.go_to_carrello")%>&nbsp;<img src="/common/img/cart.png" alt="<%=lang.getTranslated("frontend.menu.label.go_to_carrello")%>" hspace="2" vspace="2" border="0" align="absmiddle"></a></li>
+				<li><a <%if(Request["ext_ger"] == "card") { Response.Write("class=\"link-attivo\"");}%> href="<%=secureURL%>public/templates/shopping-cart/checkout.aspx?ext_ger=card"><%=lang.getTranslated("frontend.menu.label.go_to_carrello")%>&nbsp;<img src="/common/img/cart.png" alt="<%=lang.getTranslated("frontend.menu.label.go_to_carrello")%>" hspace="2" vspace="2" border="0" align="absmiddle"></a></li>
 			<%}%>
 		</ul>
 		<!---nsys-inc1-->

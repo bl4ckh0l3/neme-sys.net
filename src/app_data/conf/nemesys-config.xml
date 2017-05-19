@@ -184,7 +184,7 @@
     <description>backend.config.lista.table.description.use_https</description>
     <alert>1</alert>
     <type>configuration_ssl</type>
-    <type_values>0,1</type_values>
+    <type_values>0,1,2</type_values>
     <is_base>1</is_base>
   </use_https>
   <use_locale>

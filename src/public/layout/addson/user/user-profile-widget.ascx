@@ -13,7 +13,6 @@
 <script runat="server">  
 public ASP.MultiLanguageControl lang;
 public ASP.UserLoginControl login;
-private ConfigurationService configService;
 private ICommentRepository commentrep;
 private IUserPreferencesRepository preftrep;
 bool logged;
@@ -54,7 +53,6 @@ protected void Page_Load(Object sender, EventArgs e)
 	logged = login.checkedUser();
 	commentrep = RepositoryFactory.getInstance<ICommentRepository>("ICommentRepository");
 	preftrep = RepositoryFactory.getInstance<IUserPreferencesRepository>("IUserPreferencesRepository");
-	configService = new ConfigurationService();
 }
 </script>
 

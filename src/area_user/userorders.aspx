@@ -95,7 +95,7 @@
 							paymentTypes.TryGetValue(k.id, out ptype);
 							%>		
 							<tr class="<%if(intCount % 2 == 0){Response.Write("table-list-on");}else{Response.Write("table-list-off");}%>" id="tr_delete_list_<%=intCount%>">
-							<td align="center" width="25"><a href="/area_user/vieworder.aspx?orderid=<%=k.id%>" title="<%=lang.getTranslated("frontend.area_user.ordini.alt.view_order")%>"><img src="/backoffice/img/zoom.png" alt="<%=lang.getTranslated("frontend.area_user.ordini.alt.view_order")%>" hspace="2" vspace="0" border="0"></a></td>
+							<td align="center" width="25"><a href="<%=secureURL%>area_user/vieworder.aspx?orderid=<%=k.id%>" title="<%=lang.getTranslated("frontend.area_user.ordini.alt.view_order")%>"><img src="/backoffice/img/zoom.png" alt="<%=lang.getTranslated("frontend.area_user.ordini.alt.view_order")%>" hspace="2" vspace="0" border="0"></a></td>
 							<td><%=k.insertDate.ToString("dd/MM/yyyy HH:mm")%></td>
 							<td>&euro;&nbsp;<%=k.amount.ToString("#,###0.00")%></td>
 							<td><%=ptype%></td>

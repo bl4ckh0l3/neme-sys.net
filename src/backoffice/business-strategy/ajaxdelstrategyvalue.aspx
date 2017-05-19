@@ -28,7 +28,7 @@ protected void Page_Load(Object sender, EventArgs e)
 	Session.CodePage  = 65001;		
 
 	IBusinessRuleRepository brulerep = RepositoryFactory.getInstance<IBusinessRuleRepository>("IBusinessRuleRepository");
-	StringBuilder url = new StringBuilder("/error.aspx?error_code=");
+	//StringBuilder url = new StringBuilder("/error.aspx?error_code=");
 	int idStrategy = Convert.ToInt32(Request["id_strategy"]);
 
 	try

@@ -26,6 +26,7 @@
 	protected IList<UserAttachment> attachments;
 	protected IDictionary<string, IList<UserAttachment>> albums;
 	protected string basePath;
+	protected string baseURL, secureURL;
 	
 	protected void Page_Init(Object sender, EventArgs e)
 	{
@@ -40,13 +41,16 @@
 		Session.CodePage  = 65001;	
 		login.acceptedRoles = "3";
 		bool loggedin = login.checkedUser();
+
+		baseURL = Utils.getBaseUrl(Request.Url.ToString(),2).ToString();
+		secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();		
 		
 		if(login.userLogged != null && (login.userLogged.role.isAdmin() || login.userLogged.role.isEditor())){
-			Response.Redirect("~/backoffice/index.aspx");
+			Response.Redirect(secureURL+"backoffice/index.aspx");
 		}
 		
 		if(!loggedin){
-			Response.Redirect("~/login.aspx");
+			Response.Redirect(secureURL+"login.aspx");
 		}
 		
 		ILoggerRepository lrep = RepositoryFactory.getInstance<ILoggerRepository>("ILoggerRepository");
@@ -54,11 +58,12 @@
 		confservice = new ConfigurationService();
 		bolFoundPhotos = false;
 
-		StringBuilder url = new StringBuilder("/error.aspx?error_code=");	
-		StringBuilder happyUrl = new StringBuilder("/area_user/photos.aspx");		
+		StringBuilder url = new StringBuilder(baseURL).Append("error.aspx?error_code=");	
+		StringBuilder happyUrl = new StringBuilder(secureURL).Append("area_user/photos.aspx");		
 		Logger log = new Logger();
 
-		basePath = new StringBuilder(Request.Url.Scheme).Append("://").Append(Request.Url.Host).Append("/public/upload/files/user/").ToString();
+		//basePath = new StringBuilder(Request.Url.Scheme).Append("://").Append(Request.Url.Host).Append("/public/upload/files/user/").ToString();
+		basePath = "/public/upload/files/user/";
 		albums = new Dictionary<string, IList<UserAttachment>>();
 
 		try
@@ -229,13 +234,13 @@
 <script language="JavaScript">
 function changeTab(number){
 	if(number==1)
-		location.href='/area_user/profile.aspx';
+		location.href='<%=secureURL%>area_user/profile.aspx';
 	else if(number==2)
-		location.href='/area_user/account.aspx';
+		location.href='<%=secureURL%>area_user/account.aspx';
 	else if(number==3)
-		location.href='/area_user/friends.aspx';
+		location.href='<%=secureURL%>area_user/friends.aspx';
 	else if(number==4)
-		location.href='/area_user/photos.aspx';
+		location.href='<%=secureURL%>area_user/photos.aspx';
 
 }
 
@@ -245,7 +250,7 @@ function insertPhoto(){
 
 function deletePhoto(id){
 	if(confirm("<%=lang.getTranslated("frontend.area_user.manage.label.confirm_del_attach")%>")){
-		location.href='/area_user/photos.aspx?operation=deletephoto&id='+id;      
+		location.href='<%=secureURL%>area_user/photos.aspx?operation=deletephoto&id='+id;      
 	}
 }
 
@@ -298,7 +303,7 @@ function closeAlbum(){
 	
 			<div id="profilo-utente" style="margin-top:20px;">      
 				<div id="send-photo" style="margin-bottom:10px;vertical-align:top;text-align:left;font-size: 10px;text-decoration: none;border:none;padding-left:0px;padding-right:0px;padding-bottom:5px;background:#FFFFFF;">
-					<form action="/area_user/photos.aspx" method="post" name="form_photos" accept-charset="UTF-8" enctype="multipart/form-data">		
+					<form action="<%=secureURL%>area_user/photos.aspx" method="post" name="form_photos" accept-charset="UTF-8" enctype="multipart/form-data">		
 						<input type="hidden" value="addphoto" name="operation">		
 						<br/>
 						<div style="float:left;margin-right:20px;">

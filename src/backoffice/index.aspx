@@ -14,6 +14,7 @@
 <script runat="server">
 private ASP.BoMultiLanguageControl lang;
 private ASP.UserLoginControl login;
+protected string secureURL;
 
 protected void Page_Init(Object sender, EventArgs e)
 {
@@ -26,9 +27,12 @@ protected void Page_Load(Object sender, EventArgs e)
 	lang.set();
 	Response.Charset="UTF-8";
 	Session.CodePage  = 65001;	
+	
+	secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+	
 	login.acceptedRoles = "1,2";
 	if(!login.checkedUser()){
-		Response.Redirect("~/login.aspx?error_code=002");
+		Response.Redirect(secureURL+"login.aspx?error_code=002");
 	}
 }
 </script>
@@ -56,15 +60,15 @@ $(function() {
 			<div align="center">
 				<strong id="init"><br><br><lang:getTranslated keyword="backend.index.detail.table.label.editor_contents" runat="server" /><br><br></strong>
 				<%if(login.userLogged.role.isAdmin() || login.userLogged.role.isEditor()) {%>
-				<a href="/backoffice/contents/contentlist.aspx?cssClass=LN&resetMenu=1" title="<%=lang.getTranslated("backend.menu.item.contenuti.lista")%>"><IMG height="120" alt="<%=lang.getTranslated("backend.menu.item.contenuti")%>" src="/backoffice/img/home/ico-contenuti.jpg" data-hover="/backoffice/img/home/ico-active-contenuti.jpg" width="100" border="0" vspace="3" hspace="2"></a>
+				<a href="<%=secureURL%>backoffice/contents/contentlist.aspx?cssClass=LN&resetMenu=1" title="<%=lang.getTranslated("backend.menu.item.contenuti.lista")%>"><IMG height="120" alt="<%=lang.getTranslated("backend.menu.item.contenuti")%>" src="/backoffice/img/home/ico-contenuti.jpg" data-hover="/backoffice/img/home/ico-active-contenuti.jpg" width="100" border="0" vspace="3" hspace="2"></a>
 				<%}
     			if(login.userLogged.role.isAdmin()) {%>
-				<a href="/backoffice/users/userlist.aspx?cssClass=LU" title="<%=lang.getTranslated("backend.menu.item.utenti.lista")%>"><IMG height="120" alt="<%=lang.getTranslated("backend.menu.item.utenti")%>" src="/backoffice/img/home/ico-utenti.jpg" data-hover="/backoffice/img/home/ico-active-utenti.jpg" width="100" border="0" vspace="3"></a>
-				<a href="/backoffice/categories/categorylist.aspx?cssClass=LCE" title="<%=lang.getTranslated("backend.menu.item.categorie.lista")%>"><IMG height="120" alt="<%=lang.getTranslated("backend.menu.item.categorie")%>" src="/backoffice/img/home/ico-struttura.jpg" data-hover="/backoffice/img/home/ico-active-struttura.jpg" width="100" border="0" vspace="3" hspace="2"></a><br/>
-				<a href="/backoffice/templates/templatelist.aspx?cssClass=LTP" title="<%=lang.getTranslated("backend.menu.item.templates.lista")%>"><IMG height="120" alt="<%=lang.getTranslated("backend.menu.item.templates")%>" src="/backoffice/img/home/ico-grafica.jpg" data-hover="/backoffice/img/home/ico-active-grafica.jpg" width="100" border="0" hspace="2"></a>
+				<a href="<%=secureURL%>backoffice/users/userlist.aspx?cssClass=LU" title="<%=lang.getTranslated("backend.menu.item.utenti.lista")%>"><IMG height="120" alt="<%=lang.getTranslated("backend.menu.item.utenti")%>" src="/backoffice/img/home/ico-utenti.jpg" data-hover="/backoffice/img/home/ico-active-utenti.jpg" width="100" border="0" vspace="3"></a>
+				<a href="<%=secureURL%>backoffice/categories/categorylist.aspx?cssClass=LCE" title="<%=lang.getTranslated("backend.menu.item.categorie.lista")%>"><IMG height="120" alt="<%=lang.getTranslated("backend.menu.item.categorie")%>" src="/backoffice/img/home/ico-struttura.jpg" data-hover="/backoffice/img/home/ico-active-struttura.jpg" width="100" border="0" vspace="3" hspace="2"></a><br/>
+				<a href="<%=secureURL%>backoffice/templates/templatelist.aspx?cssClass=LTP" title="<%=lang.getTranslated("backend.menu.item.templates.lista")%>"><IMG height="120" alt="<%=lang.getTranslated("backend.menu.item.templates")%>" src="/backoffice/img/home/ico-grafica.jpg" data-hover="/backoffice/img/home/ico-active-grafica.jpg" width="100" border="0" hspace="2"></a>
 				<%}
     			if(login.userLogged.role.isAdmin()) {%>
-				<a href="/backoffice/multilanguages/multilanguagelist.aspx?cssClass=IML&resetMenu=1" title="<%=lang.getTranslated("backend.menu.item.multi_language.lista")%>"><IMG height="120" alt="<%=lang.getTranslated("backend.menu.item.multi_language")%>" src="/backoffice/img/home/ico-multilingua.jpg" data-hover="/backoffice/img/home/ico-active-multilingua.jpg" width="100" border="0"></a><br/><br/>
+				<a href="<%=secureURL%>backoffice/multilanguages/multilanguagelist.aspx?cssClass=IML&resetMenu=1" title="<%=lang.getTranslated("backend.menu.item.multi_language.lista")%>"><IMG height="120" alt="<%=lang.getTranslated("backend.menu.item.multi_language")%>" src="/backoffice/img/home/ico-multilingua.jpg" data-hover="/backoffice/img/home/ico-active-multilingua.jpg" width="100" border="0"></a><br/><br/>
 				<%}%>
 				<div><strong><lang:getTranslated keyword="backend.index.detail.table.label.download_guide" runat="server" /></strong>&nbsp;<!--nsys-bohome1--><a class="link-down-guide" target="_blank" href="http://www.neme-sys.it/public/utils/econeme-sys_guide.pdf"><!---nsys-bohome1--><lang:getTranslated keyword="backend.index.detail.table.label.download_guide_click" runat="server" /></a></div>
 			</div>

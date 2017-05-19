@@ -84,7 +84,7 @@ function controllaCampiInput(){
 					<span class="labelForm"><%=lang.getTranslated("backend.contenuti.detail.table.label.data_pub")%></span><br>
 					<%=content.publishDate.ToString("dd/MM/yyyy HH:mm")%><br/><br/>				
 				
-					<form action="/area_user/ads/insertads.aspx" method="post" name="form_inserisci" enctype="multipart/form-data" accept-charset="UTF-8">
+					<form action="<%=secureURL%>area_user/ads/insertads.aspx" method="post" name="form_inserisci" enctype="multipart/form-data" accept-charset="UTF-8">
 					<input type="hidden" value="<%=content.id%>" name="contentid"  id="contentid">
 					<input type="hidden" value="<%=ads.id%>" name="adsid"  id="adsid">
 					<input type="hidden" value="insert" name="operation">		 	
@@ -146,7 +146,7 @@ function controllaCampiInput(){
 			<br/><br/>
 			
 			<%if(ads.id != -1) {%>		
-				<form action="/area_user/ads/insertads.aspx" method="post" name="form_cancella_ads">
+				<form action="<%=secureURL%>area_user/ads/insertads.aspx" method="post" name="form_cancella_ads">
 				<input type="hidden" value="<%=content.id%>" name="contentid"  id="contentid">
 				<input type="hidden" value="<%=ads.id%>" name="adsid">
 				<input type="hidden" value="delete" name="operation">

@@ -2,11 +2,35 @@ using System;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using com.nemesys.services;
 
 namespace com.nemesys.model
 {
 	public class Utils
-	{	
+	{
+		private static ConfigurationService configService = new ConfigurationService();
+		
+		public static UriBuilder getBaseUrl(string RequestUrl, int useHttps)	
+		{
+			UriBuilder redirectUrl = new UriBuilder(RequestUrl);
+			if( configService.get("use_https").value=="2" ||
+			   (configService.get("use_https").value=="1" && useHttps==1) || 
+		  	   (configService.get("use_https").value=="1" && useHttps==2 && "https".Equals(redirectUrl.Scheme))
+		  	  )
+			{	
+				redirectUrl.Scheme = "https";
+			}
+			else
+			{
+				redirectUrl.Scheme = "http";
+			}
+			redirectUrl.Port = -1;	
+			redirectUrl.Path = "";
+			redirectUrl.Query="";
+			
+			return redirectUrl;
+		}		
+		
 		public static string getCurrentCopyrightYearRange()	
 		{
 			return getCurrentCopyrightYearRange(2);
@@ -65,7 +89,7 @@ namespace com.nemesys.model
 			acceptedExtension.Add(".csv");
 			acceptedExtension.Add(".zip");	
 			
-			return acceptedExtension.Contains(ext);
+			return !String.IsNullOrEmpty(ext) && acceptedExtension.Contains(ext.ToLower());
 		}
 	}
 }

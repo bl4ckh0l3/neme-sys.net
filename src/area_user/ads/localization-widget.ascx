@@ -19,6 +19,7 @@ protected string savetext;
 protected string class_style;
 protected int tmpcounter=1;
 protected IList<Geolocalization> points;
+protected string secureURL;
 
 private int _idElem;	
 public int idElem {
@@ -55,6 +56,7 @@ protected void Page_Load(Object sender, EventArgs e)
 	savetext = lang.getTranslated("backend.commons.detail.table.label.save");
 	class_style="backend-localization";
 	points = new List<Geolocalization>();
+	secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
 	
 	//Response.Write("<br>load _idElem:"+_idElem);
 	//Response.Write("<br>load _elemType:"+_elemType);
@@ -257,7 +259,7 @@ protected void Page_Load(Object sender, EventArgs e)
 		
 		$.ajax({
 			type: "POST",
-			url: "/area_user/ads/ajaxsavepoint.aspx",
+			url: "<%=secureURL%>area_user/ads/ajaxsavepoint.aspx",
 			data: query_string,
 			success: function(response) {
 				//alert("salvato point: "+response);
@@ -287,7 +289,7 @@ protected void Page_Load(Object sender, EventArgs e)
 		
 		$.ajax({
 			type: "POST",
-			url: "/area_user/ads/include/ajaxsavepoint.aspx",
+			url: "<%=secureURL%>area_user/ads/ajaxsavepoint.aspx",
 			data: query_string,
 			success: function(response) {
 				//alert("salvato point: "+response);

@@ -31,6 +31,7 @@
 	protected IList<UserAttachment> attachments;
 	protected IDictionary<string, IList<UserAttachment>> albums;
 	protected string basePath;
+	protected string baseURL, secureURL;
 	
 	protected void Page_Init(Object sender, EventArgs e)
 	{
@@ -53,20 +54,24 @@
 		preferenceFound = false;
 		bolFoundField = false;
 		bolFoundPhotos = false;
+		
+		baseURL = Utils.getBaseUrl(Request.Url.ToString(),2).ToString();
+		secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
 
-		StringBuilder url = new StringBuilder("/error.aspx?error_code=");	
-		StringBuilder happyUrl = new StringBuilder("/area_user/publicprofile.aspx");		
+		StringBuilder url = new StringBuilder(baseURL).Append("error.aspx?error_code=");	
+		StringBuilder happyUrl = new StringBuilder(secureURL).Append("area_user/publicprofile.aspx");		
 		Logger log = new Logger();
 		
-		basePath = new StringBuilder(Request.Url.Scheme).Append("://").Append(Request.Url.Host).Append("/public/upload/files/user/").ToString();
+		//basePath = new StringBuilder(Request.Url.Scheme).Append("://").Append(Request.Url.Host).Append("/public/upload/files/user/").ToString();
+		basePath = "/public/upload/files/user/";
 		albums = new Dictionary<string, IList<UserAttachment>>();
 		
 		if(login.userLogged != null && (login.userLogged.role.isAdmin() || login.userLogged.role.isEditor())){
-			Response.Redirect("~/backoffice/index.aspx");
+			Response.Redirect(secureURL+"backoffice/index.aspx");
 		}
 				
 		if(!loggedin || String.IsNullOrEmpty(Request["userid"])){
-			Response.Redirect("~/login.aspx");
+			Response.Redirect(secureURL+"login.aspx");
 		}	
 
 		publicuser = usrrep.getById(Convert.ToInt32(Request["userid"]));
@@ -87,7 +92,7 @@
 		}
 		
 		if(publicuser.id==login.userLogged.id || !publicuser.isPublicProfile || !thisFriendOk){
-			Response.Redirect("~/area_user/profile.aspx");
+			Response.Redirect(secureURL+"area_user/profile.aspx");
 		}
 
 		// recupero elementi della pagina necessari
@@ -267,7 +272,7 @@ function checkAjaxHasFriendActive(id_friend, usrnameCurrUser){
 	$.ajax({
 		type: "POST",
 		cache: false,
-		url: "/area_user/ajaxcheckfriend.aspx",
+		url: "<%=secureURL%>area_user/ajaxcheckfriend.aspx",
 		data: query_string,
 		success: function(response) {
 			//alert("response: "+response);
@@ -339,7 +344,7 @@ function closeAlbum(){
 				<div style="display:inline-block;border:1px solid #999999;margin-bottom:0px;width:100px;height:20px;text-align:center;cursor:pointer;padding-top:5px;" id="show_user_info"><%=lang.getTranslated("frontend.area_user.manage.label.user_info")%></div>
 				<%if(bolFoundPhotos) {%><div style="display:inline-block;border:1px solid #999999;margin-bottom:0px;width:100px;height:20px;text-align:center;cursor:pointer;padding-top:5px;" id="show_user_photos"><%=lang.getTranslated("frontend.area_user.manage.label.photos")%></div><%}%>
 				<div id="send-status" style="display:none;margin-bottom:10px;vertical-align:top;text-align:left;font-size: 10px;text-decoration: none;border:none;padding-left:0px;padding-right:0px;padding-bottom:5px;background:#FFFFFF;">
-					<form action="/area_user/publicprofile.aspx" method="post" name="form_update_status" accept-charset="UTF-8" enctype="multipart/form-data">
+					<form action="<%=secureURL%>area_user/publicprofile.aspx" method="post" name="form_update_status" accept-charset="UTF-8" enctype="multipart/form-data">
 						<input type="hidden" name="friendid" value="<%=login.userLogged.id%>">
 						<input type="hidden" value="poststatus" name="operation">
 						<input type="hidden" value="<%=publicuser.id%>" name="userid">						

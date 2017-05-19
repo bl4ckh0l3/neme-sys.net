@@ -33,7 +33,6 @@ protected FOrder order;
 protected IList<OrderFee> fees;
 protected OrderShippingAddress oshipaddr;
 protected OrderBillsAddress obillsaddr;
-protected UriBuilder builder;
 protected bool hasShipAddress;
 protected bool hasBillsAddress;
 protected string orderStatus;
@@ -44,6 +43,7 @@ protected string orderRulesDesc;
 protected string orderProdRulesDesc;
 protected IList<OrderBusinessRule> orderRules;
 protected IList<OrderBusinessRule> productRules;
+protected string secureURL;
 
 protected void Page_Init(Object sender, EventArgs e)
 {
@@ -92,6 +92,7 @@ protected void Page_Load(object sender, EventArgs e)
 	orderRules = null;
 	productRules = null;
 	IDictionary<int,string> statusOrder = OrderService.getOrderStatus();
+	secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
 	
 	if(!String.IsNullOrEmpty(Request["orderid"])){	
 		try{
@@ -193,12 +194,6 @@ protected void Page_Load(object sender, EventArgs e)
 				}
 				orderRulesDesc+="<br/>";
 			}
-			
-			builder = new UriBuilder(Request.Url);
-			builder.Scheme = "http";
-			builder.Port = -1;
-			builder.Path="";
-			builder.Query="";
 		}catch(Exception ex){
 			//Response.Write(ex.Message+"<br><br><br>"+ex.StackTrace);
 			
@@ -245,11 +240,11 @@ protected void Page_Load(object sender, EventArgs e)
 						newsContent.Append(comment.insertDate.ToString("dd/MM/yyyy HH:mm")).Append("<br/>");
 						newsContent.Append(comment.message);
 						newsContent.Append("</p>");
-						newsContent.Append("<hr><br/><br/><a href=\"").Append(builder.ToString()).Append("common/include/confirmcomment.aspx?id_comment=").Append(comment.id).Append("\">").Append(lang.getTranslated("backend.confirm_comment.mail.label.confirm")).Append("</a><br/><br/>");
+						newsContent.Append("<hr><br/><br/><a href=\"").Append(secureURL).Append("common/include/confirmcomment.aspx?id_comment=").Append(comment.id).Append("\">").Append(lang.getTranslated("backend.confirm_comment.mail.label.confirm")).Append("</a><br/><br/>");
 						
 						replacements.Add("mail_receiver",confservice.get("mail_comment_receiver").value);				
 						replacements.Add("<%content%>",newsContent.ToString());						
-						MailService.prepareAndSend(mtemplate.name, lang.currentLangCode, lang.defaultLangCode, "backend.mails.detail.table.label.subject_", replacements, null, builder.ToString());				
+						MailService.prepareAndSend(mtemplate.name, lang.currentLangCode, lang.defaultLangCode, "backend.mails.detail.table.label.subject_", replacements, null, secureURL);				
 					}catch(Exception ex){
 						//Response.Write(ex.Message);
 						throw;
@@ -260,7 +255,7 @@ protected void Page_Load(object sender, EventArgs e)
 			//Response.Write(ex.Message);
 		}
 		
-		Response.Redirect("/area_user/vieworder.aspx?orderid="+order.id);
+		Response.Redirect(secureURL+"area_user/vieworder.aspx?orderid="+order.id);
 	}	
 }
 </script>
@@ -326,7 +321,7 @@ function hideCommentform(){
 </head>
 <body>
 <div id="send-comment" style="z-index:1000000;position:absolute;left:-0px;top:0px;margin-bottom:3px;vertical-align:top;text-align:left;font-size: 10px;text-decoration: none;visibility:hidden;display:none;border:1px solid;padding:10px;background:#FFFFFF;width:350px;">
-	<form action="/area_user/vieworder.aspx" method="post" name="form_comment" accept-charset="UTF-8">		  
+	<form action="<%=secureURL%>area_user/vieworder.aspx" method="post" name="form_comment" accept-charset="UTF-8">		  
 		<input type="hidden" name="id_element" value="">
 		<input type="hidden" name="operation" value="insert_comment">
 		<input type="hidden" name="orderid" value="<%=Request["orderid"]%>">
@@ -401,7 +396,7 @@ function hideCommentform(){
 									}	
 									
 									if(opf.fieldType==8){
-										productFields+=flabel+":&nbsp;<a target='_blank' href='"+builder.ToString()+"public/upload/files/orders/"+opf.idOrder+"/"+opf.value+"'>"+opf.value+"</a><br/>";
+										productFields+=flabel+":&nbsp;<a target='_blank' href='/public/upload/files/orders/"+opf.idOrder+"/"+opf.value+"'>"+opf.value+"</a><br/>";
 									}else if(opf.fieldType==3 || opf.fieldType==4 || opf.fieldType==5 || opf.fieldType==6){
 										string fvalue = opf.value;
 										if(pftMap.TryGetValue(new StringBuilder().Append(prod.id).Append("-").Append(opf.idField).Append("-").Append("values").Append("-").Append(fvalue).Append("-").Append(lang.currentLangCode).ToString(), out pftv)){

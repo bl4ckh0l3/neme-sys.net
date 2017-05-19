@@ -16,6 +16,7 @@ public partial class _FeContentList : Page
 	protected int itemsXpageNews, numPageNews;
 	protected string cssClass;
 	protected ConfigurationService configService;
+	protected string secureURL, currentURL;
 	
 	protected int order_by;
 	protected string titlef;
@@ -45,9 +46,15 @@ public partial class _FeContentList : Page
 		Response.Charset="UTF-8";
 		Session.CodePage  = 65001;	
 		cssClass="LN";	
+		
+		UriBuilder baseBuilder = Utils.getBaseUrl(Request.Url.ToString(),1);
+		secureURL = baseBuilder.ToString();
+		baseBuilder.Path=Request.Url.AbsolutePath;
+		currentURL=baseBuilder.ToString();
+		
 		login.acceptedRoles = "3";
 		if(!login.checkedUser()){
-			Response.Redirect("~/login.aspx?error_code=002");
+			Response.Redirect(secureURL+"login.aspx?error_code=002");
 		}
 		IContentRepository contentrep = RepositoryFactory.getInstance<IContentRepository>("IContentRepository");
 		ILanguageRepository langrep = RepositoryFactory.getInstance<ILanguageRepository>("ILanguageRepository");

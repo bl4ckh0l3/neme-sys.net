@@ -36,6 +36,8 @@ protected void Page_Load(object sender, EventArgs e)
 	
 	bool carryOn = false;
 	string ECURL = "";
+	
+	string secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
 			
 	if(!String.IsNullOrEmpty(Request["orderid"])){
 		try{
@@ -44,11 +46,6 @@ protected void Page_Load(object sender, EventArgs e)
 			if(order != null){
 				IDictionary<string,string> checkoutValues = PaymentService.setCheckout(order);
 	
-				UriBuilder orderUri = new UriBuilder(Request.Url);
-				orderUri.Port = -1;
-				orderUri.Path="";
-				orderUri.Query="";	
-				
 				string langCode = lang.currentLangCode;
 				if(!String.IsNullOrEmpty(Request["useLang"])){
 					langCode = Request["useLang"];
@@ -59,7 +56,7 @@ protected void Page_Load(object sender, EventArgs e)
 				
 				string shopLogin = "";
 				string externalURL = "";
-				string returnURL = orderUri.ToString()+"checkout/checkin.aspx";
+				string returnURL = secureURL+"checkout/checkin.aspx";
 				string amount = order.amount.ToString("0.00").Replace(",",".");
 				string shopTransactionId = order.id.ToString()+"|"+amount+langCode;
 				string currency = "";
@@ -117,7 +114,7 @@ protected void Page_Load(object sender, EventArgs e)
 		if(carryOn){
 			Response.Redirect(ECURL);
 		}else{
-			Response.Redirect("/error.aspx?error_code=043");
+			Response.Redirect(secureURL+"error.aspx?error_code=043");
 		}
 	}
 }

@@ -17,6 +17,7 @@ private ConfigurationService configService;
 private ICategoryRepository catrep;
 private ILanguageRepository langrep;
 private string action, from;
+protected string baseURL, secureURL;
 bool logged;
 protected bool usrHasAvatar;
 protected string avatarPath;
@@ -62,23 +63,12 @@ protected void Page_Load(Object sender, EventArgs e)
 	usrHasAvatar = false;
 	avatarPath = "";
 	forcedAvHeight = "";
+	baseURL = Utils.getBaseUrl(Request.Url.ToString(),0).ToString();
+	secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
 	
 	if(Request.ServerVariables["HTTP_USER_AGENT"].Contains("MSIE")){
 		//forcedAvHeight = " height=50";
 	}
-	
-	UriBuilder redirectUrl = new UriBuilder(Request.Url);
-	if(configService.get("use_https").value=="1")
-	{	
-		redirectUrl.Scheme = "https";
-	}
-	else
-	{
-		redirectUrl.Scheme = "http";
-	}
-	redirectUrl.Port = -1;	
-	redirectUrl.Path = "login.aspx";		
-	action = redirectUrl.ToString();
 	
 	if(logged){
 		UserAttachment avatar = UserService.getUserAvatar(login.userLogged);
@@ -128,8 +118,8 @@ protected void Page_Load(Object sender, EventArgs e)
 		}
 	}
 	</script>
-	<h2><a href="<%=action%>"><%=lang.getTranslated("frontend.menu.label.login_button")%></a></h2>
-	<form name="login" method="post" action="<%=action%>" onsubmit="return sendLoginForm();">
+	<h2><a href="<%=secureURL+"login.aspx"%>"><%=lang.getTranslated("frontend.menu.label.login_button")%></a></h2>
+	<form name="login" method="post" action="<%=secureURL+"login.aspx"%>" onsubmit="return sendLoginForm();">
 		<input type="hidden" name="from" value="<%=from%>">
 		<input type="text" class="formfield-user-widget" name="j_username" id="j_username" value="<%=lang.getTranslated("frontend.login.label.username")%>" onFocus="cleanLoginField('j_username');" onBlur="restoreLoginField('j_username','<%=lang.getTranslated("frontend.login.label.username")%>');">
 		<br/><br/>        
@@ -147,7 +137,7 @@ protected void Page_Load(Object sender, EventArgs e)
 		
 	<ul>
 		<li><br/></li>
-		<li><h2><a href="/area_user/account.aspx"><%=lang.getTranslated("frontend.menu.label.not_registered_user")%></a></h2></li>
+		<li><h2><a href="<%=secureURL%>area_user/account.aspx"><%=lang.getTranslated("frontend.menu.label.not_registered_user")%></a></h2></li>
 		<li><p><%=lang.getTranslated("frontend.header.label.subscribe")%></p></li>
 	</ul>
 <%}else{%>     	      
@@ -196,17 +186,17 @@ protected void Page_Load(Object sender, EventArgs e)
 	</script>
 	</div>
 	<div style="float:left;">	
-	<a href="/area_user/account.aspx"><%=lang.getTranslated("frontend.area_user.manage.label.profile")%></a>
+	<a href="<%=secureURL%>area_user/account.aspx"><%=lang.getTranslated("frontend.area_user.manage.label.profile")%></a>
 	<!--nsys-incecom1-->
 	<%if(configService.get("disable_ecommerce").value == "0") {%>
-	<a href="/public/templates/shopping-cart/checkout.aspx?ext_ger=card"><%=lang.getTranslated("frontend.area_user.index.label.go_to_carrello")%></a>
-	<a href="/area_user/userorders.aspx"><%=lang.getTranslated("frontend.area_user.index.label.list_ordini")%></a>
+	<a href="<%=secureURL%>public/templates/shopping-cart/checkout.aspx?ext_ger=card"><%=lang.getTranslated("frontend.area_user.index.label.go_to_carrello")%></a>
+	<a href="<%=secureURL%>area_user/userorders.aspx"><%=lang.getTranslated("frontend.area_user.index.label.list_ordini")%></a>
 	<%}%>
 	<!---nsys-incecom1-->
 	<!--nsys-modblog1-->
-	<%if(configService.get("enable_user_content").value=="1"){%><a href="/area_user/ads/contentlist.aspx?resetMenu=1"><%=lang.getTranslated("backend.menu.item.contenuti.lista")%></a><%}%>
+	<%if(configService.get("enable_user_content").value=="1"){%><a href="<%=secureURL%>area_user/ads/contentlist.aspx?resetMenu=1"><%=lang.getTranslated("backend.menu.item.contenuti.lista")%></a><%}%>
 	<!---nsys-modblog1-->
-	<a href="/logoff.aspx"><%=lang.getTranslated("frontend.header.label.logoff")%></a>
+	<a href="<%=baseURL%>logoff.aspx"><%=lang.getTranslated("frontend.header.label.logoff")%></a>
 	</div>
 	<!--nsys-modcommunity3-->
 	<UserProfileWidget:render runat="server" ID="upw1" style="float:left;padding-left:0px;padding-top:20px;" index="1"/>

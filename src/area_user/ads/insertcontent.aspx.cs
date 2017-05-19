@@ -45,13 +45,13 @@ public partial class _FeContent : Page
 	protected ICountryRepository countryrep;
 	protected string pre_el_id;
 	protected int numMaxAttachs = 2;
-	protected UriBuilder ubuilder = null;
 	protected bool hasContentFields,hasFieldsList,hasComments,hasCommonContentFields;
 	protected string country_opt_text;
 	protected string state_region_opt_text;
 	protected IList<Country> countries;
 	protected IList<Country> stateRegions;
 	protected IList<ContentField> commonfields;
+	protected string secureURL, baseURL;
 			
 	protected void Page_Init(Object sender, EventArgs e)
 	{
@@ -65,9 +65,13 @@ public partial class _FeContent : Page
 		Response.Charset="UTF-8";
 		Session.CodePage  = 65001;	
 		cssClass="LN";	
+		
+		secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+		baseURL = Utils.getBaseUrl(Request.Url.ToString(),2).ToString();
+		
 		login.acceptedRoles = "3";
 		if(!login.checkedUser()){
-			Response.Redirect("~/login.aspx?error_code=002");
+			Response.Redirect(secureURL+"login.aspx?error_code=002");
 		}
 		contrep = RepositoryFactory.getInstance<IContentRepository>("IContentRepository");
 		countryrep = RepositoryFactory.getInstance<ICountryRepository>("ICountryRepository");
@@ -110,16 +114,10 @@ public partial class _FeContent : Page
 		{
 			numMaxAttachs = Convert.ToInt32(configService.get("num_max_attachments").value);
 		}
-		StringBuilder url = new StringBuilder("/error.aspx?error_code=");		
+		StringBuilder url = new StringBuilder(baseURL+"error.aspx?error_code=");		
 		Logger log = new Logger();
 		
 		// recupero elementi della pagina necessari
-		ubuilder = new UriBuilder(Request.Url);
-		ubuilder.Scheme = "http";
-		ubuilder.Port = -1;
-		ubuilder.Path="";
-		ubuilder.Query = "";
-
 		country_opt_text = "country";
 		state_region_opt_text = "state/region";		
 		if(!String.IsNullOrEmpty(lang.getTranslated("portal.commons.user_field.type_content.label.country"))){
@@ -562,7 +560,7 @@ public partial class _FeContent : Page
 						}						
 						replacements.Add("<%content%>",newsContent.ToString());
 						replacements.Add("mail_bcc",mailAddressBCC);								
-						MailService.prepareAndSend(template.name, lang.currentLangCode, lang.defaultLangCode, "backend.mails.detail.table.label.subject_", replacements, null, ubuilder.ToString());																		
+						MailService.prepareAndSend(template.name, lang.currentLangCode, lang.defaultLangCode, "backend.mails.detail.table.label.subject_", replacements, null, secureURL);																		
 					}
 					catch(Exception ex)
 					{
@@ -582,9 +580,9 @@ public partial class _FeContent : Page
 			
 			if(carryOn){
 				if(savesc==0){
-					Response.Redirect("/area_user/ads/insertcontent.aspx?cssClass="+Request["cssClass"]+"&id="+content.id);
+					Response.Redirect(secureURL+"area_user/ads/insertcontent.aspx?cssClass="+Request["cssClass"]+"&id="+content.id);
 				}else{
-					Response.Redirect("/area_user/ads/contentlist.aspx?cssClass="+Request["cssClass"]);
+					Response.Redirect(secureURL+"area_user/ads/contentlist.aspx?cssClass="+Request["cssClass"]);
 				}
 			}else{
 				Response.Redirect(url.ToString());
@@ -611,7 +609,7 @@ public partial class _FeContent : Page
 			}
 				
 			if(carryOn){
-				Response.Redirect("/area_user/ads/contentlist.aspx?cssClass="+Request["cssClass"]);
+				Response.Redirect(secureURL+"area_user/ads/contentlist.aspx?cssClass="+Request["cssClass"]);
 			}else{
 				Response.Redirect(url.ToString());
 			}			

@@ -16,6 +16,7 @@ protected ConfigurationService configService;
 protected ICommentRepository commentrep;
 protected IUserPreferencesRepository preferencerep;
 protected IUserRepository usrrep;
+protected string secureURL;
 bool logged;
 
 private string _elemId;	
@@ -65,6 +66,7 @@ protected void Page_Load(Object sender, EventArgs e)
 	commentrep = RepositoryFactory.getInstance<ICommentRepository>("ICommentRepository");
 	preferencerep = RepositoryFactory.getInstance<IUserPreferencesRepository>("IUserPreferencesRepository");
 	usrrep = RepositoryFactory.getInstance<IUserRepository>("IUserRepository");
+	secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
 }
 </script>
 
@@ -76,7 +78,7 @@ protected void Page_Load(Object sender, EventArgs e)
 		$.ajax({
 		   type: "GET",
 		   cache: false,
-		   url: "/public/layout/addson/comments/ajax-comments-widget.aspx",
+		   url: "<%=secureURL%>public/layout/addson/comments/ajax-comments-widget.aspx",
 		   data: query_string,
 			success: function(html) {
 			  //alert("ciao");
@@ -101,14 +103,10 @@ protected void Page_Load(Object sender, EventArgs e)
 	<div align="left" id="div_ncw" style="margin-top:10px;width:100%;">
 		<div id="view-comments">
 			<%if("1".Equals(elemType)){%>
-				<%if (logged){
-				  //if (login.userLogged.role.isAdmin()) {%>
-					<!--<a href="javascript:openWin('/public/layout/include/popupinsertcomments.aspx?id_element=<%//=elemId%>&element_type=<%//=elemType%>','popupallegati',400,400,100,100);"><img alt="<%//=lang.getTranslated("frontend.popup.label.insert_commento")%>" src="/common/img/comment_add.png" hspace="0" vspace="0" border="0"></a>-->
-				  <%//}else{%>
+				<%if (logged){%>
 					<a href="javascript:prepareComment();"><img alt="<%=lang.getTranslated("frontend.popup.label.insert_commento")%>" src="/common/img/comment_add.png" hspace="0" vspace="0" border="0"></a>
-				  <%//}
-				}else{%>
-					<a href="/login.aspx?from=<%=from%>&elemid=<%=elemId%>&elemtype=<%=elemType%>&hierarchy=<%=hierarchy%>&categoryid=<%=categoryId%>"><img alt="<%=lang.getTranslated("frontend.popup.label.insert_commento")%>" src="/common/img/comment_add.png" hspace="0" vspace="0" border="0"></a>
+				  <%}else{%>
+					<a href="<%=secureURL%>login.aspx?from=<%=from%>&elemid=<%=elemId%>&elemtype=<%=elemType%>&hierarchy=<%=hierarchy%>&categoryid=<%=categoryId%>"><img alt="<%=lang.getTranslated("frontend.popup.label.insert_commento")%>" src="/common/img/comment_add.png" hspace="0" vspace="0" border="0"></a>
 				<%}%>
 			<%}%>
 			<%="&nbsp;&nbsp;"+lang.getTranslated("portal.templates.commons.label.see_comments_news")%><br/>
@@ -210,9 +208,6 @@ protected void Page_Load(Object sender, EventArgs e)
 						<%}%>
 					</div>					
 					<div style="display:inline-block;padding:0px 5px 5px 0px;">
-						<%//if (logged && login.userLogged.role.isAdmin()) {%>
-							<!--<a href="javascript:sendAjaxDelComment(<%//=comment.id%>,<%//=elemId%>,'comment_<%//=commentCounter%>');">x</a>&nbsp;&nbsp;-->
-						<%//}%>
 						<strong><%=comment.insertDate.ToString("dd/MM/yyyy HH:mm")+"&nbsp;"%>
 						<!--nsys-modcommunity6-->
 						<%if(userComment.isPublicProfile) {
@@ -233,7 +228,7 @@ protected void Page_Load(Object sender, EventArgs e)
 								$("#showprofilenc<%=commentCounter%>_<%=comment.userId%>").hide();                  
 								checkAjaxHasFriendActiveNC('showprofilenc<%=commentCounter%>_','shownamenc<%=commentCounter%>_',<%=comment.userId%>, '<%=userComment.username%>');
 						 	</script>
-							<form action="/area_user/publicprofile.aspx" method="post" name="form_public_profile_<%=commentCounter%>_<%=comment.userId%>">
+							<form action="<%=secureURL%>area_user/publicprofile.aspx" method="post" name="form_public_profile_<%=commentCounter%>_<%=comment.userId%>">
 							<input type="hidden" value="<%=comment.userId%>" name="userid">
 							</form>
 						<%}else{%>
@@ -297,7 +292,7 @@ protected void Page_Load(Object sender, EventArgs e)
 												$("#showprofilencp<%=h.id%>_<%=userP.id%>").hide();                  
 												checkAjaxHasFriendActiveNC('showprofilencp<%=h.id%>_','shownamencp<%=h.id%>_',<%=userP.id%>, '<%=userP.username%>');
 											</script>
-											<form action="/area_user/publicprofile.aspx" method="post" name="form_public_profilep_<%=h.id%>_<%=userP.id%>">
+											<form action="<%=secureURL%>area_user/publicprofile.aspx" method="post" name="form_public_profilep_<%=h.id%>_<%=userP.id%>">
 											<input type="hidden" value="<%=userP.id%>" name="userid">
 											</form>
 										<%}else{%>

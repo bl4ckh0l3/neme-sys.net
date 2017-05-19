@@ -34,7 +34,7 @@ public bool checkedUser()
 	{
 		int usrid = Convert.ToInt32(checkCookie.Value);
 		userep = RepositoryFactory.getInstance<IUserRepository>("IUserRepository");
-		_userLogged = userep.getByParams(usrid, true, false, false, false, false, true);
+		_userLogged = userep.getByParams(usrid, true, true, true, true, true, true);
 	}
 	if(_userLogged==null)
 	{
@@ -80,7 +80,7 @@ private bool checkedRoles()
 protected void Page_Load(Object sender, EventArgs e)
 {
 	if(!checkedUser()){
-		Response.Redirect("~/login.aspx?error_code=002");
+		Response.Redirect(Utils.getBaseUrl(Request.Url.ToString(),1).ToString()+"login.aspx?error_code=002");
 	}
 }
 </script>

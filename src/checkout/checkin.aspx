@@ -18,13 +18,15 @@ protected void Page_Load(object sender, EventArgs e)
 	
 	IPaymentRepository payrep = RepositoryFactory.getInstance<IPaymentRepository>("IPaymentRepository");
 	IOrderRepository orderep = RepositoryFactory.getInstance<IOrderRepository>("IOrderRepository");
+	
+	string secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
 
 	if(!String.IsNullOrEmpty(Request["token"])){
 		Server.Transfer("/checkout/checkin_paypal.aspx?token="+Request["token"],true);
 	}else if(!String.IsNullOrEmpty(Request["b"])){
 		Server.Transfer("/checkout/checkin_sella.aspx?b="+Request["b"]+"&a="+Request["a"],true);
 	}else{
-		Response.Redirect("/error.aspx?error_code=043");
+		Response.Redirect(secureURL+"error.aspx?error_code=043");
 	}	
 }
 </script>

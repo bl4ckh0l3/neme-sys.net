@@ -26,7 +26,10 @@
 		<property name="quantityRotationMode" column="quantity_rotation_mode" type="Int32" />
 		<property name="rotationModeValue" column="rotation_mode_value" />
 		<property name="reloadQuantity" column="reload_quantity" type="Int32" />
-		
+		<property name="weight" column="weight" not-null="true" />	
+		<property name="length" column="length" not-null="true" />	
+		<property name="width" column="width" not-null="true" />	
+		<property name="height" column="height" not-null="true" />			
 		<property name="insertDate">
 			<column name="insert_date" sql-type="timestamp" />
 		</property>	
@@ -63,7 +66,7 @@
 		<bag name="calendar" table="PRODUCT_CALENDAR" inverse="true" lazy="true" cascade="all">
 			<key column="id_parent_product"/>
 			<one-to-many class="ProductCalendar"/>
-		</bag>	
+		</bag>
     </class>
 
     <class name="ProductAttachment" table="PRODUCT_ATTACHMENTS">

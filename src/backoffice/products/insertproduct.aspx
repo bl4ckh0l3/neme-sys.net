@@ -3727,6 +3727,7 @@ function fieldValueSlideToggle(idsuffix){
 							if($("#prod_type").val()==2){
 								$("#divCodLabel").hide();
 								$("#divCod").hide();
+								$("#prod_dimension").hide();
 								$("#divCod4Ads").show();
 								$("#sel_qta_prod").show();
 								$("#select_qty_mode_title").show();
@@ -3740,6 +3741,7 @@ function fieldValueSlideToggle(idsuffix){
 									$("#sel_qta_prod").hide();
 									$("#rotation_mode").val('0');
 									$("#select_qty_mode_title").hide();
+									$("#prod_dimension").hide();
 									$("#prod_price").val('0,00');
 									$("#prod_price").attr("readonly","true");
 									$("#prod_price").attr("style","color:#CCCCCC;");
@@ -3756,6 +3758,12 @@ function fieldValueSlideToggle(idsuffix){
 									$("#edit_buy_qtysel").show();
 									$("#prod_price").attr("style","color:#000000;");
 									$("#prod_discount").attr("style","color:#000000;");
+									
+									if($("#prod_type").val()==0){
+										$("#prod_dimension").show();
+									}else{
+										$("#prod_dimension").hide();
+									}
 								}
 								$("#divCod4Ads").hide();
 								$("#divCodLabel").show();
@@ -3787,6 +3795,7 @@ function fieldValueSlideToggle(idsuffix){
 							if($("#prod_type").val()==2){
 								$("#divCodLabel").hide();
 								$("#divCod").hide();
+								$("#prod_dimension").hide();
 								$("#divCod4Ads").show();
 								$("#sel_qta_prod").show();
 								$("#select_qty_mode_title").show();
@@ -3802,6 +3811,7 @@ function fieldValueSlideToggle(idsuffix){
 									reloadNumQtaType(document.form_inserisci.sel_qta_prod);
 									$("#sel_qta_prod").hide();
 									$("#select_qty_mode_title").hide();
+									$("#prod_dimension").hide();
 									$("#prod_price").val('0,00');
 									$("#prod_price").attr("readonly","true");
 									$("#prod_price").attr("style","color:#CCCCCC;");
@@ -3818,6 +3828,12 @@ function fieldValueSlideToggle(idsuffix){
 									$("#edit_buy_qtysel").show();
 									$("#prod_price").attr("style","color:#000000;");
 									$("#prod_discount").attr("style","color:#000000;");
+									
+									if($("#prod_type").val()==0){
+										$("#prod_dimension").show();
+									}else{
+										$("#prod_dimension").hide();
+									}
 								}
 								$("#divCod4Ads").hide();
 								$("#divCodLabel").show();
@@ -3825,7 +3841,30 @@ function fieldValueSlideToggle(idsuffix){
 							}
 						});
 					</script>					
-
+					
+					
+					<div id="prod_dimension" style="display:none;">	
+						<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+						<td><span class="labelForm"><%=lang.getTranslated("backend.prodotti.detail.table.label.weight")%>&nbsp;&nbsp;&nbsp;</span><br/>
+						<input type="text" name="weight" id="prod_weight" value="<%=product.weight.ToString("#0.00#")%>" class="formFieldTXTMedium" onkeypress="javascript:return isDouble(event);">&nbsp;<%=lang.getTranslated("backend.prodotti.detail.table.label.kilos")%>
+						</td>	
+						<td><span class="labelForm"><%=lang.getTranslated("backend.prodotti.detail.table.label.dimension_length")%>&nbsp;&nbsp;&nbsp;</span><br/>
+						<input type="text" name="length" id="prod_length" value="<%=product.length.ToString("#0.00#")%>" class="formFieldTXTMedium" onkeypress="javascript:return isDouble(event);">&nbsp;<%=lang.getTranslated("backend.prodotti.detail.table.label.dimension_centimeter")%>
+						</td>
+						<td>
+						<span class="labelForm"><%=lang.getTranslated("backend.prodotti.detail.table.label.dimension_width")%>&nbsp;&nbsp;&nbsp;</span><br>
+						<input type="text" name="width" id="prod_width" value="<%=product.width.ToString("#0.00#")%>" class="formFieldTXTMedium" onkeypress="javascript:return isDouble(event);">&nbsp;<%=lang.getTranslated("backend.prodotti.detail.table.label.dimension_centimeter")%>
+						</td>
+						<td>
+						<span class="labelForm"><%=lang.getTranslated("backend.prodotti.detail.table.label.dimension_height")%></span><br>
+						<input type="text" name="height" id="prod_height" value="<%=product.height.ToString("#0.00#")%>" class="formFieldTXTMedium" onkeypress="javascript:return isDouble(event);">&nbsp;<%=lang.getTranslated("backend.prodotti.detail.table.label.dimension_centimeter")%>
+						</td>
+						</tr>
+						</table>
+					</div>
+				
+					
 					<table border="0" cellspacing="0" cellpadding="0">
 					<tr>
 					<td><span class="labelForm"><%=lang.getTranslated("backend.prodotti.detail.table.label.prezzo_prod")%>&nbsp;&nbsp;&nbsp;</span><br/>

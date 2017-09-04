@@ -1429,7 +1429,11 @@ namespace com.nemesys.database.repository
 				newproduct.quantityRotationMode = original.quantityRotationMode;
 				newproduct.rotationModeValue = original.rotationModeValue;
 				newproduct.reloadQuantity = original.reloadQuantity;
-
+				newproduct.weight = original.weight;
+				newproduct.length = original.length;
+				newproduct.width = original.width;
+				newproduct.height = original.height;			
+				
 				IList<ProductAttachment> newProductAttachment = new List<ProductAttachment>();
 				IList<ProductAttachmentDownload> newProductAttachmentDownload = new List<ProductAttachmentDownload>();
 				IList<ProductLanguage> newProductLanguage = new List<ProductLanguage>();

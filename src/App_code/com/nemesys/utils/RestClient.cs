@@ -19,7 +19,8 @@ namespace com.nemesys.model
     private string _EndPoint;
     private HttpVerb _Method;
     private string _ContentType;
-    private string _PostData;	 
+    private string _PostData;	
+    private BasicAuthenticator _Authenticator; 
   	  
 	public virtual string EndPoint {
 		get { return _EndPoint; }
@@ -36,7 +37,13 @@ namespace com.nemesys.model
 	public virtual string PostData {
 		get { return _PostData; }
 		set { _PostData = value; }
+	}
+	public virtual BasicAuthenticator Authenticator {
+		get { return _Authenticator; }
+		set { _Authenticator = value; }
 	} 
+	
+	
 
 
     public RestClient()
@@ -45,6 +52,7 @@ namespace com.nemesys.model
       _Method = HttpVerb.GET;
       _ContentType = "application/json";
       _PostData = "";
+      _Authenticator = new BasicAuthenticator();
     }
     public RestClient(string endpoint)
     {
@@ -52,6 +60,7 @@ namespace com.nemesys.model
       _Method = HttpVerb.GET;
       _ContentType = "application/json";
       _PostData = "";
+      _Authenticator = new BasicAuthenticator();
     }
     public RestClient(string endpoint, HttpVerb method)
     {
@@ -59,6 +68,7 @@ namespace com.nemesys.model
       _Method = method;
       _ContentType = "application/json";
       _PostData = "";
+      _Authenticator = new BasicAuthenticator();
     }
 
     public RestClient(string endpoint, HttpVerb method, string postData)
@@ -67,6 +77,16 @@ namespace com.nemesys.model
       _Method = method;
       _ContentType = "application/json";
       _PostData = postData;
+      _Authenticator = new BasicAuthenticator();
+    }
+
+    public RestClient(string endpoint, HttpVerb method, string postData, BasicAuthenticator Authenticator)
+    {
+      _EndPoint = endpoint;
+      _Method = method;
+      _ContentType = "application/json";
+      _PostData = postData;
+      _Authenticator = Authenticator;
     }
 
 
@@ -78,13 +98,21 @@ namespace com.nemesys.model
     public string[] MakeRequest(string parameters)
     {
       string[] results = new string[3];
+
+      try{	
+    	
     	
       HttpWebRequest request = (HttpWebRequest)WebRequest.Create(EndPoint + parameters);
 
       request.Method = Method.ToString();
       request.ContentLength = 0;
       request.ContentType = ContentType;
-      request.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes("snapoli:snapoli"));
+      if(!string.IsNullOrEmpty(_Authenticator.user) && !string.IsNullOrEmpty(_Authenticator.password)){
+      	  request.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes(_Authenticator.user+":"+_Authenticator.password));
+      }
+      request.PreAuthenticate = true;
+      request.KeepAlive = false;
+      
 
       //System.Web.HttpContext.Current.Response.Write("<br><b>request.Method:</b>"+request.Method+"<br>");
       //System.Web.HttpContext.Current.Response.Write("<br><b>PostData:</b>"+PostData+"<br>");
@@ -95,13 +123,18 @@ namespace com.nemesys.model
         UTF8Encoding encoding = new UTF8Encoding();
         byte[] bytes = Encoding.GetEncoding("iso-8859-1").GetBytes(PostData);
         request.ContentLength = bytes.Length;
+        ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
+        //System.Web.HttpContext.Current.Response.Write("<br><b>before: request.GetRequestStream()</b><br>");
+        
         using (Stream writeStream = request.GetRequestStream())
         {
           writeStream.Write(bytes, 0, bytes.Length);
         }
       }
 
+      //System.Web.HttpContext.Current.Response.Write("<br><b>before: request.GetResponse()</b><br>");
+      
 	  using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
 	  {
 		string responseValue = string.Empty;
@@ -111,6 +144,8 @@ namespace com.nemesys.model
 		//  string message = String.Format("Request failed. Received HTTP {0}", response.StatusCode);
 		//  throw new ApplicationException(message);
 		//}
+		
+		//System.Web.HttpContext.Current.Response.Write("<br><b>StatusCode:</b>"+response.StatusCode+"<br>");
 
 		// grab the response
 		using (Stream responseStream = response.GetResponseStream())
@@ -135,9 +170,15 @@ namespace com.nemesys.model
 		
 		//System.Web.HttpContext.Current.Response.Write("<br><b>headers:</b>"+headers+"<br>");
 		//System.Web.HttpContext.Current.Response.Write("<br><b>StatusCode:</b>"+response.StatusCode+"<br>");
-		
-		return results;
+
 	  }
+		
+	  return results;
+	  
+}catch(Exception ex){
+	throw ex;
+}
+		
 	  
 	  /*
 	  // prova di implementazione con try/catch

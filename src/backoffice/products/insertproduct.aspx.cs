@@ -134,6 +134,10 @@ public partial class _Product : Page
 		product.fields = new List<ProductField>();
 		product.relations = new List<ProductRelation>();
 		product.quantity = -1;
+		product.weight= 0;
+		product.length= 0;
+		product.width= 0;
+		product.height= 0;
 		pre_el_id="";
 		pre_el_id_transfield="";
 		if(!String.IsNullOrEmpty(configService.get("num_max_attachments").value))
@@ -556,6 +560,33 @@ public partial class _Product : Page
 				product.quantity = quantity;
 				product.setBuyQta = setBuyQta;				
 				product.quantityRotationMode = quantityRotationMode;
+				
+				if(prodType==0){
+					decimal weight = 0;
+					if(!String.IsNullOrEmpty(Request["weight"])){
+						weight = Convert.ToDecimal(Request["weight"]);
+					}					
+					product.weight= weight;
+					
+					decimal length = 0;
+					if(!String.IsNullOrEmpty(Request["length"])){
+						length = Convert.ToDecimal(Request["length"]);
+					}
+					product.length= length;
+					
+					decimal width = 0;
+					if(!String.IsNullOrEmpty(Request["width"])){
+						width = Convert.ToDecimal(Request["width"]);
+					}
+					product.width= width;
+					
+					decimal height = 0;
+					if(!String.IsNullOrEmpty(Request["height"])){
+						height = Convert.ToDecimal(Request["height"]);
+					}
+					product.height= height;	
+				}
+				
 				/*Response.Write(
 				"- quantityRotationMode:"+product.quantityRotationMode+
 				"<br>- rotationModeValue:"+rotationModeValue+"<br>"

@@ -40,6 +40,10 @@ namespace com.nemesys.model
 		private int _quantityRotationMode;
 		private string _rotationModeValue;
 		private int _reloadQuantity;
+		private decimal _weight;
+		private decimal _length;
+		private decimal _width;
+		private decimal _height;
 		
 		
 		public Product(){}
@@ -203,6 +207,26 @@ namespace com.nemesys.model
 			get { return _reloadQuantity; }
 			set { _reloadQuantity = value; }
 		}
+
+		public virtual decimal weight {
+			get { return _weight; }
+			set { _weight = value; }
+		}
+
+		public virtual decimal length {
+			get { return _length; }
+			set { _length = value; }
+		}
+
+		public virtual decimal width {
+			get { return _width; }
+			set { _width = value; }
+		}
+
+		public virtual decimal height {
+			get { return _height; }
+			set { _height = value; }
+		}
 	
 		
 		public virtual string ToString() {
@@ -227,7 +251,11 @@ namespace com.nemesys.model
 			.Append(" - maxDownloadTime: ").Append(this._maxDownloadTime)
 			.Append(" - quantityRotationMode: ").Append(this._quantityRotationMode)
 			.Append(" - rotationModeValue: ").Append(this._rotationModeValue)
-			.Append(" - reloadQuantity: ").Append(this._reloadQuantity);
+			.Append(" - reloadQuantity: ").Append(this._reloadQuantity)
+			.Append(" - weight: ").Append(this._weight)
+			.Append(" - length: ").Append(this._length)
+			.Append(" - width: ").Append(this._width)
+			.Append(" - height: ").Append(this._height);
 			
 			return builder.ToString();			
 		}

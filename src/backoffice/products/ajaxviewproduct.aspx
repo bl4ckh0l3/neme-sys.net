@@ -237,12 +237,12 @@ $(function() {
 	<th colspan="3"><%=lang.getTranslated("backend.prodotti.view.table.label.dimensions")%></th>
 	</tr>
 	<tr>
-	<td style="vertical-align:top;"><%=product.weight.ToString("###0.00")%>&nbsp;<%=lang.getTranslated("backend.prodotti.view.table.label.kilos")%></td>
+	<td style="vertical-align:top;"><%=lang.getTranslated("backend.prodotti.view.table.label.kilos")+"&nbsp;"+product.weight.ToString("###0.00")%></td>
 	<td class="separator">&nbsp;</td>
 	<td colspan="3">
-	<div style="width:100px;float:left;"><%=lang.getTranslated("backend.prodotti.view.table.label.dimension_length")%></div><div><%=product.length.ToString("###0.00")+"&nbsp;"+lang.getTranslated("backend.prodotti.view.table.label.dimension_centimeter")%></div>
-	<div style="width:100px;float:left;"><%=lang.getTranslated("backend.prodotti.view.table.label.dimension_width")%></div><div><%=product.width.ToString("###0.00")+"&nbsp;"+lang.getTranslated("backend.prodotti.view.table.label.dimension_centimeter")%></div>
-	<div style="width:100px;float:left;"><%=lang.getTranslated("backend.prodotti.view.table.label.dimension_height")%></div><div><%=product.height.ToString("###0.00")+"&nbsp;"+lang.getTranslated("backend.prodotti.view.table.label.dimension_centimeter")%></div>
+	<div style="width:100px;float:left;"><%=lang.getTranslated("backend.prodotti.view.table.label.dimension_length")%></div><div><%=lang.getTranslated("backend.prodotti.view.table.label.dimension_centimeter")+"&nbsp;"+product.length.ToString("###0.00")%></div>
+	<div style="width:100px;float:left;"><%=lang.getTranslated("backend.prodotti.view.table.label.dimension_width")%></div><div><%=lang.getTranslated("backend.prodotti.view.table.label.dimension_centimeter")+"&nbsp;"+product.width.ToString("###0.00")%></div>
+	<div style="width:100px;float:left;"><%=lang.getTranslated("backend.prodotti.view.table.label.dimension_height")%></div><div><%=lang.getTranslated("backend.prodotti.view.table.label.dimension_centimeter")+"&nbsp;"+product.height.ToString("###0.00")%></div>
 	</td>
 	</tr>
 	<%}%>	

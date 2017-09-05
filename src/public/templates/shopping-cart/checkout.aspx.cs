@@ -1210,7 +1210,7 @@ public partial class _Checkout : Page
 					try{
 						fees = feerep.find(null, -1, "0,2", true);    	
 					}catch (Exception ex){
-						//Response.Write("bolFoundLista Exception:"+ex.Message+"<br>");
+						//Response.Write("fees Exception:"+ex.Message+"<br>");
 						fees = new List<Fee>();
 					}
 					

@@ -1,4 +1,4 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeFile="checkout.aspx.cs" Inherits="_Checkout" Debug="false"%>
+<%@ Page Language="C#" AutoEventWireup="true" CodeFile="checkout.aspx.cs" Inherits="_Checkout" Debug="true"%>
 <%@ import Namespace="System" %>
 <%@ import Namespace="System.Collections" %>
 <%@ import Namespace="System.Collections.Generic" %>
@@ -435,7 +435,7 @@ function openRelatedProdPage(strAction, hierarchy, numIdProd, numPageNum, extern
     document.form_cart_rel_prod.productid.value=numIdProd;
     document.form_cart_rel_prod.modelPageNum.value=numPageNum;
     
-    if(externalParams != ""){
+    if(externalParams && externalParams != ""){
 		$('<input>', {type: 'hidden',name: 'search_text',value: externalParams.search_text}).appendTo('#form_cart_rel_prod');	
 		$('<input>', {type: 'hidden',name: 'adults',value: externalParams.adults}).appendTo('#form_cart_rel_prod');	
 		$('<input>', {type: 'hidden',name: 'childs',value: externalParams.childs}).appendTo('#form_cart_rel_prod');	
@@ -849,7 +849,7 @@ function selectPayAndBills4Form(applyBills){
 							<%}%>
 							</div>						
 							<div class="prodotto-carrello">
-								<h2><a href="javascript:openRelatedProdPage('<%=urlRelProd%>', '<%=hierarchyRelProd%>', <%=product.id%>, <%=numPageTempl%>, <%=backToProdParams%>);"><%=productrep.getMainFieldTranslationCached(product.id, 1 , lang.currentLangCode, true,  product.name, true).value%></a></h2>
+								<h2><a href="javascript:openRelatedProdPage('<%=urlRelProd%>', '<%=hierarchyRelProd%>', <%=product.id%>, <%=numPageTempl%> <%if(!String.IsNullOrEmpty(backToProdParams)){Response.Write(","+backToProdParams);}%>);"><%=productrep.getMainFieldTranslationCached(product.id, 1 , lang.currentLangCode, true,  product.name, true).value%></a></h2>
 								
 								<p>
 								<%	

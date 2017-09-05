@@ -356,6 +356,8 @@ namespace com.nemesys.database.repository
 				}						
 				if(ids.Count>0){strSQL+=string.Format(" and applyTo in({0})",string.Join(",",ids.ToArray()));}		
 			}
+			
+			strSQL += "order by feeGroup asc";
 
 
 			

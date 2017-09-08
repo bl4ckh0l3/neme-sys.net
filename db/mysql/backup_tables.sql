@@ -793,6 +793,8 @@ CREATE TABLE IF NOT EXISTS `FEE` (
   `required` SMALLINT(1) UNSIGNED NOT NULL default '0',
   `fee_group` VARCHAR(100) default NULL, 
   `type_view` SMALLINT(1) UNSIGNED NOT NULL default '0',
+  `ext_provider` SMALLINT(1) NOT NULL default '0',
+  `ext_params` text,
   PRIMARY KEY (`id`),
   INDEX `Index_1`(`description`),
   INDEX `Index_2`(`amount`),

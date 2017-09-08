@@ -146,6 +146,12 @@ public partial class _Fee : Page
 				bool required = Convert.ToBoolean(Convert.ToInt32(Request["required"]));
 				string feeGroup = Request["group"];
 				int typeView = Convert.ToInt32(Request["type_view"]);
+				int extProvider = Convert.ToInt32(Request["ext_provider"]);
+				string extParams = "";
+				if(extProvider>0){
+					extParams = Request["ext_params"];
+				}
+				
 				string billsStrategyCounter = Request["bills_strategy_counter"];
 				
 				fee.description = description;
@@ -159,6 +165,8 @@ public partial class _Fee : Page
 				fee.required = required;
 				fee.feeGroup = feeGroup;
 				fee.typeView = typeView;
+				fee.extProvider = extProvider;
+				fee.extParams = extParams;
 				
 				try{			
 					fee.configs.Clear();	

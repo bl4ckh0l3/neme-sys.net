@@ -16,6 +16,8 @@
 		<property name="required" column="required" not-null="true"  type="Boolean" />
 		<property name="feeGroup" column="fee_group" />	
 		<property name="typeView" column="type_view" type="Int32" not-null="true" />
+		<property name="extProvider" column="ext_provider" not-null="true"  type="Int32" />
+		<property name="extParams" column="ext_params" />	
 		<bag name="configs" table="FEE_CONFIG" inverse="true" lazy="true" cascade="all">
 			<key column="idFee"/>
 			<one-to-many class="FeeConfig"/>

@@ -121,6 +121,16 @@ function insertSpesa(){
 	//alert("bills_strategy_counter: "+document.form_inserisci.bills_strategy_counter.value);
 	//alert("valore: "+document.form_inserisci.valore.value);	
 	
+	var extp = document.form_inserisci.ext_provider.value;
+	var extpjson = "";
+	if(extp==1){
+		extpjson="{\"username\":\""+$('#upsusername').val()+"\",\"password\":\""+$('#upspassword').val()+"\",\"access_number\":\""+$('#upsaccesslicence').val()+"\",\"shipper_number\":\""+$('#upsshippernumber').val()+"\",\"use_internal\":\""+$('#apply_internal_params').val()+"\"}";
+		
+		document.form_inserisci.ext_params.value = extpjson;
+	}else if(extp==2){
+		
+	}
+	
 	document.form_inserisci.submit();
 }
 
@@ -144,6 +154,9 @@ function checkGroupFormat(field){
 
 var tempX = 0;
 var tempY = 0;
+
+var externalProvider = <%=fee.extProvider%>;
+var hasExternalParam = '<%=fee.extParams%>';
 
 jQuery(document).ready(function(){
 	$(document).mousemove(function(e){
@@ -276,6 +289,71 @@ function checkFrom(counter){
 		}	
 	}		
 }*/ 
+
+
+function setUPS(){
+	$("#external_params").empty();
+	$("#external_params").append('<input type="hidden" value="" name="ext_params" id="ext_params" />');
+
+	$("#external_params").append('<div style="float:left;margin-right:10px;"><span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.ups_username")%></span><br><input type="text" id="upsusername" name="username" value="" class="formFieldTXT"></div>');
+	$("#external_params").append('<div style="float:left;margin-right:10px;"><span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.ups_password")%></span><br><input type="text" id="upspassword" name="password" value="" class="formFieldTXT"></div>');
+	$("#external_params").append('<div style="float:left;margin-right:10px;"><span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.ups_accesskey")%></span><br><input type="text" id="upsaccesslicence" name="accessnumber" value="" class="formFieldTXT"></div>');
+	$("#external_params").append('<div style="float:top;margin-bottom:5px;"><span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.ups_shippernumber")%></span><br><input type="text" id="upsshippernumber" name="shippernumber" value="" class="formFieldTXT"></div>');
+	$("#external_params").append('<a id="use_internal_params" href="javascript:$(\'#internal_params\').show();showInternalParams();"><%=lang.getTranslated("backend.spese.detail.table.label.apply_internal_fee")%></a>');
+	
+	if(hasExternalParam && hasExternalParam != ""){
+		var obj = jQuery.parseJSON(hasExternalParam);	
+		
+		$('#upsusername').val(obj.username);
+		$('#upspassword').val(obj.password);
+		$('#upsaccesslicence').val(obj.access_number);
+		$('#upsshippernumber').val(obj.shipper_number);
+		
+		$('#apply_internal_params').val(obj.use_internal);
+		
+		if(obj.use_internal==1){
+			$("#internal_params").show();
+		}else{
+			$("#internal_params").hide();
+		}
+	}	
+	
+	$("#external_params").show();
+}
+
+function setDHL(){
+	$("#external_params").empty();
+	$("#external_params").append('<input type="hidden" value="" name="ext_params" id="ext_params" />');
+	
+	
+	
+	$("#external_params").append('<a id="use_internal_params" href="javascript:$(\'#internal_params\').show();showInternalParams();"><%=lang.getTranslated("backend.spese.detail.table.label.apply_internal_fee")%></a>');
+
+	if(hasExternalParam && hasExternalParam != ""){
+		var obj = jQuery.parseJSON(hasExternalParam);	
+
+		
+		$('#apply_internal_params').val(obj.use_internal);
+		
+		if(obj.use_internal==1){
+			$("#internal_params").show();
+		}else{
+			$("#internal_params").hide();
+		}
+	}	
+	
+	$("#external_params").show();
+}
+
+function showInternalParams(){
+	if($('#apply_internal_params').val()==1){
+		$('#apply_internal_params').val('0');
+		$("#internal_params").hide();
+	}else{
+		$('#apply_internal_params').val('1');
+		$("#internal_params").show();
+	}
+}
 </script>
 </head>
 <body onLoad="javascript:document.form_inserisci.descrizione.focus();">
@@ -305,6 +383,47 @@ function checkFrom(counter){
 			<%}%>				
 			</div>
 		  <br/><br/>
+		  
+		  <span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.external_provider")%></span><br>
+			<select name="ext_provider" id="ext_provider" class="formFieldSelect" >
+				<option value="0" <%if (0==fee.extProvider) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.spese.detail.table.label.no_ext_provider")%></option>
+				<option value="1" <%if (1==fee.extProvider) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.spese.detail.table.label.ups_ext_provider")%></option>	
+				<option value="2" <%if (2==fee.extProvider) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.spese.detail.table.label.dhl_ext_provider")%></option>
+			</select>	
+			
+			<input type="hidden" value="" name="apply_internal_params"  id="apply_internal_params">
+			
+			<div id="external_params" align="left" style="display:none;margin-top:10px;margin-bottom:10px;"></div>
+
+			<script>
+			$('#ext_provider').change(function() {
+				var ext_provider_val_ch = $('#ext_provider').val();
+				
+				if(ext_provider_val_ch==1){
+					setUPS();
+				}else if(ext_provider_val_ch==2){
+					setDHL();
+				}else{
+					$("#external_params").hide();
+					$("#internal_params").show();
+				}
+			});			
+			
+			
+			$(document).ready(function(){
+				var ext_provider_val = $('#ext_provider').val();
+				if(ext_provider_val==1){
+					setUPS();
+				}else if(ext_provider_val==2){
+					setDHL();
+				}else{
+					$("#external_params").hide();
+					$("#internal_params").show();
+				}				
+			});
+			</script>		    
+		    
+		  <div id="internal_params" style="margin-top:10px;">  
 		  <div align="left"><span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.tipo_valore")%></span><br>
 			<select name="tipo_valore" id="tipo_valore" class="formFieldTXTLong">
 			<option value="1" <%if (1==fee.type) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.spese.label.tipologia_fisso")%></option>	
@@ -481,7 +600,10 @@ function checkFrom(counter){
 				<%}
 			}%> 
 		  </select>		
-		  <br/><br/>		
+		  <br/><br/>
+		  </div>
+		  
+		  
 		  <div align="left" style="float:left;padding-right:10px;"><span class="labelForm"><%=lang.getTranslated("backend.fees.lista.table.header.apply_to")%>&nbsp;&nbsp;&nbsp;</span><br>
 			<select name="apply_to" class="formFieldTXT">
 				<OPTION VALUE="0" <%if (fee.applyTo==0) { Response.Write("selected");}%>><%=lang.getTranslated("backend.fees.lista.table.applyto_front")%></OPTION>

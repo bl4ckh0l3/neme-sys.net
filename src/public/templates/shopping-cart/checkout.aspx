@@ -551,7 +551,7 @@ function calculateBills4Order(amount, currFrom, currTo){
 		var bill_amount = tmpValue.replace(',','.');
 		elem = document.getElementById(tmpKey);
 		
-		if(elem.checked==true){
+		if(elem && elem.checked==true){
 			total_amount = Number(total_amount)+Number(bill_amount);
 		}
 	}
@@ -1099,7 +1099,7 @@ function selectPayAndBills4Form(applyBills){
 											if(f.multiply && ((billImp+billSup)>0 || f.typeView==1)){%>
 												<input style="margin-left:10px;" type="checkbox" onclick="javascript:ajaxSetSessionPayAndBills(this),calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','<%=defCurrency.rate%>','<%=userCurrency.rate%>');" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/> 
 												<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>"+currency+"&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>&nbsp;&nbsp;<br/>"%>	
-											<%}else if(!f.multiply && (billImp+billSup)>0){%>
+											<%}else if(!f.multiply && ((billImp+billSup)>0 || f.typeView==1)){%>
 												<input style="margin-left:10px;" type="radio"  onclick="javascript:ajaxSetSessionPayAndBills(this),calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','<%=defCurrency.rate%>','<%=userCurrency.rate%>');" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/> 
 												<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>"+currency+"&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>&nbsp;&nbsp;<br/>"%>				
 											<%}%>										

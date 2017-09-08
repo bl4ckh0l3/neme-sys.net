@@ -465,7 +465,7 @@ function calculateBills4Order(amount, currFrom, currTo){
 		var bill_amount = tmpValue.replace(',','.');
 		elem = document.getElementById(tmpKey);
 		
-		if(elem.checked==true){
+		if(elem && elem.checked==true){
 			total_amount = Number(total_amount)+Number(bill_amount);
 		}
 	}
@@ -1283,7 +1283,7 @@ jQuery(document).ready(function(){
 									if(f.multiply && ((billImp+billSup)>0 || f.typeView==1)){%>
 										<input style="margin-left:10px;" <%if(orderid>0 && paymentDone){%>onclick="return false;" onkeydown="return false;"<%}else{%>onclick="javascript:calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','1','1');"<%}%> type="checkbox" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/> 
 										<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>&euro;&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>&nbsp;&nbsp;<br/>"%>	
-									<%}else if(!f.multiply && (billImp+billSup)>0){%>	
+									<%}else if(!f.multiply && ((billImp+billSup)>0 || f.typeView==1)){%>	
 										<input style="margin-left:10px;" onclick="return false;" <%if(orderid>0 && paymentDone){%>onkeydown="return false;"<%}else{%>onclick="javascript:calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','1','1');"<%}%> type="radio" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/>
 										<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>&euro;&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>&nbsp;&nbsp;<br/>"%>				
 									<%}%>										

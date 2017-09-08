@@ -20,6 +20,8 @@ namespace com.nemesys.model
 		private bool _required;
 		private string _feeGroup;
 		private int _typeView;
+		private int _extProvider;
+		private string _extParams;
 		private IList<FeeConfig> _configs;
 
 		
@@ -85,6 +87,16 @@ namespace com.nemesys.model
 			set { _typeView = value; }
 		}
 
+		public virtual int extProvider {
+			get { return _extProvider; }
+			set { _extProvider = value; }
+		}
+
+		public virtual string extParams {
+			get { return _extParams; }
+			set { _extParams = value; }
+		}
+
 		public virtual IList<FeeConfig> configs {
 			get { return _configs; }
 			set { _configs = value; }
@@ -103,7 +115,9 @@ namespace com.nemesys.model
 			.Append(" - multiply: ").Append(this._multiply)
 			.Append(" - required: ").Append(this._required)
 			.Append(" - feeGroup: ").Append(this._feeGroup)
-			.Append(" - typeView: ").Append(this._typeView);
+			.Append(" - typeView: ").Append(this._typeView)
+			.Append(" - extProvider: ").Append(this._extProvider)
+			.Append(" - extParams: ").Append(this._extParams);
 			
 			return builder.ToString();			
 		}

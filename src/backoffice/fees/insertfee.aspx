@@ -299,7 +299,9 @@ function setUPS(){
 	$("#external_params").append('<div style="float:left;margin-right:10px;"><span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.ups_password")%></span><br><input type="text" id="upspassword" name="password" value="" class="formFieldTXT"></div>');
 	$("#external_params").append('<div style="float:left;margin-right:10px;"><span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.ups_accesskey")%></span><br><input type="text" id="upsaccesslicence" name="accessnumber" value="" class="formFieldTXT"></div>');
 	$("#external_params").append('<div style="float:top;margin-bottom:5px;"><span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.ups_shippernumber")%></span><br><input type="text" id="upsshippernumber" name="shippernumber" value="" class="formFieldTXT"></div>');
-	$("#external_params").append('<a id="use_internal_params" href="javascript:$(\'#internal_params\').show();showInternalParams();"><%=lang.getTranslated("backend.spese.detail.table.label.apply_internal_fee")%></a>');
+	$("#external_params").append('<a id="use_internal_params" href="javascript:showInternalParams();"><%=lang.getTranslated("backend.spese.detail.table.label.hide_internal_fee")%></a>');
+	
+	$('#apply_internal_params').val('1');
 	
 	if(hasExternalParam && hasExternalParam != ""){
 		var obj = jQuery.parseJSON(hasExternalParam);	
@@ -313,8 +315,10 @@ function setUPS(){
 		
 		if(obj.use_internal==1){
 			$("#internal_params").show();
+			$("#use_internal_params").text('<%=lang.getTranslated("backend.spese.detail.table.label.hide_internal_fee")%>');
 		}else{
 			$("#internal_params").hide();
+			$("#use_internal_params").text('<%=lang.getTranslated("backend.spese.detail.table.label.apply_internal_fee")%>');
 		}
 	}	
 	
@@ -327,8 +331,10 @@ function setDHL(){
 	
 	
 	
-	$("#external_params").append('<a id="use_internal_params" href="javascript:$(\'#internal_params\').show();showInternalParams();"><%=lang.getTranslated("backend.spese.detail.table.label.apply_internal_fee")%></a>');
+	$("#external_params").append('<a id="use_internal_params" href="javascript:showInternalParams();"><%=lang.getTranslated("backend.spese.detail.table.label.hide_internal_fee")%></a>');
 
+	$('#apply_internal_params').val('1');
+	
 	if(hasExternalParam && hasExternalParam != ""){
 		var obj = jQuery.parseJSON(hasExternalParam);	
 
@@ -337,8 +343,10 @@ function setDHL(){
 		
 		if(obj.use_internal==1){
 			$("#internal_params").show();
+			$("#use_internal_params").text('<%=lang.getTranslated("backend.spese.detail.table.label.hide_internal_fee")%>');
 		}else{
 			$("#internal_params").hide();
+			$("#use_internal_params").text('<%=lang.getTranslated("backend.spese.detail.table.label.apply_internal_fee")%>');
 		}
 	}	
 	
@@ -348,9 +356,11 @@ function setDHL(){
 function showInternalParams(){
 	if($('#apply_internal_params').val()==1){
 		$('#apply_internal_params').val('0');
+		$("#use_internal_params").text('<%=lang.getTranslated("backend.spese.detail.table.label.apply_internal_fee")%>');
 		$("#internal_params").hide();
 	}else{
 		$('#apply_internal_params').val('1');
+		$("#use_internal_params").text('<%=lang.getTranslated("backend.spese.detail.table.label.hide_internal_fee")%>');
 		$("#internal_params").show();
 	}
 }

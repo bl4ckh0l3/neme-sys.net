@@ -35,7 +35,7 @@ function deleteFee(id_objref,row,refreshrows){
 			<div id="ajaxresp" align="center" style="background-color:#FFFF00; border:1px solid #000000; color:#000000; display:none;"></div>
 			<table border="0" cellpadding="0" cellspacing="0" class="principal">
 				<tr> 
-				<th colspan="8" align="left">
+				<th colspan="9" align="left">
 				<div style="float:left;padding-right:3px;height:15px;">
 				<form action="<%=Request.Url.AbsolutePath%>" method="post" name="item_x_page">
 				<input type="hidden" value="<%=cssClass%>" name="cssClass">	
@@ -51,6 +51,7 @@ function deleteFee(id_objref,row,refreshrows){
 			<tr> 
 				  <th colspan="2">&nbsp;</th>
 				  <th><%=lang.getTranslated("backend.spese.lista.table.header.descrizione_spesa").ToUpper()%></th>
+				  <th><%=lang.getTranslated("backend.spese.lista.table.header.courier_integration").ToUpper()%></th>
 				  <th><%=lang.getTranslated("backend.spese.lista.table.header.tipologia_valore").ToUpper()%></th>
 				  <th><%=lang.getTranslated("backend.spese.lista.table.header.tassa_applicata").ToUpper()%></th>
 				  <th><%=lang.getTranslated("backend.spese.lista.table.header.taxs_group").ToUpper()%></th>
@@ -75,6 +76,15 @@ function deleteFee(id_objref,row,refreshrows){
 							<script>
 							$("#edit_description_<%=counter%>").hide();
 							</script>
+							</td>
+							<td style="min-width:90px;">
+							<%if(0==k.extProvider){
+								Response.Write(lang.getTranslated("backend.spese.detail.table.label.no_ext_provider"));
+							}else if(1==k.extProvider){
+								Response.Write(lang.getTranslated("backend.spese.detail.table.label.ups_ext_provider"));
+							}else if(2==k.extProvider){
+								Response.Write(lang.getTranslated("backend.spese.detail.table.label.dhl_ext_provider"));
+							}%>					
 							</td>
 							<td width="240">
 							<%
@@ -199,7 +209,7 @@ function deleteFee(id_objref,row,refreshrows){
 						<%}
 					}%>	
 				<tr> 
-				<th colspan="8" align="left">
+				<th colspan="9" align="left">
 				<div style="float:left;padding-right:3px;height:15px;">
 				<form action="<%=Request.Url.AbsolutePath%>" method="post" name="item_x_page">
 				<input type="hidden" value="<%=cssClass%>" name="cssClass">	

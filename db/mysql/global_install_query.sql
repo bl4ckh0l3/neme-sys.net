@@ -7201,3 +7201,7 @@ INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.spese.detail.table.label.ups_accesskey', 'IT', 'Access License Number');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.spese.detail.table.label.ups_shippernumber', 'EN', 'Shipper Number');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.spese.detail.table.label.ups_shippernumber', 'IT', 'Shipper Number');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.spese.detail.table.label.hide_internal_fee', 'EN', 'Hide internal fees');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.spese.detail.table.label.hide_internal_fee', 'IT', 'Nascondi ommissioni interne');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.spese.lista.table.header.courier_integration', 'EN', 'External courier');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.spese.lista.table.header.courier_integration', 'IT', 'Corriere esterno');

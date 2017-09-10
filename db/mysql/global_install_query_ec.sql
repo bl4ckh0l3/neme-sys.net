@@ -7322,3 +7322,11 @@ INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.spese.detail.table.label.hide_internal_fee', 'IT', 'Nascondi ommissioni interne');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.spese.lista.table.header.courier_integration', 'EN', 'External courier');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.spese.lista.table.header.courier_integration', 'IT', 'Corriere esterno');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.prodotti.detail.js.alert.insert_weight', 'EN', 'Insert product weight!');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.prodotti.detail.js.alert.insert_weight', 'IT', 'Inserire il peso del prodotto!');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.prodotti.detail.js.alert.insert_length', 'EN', 'Insert product length!');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.prodotti.detail.js.alert.insert_length', 'IT', 'Inserire la lunghezza del prodotto!');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.prodotti.detail.js.alert.insert_width', 'EN', 'Insert product width!');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.prodotti.detail.js.alert.insert_width', 'IT', 'Inserire la larghezza del prodotto!');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.prodotti.detail.js.alert.insert_height', 'EN', 'Insert product height!');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.prodotti.detail.js.alert.insert_height', 'IT', 'Inserire l''altezza del prodotto!');

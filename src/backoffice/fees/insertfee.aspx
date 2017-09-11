@@ -124,7 +124,7 @@ function insertSpesa(){
 	var extp = document.form_inserisci.ext_provider.value;
 	var extpjson = "";
 	if(extp==1){
-		extpjson="{\"username\":\""+$('#upsusername').val()+"\",\"password\":\""+$('#upspassword').val()+"\",\"access_number\":\""+$('#upsaccesslicence').val()+"\",\"shipper_number\":\""+$('#upsshippernumber').val()+"\",\"use_internal\":\""+$('#apply_internal_params').val()+"\"}";
+		extpjson="{\"endpoint\":\""+$('#upsendpoint').val()+"\",\"username\":\""+$('#upsusername').val()+"\",\"password\":\""+$('#upspassword').val()+"\",\"access_number\":\""+$('#upsaccesslicence').val()+"\",\"shipper_number\":\""+$('#upsshippernumber').val()+"\",\"use_internal\":\""+$('#apply_internal_params').val()+"\"}";
 		
 		document.form_inserisci.ext_params.value = extpjson;
 	}else if(extp==2){
@@ -295,6 +295,7 @@ function setUPS(){
 	$("#external_params").empty();
 	$("#external_params").append('<input type="hidden" value="" name="ext_params" id="ext_params" />');
 
+	$("#external_params").append('<div style="float:left;margin-right:10px;"><span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.ups_endpoint")%></span><br><input type="text" id="upsendpoint" name="endpoint" value="" class="formFieldTXT"></div>');
 	$("#external_params").append('<div style="float:left;margin-right:10px;"><span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.ups_username")%></span><br><input type="text" id="upsusername" name="username" value="" class="formFieldTXT"></div>');
 	$("#external_params").append('<div style="float:left;margin-right:10px;"><span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.ups_password")%></span><br><input type="text" id="upspassword" name="password" value="" class="formFieldTXT"></div>');
 	$("#external_params").append('<div style="float:left;margin-right:10px;"><span class="labelForm"><%=lang.getTranslated("backend.spese.detail.table.label.ups_accesskey")%></span><br><input type="text" id="upsaccesslicence" name="accessnumber" value="" class="formFieldTXT"></div>');
@@ -306,6 +307,7 @@ function setUPS(){
 	if(hasExternalParam && hasExternalParam != ""){
 		var obj = jQuery.parseJSON(hasExternalParam);	
 		
+		$('#upsendpoint').val(obj.endpoint);
 		$('#upsusername').val(obj.username);
 		$('#upspassword').val(obj.password);
 		$('#upsaccesslicence').val(obj.access_number);

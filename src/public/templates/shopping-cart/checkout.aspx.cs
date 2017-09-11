@@ -68,6 +68,7 @@ public partial class _Checkout : Page
 	protected decimal totalPaymentAmount;
 	protected int totalCartQuantity;
 	protected bool applyBills = false;
+	protected bool hasExternalProviderBills = false;
 	protected bool hasOrderRule = false;
 	protected bool bolHasProdRule = false;
 	protected IList<Fee> fees;
@@ -1218,6 +1219,7 @@ public partial class _Checkout : Page
 						foreach(Fee f in fees){
 							decimal billImp = 0.00M;
 							decimal billSup = 0.00M;
+							decimal billExt = 0.00M;
 							Supplement feesup = null;
 							
 							billImp = FeeService.getTaxableAmountByStrategy(f, totalAmount4Bills, totalCartQuantity, Scpf4Bills);
@@ -1296,7 +1298,47 @@ public partial class _Checkout : Page
 							}	
 							
 							bool isChecked = false;
+							bool isFinalized = true;
+							string fem = lang.getTranslated("frontend.carrello.table.label.shipping_data_missing");
+							
 							decimal billAmount = billImp+billSup;
+							
+							
+							/** verifico se e' un corriere esterno (UPS,DHL) **/
+							if(f.extProvider>0){
+								hasExternalProviderBills = true;
+								if(hasShipAddress){
+									if(f.extProvider==1){
+										// UPS integration
+										IList<Product> shippableProducts = new List<Product>();
+
+										foreach(ShoppingCartProduct scp in shoppingCart.products.Values){	
+											Product c = uniqueProducts[scp.idProduct];
+											if(c.prodType==0){
+												for(int x=1;x<=scp.productQuantity;x++){
+													shippableProducts.Add(c);
+												}
+											}
+										}
+										
+										UPSFee extProvider = FeeService.getUPSRate(f.extParams, shippableProducts, shipaddr);
+										
+										if(extProvider != null && extProvider.success){
+											billExt=extProvider.amount;
+											billAmount+=billExt;
+											isFinalized = true;
+										}else{
+											isFinalized = false;
+											fem = lang.getTranslated("frontend.carrello.table.label.ups_quotation_error");
+										}
+									}else if(f.extProvider==2){
+										//TODO: implement DHL integration
+									}
+								}else{
+									isFinalized = false;
+								}
+							}
+							
 							
 							if(f.autoactive){
 								totalBillsAmount+=billAmount;
@@ -1352,6 +1394,9 @@ public partial class _Checkout : Page
 							billElements.Add(billGdesc);
 							billElements.Add(billDesc);
 							billElements.Add(isChecked);
+							billElements.Add(isFinalized);
+							billElements.Add(fem);
+							billElements.Add(billExt);
 							
 							billsData.Add(f.id, billElements); 
 						}

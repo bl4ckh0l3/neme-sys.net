@@ -211,6 +211,7 @@ span.imgError{background:#FFFFFF;color:#FF0000;display:inline;}
 #divShipCost div{padding-right:3px;padding-bottom:5px;}
 #divBillsCost div{padding-right:3px;padding-bottom:5px;}
 .cart-error { font-size:12px; text-align:left;color:#ff0000;}
+.bill-not-finalized {font-size:12px; text-align:left;color:#ff0000;}
 
 /********* carrello ordine */
 #spese-totale { background:#ccc; padding:10px; margin-bottom:10px; }

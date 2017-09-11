@@ -1068,12 +1068,15 @@ function selectPayAndBills4Form(applyBills){
 										bool foundbel = billsData.TryGetValue(key, out belements);
 										decimal billImp = 0.00M;
 										decimal billSup = 0.00M;
+										decimal billExt = 0.00M;
 										decimal billAmount = 0.00M;
 										Fee f = null;
 										string billGdesc = "";
 										string billDesc = "";
 										bool isChecked = false;
+										bool isFinalized = true;
 										int required = 0;
+										string finalizedErrorMessage = "";
 										
 										if(foundbel){
 											billImp = Convert.ToDecimal(belements[0]);
@@ -1083,6 +1086,9 @@ function selectPayAndBills4Form(applyBills){
 											billGdesc = Convert.ToString(belements[4]);
 											billDesc = Convert.ToString(belements[5]);
 											isChecked = Convert.ToBoolean(belements[6]);
+											isFinalized = Convert.ToBoolean(belements[7]);
+											finalizedErrorMessage = Convert.ToString(belements[8]);
+											billExt = Convert.ToDecimal(belements[9]);
 											
 											if(f.required){required=1;}
 										}
@@ -1093,15 +1099,21 @@ function selectPayAndBills4Form(applyBills){
 										}
 										
 										if(f.autoactive){
-											Response.Write("&nbsp;"+billDesc+"&nbsp;&nbsp;&nbsp;<strong>"+currency+"&nbsp;"+billAmount.ToString("#,###0.00")+"</strong><br/>");
+											Response.Write("&nbsp;"+billDesc+"&nbsp;&nbsp;&nbsp;<strong>"+currency+"&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>");
+											if(!isFinalized){Response.Write("&nbsp;<span class=\"bill-not-finalized\">"+finalizedErrorMessage+"</span>");}
+											Response.Write("<br/>");
 											hasBills2charge = true;
 										}else{
-											if(f.multiply && ((billImp+billSup)>0 || f.typeView==1)){%>
-												<input style="margin-left:10px;" type="checkbox" onclick="javascript:ajaxSetSessionPayAndBills(this),calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','<%=defCurrency.rate%>','<%=userCurrency.rate%>');" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/> 
-												<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>"+currency+"&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>&nbsp;&nbsp;<br/>"%>	
-											<%}else if(!f.multiply && ((billImp+billSup)>0 || f.typeView==1)){%>
-												<input style="margin-left:10px;" type="radio"  onclick="javascript:ajaxSetSessionPayAndBills(this),calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','<%=defCurrency.rate%>','<%=userCurrency.rate%>');" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/> 
-												<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>"+currency+"&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>&nbsp;&nbsp;<br/>"%>				
+											string ipt = "radio";
+											if(f.multiply){
+												ipt = "checkbox";
+											}
+											
+											if((billImp+billSup)>0 || f.typeView==1){%>
+												<input style="margin-left:10px;" type="<%=ipt%>" onclick="javascript:ajaxSetSessionPayAndBills(this),calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','<%=defCurrency.rate%>','<%=userCurrency.rate%>');" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%> <%if(!isFinalized){Response.Write(" disabled='true'");}%>/> 
+												<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>"+currency+"&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>"%>
+												<%if(!isFinalized){Response.Write("&nbsp;<span class=\"bill-not-finalized\">"+finalizedErrorMessage+"</span>");}%>
+												<%="&nbsp;&nbsp;<br/>"%>	
 											<%}%>										
 										
 
@@ -1114,7 +1126,7 @@ function selectPayAndBills4Form(applyBills){
 											<%}
 											
 											if((billImp+billSup)>0 || f.typeView==1){%>
-												listBills4Order.put("<%=f.feeGroup+"-"+f.id+"-"+required%>","<%=billImp+billSup%>");
+												listBills4Order.put("<%=f.feeGroup+"-"+f.id+"-"+required%>","<%=billImp+billSup+billExt%>");
 												<%
 												hasBills2charge = true;
 												bills2Charge[f.feeGroup] = true;
@@ -1330,7 +1342,7 @@ function selectPayAndBills4Form(applyBills){
 									</select></div>	
 									
 									<script>
-									<%if("1".Equals(confservice.get("enable_international_tax_option").value)){%>
+									<%if("1".Equals(confservice.get("enable_international_tax_option").value) || hasExternalProviderBills){%>
 										$('#ship_country').change(function() {
 											$('#prodotto-totale').hide();	
 											document.form_insert_carrello.operation.value="";
@@ -1347,7 +1359,16 @@ function selectPayAndBills4Form(applyBills){
 											$('#prodotto-totale').hide();			
 											document.form_insert_carrello.operation.value="";
 											document.form_insert_carrello.submit();
-										});		
+										});	
+									
+										<%if(hasExternalProviderBills){%>
+										// reload su cambio CAP per ricalcolo spese con corriere esterno (UPS, DHL)	
+										$('#ship_zip_code').change(function() {
+											$('#prodotto-totale').hide();
+											document.form_insert_carrello.operation.value="";
+											document.form_insert_carrello.submit();
+										});	
+										<%}%>
 									<%}else{%>
 										$('#ship_country').change(function() {
 											var type_val_ch = $('#ship_country').val();

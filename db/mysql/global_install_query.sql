@@ -7213,3 +7213,9 @@ INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.prodotti.detail.js.alert.insert_width', 'IT', 'Inserire la larghezza del prodotto!');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.prodotti.detail.js.alert.insert_height', 'EN', 'Insert product height!');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.prodotti.detail.js.alert.insert_height', 'IT', 'Inserire l''altezza del prodotto!');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('frontend.carrello.table.label.shipping_data_missing', 'EN', '(not confirmed! complete shipping data)');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('frontend.carrello.table.label.shipping_data_missing', 'IT', '(non confermato! completare i dati di spedizione)');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.spese.detail.table.label.ups_endpoint', 'EN', 'Endpoint');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.spese.detail.table.label.ups_endpoint', 'IT', 'Endpoint');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('frontend.carrello.table.label.ups_quotation_error', 'EN', 'UPS service failed! please reload shopping cart');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('frontend.carrello.table.label.ups_quotation_error', 'IT', 'Servizio UPS non raggiungibile! prego ricaricare il carrello');

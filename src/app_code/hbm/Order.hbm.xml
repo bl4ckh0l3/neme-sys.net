@@ -85,6 +85,9 @@
 		<property name="taxable" column="taxable" not-null="true" />
 		<property name="supplement" column="supplement" not-null="true" />
 		<property name="feeDesc" column="fee_desc" />
+		<property name="autoactive" column="autoactive" not-null="true"  type="Boolean" />
+		<property name="required" column="required" not-null="true"  type="Boolean" />
+		<property name="feeGroup" column="fee_group" />	
 	</class>
 	
     <class name="OrderProductAttachmentDownload" table="ORDER_PRODUCT_ATTACHMENT_DOWNLOAD">

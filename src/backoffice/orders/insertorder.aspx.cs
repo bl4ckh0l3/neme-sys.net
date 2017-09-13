@@ -77,6 +77,7 @@ public partial class _InsertOrder : Page
 	protected decimal totalPaymentAmount;
 	protected int totalCartQuantity;
 	protected bool applyBills = false;
+	protected bool hasExternalProviderBills = false;
 	protected bool hasOrderRule = false;
 	protected bool bolHasProdRule = false;
 	protected IList<Fee> fees;
@@ -134,6 +135,7 @@ public partial class _InsertOrder : Page
 		ILoggerRepository lrep = RepositoryFactory.getInstance<ILoggerRepository>("ILoggerRepository");
 		IShippingAddressRepository shiprep = RepositoryFactory.getInstance<IShippingAddressRepository>("IShippingAddressRepository");
 		IBillsAddressRepository billsrep = RepositoryFactory.getInstance<IBillsAddressRepository>("IBillsAddressRepository");
+		IBillingRepository billingrep = RepositoryFactory.getInstance<IBillingRepository>("IBillingRepository");
 		productrep = RepositoryFactory.getInstance<IProductRepository>("IProductRepository");
 		contrep = RepositoryFactory.getInstance<IContentRepository>("IContentRepository");
 		adsrep = RepositoryFactory.getInstance<IAdsRepository>("IAdsRepository"); 
@@ -567,6 +569,9 @@ public partial class _InsertOrder : Page
 		//Response.Write("hasOrderRule: "+hasOrderRule+"<br>");							
 		
 		
+		//unique products container
+		IDictionary<int,Product> uniqueProducts = null;
+		
 		if(orderid>0){
 			try{
 				order = orderep.getByIdExtended(orderid, true);				
@@ -662,7 +667,7 @@ public partial class _InsertOrder : Page
 						}
 					}
 					
-					IDictionary<int,Product> uniqueProducts = new Dictionary<int,Product>();
+					uniqueProducts = new Dictionary<int,Product>();
 					
 					//*** PREPARE PRODUCT BUSINESS RULES
 					foreach(OrderProduct op in order.products.Values){
@@ -891,7 +896,7 @@ public partial class _InsertOrder : Page
 						}
 					}	
 					
-					IDictionary<int,Product> uniqueProducts = new Dictionary<int,Product>();
+					uniqueProducts = new Dictionary<int,Product>();
 					
 					//**** set Dictionary for ProductCalendar, in case of product type booking
 					IDictionary<string,IList<ShoppingCartProductCalendar>> productsCal = new Dictionary<string,IList<ShoppingCartProductCalendar>>();
@@ -1697,16 +1702,25 @@ public partial class _InsertOrder : Page
 						}
 					}
 					
-					if(founded != null && founded.autoactive){
+					if(founded==null){
+						founded = new Fee();  
+						founded.description=of.feeDesc;
+						founded.amount=of.amount;
+						founded.autoactive=of.autoactive;
+						founded.required=of.required;
+						founded.feeGroup=of.feeGroup; 	
+					}
+					
+					if(of.autoactive){
 						totalBillsAmount+=of.amount;
 						totalAutomaticBillsAmount+=of.amount;	
 					}					
 					
 					string billGdesc = "";
-					if(founded != null){
-						billGdesc = founded.feeGroup;
-						if(!String.IsNullOrEmpty(lang.getTranslated("backend.fee.group.label."+founded.feeGroup))){
-							billGdesc = lang.getTranslated("backend.fee.group.label."+founded.feeGroup);
+					if(of.feeGroup != null){
+						billGdesc = of.feeGroup;
+						if(!String.IsNullOrEmpty(lang.getTranslated("backend.fee.group.label."+of.feeGroup))){
+							billGdesc = lang.getTranslated("backend.fee.group.label."+billGdesc);
 						}
 					}
 					
@@ -1724,6 +1738,9 @@ public partial class _InsertOrder : Page
 					billElements.Add(billGdesc);
 					billElements.Add(billDesc);
 					billElements.Add(true);
+					billElements.Add(true);
+					billElements.Add("");
+					billElements.Add(0.00M);
 					
 					billsData.Add(of.idFee, billElements);									
 				}
@@ -1732,6 +1749,7 @@ public partial class _InsertOrder : Page
 			foreach(Fee f in fees){
 				decimal billImp = 0.00M;
 				decimal billSup = 0.00M;
+				decimal billExt = 0.00M;
 				Supplement feesup = null;
 				
 				billImp = FeeService.getTaxableAmountByStrategy(f, totalAmount4Bills, totalCartQuantity, Scpf4Bills);
@@ -1810,7 +1828,60 @@ public partial class _InsertOrder : Page
 				}	
 				
 				bool isChecked = false;
+				bool isFinalized = true;
+				string fem = lang.getTranslated("frontend.carrello.table.label.shipping_data_missing");
+							
 				decimal billAmount = billImp+billSup;
+					
+				/** verifico se e' un corriere esterno (UPS,DHL) **/
+				if(f.extProvider>0){
+					hasExternalProviderBills = true;
+					if(hasShipAddress){
+						// retrieve BillingData
+						BillingData billingData = billingrep.getBillingData();
+							
+						if(f.extProvider==1){
+							// UPS integration
+							IList<Product> shippableProducts = new List<Product>();
+							
+							if(orderid<0){
+								foreach(ShoppingCartProduct scp in shoppingCart.products.Values){	
+									Product c = uniqueProducts[scp.idProduct];
+									if(c.prodType==0){
+										for(int x=1;x<=scp.productQuantity;x++){
+											shippableProducts.Add(c);
+										}
+									}
+								}							
+							}else{
+								foreach(OrderProduct op in order.products.Values){
+									Product c = uniqueProducts[op.idProduct];
+									if(c.prodType==0){
+										for(int x=1;x<=op.productQuantity;x++){
+											shippableProducts.Add(c);
+										}
+									}								
+								}
+							}
+							
+							UPSFee extProvider = FeeService.getUPSRate(f.extParams, shippableProducts, shipaddr, billingData);
+							
+							if(extProvider != null && extProvider.success){
+								billExt=extProvider.amount;
+								billAmount+=billExt;
+								isFinalized = true;
+							}else{
+								isFinalized = false;
+								fem = lang.getTranslated("frontend.carrello.table.label.ups_quotation_error");
+							}
+						}else if(f.extProvider==2){
+							//TODO: implement DHL integration
+						}
+					}else{
+						isFinalized = false;
+					}
+				}
+							
 				
 				if(f.autoactive){
 					totalBillsAmount+=billAmount;
@@ -1858,6 +1929,9 @@ public partial class _InsertOrder : Page
 				billElements.Add(billGdesc);
 				billElements.Add(billDesc);
 				billElements.Add(isChecked);
+				billElements.Add(isFinalized);
+				billElements.Add(fem);
+				billElements.Add(billExt);
 				
 				billsData.Add(f.id, billElements); 
 			}								
@@ -2229,6 +2303,9 @@ public partial class _InsertOrder : Page
 						of.taxable=billImp;
 						of.supplement=billSup;	
 						of.feeDesc=f.description;
+						of.autoactive=f.autoactive;
+						of.required=f.required;
+						of.feeGroup=f.feeGroup;
 						ofs.Add(of);
 						
 						orderTaxable+=of.taxable;

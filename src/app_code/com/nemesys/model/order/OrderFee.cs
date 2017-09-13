@@ -10,7 +10,10 @@ namespace com.nemesys.model
 		private decimal _amount;
 		private decimal _taxable;
 		private decimal _supplement;	
-		private string _feeDesc;	
+		private string _feeDesc;
+		private bool _autoactive;
+		private bool _required;
+		private string _feeGroup;
 	
 		public OrderFee(){}
 
@@ -44,6 +47,21 @@ namespace com.nemesys.model
 			set { _feeDesc = value; }
 		}
 
+		public virtual bool autoactive {
+			get { return _autoactive; }
+			set { _autoactive = value; }
+		}
+
+		public virtual bool required {
+			get { return _required; }
+			set { _required = value; }
+		}
+
+		public virtual string feeGroup {
+			get { return _feeGroup; }
+			set { _feeGroup = value; }
+		}		
+		
 		public override bool Equals(object obj)
 		{
 			OrderFee other = obj as OrderFee;
@@ -80,7 +98,10 @@ namespace com.nemesys.model
 			.Append(" - amount: ").Append(this._amount)
 			.Append(" - taxable: ").Append(this._taxable)
 			.Append(" - supplement: ").Append(this._supplement)
-			.Append(" - feeDesc: ").Append(this._feeDesc);
+			.Append(" - feeDesc: ").Append(this._feeDesc)
+			.Append(" - autoactive: ").Append(this._autoactive)
+			.Append(" - required: ").Append(this._required)
+			.Append(" - feeGroup: ").Append(this._feeGroup);
 			
 			return builder.ToString();			
 		}

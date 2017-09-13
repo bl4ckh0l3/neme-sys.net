@@ -3,7 +3,7 @@ using System.Text;
 
 namespace com.nemesys.model
 {
-	public class ShoppingCartProduct
+	public class ShoppingCartProduct: IProduct
 	{	
 		private int _idCart;
 		private int _idProduct;

@@ -127,6 +127,7 @@ public partial class _Checkout : Page
 		shoprep = RepositoryFactory.getInstance<IShoppingCartRepository>("IShoppingCartRepository");
 		IShippingAddressRepository shiprep = RepositoryFactory.getInstance<IShippingAddressRepository>("IShippingAddressRepository");
 		IBillsAddressRepository billsrep = RepositoryFactory.getInstance<IBillsAddressRepository>("IBillsAddressRepository");
+		IBillingRepository billingrep = RepositoryFactory.getInstance<IBillingRepository>("IBillingRepository");
 		currrep = RepositoryFactory.getInstance<ICurrencyRepository>("ICurrencyRepository");
 		IFeeRepository feerep = RepositoryFactory.getInstance<IFeeRepository>("IFeeRepository");
 		IPaymentRepository payrep = RepositoryFactory.getInstance<IPaymentRepository>("IPaymentRepository");
@@ -528,6 +529,8 @@ public partial class _Checkout : Page
 			if(!String.IsNullOrEmpty(Request["ship_country"])){
 				internationalCountryCode = Request["ship_country"];
 				shipaddr.country=internationalCountryCode;
+				//sbianco il campo state region per evitare inconsistenze con la country
+				shipaddr.stateRegion="";
 				hasShipReqVal = true;
 			}
 			if(!String.IsNullOrEmpty(Request["ship_state_region"])){
@@ -549,7 +552,7 @@ public partial class _Checkout : Page
 			if(!String.IsNullOrEmpty(Request["bills_address"])){billsaddr.address=Request["bills_address"];hasBillsReqVal = true;}	
 			if(!String.IsNullOrEmpty(Request["bills_city"])){billsaddr.city=Request["bills_city"];hasBillsReqVal = true;}	
 			if(!String.IsNullOrEmpty(Request["bills_zip_code"])){billsaddr.zipCode=Request["bills_zip_code"];hasBillsReqVal = true;}	
-			if(!String.IsNullOrEmpty(Request["bills_country"])){billsaddr.country=Request["bills_country"];hasBillsReqVal = true;}	
+			if(!String.IsNullOrEmpty(Request["bills_country"])){billsaddr.country=Request["bills_country"];billsaddr.stateRegion="";hasBillsReqVal = true;}	
 			if(!String.IsNullOrEmpty(Request["bills_state_region"])){billsaddr.stateRegion=Request["bills_state_region"];hasBillsReqVal = true;}	
 
 			
@@ -1308,6 +1311,9 @@ public partial class _Checkout : Page
 							if(f.extProvider>0){
 								hasExternalProviderBills = true;
 								if(hasShipAddress){
+									// retrieve BillingData
+									BillingData billingData = billingrep.getBillingData();
+										
 									if(f.extProvider==1){
 										// UPS integration
 										IList<Product> shippableProducts = new List<Product>();
@@ -1321,7 +1327,7 @@ public partial class _Checkout : Page
 											}
 										}
 										
-										UPSFee extProvider = FeeService.getUPSRate(f.extParams, shippableProducts, shipaddr);
+										UPSFee extProvider = FeeService.getUPSRate(f.extParams, shippableProducts, shipaddr, billingData);
 										
 										if(extProvider != null && extProvider.success){
 											billExt=extProvider.amount;
@@ -1755,6 +1761,9 @@ public partial class _Checkout : Page
 							of.taxable=billImp;
 							of.supplement=billSup;	
 							of.feeDesc=f.description;
+							of.autoactive=f.autoactive;
+							of.required=f.required;
+							of.feeGroup=f.feeGroup;
 							ofs.Add(of);
 							
 							orderTaxable+=of.taxable;

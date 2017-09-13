@@ -137,6 +137,11 @@
     <description>nhibernate implementation of IOrderRepository</description>
   </IOrderRepository>
   
+  <IBillingRepository>
+    <value>com.nemesys.database.repository.BillingRepository</value>
+    <description>nhibernate implementation of IBillingRepository</description>
+  </IBillingRepository>
+  
   <IAdsRepository>
     <value>com.nemesys.database.repository.AdsRepository</value>
     <description>nhibernate implementation of IAdsRepository</description>

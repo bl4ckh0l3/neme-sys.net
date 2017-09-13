@@ -194,7 +194,7 @@ namespace com.nemesys.services
 			return result;
 		}
 		
-		public static UPSFee getUPSRate(string extParams, IList<Product> products, ShippingAddress shipToAddr)
+		public static UPSFee getUPSRate(string extParams, IList<Product> products, ShippingAddress shipToAddr, BillingData billingData)
 		{
 			UPSFee result = null;
 			
@@ -236,9 +236,20 @@ namespace com.nemesys.services
 				.Append(password)
 				.Append("'},'ServiceAccessToken': {'AccessLicenseNumber': '")
 				.Append(licenceNumber)
-				.Append("'}},'RateRequest': {'Request': {'RequestOption': 'Rate','TransactionReference': {'CustomerContext': ''}},'Shipment': {'Shipper': {'Name': '','ShipperNumber': '")
+				.Append("'}},'RateRequest': {'Request': {'RequestOption': 'Rate','TransactionReference': {'CustomerContext': ''}},")
+				.Append("'Shipment': {'Shipper': {'Name': '")
+				.Append(billingData.name)
+				.Append("','ShipperNumber': '")
 				.Append(shipperNumber)
-				.Append("','Address': {'AddressLine': '','City': '','StateProvinceCode': '','PostalCode': '','CountryCode': 'IT'}},")
+				.Append("','Address': {'AddressLine': '")
+				.Append(billingData.address)
+				.Append("','City': '")
+				.Append(billingData.city)
+				.Append("','StateProvinceCode': '','PostalCode': '")
+				.Append(billingData.zipCode)
+				.Append("','CountryCode': '")
+				.Append(billingData.country)
+				.Append("'}},")
 				.Append("'ShipTo': {'Name': '")
 				.Append(shipToAddr.name)
 				.Append(" ")
@@ -252,7 +263,17 @@ namespace com.nemesys.services
 				.Append("','CountryCode': '")
 				.Append(shipToAddr.country)
 				.Append("'}},")
-				.Append("'ShipFrom': {'Name': 'DickDick Shop','Address': {'AddressLine': 'Via napoli, 45','City': 'Milano','StateProvinceCode': 'MI','PostalCode': '20121','CountryCode': 'IT'}},")
+				.Append("'ShipFrom': {'Name': '")
+				.Append(billingData.name)
+				.Append("','Address': {'AddressLine': '")
+				.Append(billingData.address)
+				.Append("','City': '")
+				.Append(billingData.city)
+				.Append("','StateProvinceCode': '','PostalCode': '")
+				.Append(billingData.zipCode)
+				.Append("','CountryCode': '")
+				.Append(billingData.country)
+				.Append("'}},")
 				.Append("'Service': {'Code': '11','Description': ''},")
 				.Append("'Package': [");
 				
@@ -302,11 +323,13 @@ namespace com.nemesys.services
 					
 					if("1".Equals(code)){
 						decimal amount = (decimal)o.SelectToken("RateResponse.RatedShipment.TotalCharges.MonetaryValue");
+						string currency = (string)o.SelectToken("RateResponse.RatedShipment.TotalCharges.CurrencyCode");
 						//HttpContext.Current.Response.Write("amount:<br>"+amount+"<br>");
 						
 						result = new UPSFee();
 						result.extResponse=json[0];
 						result.amount=amount;
+						result.currency=currency;
 						result.success=true;
 					}
 				}

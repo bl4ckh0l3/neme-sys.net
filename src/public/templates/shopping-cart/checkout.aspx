@@ -1077,6 +1077,7 @@ function selectPayAndBills4Form(applyBills){
 										bool isFinalized = true;
 										int required = 0;
 										string finalizedErrorMessage = "";
+										string tFeeGroup = "";
 										
 										if(foundbel){
 											billImp = Convert.ToDecimal(belements[0]);
@@ -1091,11 +1092,15 @@ function selectPayAndBills4Form(applyBills){
 											billExt = Convert.ToDecimal(belements[9]);
 											
 											if(f.required){required=1;}
+											
+											if(!String.IsNullOrEmpty(f.feeGroup)){
+												tFeeGroup = f.feeGroup;
+											}
 										}
 										
-										if(!oldGroupDesc.Equals(f.feeGroup) && !String.IsNullOrEmpty(f.feeGroup)){
-											bills2Charge.Add(f.feeGroup,false);
-											Response.Write("<strong class=bills-group-name id="+f.feeGroup+">"+billGdesc+"</strong><br/>");
+										if(!oldGroupDesc.Equals(tFeeGroup) && !String.IsNullOrEmpty(tFeeGroup)){
+											bills2Charge.Add(tFeeGroup,false);
+											Response.Write("<strong class=bills-group-name id="+tFeeGroup+">"+billGdesc+"</strong><br/>");
 										}
 										
 										if(f.autoactive){
@@ -1109,8 +1114,8 @@ function selectPayAndBills4Form(applyBills){
 												ipt = "checkbox";
 											}
 											
-											if((billImp+billSup)>0 || f.typeView==1){%>
-												<input style="margin-left:10px;" type="<%=ipt%>" onclick="javascript:ajaxSetSessionPayAndBills(this),calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','<%=defCurrency.rate%>','<%=userCurrency.rate%>');" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%> <%if(!isFinalized){Response.Write(" disabled='true'");}%>/> 
+											if((billImp+billSup+billExt)>0 || f.typeView==1){%>
+												<input style="margin-left:10px;" type="<%=ipt%>" onclick="javascript:ajaxSetSessionPayAndBills(this),calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','<%=defCurrency.rate%>','<%=userCurrency.rate%>');" name="<%=tFeeGroup%>" id="<%=tFeeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%> <%if(!isFinalized){Response.Write(" disabled='true'");}%>/> 
 												<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>"+currency+"&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>"%>
 												<%if(!isFinalized){Response.Write("&nbsp;<span class=\"bill-not-finalized\">"+finalizedErrorMessage+"</span>");}%>
 												<%="&nbsp;&nbsp;<br/>"%>	
@@ -1125,16 +1130,18 @@ function selectPayAndBills4Form(applyBills){
 												});
 											<%}
 											
-											if((billImp+billSup)>0 || f.typeView==1){%>
-												listBills4Order.put("<%=f.feeGroup+"-"+f.id+"-"+required%>","<%=billImp+billSup+billExt%>");
+											if((billImp+billSup+billExt)>0 || f.typeView==1){%>
+												listBills4Order.put("<%=tFeeGroup+"-"+f.id+"-"+required%>","<%=billImp+billSup+billExt%>");
 												<%
 												hasBills2charge = true;
-												bills2Charge[f.feeGroup] = true;
+												if(!String.IsNullOrEmpty(tFeeGroup)){
+													bills2Charge[tFeeGroup] = true;
+												}
 											}%>
 											</script> 											
 										
 										<%}
-										oldGroupDesc=f.feeGroup;
+										oldGroupDesc=tFeeGroup;
 									}%>
 								</div>
 								
@@ -1345,6 +1352,7 @@ function selectPayAndBills4Form(applyBills){
 									<%if("1".Equals(confservice.get("enable_international_tax_option").value) || hasExternalProviderBills){%>
 										$('#ship_country').change(function() {
 											$('#prodotto-totale').hide();	
+											$('#ship_state_region').val('');
 											document.form_insert_carrello.operation.value="";
 											document.form_insert_carrello.submit();
 										});

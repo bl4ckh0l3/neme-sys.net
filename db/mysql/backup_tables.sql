@@ -1283,6 +1283,9 @@ CREATE TABLE `ORDER_FEES` (
   `taxable` DECIMAL(20,4) NOT NULL default '0.00',
   `supplement` decimal(20,4) NOT NULL default '0.00',  
   `fee_desc` varchar(100) DEFAULT NULL,
+  `autoactive` SMALLINT(1) UNSIGNED NOT NULL default '0',
+  `required` SMALLINT(1) UNSIGNED NOT NULL default '0',
+  `fee_group` VARCHAR(100) default NULL,
   PRIMARY KEY  (`id_order`,`id_fee`)
 )ENGINE = InnoDB  DEFAULT CHARSET=utf8;
 
@@ -1364,6 +1367,47 @@ CREATE TABLE IF NOT EXISTS `ORDER_BILLS_ADDRESS` (
   `country` varchar(100) default NULL,
   `state_region` varchar(100) default NULL,
   PRIMARY KEY (`id_order`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- --------------------------------------------------------
+-- 
+-- Structure of table `BILLING`
+-- 
+DROP TABLE IF EXISTS `BILLING`;
+CREATE TABLE IF NOT EXISTS `BILLING` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `id_parent_order` int(11) NOT NULL,
+  `order_amount` DECIMAL(20,4) NOT NULL default '0.00',
+  `name` varchar(100) default NULL,
+  `cfiscvat` varchar(30) default NULL,
+  `address` varchar(250) default NULL,
+  `city` varchar(100) default NULL,
+  `zip_code` varchar(20) default NULL,
+  `country` varchar(100) default NULL,
+  `state_region` varchar(100) default NULL,
+  `last_update` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `insert_date` timestamp NOT NULL,
+  `order_date` timestamp NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- --------------------------------------------------------
+-- 
+-- Structure of table `BILLING_DATA`
+-- 
+DROP TABLE IF EXISTS `BILLING_DATA`;
+CREATE TABLE IF NOT EXISTS `BILLING_DATA` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `name` varchar(100) default NULL,
+  `cfiscvat` varchar(30) default NULL,
+  `address` varchar(250) default NULL,
+  `city` varchar(100) default NULL,
+  `zip_code` varchar(20) default NULL,
+  `country` varchar(100) default NULL,
+  `state_region` varchar(100) default NULL,
+  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

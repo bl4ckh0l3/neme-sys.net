@@ -1252,12 +1252,16 @@ jQuery(document).ready(function(){
 								bool foundbel = billsData.TryGetValue(key, out belements);
 								decimal billImp = 0.00M;
 								decimal billSup = 0.00M;
+								decimal billExt = 0.00M;
 								decimal billAmount = 0.00M;
 								Fee f = null;
 								string billGdesc = "";
 								string billDesc = "";
 								bool isChecked = false;
+								bool isFinalized = true;
 								int required = 0;
+								string finalizedErrorMessage = "";
+								string tFeeGroup = "";
 								
 								if(foundbel){
 									billImp = Convert.ToDecimal(belements[0]);
@@ -1267,25 +1271,39 @@ jQuery(document).ready(function(){
 									billGdesc = Convert.ToString(belements[4]);
 									billDesc = Convert.ToString(belements[5]);
 									isChecked = Convert.ToBoolean(belements[6]);
+									isFinalized = Convert.ToBoolean(belements[7]);
+									finalizedErrorMessage = Convert.ToString(belements[8]);
+									billExt = Convert.ToDecimal(belements[9]);
 									
 									if(f.required){required=1;}
+											
+									if(!String.IsNullOrEmpty(f.feeGroup)){
+										tFeeGroup = f.feeGroup;
+									}
 								}
 								
-								if(!oldGroupDesc.Equals(f.feeGroup) && !String.IsNullOrEmpty(f.feeGroup)){
-									bills2Charge.Add(f.feeGroup,false);
+								if(!oldGroupDesc.Equals(tFeeGroup) && !String.IsNullOrEmpty(tFeeGroup)){
+									bills2Charge.Add(tFeeGroup,false);
 									Response.Write("<strong id="+f.feeGroup+">"+billGdesc+"</strong><br/>");
 								}
 								
 								if(f.autoactive){
-									Response.Write("&nbsp;"+billDesc+"&nbsp;&nbsp;&nbsp;<strong>&euro;&nbsp;"+billAmount.ToString("#,###0.00")+"</strong><br/>");
-									hasBills2charge = true;
+									Response.Write("&nbsp;"+billDesc+"&nbsp;&nbsp;&nbsp;<strong>&euro;&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>");
+									if(!isFinalized){Response.Write("&nbsp;<span class=\"bill-not-finalized\">"+finalizedErrorMessage+"</span>");}
+									Response.Write("<br/>");
+									hasBills2charge = true;									
+									
 								}else{
-									if(f.multiply && ((billImp+billSup)>0 || f.typeView==1)){%>
-										<input style="margin-left:10px;" <%if(orderid>0 && paymentDone){%>onclick="return false;" onkeydown="return false;"<%}else{%>onclick="javascript:calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','1','1');"<%}%> type="checkbox" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/> 
-										<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>&euro;&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>&nbsp;&nbsp;<br/>"%>	
-									<%}else if(!f.multiply && ((billImp+billSup)>0 || f.typeView==1)){%>	
-										<input style="margin-left:10px;" onclick="return false;" <%if(orderid>0 && paymentDone){%>onkeydown="return false;"<%}else{%>onclick="javascript:calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','1','1');"<%}%> type="radio" name="<%=f.feeGroup%>" id="<%=f.feeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%>/>
-										<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>&euro;&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>&nbsp;&nbsp;<br/>"%>				
+									if(f.multiply && ((billImp+billSup+billExt)>0 || f.typeView==1)){%>
+										<input style="margin-left:10px;" <%if(orderid>0 && paymentDone){%>onclick="return false;" onkeydown="return false;"<%}else{%>onclick="javascript:calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','1','1');"<%}%> type="checkbox" name="<%=tFeeGroup%>" id="<%=tFeeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%> <%if(!isFinalized){Response.Write(" disabled='true'");}%>/> 
+										<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>&euro;&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>"%>
+										<%if(!isFinalized){Response.Write("&nbsp;<span class=\"bill-not-finalized\">"+finalizedErrorMessage+"</span>");}%>
+										<%="&nbsp;&nbsp;<br/>"%>
+									<%}else if(!f.multiply && ((billImp+billSup+billExt)>0 || f.typeView==1)){%>	
+										<input style="margin-left:10px;" onclick="return false;" <%if(orderid>0 && paymentDone){%>onkeydown="return false;"<%}else{%>onclick="javascript:calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','1','1');"<%}%> type="radio" name="<%=tFeeGroup%>" id="<%=tFeeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%> <%if(!isFinalized){Response.Write(" disabled='true'");}%>/>
+										<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>&euro;&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>"%>
+										<%if(!isFinalized){Response.Write("&nbsp;<span class=\"bill-not-finalized\">"+finalizedErrorMessage+"</span>");}%>
+										<%="&nbsp;&nbsp;<br/>"%>			
 									<%}%>										
 								
 	
@@ -1297,16 +1315,18 @@ jQuery(document).ready(function(){
 										});
 									<%}
 									
-									if((billImp+billSup)>0 || f.typeView==1){%>
-										listBills4Order.put("<%=f.feeGroup+"-"+f.id+"-"+required%>","<%=billImp+billSup%>");
+									if((billImp+billSup+billExt)>0 || f.typeView==1){%>
+										listBills4Order.put("<%=tFeeGroup+"-"+f.id+"-"+required%>","<%=billImp+billSup+billExt%>");
 										<%
 										hasBills2charge = true;
-										bills2Charge[f.feeGroup] = true;
+										if(!String.IsNullOrEmpty(tFeeGroup)){
+											bills2Charge[tFeeGroup] = true;
+										}
 									}%>
 									</script> 											
 								
 								<%}
-								oldGroupDesc=f.feeGroup;
+								oldGroupDesc=tFeeGroup;
 							}%>
 						</div>
 						
@@ -1446,6 +1466,7 @@ jQuery(document).ready(function(){
 								if(orderid==-1){%>
 								$('#ship_country').change(function() {
 									$('#prodotto-totale').hide();	
+									$('#ship_state_region').val('');
 									document.form_insert_carrello.operation.value="";
 									document.form_insert_carrello.submit();
 								});

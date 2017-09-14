@@ -1300,7 +1300,7 @@ jQuery(document).ready(function(){
 										<%if(!isFinalized){Response.Write("&nbsp;<span class=\"bill-not-finalized\">"+finalizedErrorMessage+"</span>");}%>
 										<%="&nbsp;&nbsp;<br/>"%>
 									<%}else if(!f.multiply && ((billImp+billSup+billExt)>0 || f.typeView==1)){%>	
-										<input style="margin-left:10px;" onclick="return false;" <%if(orderid>0 && paymentDone){%>onkeydown="return false;"<%}else{%>onclick="javascript:calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','1','1');"<%}%> type="radio" name="<%=tFeeGroup%>" id="<%=tFeeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%> <%if(!isFinalized){Response.Write(" disabled='true'");}%>/>
+										<input style="margin-left:10px;" <%if(orderid>0 && paymentDone){%>onclick="return false;" onkeydown="return false;"<%}else{%>onclick="javascript:calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','1','1');"<%}%> type="radio" name="<%=tFeeGroup%>" id="<%=tFeeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%> <%if(!isFinalized){Response.Write(" disabled='true'");}%>/>
 										<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>&euro;&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>"%>
 										<%if(!isFinalized){Response.Write("&nbsp;<span class=\"bill-not-finalized\">"+finalizedErrorMessage+"</span>");}%>
 										<%="&nbsp;&nbsp;<br/>"%>			

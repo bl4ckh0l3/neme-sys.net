@@ -1285,6 +1285,7 @@ CREATE TABLE `ORDER_FEES` (
   `fee_desc` varchar(100) DEFAULT NULL,
   `autoactive` SMALLINT(1) UNSIGNED NOT NULL default '0',
   `required` SMALLINT(1) UNSIGNED NOT NULL default '0',
+  `multiply` SMALLINT(1) UNSIGNED NOT NULL default '0',
   `fee_group` VARCHAR(100) default NULL,
   PRIMARY KEY  (`id_order`,`id_fee`)
 )ENGINE = InnoDB  DEFAULT CHARSET=utf8;

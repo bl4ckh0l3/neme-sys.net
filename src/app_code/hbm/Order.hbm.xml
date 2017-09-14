@@ -87,6 +87,7 @@
 		<property name="feeDesc" column="fee_desc" />
 		<property name="autoactive" column="autoactive" not-null="true"  type="Boolean" />
 		<property name="required" column="required" not-null="true"  type="Boolean" />
+		<property name="multiply" column="multiply" not-null="true"  type="Boolean" />
 		<property name="feeGroup" column="fee_group" />	
 	</class>
 	

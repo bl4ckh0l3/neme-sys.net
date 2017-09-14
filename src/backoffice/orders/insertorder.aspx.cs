@@ -1707,6 +1707,7 @@ public partial class _InsertOrder : Page
 						founded.description=of.feeDesc;
 						founded.amount=of.amount;
 						founded.autoactive=of.autoactive;
+						founded.multiply=of.multiply;
 						founded.required=of.required;
 						founded.feeGroup=of.feeGroup; 	
 					}
@@ -1729,6 +1730,7 @@ public partial class _InsertOrder : Page
 						billDesc = lang.getTranslated("backend.fee.description.label."+billDesc);
 					}
 					
+					decimal deductedBillExt = of.amount-of.taxable-of.supplement;
 					
 					IList<object> billElements = new List<object>();
 					billElements.Add(of.taxable);
@@ -1740,7 +1742,7 @@ public partial class _InsertOrder : Page
 					billElements.Add(true);
 					billElements.Add(true);
 					billElements.Add("");
-					billElements.Add(0.00M);
+					billElements.Add(deductedBillExt);
 					
 					billsData.Add(of.idFee, billElements);									
 				}
@@ -2285,12 +2287,14 @@ public partial class _InsertOrder : Page
 					bool foundbel = billsData.TryGetValue(key, out belements);
 					decimal billImp = 0.00M;
 					decimal billSup = 0.00M;
+					decimal billExt = 0.00M;
 					Fee f = null;
 					bool isChecked = false;
 					
 					if(foundbel){
 						billImp = Convert.ToDecimal(belements[0]);
 						billSup = Convert.ToDecimal(belements[1]);
+						billExt = Convert.ToDecimal(belements[9]);
 						f = (Fee)belements[3];
 						isChecked = Convert.ToBoolean(belements[6]);
 					}
@@ -2299,11 +2303,12 @@ public partial class _InsertOrder : Page
 						OrderFee of = new OrderFee();
 						of.idOrder=finalOrderId;
 						of.idFee=f.id;	
-						of.amount=billImp+billSup;
+						of.amount=billImp+billSup+billExt;
 						of.taxable=billImp;
 						of.supplement=billSup;	
 						of.feeDesc=f.description;
 						of.autoactive=f.autoactive;
+						of.multiply=f.multiply;
 						of.required=f.required;
 						of.feeGroup=f.feeGroup;
 						ofs.Add(of);

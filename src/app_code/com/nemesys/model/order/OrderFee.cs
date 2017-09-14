@@ -13,6 +13,7 @@ namespace com.nemesys.model
 		private string _feeDesc;
 		private bool _autoactive;
 		private bool _required;
+		private bool _multiply;
 		private string _feeGroup;
 	
 		public OrderFee(){}
@@ -55,6 +56,11 @@ namespace com.nemesys.model
 		public virtual bool required {
 			get { return _required; }
 			set { _required = value; }
+		}
+
+		public virtual bool multiply {
+			get { return _multiply; }
+			set { _multiply = value; }
 		}
 
 		public virtual string feeGroup {
@@ -101,6 +107,7 @@ namespace com.nemesys.model
 			.Append(" - feeDesc: ").Append(this._feeDesc)
 			.Append(" - autoactive: ").Append(this._autoactive)
 			.Append(" - required: ").Append(this._required)
+			.Append(" - multiply: ").Append(this._multiply)
 			.Append(" - feeGroup: ").Append(this._feeGroup);
 			
 			return builder.ToString();			

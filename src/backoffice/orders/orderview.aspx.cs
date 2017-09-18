@@ -71,6 +71,7 @@ public partial class _OrderView : Page
 		ILoggerRepository lrep = RepositoryFactory.getInstance<ILoggerRepository>("ILoggerRepository");
 		IShippingAddressRepository shiprep = RepositoryFactory.getInstance<IShippingAddressRepository>("IShippingAddressRepository");
 		IBillsAddressRepository billsrep = RepositoryFactory.getInstance<IBillsAddressRepository>("IBillsAddressRepository");
+		IFeeRepository feerep = RepositoryFactory.getInstance<IFeeRepository>("IFeeRepository");
 		productrep = RepositoryFactory.getInstance<IProductRepository>("IProductRepository");
 		contrep = RepositoryFactory.getInstance<IContentRepository>("IContentRepository");
 		adsrep = RepositoryFactory.getInstance<IAdsRepository>("IAdsRepository"); 
@@ -101,6 +102,7 @@ public partial class _OrderView : Page
 		builder = null;
 		orderFees = "";
 		orderRulesDesc = "";
+		
 	
 		if(!String.IsNullOrEmpty(Request["id"])){
 			try{	
@@ -163,6 +165,8 @@ public partial class _OrderView : Page
 				//****** MANAGE ORDER FEES			
 				IList<OrderFee> fees = orderep.findFeesByOrderId(orderid);
 				if(fees != null && fees.Count>0){
+					orderFees+="<table>";
+					
 					foreach(OrderFee f in fees){
 						billsAmount+=f.amount;
 						
@@ -170,8 +174,32 @@ public partial class _OrderView : Page
 						if(!String.IsNullOrEmpty(lang.getTranslated("backend.fee.description.label."+f.feeDesc))){
 							label = lang.getTranslated("backend.fee.description.label."+f.feeDesc);
 						}
-						orderFees+=label+"&nbsp;&nbsp;&nbsp;&euro;&nbsp;"+f.amount.ToString("#,###0.00")+"<br/>";
+						
+						// check if it's external provider and if the shippment has been activated
+						string extShipping = "";
+						try{
+							Fee fee = feerep.getByIdCached(f.idFee, true);
+							
+							if(order.paymentDone && order.status<3){
+								if(fee.extProvider==1){
+									//UPS integration
+									if(f.shippingEnabled){
+										extShipping = "<span id='shipping_enabled'><img src='/backoffice/img/accept.png' hspace='3' vspace='0' border='0' align='absmiddle'>"+lang.getTranslated("backend.fee.enable_shipping.ups.enabled.label")+"</span>";
+									}else{
+										extShipping = "<span id='shipping_enabled'><a href='javascript:enableExternalShipping("+orderid+",1);'>"+lang.getTranslated("backend.fee.enable_shipping.ups.label")+"</a></span>";
+									}
+								}else if(fee.extProvider==2){
+									//DHL integration
+									
+								}
+							}
+						}catch(Exception ex){
+							
+						}
+						
+						orderFees+="<tr style='height:10px;padding:0px;margin:0px;'><td style='padding:0px 20px 0px 0px;'>"+label+"</td><td style='padding:0px 2px 0px 0px;'>&euro;</td><td style='text-align:right;padding:0px 3px 0px 0px;'>"+f.amount.ToString("#,###0.00")+"</td><td style='padding:0px 0px 0px 0px;'>&nbsp;"+extShipping+"</td></tr>";
 					}
+					orderFees+="</table>";
 				}
 				
 				oshipaddr = orderep.getOrderShippingAddressCached(orderid, true);

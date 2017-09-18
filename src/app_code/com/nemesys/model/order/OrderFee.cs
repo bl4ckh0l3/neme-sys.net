@@ -15,6 +15,7 @@ namespace com.nemesys.model
 		private bool _required;
 		private bool _multiply;
 		private string _feeGroup;
+		private bool _shippingEnabled;
 	
 		public OrderFee(){}
 
@@ -66,7 +67,12 @@ namespace com.nemesys.model
 		public virtual string feeGroup {
 			get { return _feeGroup; }
 			set { _feeGroup = value; }
-		}		
+		}	
+			
+		public virtual bool shippingEnabled {
+			get { return _shippingEnabled; }
+			set { _shippingEnabled = value; }
+		}	
 		
 		public override bool Equals(object obj)
 		{
@@ -108,7 +114,8 @@ namespace com.nemesys.model
 			.Append(" - autoactive: ").Append(this._autoactive)
 			.Append(" - required: ").Append(this._required)
 			.Append(" - multiply: ").Append(this._multiply)
-			.Append(" - feeGroup: ").Append(this._feeGroup);
+			.Append(" - feeGroup: ").Append(this._feeGroup)
+			.Append(" - shippingEnabled: ").Append(this._shippingEnabled);
 			
 			return builder.ToString();			
 		}

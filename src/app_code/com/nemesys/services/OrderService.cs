@@ -914,5 +914,49 @@ namespace com.nemesys.services
 			
 			return adsActivated;			
 		}
+		
+		public static bool activateUPSShipping(int orderId, string langcode, string defLangCode)
+		{
+			bool activated = false;
+
+			try{
+				FOrder order = orderep.getByIdExtended(orderId, true);		
+				
+				if(order.products != null && order.products.Count>0){	
+					//bool hasAds = false;
+					
+					foreach(OrderProduct op in order.products.Values){
+						//if(op.productType==2 && op.idAds>-1){	
+						//	adsrep.activatePromotion(op.idAds, op.idProduct);
+						//	hasAds = true;
+						//}
+					}				
+					
+					//if(hasAds){
+						order.shippingEnabled=true;
+						orderep.update(order);
+						
+						activated = true;
+					//}
+				}
+			}catch(Exception ex){
+				StringBuilder builder = new StringBuilder("Exception: ")
+				.Append("An error occured: ").Append(ex.Message).Append("<br><br><br>").Append(ex.StackTrace);
+				Logger log = new Logger(builder.ToString(),"system","error",DateTime.Now);		
+				lrep.write(log);
+				
+				activated = false;
+			}
+			
+			return activated;			
+		}
+		
+		public static bool activateDHLShipping(int orderId, string langcode, string defLangCode)
+		{
+			bool activated = false;
+
+			
+			return activated;			
+		}
 	}
 }

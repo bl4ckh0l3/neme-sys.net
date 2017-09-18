@@ -60,6 +60,29 @@ function hideCommentDiv(){
 $(function() {
 	$("#downloadContainer").draggable();
 });
+
+function enableExternalShipping(orderId, provider){
+	var query_string = "cssClass=LO&provider="+provider+"&id_order="+orderId;	
+	//alert(query_string);
+
+	$.ajax({
+		async: true,
+		type: "GET",
+		cache: false,
+		url: "/backoffice/orders/ajaxorderextshipping.aspx",
+		data: query_string,
+		success: function(response) {
+			//alert(response);
+			$('#shipping_enabled').empty();
+			$('#shipping_enabled').append('<img src="/backoffice/img/accept.png" hspace="3" vspace="0" border="0" align="absmiddle">');
+		},
+		error: function(response) {
+			//alert(response.responseText);	
+			//$('#downloadContainer').hide();
+			alert("<%=lang.getTranslated("portal.commons.js.label.loading_error")%>");
+		}
+	});	
+}
 </script>
 </head>
 <body>

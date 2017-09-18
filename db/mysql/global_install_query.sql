@@ -7265,3 +7265,7 @@ INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.billing.lista.table.label.state_region', 'IT', 'Stato/Regione');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.billing.lista.js.alert.insert_bills_address', 'EN', 'Insert complete bills data!');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.billing.lista.js.alert.insert_bills_address', 'IT', 'inserire dati completi di fatturazione!');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.fee.enable_shipping.ups.label', 'EN', 'Activate UPS shipping');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.fee.enable_shipping.ups.label', 'IT', 'Attivare spedizione UPS');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.fee.enable_shipping.ups.enabled.label', 'EN', 'shipping activated');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.fee.enable_shipping.ups.enabled.label', 'IT', 'spedizione attivata');

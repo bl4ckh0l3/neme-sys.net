@@ -405,6 +405,7 @@
 				<exclude name="**/App_code/com/nemesys/model/product/**/*"/>
 				<exclude name="**/App_code/com/nemesys/model/supplement/**/*"/>
 				<exclude name="**/App_code/com/nemesys/model/voucher/**/*"/>
+				<exclude name="App_code/com/nemesys/model/commons/IProduct.cs"/>
 
 				<exclude name="App_code/com/nemesys/database/repository/AdsRepository.cs"/>
 				<exclude name="App_code/com/nemesys/database/repository/BillsAddressRepository.cs"/>
@@ -983,6 +984,7 @@
 				<include name="**/App_code/com/nemesys/model/product/**/*"/>
 				<include name="**/App_code/com/nemesys/model/supplement/**/*"/>
 				<include name="**/App_code/com/nemesys/model/voucher/**/*"/>
+				<include name="App_code/com/nemesys/model/commons/IProduct.cs"/>
 
 				<include name="App_code/com/nemesys/database/repository/AdsRepository.cs"/>
 				<include name="App_code/com/nemesys/database/repository/BillsAddressRepository.cs"/>

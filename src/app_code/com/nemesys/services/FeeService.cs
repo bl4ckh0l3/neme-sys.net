@@ -361,7 +361,7 @@ namespace com.nemesys.services
 			return result;
 		}
 		
-		public static UPSFee getUPSShip(string extParams, IList<Product> products, ShippingAddress shipaddr)
+		public static UPSFee getUPSShip(string extParams, IList<Product> products, ShippingAddress shipaddr, BillingData billingData)
 		{
 			UPSFee result = null;
 			

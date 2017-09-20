@@ -16,6 +16,7 @@ namespace com.nemesys.model
 		private string _zipCode;
 		private string _country;
 		private string _stateRegion;
+		private string _phone;
 		
 		
 		public BillingData(){}
@@ -60,6 +61,11 @@ namespace com.nemesys.model
 			set { _stateRegion = value; }
 		}
 
+		public virtual string phone {
+			get { return _phone; }
+			set { _phone = value; }
+		}
+
 		
 		public virtual string ToString() {
 			StringBuilder builder = new StringBuilder("BillingData id: ")
@@ -70,7 +76,8 @@ namespace com.nemesys.model
 			.Append(" - city: ").Append(this._city)
 			.Append(" - zipCode: ").Append(this._zipCode)
 			.Append(" - country: ").Append(this._country)
-			.Append(" - stateRegion: ").Append(this._stateRegion);
+			.Append(" - stateRegion: ").Append(this._stateRegion)
+			.Append(" - phone: ").Append(this._phone);
 			
 			return builder.ToString();			
 		}

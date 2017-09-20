@@ -1287,6 +1287,8 @@ CREATE TABLE `ORDER_FEES` (
   `required` SMALLINT(1) UNSIGNED NOT NULL default '0',
   `multiply` SMALLINT(1) UNSIGNED NOT NULL default '0',
   `fee_group` VARCHAR(100) default NULL,
+  `shipping_enabled` smallint(1) NOT NULL default '0',
+  `shipping_response` text,
   PRIMARY KEY  (`id_order`,`id_fee`)
 )ENGINE = InnoDB  DEFAULT CHARSET=utf8;
 
@@ -1408,6 +1410,7 @@ CREATE TABLE IF NOT EXISTS `BILLING_DATA` (
   `zip_code` varchar(20) default NULL,
   `country` varchar(100) default NULL,
   `state_region` varchar(100) default NULL,
+  `phone` varchar(50) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -90,6 +90,7 @@
 		<property name="multiply" column="multiply" not-null="true"  type="Boolean" />
 		<property name="feeGroup" column="fee_group" />	
 		<property name="shippingEnabled" column="shipping_enabled" not-null="true"  type="Boolean" />
+		<property name="shippingResponse" column="shipping_response" />
 	</class>
 	
     <class name="OrderProductAttachmentDownload" table="ORDER_PRODUCT_ATTACHMENT_DOWNLOAD">

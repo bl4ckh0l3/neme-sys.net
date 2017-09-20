@@ -27,6 +27,10 @@ namespace com.nemesys.database.repository
 				
 		IList<FOrder> find(string guid, int idUser, string dateFrom, string dateTo, string status, int paymentType, Nullable<bool> paymentDone, int orderBy, bool withItems);
 		
+		void updateOrderFee(OrderFee orderFee);
+		
+		OrderFee getFeeById(int idOrder, int idFee);
+		
 		IList<OrderFee> findFeesByOrderId(int idOrder);
 		
 		IList<OrderProductField> findItemFields(int idOrder, int idProd, int prodCounter);

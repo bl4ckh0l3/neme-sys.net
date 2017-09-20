@@ -40,7 +40,8 @@ function insertBillingData(){
 		$("#bills_address").val()=="" || 
 		$("#bills_zip_code").val()=="" || 
 		$("#bills_city").val()=="" || 
-		$("#bills_country").val()==""
+		$("#bills_country").val()=="" || 
+		$("#bills_phone").val()==""
 	){
 		alert("<%=lang.getTranslated("backend.billing.lista.js.alert.insert_bills_address")%>");
 		return;		
@@ -73,8 +74,10 @@ function insertBillingData(){
 			  	<div style="margin-top:10px;">
 					<div style="float:left;margin-right:30px;"><strong><%=lang.getTranslated("backend.billing.lista.table.label.name")%></strong><br>
 					<input type="text" id="bills_name" name="bills_name" value="<%=billingData.name%>"></div>
-					<div><strong><%=lang.getTranslated("backend.billing.lista.table.label.cfiscvat")%></strong><br>
+					<div style="float:left;margin-right:30px;"><strong><%=lang.getTranslated("backend.billing.lista.table.label.cfiscvat")%></strong><br>
 					<input type="text" id="bills_cfiscvat" name="bills_cfiscvat" value="<%=billingData.cfiscvat%>"></div>
+					<div><strong><%=lang.getTranslated("backend.billing.lista.table.label.phone")%></strong><br>
+					<input type="text" id="bills_phone" name="bills_phone" value="<%=billingData.phone%>"></div>
 				</div>
 				<div style="margin-top:10px;">
 					<div style="float:left;margin-right:30px;"><strong><%=lang.getTranslated("backend.billing.lista.table.label.address")%></strong><br>
@@ -108,31 +111,6 @@ function insertBillingData(){
 				</div>
 				
 				<script>
-				<%if(!String.IsNullOrEmpty(billingData.country)){%>
-				/*$(document).ready(function(){										
-					var type_val_ch = $('#bills_country').val();
-					var query_string = "field_val="+encodeURIComponent(type_val_ch);
-
-					$.ajax({
-						async: true,
-						type: "GET",
-						cache: false,
-						url: "/backoffice/billings/ajaxstateregionupdate.aspx",
-						data: query_string,
-						success: function(response) {
-							//alert("response: "+response);
-							$("select#bills_state_region").empty();
-							$("select#bills_state_region").append($("<option></option>").attr("value","").text(""));
-							$("select#bills_state_region").append(response);
-						},
-						error: function() {
-							$("select#bills_state_region").empty();
-							$("select#bills_state_region").append($("<option></option>").attr("value","").text(""));
-						}
-					});	
-				});	*/
-				<%}%>
-				
 				$('#bills_country').change(function() {
 					var type_val_ch = $('#bills_country').val();
 					var query_string = "field_val="+encodeURIComponent(type_val_ch);

@@ -61,8 +61,8 @@ $(function() {
 	$("#downloadContainer").draggable();
 });
 
-function enableExternalShipping(orderId, provider){
-	var query_string = "cssClass=LO&provider="+provider+"&id_order="+orderId;	
+function enableExternalShipping(orderId, provider, feeId){
+	var query_string = "cssClass=LO&provider="+provider+"&id_order="+orderId+"&id_fee="+feeId;	
 	//alert(query_string);
 
 	$.ajax({
@@ -78,7 +78,6 @@ function enableExternalShipping(orderId, provider){
 		},
 		error: function(response) {
 			//alert(response.responseText);	
-			//$('#downloadContainer').hide();
 			alert("<%=lang.getTranslated("portal.commons.js.label.loading_error")%>");
 		}
 	});	

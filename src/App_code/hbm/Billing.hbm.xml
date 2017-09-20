@@ -39,5 +39,6 @@
 		<property name="zipCode" column="zip_code" />
 		<property name="country" column="country" />
 		<property name="stateRegion" column="state_region" />
+		<property name="phone" column="phone" />
     </class>
 </hibernate-mapping>

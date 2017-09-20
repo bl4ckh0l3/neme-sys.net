@@ -7269,3 +7269,7 @@ INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.fee.enable_shipping.ups.label', 'IT', 'Attivare spedizione UPS');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.fee.enable_shipping.ups.enabled.label', 'EN', 'shipping activated');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.fee.enable_shipping.ups.enabled.label', 'IT', 'spedizione attivata');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.billing.lista.table.label.phone', 'EN', 'Phone number');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.billing.lista.table.label.phone', 'IT', 'Telefono');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.tracking_number', 'EN', 'Tracking Number');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.tracking_number', 'IT', 'Tracking Number');

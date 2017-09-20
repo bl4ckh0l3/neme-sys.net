@@ -186,7 +186,7 @@ public partial class _OrderView : Page
 									if(f.shippingEnabled){
 										extShipping = "<span id='shipping_enabled'><img src='/backoffice/img/accept.png' hspace='3' vspace='0' border='0' align='absmiddle'>"+lang.getTranslated("backend.fee.enable_shipping.ups.enabled.label")+"</span>";
 									}else{
-										extShipping = "<span id='shipping_enabled'><a href='javascript:enableExternalShipping("+orderid+",1);'>"+lang.getTranslated("backend.fee.enable_shipping.ups.label")+"</a></span>";
+										extShipping = "<span id='shipping_enabled'><a href='javascript:enableExternalShipping("+orderid+",1,"+f.idFee+");'>"+lang.getTranslated("backend.fee.enable_shipping.ups.label")+"</a></span>";
 									}
 								}else if(fee.extProvider==2){
 									//DHL integration

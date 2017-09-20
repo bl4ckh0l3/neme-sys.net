@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using com.nemesys.services;
 
 namespace com.nemesys.model
@@ -71,6 +72,19 @@ namespace com.nemesys.model
 				result = Encoding.UTF8.GetString(data);
 			}
 			return result;
+		}
+		
+		public static void SaveImageFrom64(string toDecode, string filePath)
+		{
+			//this is a simple white background image
+			//string myfilename= string.Format(@"{0}", Guid.NewGuid());
+			
+			byte[] bytess = Convert.FromBase64String(toDecode);
+			using (FileStream imageFile = new FileStream(filePath, FileMode.Create))
+			{
+				imageFile.Write(bytess, 0, bytess.Length);
+				imageFile.Flush();
+			}
 		}
 		
 		public static bool isValidExtension(string ext)

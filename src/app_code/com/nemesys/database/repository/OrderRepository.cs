@@ -777,7 +777,32 @@ namespace com.nemesys.database.repository
 						
 			return results;		
 		}
-	
+
+		public OrderFee getFeeById(int idOrder, int idFee)
+		{
+			OrderFee orderFee = null;	
+							
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			{				
+				orderFee = session.CreateQuery("from OrderFee where idOrder=:idOrder and idFee=:idFee").SetInt32("idOrder",idOrder).SetInt32("idFee",idFee).UniqueResult<OrderFee>();	
+				NHibernateHelper.closeSession();
+			}
+			
+			return orderFee;			
+		}
+		
+		public void updateOrderFee(OrderFee orderFee)
+		{
+			using (ISession session = NHibernateHelper.getCurrentSession())
+			using (ITransaction tx = session.BeginTransaction())
+			{			
+				session.Update(orderFee);			
+				
+				tx.Commit();
+				NHibernateHelper.closeSession();
+			}			
+		}		
+		
 		public IList<OrderFee> findFeesByOrderId(int idOrder)
 		{
 			IList<OrderFee> results = null;
@@ -1628,8 +1653,11 @@ namespace com.nemesys.database.repository
 		public void insertOrderBusinessRule(OrderBusinessRule orderBusinessRule)
 		{
 			using (ISession session = NHibernateHelper.getCurrentSession())
-			{				
-				session.Save(orderBusinessRule);	
+			using (ITransaction tx = session.BeginTransaction())
+			{			
+				session.Save(orderBusinessRule);			
+				
+				tx.Commit();
 				NHibernateHelper.closeSession();
 			}
 		}
@@ -1637,8 +1665,11 @@ namespace com.nemesys.database.repository
 		public void updateOrderBusinessRule(OrderBusinessRule orderBusinessRule)
 		{
 			using (ISession session = NHibernateHelper.getCurrentSession())
-			{				
-				session.Update(orderBusinessRule);	
+			using (ITransaction tx = session.BeginTransaction())
+			{			
+				session.Update(orderBusinessRule);			
+				
+				tx.Commit();
 				NHibernateHelper.closeSession();
 			}
 		}
@@ -1646,10 +1677,13 @@ namespace com.nemesys.database.repository
 		public void deleteOrderBusinessRule(OrderBusinessRule orderBusinessRule)
 		{
 			using (ISession session = NHibernateHelper.getCurrentSession())
-			{		
-				session.Delete(orderBusinessRule);	
+			using (ITransaction tx = session.BeginTransaction())
+			{			
+				session.Delete(orderBusinessRule);			
+				
+				tx.Commit();
 				NHibernateHelper.closeSession();
-			}					
+			}
 		}		
 		
 		public void deleteOrderBusinessRuleByOrder(int idOrder)
@@ -1696,8 +1730,11 @@ namespace com.nemesys.database.repository
 		public void insertOrderVoucher(OrderVoucher orderVoucher)
 		{
 			using (ISession session = NHibernateHelper.getCurrentSession())
-			{				
-				session.Save(orderVoucher);	
+			using (ITransaction tx = session.BeginTransaction())
+			{			
+				session.Save(orderVoucher);			
+				
+				tx.Commit();
 				NHibernateHelper.closeSession();
 			}
 		}
@@ -1705,8 +1742,11 @@ namespace com.nemesys.database.repository
 		public void updateOrderVoucher(OrderVoucher orderVoucher)
 		{
 			using (ISession session = NHibernateHelper.getCurrentSession())
-			{				
-				session.Update(orderVoucher);	
+			using (ITransaction tx = session.BeginTransaction())
+			{			
+				session.Update(orderVoucher);			
+				
+				tx.Commit();
 				NHibernateHelper.closeSession();
 			}
 		}		

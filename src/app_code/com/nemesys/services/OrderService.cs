@@ -878,6 +878,67 @@ namespace com.nemesys.services
 			
 			return mailDownSent;
 		}
+
+		
+		public static bool sendShippingOrderMail(int orderId, int idFee, string trackingNumber, string langcode, string defLangCode, string url)
+		{
+			bool mailShipSent = false;
+
+			try{
+				FOrder order = orderep.getByIdExtended(orderId, true);
+				
+				User user = usrrep.getById(order.userId);
+						
+				ListDictionary replacementsUser = new ListDictionary();
+				ListDictionary replacementsAdmin = new ListDictionary();
+				StringBuilder userMessage = new StringBuilder();
+				StringBuilder adminMessage = new StringBuilder();	
+				replacementsUser.Add("mail_receiver",user.email);	
+		
+				string boLangCode = confservice.get("bo_lang_code_default").value;
+				if(String.IsNullOrEmpty(boLangCode)){
+					boLangCode = defLangCode;
+				}
+				
+				//lrep.write(new Logger("langcode: "+langcode,"system","debug",DateTime.Now));
+				//lrep.write(new Logger("boLangCode: "+boLangCode,"system","debug",DateTime.Now));
+				
+				//start user message
+				userMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.id_ordine", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.id).Append("</b><br/><br/>")
+				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.guid_ordine", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.guid).Append("</b><br/><br/>")
+				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.order_client", langcode, defLangCode)).Append("&nbsp;-&nbsp;ID:&nbsp;<b>").Append(user.username).Append("</b>&nbsp;-&nbsp;")
+				.Append(MultiLanguageService.translate("frontend.registration.manage.label.email", langcode, defLangCode)).Append(":&nbsp;<b>").Append(user.email).Append("</b><br/><br/>");		
+				
+				//start admin message
+				adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.id_ordine", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(order.id).Append("</b><br/><br/>")
+				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.guid_ordine", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(order.guid).Append("</b><br/><br/>")
+				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.order_client", boLangCode, defLangCode)).Append("&nbsp;-&nbsp;ID:&nbsp;<b>").Append(user.username).Append("</b>&nbsp;-&nbsp;")
+				.Append(MultiLanguageService.translate("frontend.registration.manage.label.email", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(user.email).Append("</b><br/><br/>");					
+					
+				userMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.dta_insert_order", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.insertDate.ToString("dd/MM/yyyy HH:mm")).Append("</b><br/><br/>");
+				adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.dta_insert_order", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(order.insertDate.ToString("dd/MM/yyyy HH:mm")).Append("</b><br/><br/>");				
+	
+				userMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.tracking_number", langcode, defLangCode)).Append("<br/>");		
+				adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.tracking_number", boLangCode, defLangCode)).Append("<br/>");										
+
+				replacementsUser.Add("<%content%>",HttpUtility.HtmlDecode(userMessage.ToString()));
+				replacementsAdmin.Add("<%content%>",HttpUtility.HtmlDecode(adminMessage.ToString()));
+				
+				MailService.prepareAndSend("order-shipping-mail", langcode, defLangCode, "backend.mails.detail.table.label.subject_", replacementsUser, null, url);
+				MailService.prepareAndSend("order-shipping-mail", boLangCode, defLangCode, "backend.mails.detail.table.label.subject_", replacementsAdmin, null, url);	
+			
+				mailShipSent = true;	
+			}catch(Exception ex){
+				StringBuilder builder = new StringBuilder("Exception: ")
+				.Append("An error occured: ").Append(ex.Message).Append("<br><br><br>").Append(ex.StackTrace);
+				Logger log = new Logger(builder.ToString(),"system","error",DateTime.Now);		
+				lrep.write(log);
+				
+				mailShipSent = false;
+			}
+			
+			return mailShipSent;
+		}
 		
 		public static bool activateAds(int orderId, string langcode, string defLangCode)
 		{
@@ -913,50 +974,6 @@ namespace com.nemesys.services
 			}
 			
 			return adsActivated;			
-		}
-		
-		public static bool activateUPSShipping(int orderId, string langcode, string defLangCode)
-		{
-			bool activated = false;
-
-			try{
-				FOrder order = orderep.getByIdExtended(orderId, true);		
-				
-				if(order.products != null && order.products.Count>0){	
-					//bool hasAds = false;
-					
-					foreach(OrderProduct op in order.products.Values){
-						//if(op.productType==2 && op.idAds>-1){	
-						//	adsrep.activatePromotion(op.idAds, op.idProduct);
-						//	hasAds = true;
-						//}
-					}				
-					
-					//if(hasAds){
-						order.shippingEnabled=true;
-						orderep.update(order);
-						
-						activated = true;
-					//}
-				}
-			}catch(Exception ex){
-				StringBuilder builder = new StringBuilder("Exception: ")
-				.Append("An error occured: ").Append(ex.Message).Append("<br><br><br>").Append(ex.StackTrace);
-				Logger log = new Logger(builder.ToString(),"system","error",DateTime.Now);		
-				lrep.write(log);
-				
-				activated = false;
-			}
-			
-			return activated;			
-		}
-		
-		public static bool activateDHLShipping(int orderId, string langcode, string defLangCode)
-		{
-			bool activated = false;
-
-			
-			return activated;			
 		}
 	}
 }

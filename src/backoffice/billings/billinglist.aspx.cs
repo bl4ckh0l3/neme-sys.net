@@ -174,6 +174,7 @@ public partial class _BillingList : Page
 				billingData.zipCode = Request["bills_zip_code"];
 				billingData.country = Request["bills_country"];
 				billingData.stateRegion = Request["bills_state_region"];  
+				billingData.phone = Request["bills_phone"];  
 			
 				//Response.Write("<br>billingData: "+billingData.ToString());
 				

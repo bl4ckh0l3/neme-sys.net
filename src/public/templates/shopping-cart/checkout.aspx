@@ -1078,6 +1078,7 @@ function selectPayAndBills4Form(applyBills){
 										int required = 0;
 										string finalizedErrorMessage = "";
 										string tFeeGroup = "";
+										string externalProdiverLogo = "";
 										
 										if(foundbel){
 											billImp = Convert.ToDecimal(belements[0]);
@@ -1096,6 +1097,12 @@ function selectPayAndBills4Form(applyBills){
 											if(!String.IsNullOrEmpty(f.feeGroup)){
 												tFeeGroup = f.feeGroup;
 											}
+									
+											if(f.extProvider==1){
+												externalProdiverLogo="<img src='/common/img/Logo_UPS.png' width='24' height='24' hspace='3' vspace='0' border='0' align='absmiddle'>";
+											}else if(f.extProvider==2){
+												
+											}
 										}
 										
 										if(!oldGroupDesc.Equals(tFeeGroup) && !String.IsNullOrEmpty(tFeeGroup)){
@@ -1104,7 +1111,7 @@ function selectPayAndBills4Form(applyBills){
 										}
 										
 										if(f.autoactive){
-											Response.Write("&nbsp;"+billDesc+"&nbsp;&nbsp;&nbsp;<strong>"+currency+"&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>");
+											Response.Write("&nbsp;"+billDesc+externalProdiverLogo+"&nbsp;&nbsp;&nbsp;<strong>"+currency+"&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>");
 											if(!isFinalized){Response.Write("&nbsp;<span class=\"bill-not-finalized\">"+finalizedErrorMessage+"</span>");}
 											Response.Write("<br/>");
 											hasBills2charge = true;
@@ -1116,7 +1123,7 @@ function selectPayAndBills4Form(applyBills){
 											
 											if((billImp+billSup+billExt)>0 || f.typeView==1){%>
 												<input style="margin-left:10px;" type="<%=ipt%>" onclick="javascript:ajaxSetSessionPayAndBills(this),calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','<%=defCurrency.rate%>','<%=userCurrency.rate%>');" name="<%=tFeeGroup%>" id="<%=tFeeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%> <%if(!isFinalized){Response.Write(" disabled='true'");}%>/> 
-												<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>"+currency+"&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>"%>
+												<%=billDesc+externalProdiverLogo+"&nbsp;&nbsp;&nbsp;<strong>"+currency+"&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>"%>
 												<%if(!isFinalized){Response.Write("&nbsp;<span class=\"bill-not-finalized\">"+finalizedErrorMessage+"</span>");}%>
 												<%="&nbsp;&nbsp;<br/>"%>	
 											<%}%>										

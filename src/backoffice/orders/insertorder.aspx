@@ -1262,6 +1262,7 @@ jQuery(document).ready(function(){
 								int required = 0;
 								string finalizedErrorMessage = "";
 								string tFeeGroup = "";
+								string externalProdiverLogo = "";
 								
 								if(foundbel){
 									billImp = Convert.ToDecimal(belements[0]);
@@ -1280,6 +1281,12 @@ jQuery(document).ready(function(){
 									if(!String.IsNullOrEmpty(f.feeGroup)){
 										tFeeGroup = f.feeGroup;
 									}
+									
+									if(f.extProvider==1){
+										externalProdiverLogo="<img src='/common/img/Logo_UPS.png' width='24' height='24' hspace='3' vspace='0' border='0' align='absmiddle'>";
+									}else if(f.extProvider==2){
+										
+									}									
 								}
 								
 								if(!oldGroupDesc.Equals(tFeeGroup) && !String.IsNullOrEmpty(tFeeGroup)){
@@ -1288,7 +1295,7 @@ jQuery(document).ready(function(){
 								}
 								
 								if(f.autoactive){
-									Response.Write("&nbsp;"+billDesc+"&nbsp;&nbsp;&nbsp;<strong>&euro;&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>");
+									Response.Write("&nbsp;"+billDesc+externalProdiverLogo+"&nbsp;&nbsp;&nbsp;<strong>&euro;&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>");
 									if(!isFinalized){Response.Write("&nbsp;<span class=\"bill-not-finalized\">"+finalizedErrorMessage+"</span>");}
 									Response.Write("<br/>");
 									hasBills2charge = true;									
@@ -1296,12 +1303,12 @@ jQuery(document).ready(function(){
 								}else{
 									if(f.multiply && ((billImp+billSup+billExt)>0 || f.typeView==1)){%>
 										<input style="margin-left:10px;" <%if(orderid>0 && paymentDone){%>onclick="return false;" onkeydown="return false;"<%}else{%>onclick="javascript:calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','1','1');"<%}%> type="checkbox" name="<%=tFeeGroup%>" id="<%=tFeeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%> <%if(!isFinalized){Response.Write(" disabled='true'");}%>/> 
-										<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>&euro;&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>"%>
+										<%=billDesc+externalProdiverLogo+"&nbsp;&nbsp;&nbsp;<strong>&euro;&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>"%>
 										<%if(!isFinalized){Response.Write("&nbsp;<span class=\"bill-not-finalized\">"+finalizedErrorMessage+"</span>");}%>
 										<%="&nbsp;&nbsp;<br/>"%>
 									<%}else if(!f.multiply && ((billImp+billSup+billExt)>0 || f.typeView==1)){%>	
 										<input style="margin-left:10px;" <%if(orderid>0 && paymentDone){%>onclick="return false;" onkeydown="return false;"<%}else{%>onclick="javascript:calculateBills4Order('<%=totalCartAmountAndAutoBillsAmount%>','1','1');"<%}%> type="radio" name="<%=tFeeGroup%>" id="<%=tFeeGroup+"-"+f.id+"-"+required%>" value="<%=f.id%>" <%if(isChecked){Response.Write(" checked='checked'");}%> <%if(!isFinalized){Response.Write(" disabled='true'");}%>/>
-										<%=billDesc+"&nbsp;&nbsp;&nbsp;<strong>&euro;&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>"%>
+										<%=billDesc+externalProdiverLogo+"&nbsp;&nbsp;&nbsp;<strong>&euro;&nbsp;"+billAmount.ToString("#,###0.00")+"</strong>"%>
 										<%if(!isFinalized){Response.Write("&nbsp;<span class=\"bill-not-finalized\">"+finalizedErrorMessage+"</span>");}%>
 										<%="&nbsp;&nbsp;<br/>"%>			
 									<%}%>										

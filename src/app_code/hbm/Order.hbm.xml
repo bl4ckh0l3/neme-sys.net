@@ -88,6 +88,7 @@
 		<property name="autoactive" column="autoactive" not-null="true"  type="Boolean" />
 		<property name="required" column="required" not-null="true"  type="Boolean" />
 		<property name="multiply" column="multiply" not-null="true"  type="Boolean" />
+		<property name="extProvider" column="ext_provider" not-null="true"  type="Int32" />
 		<property name="feeGroup" column="fee_group" />	
 		<property name="shippingEnabled" column="shipping_enabled" not-null="true"  type="Boolean" />
 		<property name="shippingResponse" column="shipping_response" />

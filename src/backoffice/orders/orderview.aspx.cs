@@ -175,20 +175,25 @@ public partial class _OrderView : Page
 							label = lang.getTranslated("backend.fee.description.label."+f.feeDesc);
 						}
 						
+						string externalProdiverLogo = "";
+						if(f.extProvider==1){
+							externalProdiverLogo="<img src='/common/img/Logo_UPS.png' width='24' height='24' hspace='3' vspace='0' border='0' align='absmiddle'>";
+						}else if(f.extProvider==2){
+							
+						}
+						
 						// check if it's external provider and if the shippment has been activated
 						string extShipping = "";
 						try{
-							Fee fee = feerep.getByIdCached(f.idFee, true);
-							
 							if(order.paymentDone && order.status<3){
-								if(fee.extProvider==1){
+								if(f.extProvider==1){
 									//UPS integration
 									if(f.shippingEnabled){
 										extShipping = "<span id='shipping_enabled'><img src='/backoffice/img/accept.png' hspace='3' vspace='0' border='0' align='absmiddle'>"+lang.getTranslated("backend.fee.enable_shipping.ups.enabled.label")+"</span>";
 									}else{
 										extShipping = "<span id='shipping_enabled'><a href='javascript:enableExternalShipping("+orderid+",1,"+f.idFee+");'>"+lang.getTranslated("backend.fee.enable_shipping.ups.label")+"</a></span>";
 									}
-								}else if(fee.extProvider==2){
+								}else if(f.extProvider==2){
 									//DHL integration
 									
 								}
@@ -197,7 +202,7 @@ public partial class _OrderView : Page
 							
 						}
 						
-						orderFees+="<tr style='height:10px;padding:0px;margin:0px;'><td style='padding:0px 20px 0px 0px;'>"+label+"</td><td style='padding:0px 2px 0px 0px;'>&euro;</td><td style='text-align:right;padding:0px 3px 0px 0px;'>"+f.amount.ToString("#,###0.00")+"</td><td style='padding:0px 0px 0px 0px;'>&nbsp;"+extShipping+"</td></tr>";
+						orderFees+="<tr style='height:10px;padding:0px;margin:0px;'><td style='padding:0px 20px 0px 0px;'>"+label+externalProdiverLogo+"</td><td style='padding:0px 2px 0px 0px;'>&euro;</td><td style='text-align:right;padding:0px 3px 0px 0px;'>"+f.amount.ToString("#,###0.00")+"</td><td style='padding:0px 0px 0px 0px;'>&nbsp;"+extShipping+"</td></tr>";
 					}
 					orderFees+="</table>";
 				}

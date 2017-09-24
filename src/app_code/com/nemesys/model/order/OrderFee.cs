@@ -14,6 +14,7 @@ namespace com.nemesys.model
 		private bool _autoactive;
 		private bool _required;
 		private bool _multiply;
+		private int _extProvider;
 		private string _feeGroup;
 		private bool _shippingEnabled;
 		private string _shippingResponse;
@@ -69,6 +70,11 @@ namespace com.nemesys.model
 			get { return _feeGroup; }
 			set { _feeGroup = value; }
 		}	
+
+		public virtual int extProvider {
+			get { return _extProvider; }
+			set { _extProvider = value; }
+		}
 			
 		public virtual bool shippingEnabled {
 			get { return _shippingEnabled; }
@@ -120,6 +126,7 @@ namespace com.nemesys.model
 			.Append(" - autoactive: ").Append(this._autoactive)
 			.Append(" - required: ").Append(this._required)
 			.Append(" - multiply: ").Append(this._multiply)
+			.Append(" - extProvider: ").Append(this._extProvider)
 			.Append(" - feeGroup: ").Append(this._feeGroup)
 			.Append(" - shippingEnabled: ").Append(this._shippingEnabled)
 			.Append(" - shippingResponse: ").Append(this._shippingResponse);

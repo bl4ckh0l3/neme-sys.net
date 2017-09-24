@@ -1767,6 +1767,7 @@ public partial class _Checkout : Page
 							of.multiply=f.multiply;
 							of.required=f.required;
 							of.feeGroup=f.feeGroup;
+							of.extProvider=f.extProvider;
 							ofs.Add(of);
 							
 							orderTaxable+=of.taxable;

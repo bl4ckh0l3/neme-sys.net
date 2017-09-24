@@ -1287,6 +1287,7 @@ CREATE TABLE `ORDER_FEES` (
   `required` SMALLINT(1) UNSIGNED NOT NULL default '0',
   `multiply` SMALLINT(1) UNSIGNED NOT NULL default '0',
   `fee_group` VARCHAR(100) default NULL,
+  `ext_provider` SMALLINT(1) NOT NULL default '0',
   `shipping_enabled` smallint(1) NOT NULL default '0',
   `shipping_response` text,
   PRIMARY KEY  (`id_order`,`id_fee`)

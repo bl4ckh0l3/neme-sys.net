@@ -1709,7 +1709,8 @@ public partial class _InsertOrder : Page
 						founded.autoactive=of.autoactive;
 						founded.multiply=of.multiply;
 						founded.required=of.required;
-						founded.feeGroup=of.feeGroup; 	
+						founded.feeGroup=of.feeGroup; 
+						founded.extProvider=of.extProvider;	
 					}
 					
 					if(of.autoactive){
@@ -2311,6 +2312,7 @@ public partial class _InsertOrder : Page
 						of.multiply=f.multiply;
 						of.required=f.required;
 						of.feeGroup=f.feeGroup;
+						of.extProvider=f.extProvider;
 						ofs.Add(of);
 						
 						orderTaxable+=of.taxable;

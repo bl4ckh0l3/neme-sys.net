@@ -99,7 +99,7 @@ protected void Page_Load(Object sender, EventArgs e)
 						Directory.CreateDirectory(HttpContext.Current.Server.MapPath(basePath));
 					}					
 					
-					string filePath = HttpContext.Current.Server.MapPath(basePath+"/ups_shipping_label.gif");
+					string filePath = HttpContext.Current.Server.MapPath(basePath+"/shipping_label.gif");
 					
 					if(File.Exists(@filePath)){
 						File.Delete(@filePath);
@@ -117,11 +117,15 @@ protected void Page_Load(Object sender, EventArgs e)
 					// send email to the customer with the tracking id and the label gif image and update OrderFee
 					bool mailSent = OrderService.sendShippingOrderMail(idOrder, idFee, trackingNumber, lang.currentLangCode, lang.defaultLangCode, orderMailBuilder.ToString());		
 
+					//Response.Write("mailSent: "+mailSent+"<br><br>");
+					
 					if(mailSent){
 						OrderFee orderFee = orderep.getFeeById(idOrder, idFee);
 						orderFee.shippingEnabled = true;
 						orderFee.shippingResponse = extProvider.extResponse;
 						orderep.updateOrderFee(orderFee);		
+					}else{
+						throw new Exception("error while sending mail to the user for external UPS courier shipping");
 					}
 				}
 				
@@ -139,7 +143,7 @@ protected void Page_Load(Object sender, EventArgs e)
 		.Append("An error occured: ").Append(ex.Message).Append("<br><br><br>").Append(ex.StackTrace);
 		//log = new Logger(builder.ToString(),"system","error",DateTime.Now);		
 		//lrep.write(log);
-		//Response.Write(builder.ToString());
+		Response.Write(builder.ToString());
 		Response.StatusCode = 400;
 	}
 }

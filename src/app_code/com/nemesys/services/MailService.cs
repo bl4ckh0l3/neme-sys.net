@@ -34,18 +34,14 @@ namespace com.nemesys.services
 			if(template!=null){
 				MailDefinition md = new MailDefinition();						
 				md.IsBodyHtml = template.isBodyHTML;
-				md.CC = template.cc;
-				if(String.IsNullOrEmpty(template.cc))
-				{	
-					string cc = (string)replacements["mail_cc"];
-					md.CC = cc;
-				}
+
 				md.From = template.sender;
-				if(String.IsNullOrEmpty(template.sender))
+				if(!String.IsNullOrEmpty((string)replacements["mail_sender"]))
 				{			
 					string sender = (string)replacements["mail_sender"];
 					md.From = sender;
 				}
+				
 				// *** gestione caso subject multilingua quando specificato dal template
 				//System.Web.HttpContext.Current.Response.Write("template.subject: " + template.subject+" - langCode: "+langCode+"<br>");
 				md.Subject = template.subject;
@@ -58,7 +54,7 @@ namespace com.nemesys.services
 						md.Subject = template.subject;
 					}
 				}			
-				if(String.IsNullOrEmpty(md.Subject))
+				if(!String.IsNullOrEmpty((string)replacements["mail_subject"]))
 				{	
 					string subject = (string)replacements["mail_subject"];
 					md.Subject = subject;
@@ -76,10 +72,18 @@ namespace com.nemesys.services
 					}
 					md.Priority = priority;
 				}
-				if(String.IsNullOrEmpty(template.receiver))
+				
+				if(!String.IsNullOrEmpty((string)replacements["mail_receiver"]))
 				{
 					string receiver = (string)replacements["mail_receiver"];				
 					template.receiver = receiver;
+				}
+
+				md.CC = template.cc;
+				if(!String.IsNullOrEmpty((string)replacements["mail_cc"]))
+				{	
+					string cc = (string)replacements["mail_cc"];
+					md.CC = cc;
 				}
 				
 				template.body = template.body.Replace("[#","<%").Replace("#]","%>");
@@ -110,26 +114,10 @@ namespace com.nemesys.services
 	
 				//System.Web.HttpContext.Current.Response.Write("template.body: " + template.body+"<br>");
 				//System.Web.HttpContext.Current.Response.Write("message.body: " + message.Body+"<br>");
-			
-		
-				if(String.IsNullOrEmpty(template.bcc))
-				{		
-					if(!String.IsNullOrEmpty((string)replacements["mail_bcc"]))
-					{
-						string[] listbcc = ((string)replacements["mail_bcc"]).Split(',');
-						if(listbcc != null)
-						{
-							foreach(string s in listbcc)
-							{
-								MailAddress bcc = new MailAddress(s);	
-								message.Bcc.Add(bcc);
-							}
-						}
-					}
-				}
-				else
+
+				if(!String.IsNullOrEmpty((string)replacements["mail_bcc"]))
 				{
-					string[] listbcc = template.bcc.Split(',');
+					string[] listbcc = ((string)replacements["mail_bcc"]).Split(',');
 					if(listbcc != null)
 					{
 						foreach(string s in listbcc)
@@ -137,6 +125,19 @@ namespace com.nemesys.services
 							MailAddress bcc = new MailAddress(s);	
 							message.Bcc.Add(bcc);
 						}
+					}
+				}else{
+					if(!String.IsNullOrEmpty(template.bcc))
+					{
+						string[] listbcc = template.bcc.Split(',');
+						if(listbcc != null)
+						{
+							foreach(string s in listbcc)
+							{
+								MailAddress bcc = new MailAddress(s);	
+								message.Bcc.Add(bcc);
+							}
+						}					
 					}
 				}
 	
@@ -151,6 +152,7 @@ namespace com.nemesys.services
 			}
 			//System.Web.HttpContext.Current.Response.Write("message.Body: " + message.Body+"<br><br>");
 			//System.Web.HttpContext.Current.Response.Write("message.IsBodyHtml: " + message.IsBodyHtml+"<br>");
+			
 			return message;
 		}
 
@@ -160,6 +162,7 @@ namespace com.nemesys.services
 			{
 				string server = confservice.get("mail_server").value;
 				SmtpClient sc = new SmtpClient(server);
+				
 				//*** configuro il client smpt con eventuali cedenziali
 				sc.UseDefaultCredentials = true;
 				string smptuser = confservice.get("mail_server_usr").value;
@@ -169,14 +172,21 @@ namespace com.nemesys.services
 					sc.UseDefaultCredentials = false;
 					sc.Credentials = new System.Net.NetworkCredential(smptuser, smptpwd);
 				}
+				
 				//System.Web.HttpContext.Current.Response.Write("message.From: " + message.From+"<br>");
-				sc.Send(message);
+				//System.Web.HttpContext.Current.Response.Write("message.To: " + message.To+"<br>");
+				//System.Web.HttpContext.Current.Response.Write("message.CC: " + message.CC+"<br>");
+				//System.Web.HttpContext.Current.Response.Write("message.Bcc: " + message.Bcc+"<br>");
+				//System.Web.HttpContext.Current.Response.Write("message.Subject: " + message.Subject+"<br>");
+				
+				sc.Send(message);				
+				
 				//string userState = "";
 				//sc.SendAsync(message, userState);
 				message.Dispose();
 			}
 			catch (Exception ex) {
-			  	//System.Web.HttpContext.Current.Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
+			  	//System.Web.HttpContext.Current.Response.Write("send mail service - An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
 				throw;
 			}
 		}
@@ -191,7 +201,7 @@ namespace com.nemesys.services
 			}
 			catch (Exception ex) 
 			{
-			  	//System.Web.HttpContext.Current.Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
+			  	//System.Web.HttpContext.Current.Response.Write("prepareAndSend mail service - An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
 				throw;
 			}
 		}

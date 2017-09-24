@@ -87,6 +87,26 @@ namespace com.nemesys.model
 			}
 		}
 		
+		public static Stream StringToStream(string s)
+		{
+			MemoryStream stream = new MemoryStream();
+			StreamWriter writer = new StreamWriter(stream);
+			writer.Write(s);
+			writer.Flush();
+			stream.Position = 0;
+			return stream;
+		}
+		
+		public static Stream ByteToStream(byte[] bytess)
+		{
+			MemoryStream stream = new MemoryStream();
+			StreamWriter writer = new StreamWriter(stream);
+			writer.Write(s);
+			writer.Flush();
+			stream.Position = 0;
+			return stream;
+		}
+		
 		public static bool isValidExtension(string ext)
 		{
 			IList<string> acceptedExtension = new List<string>();

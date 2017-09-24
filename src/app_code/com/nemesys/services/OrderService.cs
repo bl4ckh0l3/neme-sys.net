@@ -906,8 +906,9 @@ namespace com.nemesys.services
 				//start user message
 				userMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.id_ordine", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.id).Append("</b><br/><br/>")
 				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.guid_ordine", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.guid).Append("</b><br/><br/>")
-				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.order_client", langcode, defLangCode)).Append("&nbsp;-&nbsp;ID:&nbsp;<b>").Append(user.username).Append("</b>&nbsp;-&nbsp;")
-				.Append(MultiLanguageService.translate("frontend.registration.manage.label.email", langcode, defLangCode)).Append(":&nbsp;<b>").Append(user.email).Append("</b><br/><br/>");		
+				//.Append(MultiLanguageService.translate("backend.ordini.view.table.label.order_client", langcode, defLangCode)).Append("&nbsp;-&nbsp;ID:&nbsp;<b>").Append(user.username).Append("</b>&nbsp;-&nbsp;")
+				//.Append(MultiLanguageService.translate("frontend.registration.manage.label.email", langcode, defLangCode)).Append(":&nbsp;<b>").Append(user.email).Append("</b><br/><br/>")
+				;		
 				
 				//start admin message
 				adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.id_ordine", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(order.id).Append("</b><br/><br/>")
@@ -918,14 +919,41 @@ namespace com.nemesys.services
 				userMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.dta_insert_order", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.insertDate.ToString("dd/MM/yyyy HH:mm")).Append("</b><br/><br/>");
 				adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.dta_insert_order", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(order.insertDate.ToString("dd/MM/yyyy HH:mm")).Append("</b><br/><br/>");				
 	
-				userMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.tracking_number", langcode, defLangCode)).Append("<br/>");		
-				adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.tracking_number", boLangCode, defLangCode)).Append("<br/>");										
+				userMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.tracking_number", langcode, defLangCode)).Append(":&nbsp;<b>").Append(trackingNumber).Append("</b><br/><br/>");		
+				adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.tracking_number", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(trackingNumber).Append("</b><br/><br/>");									
 
 				replacementsUser.Add("<%content%>",HttpUtility.HtmlDecode(userMessage.ToString()));
 				replacementsAdmin.Add("<%content%>",HttpUtility.HtmlDecode(adminMessage.ToString()));
+
+				// Create  the file attachment for this e-mail message.
+				string filePath = System.Web.HttpContext.Current.Server.MapPath("~/public/upload/files/orders/"+orderId+"/shipping_label.gif");
 				
-				MailService.prepareAndSend("order-shipping-mail", langcode, defLangCode, "backend.mails.detail.table.label.subject_", replacementsUser, null, url);
-				MailService.prepareAndSend("order-shipping-mail", boLangCode, defLangCode, "backend.mails.detail.table.label.subject_", replacementsAdmin, null, url);	
+				//attachements for user email
+				//Stream streamUser = Utils.StringToStream(File.ReadAllText(filePath));
+				//Attachment dataUser = new Attachment(streamUser, "shipping_label.gif", MediaTypeNames.Image.Gif);
+				Attachment dataUser = new Attachment(filePath, MediaTypeNames.Image.Gif);
+				// Add time stamp information for the file.
+				ContentDisposition dispositionUser = dataUser.ContentDisposition;
+				dispositionUser.CreationDate = System.IO.File.GetCreationTime(filePath);
+				dispositionUser.ModificationDate = System.IO.File.GetLastWriteTime(filePath);
+				dispositionUser.ReadDate = System.IO.File.GetLastAccessTime(filePath);
+				IList<Attachment> attachmentsUser = new List<Attachment>();
+				attachmentsUser.Add(dataUser);	
+
+				//attachements for admin email
+				//Stream streamAdmin = Utils.StringToStream(File.ReadAllText(filePath));
+				//Attachment dataAdmin = new Attachment(streamAdmin, "shipping_label.gif", MediaTypeNames.Image.Gif);
+				Attachment dataAdmin = new Attachment(filePath, MediaTypeNames.Image.Gif);
+				// Add time stamp information for the file.
+				ContentDisposition dispositionAdmin = dataAdmin.ContentDisposition;
+				dispositionAdmin.CreationDate = System.IO.File.GetCreationTime(filePath);
+				dispositionAdmin.ModificationDate = System.IO.File.GetLastWriteTime(filePath);
+				dispositionAdmin.ReadDate = System.IO.File.GetLastAccessTime(filePath);
+				IList<Attachment> attachmentsAdmin = new List<Attachment>();
+				attachmentsAdmin.Add(dataAdmin);					
+				
+				MailService.prepareAndSend("order-shipping-mail", langcode, defLangCode, "backend.mails.detail.table.label.subject_", replacementsUser, attachmentsUser, url);
+				MailService.prepareAndSend("order-shipping-mail", boLangCode, defLangCode, "backend.mails.detail.table.label.subject_", replacementsAdmin, attachmentsAdmin, url);	
 			
 				mailShipSent = true;	
 			}catch(Exception ex){

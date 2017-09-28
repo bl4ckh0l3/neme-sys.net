@@ -97,6 +97,9 @@ namespace com.nemesys.database.repository
 					session.CreateQuery(string.Format("delete from ContentFieldsValue where idParentField in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();
 				}
 
+				session.Flush();
+				session.Clear();
+
 				ids = new List<string>();
 				/*if(newContentField != null && newContentField.Count>0){
 					foreach(ContentField pcid in newContentField){
@@ -268,6 +271,9 @@ namespace com.nemesys.database.repository
 					session.CreateQuery(string.Format("delete from ContentFieldsValue where idParentField in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();	
 				}				
 				//session.CreateQuery("delete from ContentField where idParentContent=:idParentContent").SetInt32("idParentContent",content.id).ExecuteUpdate();	
+
+				session.Flush();
+				session.Clear();
 				
 				if(newContentAttachment != null && newContentAttachment.Count>0)
 				{							
@@ -520,7 +526,10 @@ namespace com.nemesys.database.repository
 							}
 							session.CreateQuery(string.Format("delete from ContentFieldsValue where idParentField in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();
 						}
-						//session.CreateQuery("delete from ContentField where idParentContent=:idParentContent").SetInt32("idParentContent",content.id).ExecuteUpdate();		
+						//session.CreateQuery("delete from ContentField where idParentContent=:idParentContent").SetInt32("idParentContent",content.id).ExecuteUpdate();
+
+						session.Flush();
+						session.Clear();	
 						
 						if(newContentAttachment != null && newContentAttachment.Count>0)
 						{							
@@ -666,6 +675,9 @@ namespace com.nemesys.database.repository
 							}
 							session.CreateQuery(string.Format("delete from ContentFieldsValue where idParentField in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();	
 						}
+
+						session.Flush();
+						session.Clear();
 						
 						if(newContentAttachment != null && newContentAttachment.Count>0)
 						{							

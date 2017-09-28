@@ -133,6 +133,7 @@ public partial class _Product : Page
 		product.attachments = new List<ProductAttachment>();
 		product.fields = new List<ProductField>();
 		product.relations = new List<ProductRelation>();
+		product.calendar = new List<ProductCalendar>();
 		product.quantity = -1;
 		product.weight= 0;
 		product.length= 0;
@@ -473,7 +474,7 @@ public partial class _Product : Page
 		{	
 			carryOn = true;	
 			try
-			{				
+			{		
 				IList<Geolocalization> listOfPoints = new List<Geolocalization>();	
 				IList<ProductMainFieldTranslation> mainFieldsTrans = new List<ProductMainFieldTranslation>();	
 				IList<ProductFieldTranslation> fieldsTrans = new List<ProductFieldTranslation>();	
@@ -668,7 +669,7 @@ public partial class _Product : Page
 							product.relations.Add(cc);
 						}
 					}
-				}				
+				}			
 
 				// update product attachments
 				for(int ac=1; ac<=Convert.ToInt32(Request["attach_counter"]);ac++)
@@ -734,7 +735,7 @@ public partial class _Product : Page
 					}
 					
 				}
-
+				
 				HttpFileCollection MyFileCollection;			
 				MyFileCollection = Request.Files;
 				//*************** save product attachment to show on page site
@@ -768,6 +769,7 @@ public partial class _Product : Page
 						}
 					}
 				}
+				
 				//*************** save product attachment downloads to sell by ecommerce
 				IList<ProductAttachmentDownload> newProductAttachmentDownload = new List<ProductAttachmentDownload>();
 				for(int ac=1; ac<=Convert.ToInt32(Request["numMaxImgsd"]);ac++)
@@ -809,7 +811,7 @@ public partial class _Product : Page
 					mainFieldsTrans = prodrep.getProductMainFieldsTranslation(Convert.ToInt32(Request["pre_el_id"]), -1, null);
 					prodrep.deleteProductFieldsTranslation(Convert.ToInt32(Request["pre_el_id"]));
 				}
-
+				
 				// PREPARO LE LISTE DI CHIAVI MULTILINGUA DA INSERIRE/AGGIORNARE IN TRANSAZIONE
 				IList<MultiLanguage> newtranslactions = new List<MultiLanguage>();
 				IList<MultiLanguage> updtranslactions = new List<MultiLanguage>();
@@ -979,49 +981,6 @@ public partial class _Product : Page
 
 								//******************  START: MULTILANGUAGE FIELDS TRANSLATIONS MANAGER ***************************/
 								
-								/*
-								//*** insert fields description
-								ml = mlangrep.find("backend.prodotti.detail.table.label.field_description_"+cf.description+"_"+product.keyword, x.label);
-								if(ml != null){	
-									if(!String.IsNullOrEmpty(Request["field_description_"+cf.id+"_"+x.label])){
-										ml.value = Request["field_description_"+cf.id+"_"+x.label].Replace("&quot;","\"");
-										updtranslactions.Add(ml);
-									}else{
-										deltranslactions.Add(ml);
-									}
-								}else{
-									ml = new MultiLanguage();
-									ml.keyword = "backend.prodotti.detail.table.label.field_description_"+cf.description+"_"+product.keyword;
-									ml.langCode = x.label;
-									ml.value = Request["field_description_"+cf.id+"_"+x.label];		
-									if(!String.IsNullOrEmpty(ml.value)){	
-										ml.value = ml.value.Replace("&quot;","\"");
-										newtranslactions.Add(ml);
-									}
-								}
-								
-								
-								//*** insert group description
-								ml = mlangrep.find("backend.prodotti.detail.table.label.id_group_"+cf.description+"_"+product.keyword, x.label);
-								if(ml != null){	
-									if(!String.IsNullOrEmpty(Request["group_value_"+cf.id+"_"+x.label])){
-										ml.value = Request["group_value_"+cf.id+"_"+x.label].Replace("&quot;","\"");
-										updtranslactions.Add(ml);
-									}else{
-										deltranslactions.Add(ml);
-									}
-								}else{
-									ml = new MultiLanguage();
-									ml.keyword = "backend.prodotti.detail.table.label.id_group_"+cf.description+"_"+product.keyword;
-									ml.langCode = x.label;
-									ml.value = Request["group_value_"+cf.id+"_"+x.label];
-									if(!String.IsNullOrEmpty(ml.value)){
-										ml.value = ml.value.Replace("&quot;","\"");	
-										newtranslactions.Add(ml);
-									}
-								}
-								*/
-						
 								if(!String.IsNullOrEmpty(Request["field_description_"+cf.id+"_"+x.label])){
 									ProductFieldTranslation pft = new ProductFieldTranslation();
 									pft.idParentProduct = product.id;
@@ -1099,32 +1058,7 @@ public partial class _Product : Page
 												pft.value = currfmlvalue.Replace("&quot;","\"");
 												//Response.Write(" - found field_values_ml: "+pft.ToString()+"<br>");
 												fieldsTrans.Add(pft); 
-											}											
-											
-											/*
-											ml = mlangrep.find("backend.prodotti.detail.table.label.field_values_"+cf.description+"_"+cfv.value+"_"+product.keyword, x.label);
-											if(ml != null){	
-												//Response.Write("- backend.prodotti.detail.table.label.field_values_"+cf.description+"_"+cfv.value+"_"+product.keyword+"<br>");
-												//Response.Write("- ml.value: "+ml.value+"<br>");	
-												if(fouldEl){	
-													ml.value = currfmlvalue.Replace("&quot;","\"");
-													updtranslactions.Add(ml);
-												}else{
-													//Response.Write("- del ml.value: "+ml.value+"<br>");
-													deltranslactions.Add(ml);									
-												}
-											}else{
-												ml = new MultiLanguage();
-												ml.keyword = "backend.prodotti.detail.table.label.field_values_"+cf.description+"_"+cfv.value+"_"+product.keyword;
-												ml.langCode = x.label;
-												ml.value = currfmlvalue;
-												//Response.Write("- ins ml.value: "+ml.value+"<br>");
-												if(!String.IsNullOrEmpty(ml.value)){
-													ml.value = ml.value.Replace("&quot;","\"");	
-													newtranslactions.Add(ml);
-												}
-											}
-											*/
+											}	
 										}											
 									}
 								}					
@@ -1164,66 +1098,6 @@ public partial class _Product : Page
 										//Response.Write(" - found field_value_e: "+pft.ToString()+"<br>");
 										fieldsTrans.Add(pft); 
 									}
-								
-									/*
-									//*** insert field value t
-									ml = mlangrep.find("backend.prodotti.detail.table.label.field_value_t_"+cf.description+"_"+product.keyword, x.label);
-									if(ml != null){	
-										if(!String.IsNullOrEmpty(Request["field_value_t_"+cf.id+"_"+x.label])){
-											ml.value = Request["field_value_t_"+cf.id+"_"+x.label].Replace("&quot;","\"");
-											updtranslactions.Add(ml);
-										}else{
-											deltranslactions.Add(ml);
-										}
-									}else{
-										ml = new MultiLanguage();
-										ml.keyword = "backend.prodotti.detail.table.label.field_value_t_"+cf.description+"_"+product.keyword;
-										ml.langCode = x.label;
-										ml.value = Request["field_value_t_"+cf.id+"_"+x.label];		
-										if(!String.IsNullOrEmpty(ml.value)){	
-											ml.value = ml.value.Replace("&quot;","\"");
-											newtranslactions.Add(ml);
-										}
-									}								
-									//*** insert field value ta
-									ml = mlangrep.find("backend.prodotti.detail.table.label.field_value_ta_"+cf.description+"_"+product.keyword, x.label);
-									if(ml != null){	
-										if(!String.IsNullOrEmpty(Request["field_value_ta_"+cf.id+"_"+x.label])){
-											ml.value = Request["field_value_ta_"+cf.id+"_"+x.label].Replace("&quot;","\"");
-											updtranslactions.Add(ml);
-										}else{
-											deltranslactions.Add(ml);
-										}
-									}else{
-										ml = new MultiLanguage();
-										ml.keyword = "backend.prodotti.detail.table.label.field_value_ta_"+cf.description+"_"+product.keyword;
-										ml.langCode = x.label;
-										ml.value = Request["field_value_ta_"+cf.id+"_"+x.label];		
-										if(!String.IsNullOrEmpty(ml.value)){	
-											ml.value = ml.value.Replace("&quot;","\"");
-											newtranslactions.Add(ml);
-										}
-									}							
-									//*** insert field value e
-									ml = mlangrep.find("backend.prodotti.detail.table.label.field_value_e_"+cf.description+"_"+product.keyword, x.label);
-									if(ml != null){	
-										if(!String.IsNullOrEmpty(Request["field_value_e_"+cf.id+"_"+x.label])){
-											ml.value = Request["field_value_e_"+cf.id+"_"+x.label].Replace("&quot;","\"");
-											updtranslactions.Add(ml);
-										}else{
-											deltranslactions.Add(ml);
-										}
-									}else{
-										ml = new MultiLanguage();
-										ml.keyword = "backend.prodotti.detail.table.label.field_value_e_"+cf.description+"_"+product.keyword;
-										ml.langCode = x.label;
-										ml.value = Request["field_value_e_"+cf.id+"_"+x.label];		
-										if(!String.IsNullOrEmpty(ml.value)){	
-											ml.value = ml.value.Replace("&quot;","\"");
-											newtranslactions.Add(ml);
-										}
-									}
-									*/
 								}
 								
 								//TODO: MFT
@@ -1268,7 +1142,7 @@ public partial class _Product : Page
 					//Response.Write("ProductFieldTranslation count before save:"+fieldsTrans.Count+"<br><br>");
 					//foreach(ProductFieldTranslation k in fieldsTrans){
 					//	Response.Write(k.ToString()+"<br>");
-					//}						
+					//}		
 					
 					prodrep.saveCompleteProduct(product, listOfPoints, mainFieldsTrans, fieldsTrans, qtyFieldValues, newtranslactions, updtranslactions, deltranslactions);
 					

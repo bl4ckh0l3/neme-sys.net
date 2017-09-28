@@ -146,6 +146,9 @@ namespace com.nemesys.database.repository
 					session.CreateQuery(string.Format("delete from ProductFieldsValue where idParentField in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();
 				}
 
+				session.Flush();
+				session.Clear();
+
 				ids = new List<string>();
 				/*if(newProductField != null && newProductField.Count>0){
 					foreach(ProductField pcid in newProductField){
@@ -447,7 +450,10 @@ namespace com.nemesys.database.repository
 					session.CreateQuery(string.Format("delete from ProductFieldsRelValue where idParentField in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();
 					session.CreateQuery(string.Format("delete from ProductFieldsValue where idParentField in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();	
 				}				
-				//session.CreateQuery("delete from ProductField where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();	
+				//session.CreateQuery("delete from ProductField where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
+
+				session.Flush();
+				session.Clear();	
 				
 				if(newProductAttachment != null && newProductAttachment.Count>0)
 				{							
@@ -673,6 +679,7 @@ namespace com.nemesys.database.repository
 				}
 				if(product.fields != null && product.fields.Count>0)
 				{
+					session.CreateQuery("delete from ProductFieldsRelValue where idProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
 					//session.CreateQuery("delete from ProductFieldsValue where idParentField in(select ProductField.id from ProductField where idParentProduct=:idParentProduct)").SetInt32("idParentProduct",product.id).ExecuteUpdate();
 					session.CreateSQLQuery("delete from PRODUCT_FIELDS_VALUES where id_parent_field in(select id from PRODUCT_FIELDS where id_parent_product=:idParentProduct)").SetInt32("idParentProduct",product.id).ExecuteUpdate();
 					session.CreateQuery("delete from ProductField where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
@@ -897,7 +904,10 @@ namespace com.nemesys.database.repository
 							session.CreateQuery(string.Format("delete from ProductFieldsRelValue where idParentField in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();
 							session.CreateQuery(string.Format("delete from ProductFieldsValue where idParentField in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();
 						}
-						session.CreateQuery("delete from ProductFieldTranslation where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();		
+						session.CreateQuery("delete from ProductFieldTranslation where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
+
+						session.Flush();
+						session.Clear();
 						
 						if(newProductAttachment != null && newProductAttachment.Count>0)
 						{							
@@ -989,24 +999,24 @@ namespace com.nemesys.database.repository
 									}
 								}
 							}
-							foreach(IList<ProductFieldsRelValue> lcfv in newProductFieldsRelValues.Values){
-								if(lcfv != null){
-									foreach(ProductFieldsRelValue cfv in lcfv){
-										ProductFieldsRelValue ncfv = new ProductFieldsRelValue();
-										ncfv.idProduct = cfv.idProduct;
-										ncfv.idParentField = cfv.idParentField;
-										ncfv.fieldValue = cfv.fieldValue;
+							foreach(IList<ProductFieldsRelValue> lcfrv in newProductFieldsRelValues.Values){
+								if(lcfrv != null){
+									foreach(ProductFieldsRelValue cfrv in lcfrv){
+										ProductFieldsRelValue ncfrv = new ProductFieldsRelValue();
+										ncfrv.idProduct = cfrv.idProduct;
+										ncfrv.idParentField = cfrv.idParentField;
+										ncfrv.fieldValue = cfrv.fieldValue;
 
 										int newrefid = -1;		
-										fieldIds.TryGetValue(cfv.idParentRelField, out newrefid);
+										fieldIds.TryGetValue(cfrv.idParentRelField, out newrefid);
 										if(newrefid!=-1){
-											ncfv.idParentRelField = newrefid;
+											ncfrv.idParentRelField = newrefid;
 										}
-										ncfv.fieldRelValue = cfv.fieldRelValue;
-										ncfv.fieldRelName = cfv.fieldRelName;
-										ncfv.quantity=cfv.quantity;	
-										//HttpContext.Current.Response.Write("ProductFieldsValue before save:"+ncfv.ToString()+"<br>");
-										session.Save(ncfv);
+										ncfrv.fieldRelValue = cfrv.fieldRelValue;
+										ncfrv.fieldRelName = cfrv.fieldRelName;
+										ncfrv.quantity=cfrv.quantity;	
+										//HttpContext.Current.Response.Write("ProductFieldsRelValue before save:"+ncfrv.ToString()+"<br>");
+										session.Save(ncfrv);
 									}
 								}
 							}
@@ -1166,6 +1176,9 @@ namespace com.nemesys.database.repository
 							session.CreateQuery(string.Format("delete from ProductFieldsValue where idParentField in ({0})",string.Join(",",ids.ToArray()))).ExecuteUpdate();	
 						}
 						session.CreateQuery("delete from ProductFieldTranslation where idParentProduct=:idParentProduct").SetInt32("idParentProduct",product.id).ExecuteUpdate();
+
+						session.Flush();
+						session.Clear();
 						
 						if(newProductAttachment != null && newProductAttachment.Count>0)
 						{							
@@ -1442,6 +1455,7 @@ namespace com.nemesys.database.repository
 				IList<ProductRelation> newProductRelation = new List<ProductRelation>();
 				IList<ProductCalendar> newProductCalendar = new List<ProductCalendar>();
 				IDictionary<int,IList<ProductFieldsValue>> newProductFieldsValues = new Dictionary<int,IList<ProductFieldsValue>>();
+				IDictionary<int,IList<ProductFieldsRelValue>> newProductFieldsRelValues = new Dictionary<int,IList<ProductFieldsRelValue>>();
 							
 				// ** insert attachments copy
 				if(original.attachments != null){
@@ -1516,6 +1530,13 @@ namespace com.nemesys.database.repository
 						qcfv.SetInt32("idParentField", ocf.id);
 						fvalues = qcfv.List<ProductFieldsValue>();						
 						newProductFieldsValues.Add(ocf.id,fvalues);
+						
+						//retrieve field rel values
+						IList<ProductFieldsRelValue> frvalues = null;
+						IQuery qr = session.CreateQuery("from ProductFieldsRelValue where idParentField=:idParentField");	
+						qr.SetInt32("idParentField", ocf.id);
+						frvalues = qr.List<ProductFieldsRelValue>();
+						newProductFieldsRelValues.Add(ocf.id,frvalues);
 					}
 				}
 
@@ -1583,12 +1604,19 @@ namespace com.nemesys.database.repository
 					} 
 				}
 				if(newProductField != null)
-				{						
+				{
+					IDictionary<int,int> fieldIds = new Dictionary<int,int>();
+							
 					foreach(ProductField k in newProductField){
 						k.idParentProduct = newproduct.id;
-						IList<ProductFieldsValue> fnvalues = null;		
+						IList<ProductFieldsValue> fnvalues = null;	
+						IList<ProductFieldsRelValue> frnvalues = null;	
 						newProductFieldsValues.TryGetValue(k.id, out fnvalues);
+						newProductFieldsRelValues.TryGetValue(k.id, out frnvalues);
+						int oldid=k.id;
+						fieldIds.Add(oldid,k.id);
 						session.Save(k);
+						fieldIds[oldid]=k.id;
 				
 						// add field values
 						if(fnvalues != null){
@@ -1596,6 +1624,13 @@ namespace com.nemesys.database.repository
 								cfv.idParentField=k.id;
 							}
 						}
+				
+						// add field rel values
+						if(frnvalues != null){
+							foreach(ProductFieldsRelValue cfv in frnvalues){
+								cfv.idParentField=k.id;
+							}
+						}											
 					}
 					foreach(IList<ProductFieldsValue> lcfv in newProductFieldsValues.Values){
 						if(lcfv != null){
@@ -1610,6 +1645,27 @@ namespace com.nemesys.database.repository
 							}
 						}
 					}	
+					foreach(IList<ProductFieldsRelValue> lcfv in newProductFieldsRelValues.Values){
+						if(lcfv != null){
+							foreach(ProductFieldsRelValue cfv in lcfv){
+								ProductFieldsRelValue ncfv = new ProductFieldsRelValue();
+								ncfv.idProduct = newproduct.id;
+								ncfv.idParentField = cfv.idParentField;
+								ncfv.fieldValue = cfv.fieldValue;
+
+								int newrefid = -1;		
+								fieldIds.TryGetValue(cfv.idParentRelField, out newrefid);
+								if(newrefid!=-1){
+									ncfv.idParentRelField = newrefid;
+								}
+								ncfv.fieldRelValue = cfv.fieldRelValue;
+								ncfv.fieldRelName = cfv.fieldRelName;
+								ncfv.quantity=cfv.quantity;	
+								//HttpContext.Current.Response.Write("ProductFieldsValue before save:"+ncfv.ToString()+"<br>");
+								session.Save(ncfv);
+							}
+						}
+					}					
 				}
 				if(newProductRelation != null && newProductRelation.Count>0)
 				{							
@@ -2778,7 +2834,11 @@ namespace com.nemesys.database.repository
 					if(field.id != -1){
 						session.Update(field);
 						session.CreateQuery("delete from ProductFieldsValue where idParentField=:idParentField").SetInt32("idParentField",field.id).ExecuteUpdate();
-						session.CreateQuery("delete from ProductFieldTranslation where idField=:idField").SetInt32("idField",field.id).ExecuteUpdate();					
+						session.CreateQuery("delete from ProductFieldTranslation where idField=:idField").SetInt32("idField",field.id).ExecuteUpdate();			
+
+						session.Flush();
+						session.Clear();
+						
 						foreach(ProductFieldTranslation m in fieldsTrans)
 						{	
 							//session.Delete(m);
@@ -3130,6 +3190,9 @@ namespace com.nemesys.database.repository
 				.SetInt32("idParentRelField",idFieldRel)
 				.SetString("fieldRelValue",fieldRelValue)
 				.ExecuteUpdate();
+
+				session.Flush();
+				session.Clear();
 				
 				ProductFieldsRelValue newPFRV = new ProductFieldsRelValue();
 				newPFRV.idProduct = idProduct;

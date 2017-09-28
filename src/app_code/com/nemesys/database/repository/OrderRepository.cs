@@ -1006,6 +1006,9 @@ namespace com.nemesys.database.repository
 						if(ovs != null && ovs.Count>0){
 							session.CreateQuery("delete from OrderVoucher where orderId=:idOrder").SetInt32("idOrder",order.id).ExecuteUpdate();
 						}
+
+						session.Flush();
+						session.Clear();
 						
 						order.lastUpdate=DateTime.Now;
 						session.Update(order);	
@@ -1236,7 +1239,10 @@ namespace com.nemesys.database.repository
 						}
 						
 						session.CreateQuery("delete from BillsAddress where idUser=:idUser").SetInt32("idUser",order.userId).ExecuteUpdate();
-						session.CreateQuery("delete from ShippingAddress where idUser=:idUser").SetInt32("idUser",order.userId).ExecuteUpdate();				
+						session.CreateQuery("delete from ShippingAddress where idUser=:idUser").SetInt32("idUser",order.userId).ExecuteUpdate();
+
+						session.Flush();
+						session.Clear();				
 						
 						order.insertDate=DateTime.Now;
 						order.lastUpdate=DateTime.Now;

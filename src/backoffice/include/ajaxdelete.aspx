@@ -53,13 +53,17 @@ protected void Page_Load(Object sender, EventArgs e)
 			}
 		}								
 	}
+	
 	/*									
 	String tmp = "id_objref: " +Request["id_objref"]+" -className: " + className+" -repositoryName: " + repositoryName+" -accessoryClass: " + accessoryClass+" -accessoryMethod: " + accessoryMethod+" -accessoryMethodModificator: " + accessoryMethodModificator+" -accessoryMethodParams: " + accessoryMethodParams+"<br>";
+	Response.Write("tmp: "+tmp+"<br><br>");
+
 	builder = new StringBuilder("Exception: ")
 	.Append("debug: ").Append(tmp);
 	log = new Logger(builder.ToString(),"system","debug",DateTime.Now);		
 	lrep.write(log);
 	*/
+	
 	try
 	{
 		int id_objref = Convert.ToInt32(Request["id_objref"]);
@@ -75,12 +79,14 @@ protected void Page_Load(Object sender, EventArgs e)
 			o = getInst.Invoke(o2, new object[]{id_objref});		
 			MethodInfo upd = o2.GetType().GetMethod("delete");
 			upd.Invoke(o2, new object[]{o});
+			
 			/*
 			getInst = o.GetType().GetMethod("ToString");
 			Object toStr = getInst.Invoke(o, null);
 			
 			builder = new StringBuilder("delete ")
 			.Append(o.GetType().ToString()).Append(": ").Append(toStr.ToString());
+			Response.Write("builder: "+builder.ToString()+"<br><br>");
 			log = new Logger(builder.ToString(),login.userLogged.username,"info",DateTime.Now);
 			lrep.write(log);
 			*/
@@ -136,7 +142,7 @@ protected void Page_Load(Object sender, EventArgs e)
 		log = new Logger(builder.ToString(),"system","error",DateTime.Now);		
 		lrep.write(log);
 		*/
-		//Response.Write(ex.Message+"<br><br>"+ex.StackTrace);
+		//Response.Write(ex.Message+"<br><br>"+ex.StackTrace+"<br><br>"+ex.ToString());
 		Response.StatusCode = 400;
 	}
 }

@@ -1390,9 +1390,14 @@ CREATE TABLE IF NOT EXISTS `BILLING` (
   `zip_code` varchar(20) default NULL,
   `country` varchar(100) default NULL,
   `state_region` varchar(100) default NULL,
+  `phone` varchar(50) default NULL,
+  `fax` varchar(50) default NULL,
+  `description` text,
   `last_update` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `insert_date` timestamp NOT NULL,
   `order_date` timestamp NOT NULL,
+  `id_registered_billing` int(11) NOT NULL default '0',
+  `registered_date` timestamp NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1412,6 +1417,8 @@ CREATE TABLE IF NOT EXISTS `BILLING_DATA` (
   `country` varchar(100) default NULL,
   `state_region` varchar(100) default NULL,
   `phone` varchar(50) default NULL,
+  `fax` varchar(50) default NULL,
+  `description` text,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

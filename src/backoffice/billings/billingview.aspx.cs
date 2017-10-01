@@ -15,6 +15,7 @@ public partial class _BillingView : Page
 	public ASP.BoMultiLanguageControl lang;
 	public ASP.UserLoginControl login;
 	protected int orderid;
+	protected int billingid;
 	protected string paymentType;
 	protected bool paymentDone;
 	protected decimal billsAmount;
@@ -29,6 +30,7 @@ public partial class _BillingView : Page
 	protected string mailSent;
 	protected string adsEnabled;
 	protected FOrder order;
+	protected Billing billing;
 	protected IDictionary<int,string> orderStatus;
 	protected User user;
 	protected IList<UserField> usrfields;
@@ -58,7 +60,7 @@ public partial class _BillingView : Page
 		lang.set();
 		Response.Charset="UTF-8";
 		Session.CodePage  = 65001;	
-		cssClass="LO";	
+		cssClass="LB";	
 		login.acceptedRoles = "1";
 		if(!login.checkedUser()){
 			Response.Redirect("~/login.aspx?error_code=002");
@@ -71,13 +73,16 @@ public partial class _BillingView : Page
 		ILoggerRepository lrep = RepositoryFactory.getInstance<ILoggerRepository>("ILoggerRepository");
 		IShippingAddressRepository shiprep = RepositoryFactory.getInstance<IShippingAddressRepository>("IShippingAddressRepository");
 		IBillsAddressRepository billsrep = RepositoryFactory.getInstance<IBillsAddressRepository>("IBillsAddressRepository");
+		IBillingRepository billingrep = RepositoryFactory.getInstance<IBillingRepository>("IBillingRepository");
 		productrep = RepositoryFactory.getInstance<IProductRepository>("IProductRepository");
 		contrep = RepositoryFactory.getInstance<IContentRepository>("IContentRepository");
 		adsrep = RepositoryFactory.getInstance<IAdsRepository>("IAdsRepository"); 
 		confservice = new ConfigurationService();
 		
+		billing = null;
 		order = null;
 		user = null;
+		billingid = -1;
 		orderid = -1;
 		paymentType = "";
 		paymentDone = false;
@@ -113,7 +118,10 @@ public partial class _BillingView : Page
 			}	
 		
 			try{
-				orderid = Convert.ToInt32(Request["id"]);
+				billingid = Convert.ToInt32(Request["id"]);
+				billing = billingrep.getById(billingid);
+				
+				orderid = billing.idParentOrder;
 				order = orderep.getByIdExtended(orderid, true);
 				
 				user = usrrep.getById(order.userId);
@@ -131,22 +139,7 @@ public partial class _BillingView : Page
 				pdone = lang.getTranslated("portal.commons.no");
 				if(paymentDone){
 					pdone = lang.getTranslated("portal.commons.yes");
-				}	
-	
-				downNotified = lang.getTranslated("portal.commons.no");
-				if(order.downloadNotified){
-					downNotified = lang.getTranslated("portal.commons.yes");
-				}	
-	
-				mailSent = lang.getTranslated("portal.commons.no");
-				if(order.mailSent){
-					mailSent = lang.getTranslated("portal.commons.yes");
-				}	
-	
-				adsEnabled = lang.getTranslated("portal.commons.no");
-				if(order.adsEnabled){
-					adsEnabled = lang.getTranslated("portal.commons.yes");
-				}		
+				}			
 				
 				int paymentId = order.paymentId;
 				Payment payment = payrep.getByIdCached(paymentId, true);
@@ -154,9 +147,6 @@ public partial class _BillingView : Page
 					paymentType = payment.description;
 					if(!String.IsNullOrEmpty(lang.getTranslated("backend.payment.description.label."+payment.description))){
 						paymentType = lang.getTranslated("backend.payment.description.label."+payment.description);
-					}
-					if(!String.IsNullOrEmpty(payment.paymentData)){
-					paymentType+="<br/>"+payment.paymentData+"<br/>";
 					}
 				}
 	
@@ -192,30 +182,6 @@ public partial class _BillingView : Page
 				productRules = orderep.findOrderBusinessRule(orderid, true);
 				if(productRules != null && productRules.Count>0){
 					hasProductRule = true;
-				}
-	
-				//****** MANAGE PAYMENT TRANSACTION (ONLY FOR ADMIN EMAIL)
-				IList<PaymentTransaction> transactions = paytransrep.find(order.id, -1, null, null, false);
-				foreach(PaymentTransaction q in transactions){
-					paymentTrans+="<strong>ID:</strong> "+q.idTransaction+";&nbsp;";
-					paymentTrans+="<strong>STATUS:</strong> "+q.status+";&nbsp;";
-					if(q.notified){
-						paymentTrans+="<strong>NOTIFIED:</strong> "+lang.getTranslated("backend.commons.yes")+";<br/>";
-					}else{
-						paymentTrans+="<strong>NOTIFIED:</strong> "+lang.getTranslated("backend.commons.no")+";<br/>";
-					}
-				}						
-			
-				//****** MANAGE ORDER RULES
-				if(hasOrderRule){
-					foreach(OrderBusinessRule x in orderRules){
-						if(!String.IsNullOrEmpty(lang.getTranslated("backend.businessrule.label.label."+x.label))){ 
-							orderRulesDesc+=lang.getTranslated("backend.businessrule.label.label."+x.label);
-						}else{
-							orderRulesDesc+=x.label;
-						}
-						orderRulesDesc+="&nbsp;&nbsp;&nbsp;<b>&euro;&nbsp;"+x.value.ToString("#,###0.00")+"</b><br/>";
-					}
 				}
 			}catch(Exception ex){
 				StringBuilder builderErr = new StringBuilder("Exception: ")

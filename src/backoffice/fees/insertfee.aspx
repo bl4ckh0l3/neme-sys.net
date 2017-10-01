@@ -400,7 +400,7 @@ function showInternalParams(){
 			<select name="ext_provider" id="ext_provider" class="formFieldSelect" >
 				<option value="0" <%if (0==fee.extProvider) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.spese.detail.table.label.no_ext_provider")%></option>
 				<option value="1" <%if (1==fee.extProvider) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.spese.detail.table.label.ups_ext_provider")%></option>	
-				<option value="2" <%if (2==fee.extProvider) {Response.Write(" selected");}%>><%=lang.getTranslated("backend.spese.detail.table.label.dhl_ext_provider")%></option>
+				<!--<option value="2" <%//if (2==fee.extProvider) {Response.Write(" selected");}%>><%//=lang.getTranslated("backend.spese.detail.table.label.dhl_ext_provider")%></option>-->
 			</select>	
 			
 			<input type="hidden" value="" name="apply_internal_params"  id="apply_internal_params">

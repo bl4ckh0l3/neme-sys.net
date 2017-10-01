@@ -175,6 +175,8 @@ public partial class _BillingList : Page
 				billingData.country = Request["bills_country"];
 				billingData.stateRegion = Request["bills_state_region"];  
 				billingData.phone = Request["bills_phone"];  
+				billingData.fax = Request["bills_fax"];  
+				billingData.description = Request["bills_description"];  
 			
 				//Response.Write("<br>billingData: "+billingData.ToString());
 				
@@ -197,6 +199,36 @@ public partial class _BillingList : Page
 			}			
 		}		
 		
+		
+		
+		//*************************** REGISTER BILLING  ***************************
+		
+		if("register".Equals(Request["operation"]))
+		{
+			bool executed = false;
+			//Response.Write("<br>executed: "+executed);
+			
+			try
+			{
+				Billing billingToRegister = billingrep.getById(Convert.ToInt32(Request["id_billing"]));
+				billingrep.registerBilling(billingToRegister);
+				executed = true;
+			}
+			catch(Exception ex)
+			{
+				//Response.Write("An error occured: " + ex.Message);
+				errorUrl.Append(Regex.Replace(ex.Message, @"\t|\n|\r", " "));
+				executed = false;
+			}
+				
+			//Response.Write("<br>executed post: "+executed);
+				
+			if(executed){
+				Response.Redirect("/backoffice/billings/billinglist.aspx?cssClass=LB&resetMenu=1");
+			}else{
+				Response.Redirect(errorUrl.ToString());
+			}			
+		}
 		
 		this.pg1.totalPages = this.totalPages;
 		this.pg1.defaultLangCode = lang.defaultLangCode;

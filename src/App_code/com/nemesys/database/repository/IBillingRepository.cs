@@ -13,13 +13,13 @@ namespace com.nemesys.database.repository
 		
 		void delete(Billing value);
 		
-		void saveCompleteBilling(Billing billing, IList<MultiLanguage> newtranslactions, IList<MultiLanguage> updtranslactions, IList<MultiLanguage> deltranslactions);
+		void registerBilling(Billing value);
 		
 		Billing getById(int id);
 		
 		IList<Billing> findAll();
 		
-		IList<Billing> find(int orderId);	
+		Billing find(int orderId);	
 		
 		void insertBillingData(BillingData value);
 		

@@ -143,7 +143,7 @@ protected void Page_Load(Object sender, EventArgs e)
 		.Append("An error occured: ").Append(ex.Message).Append("<br><br><br>").Append(ex.StackTrace);
 		//log = new Logger(builder.ToString(),"system","error",DateTime.Now);		
 		//lrep.write(log);
-		Response.Write(builder.ToString());
+		//Response.Write(builder.ToString());
 		Response.StatusCode = 400;
 	}
 }

@@ -28,6 +28,8 @@ public partial class _OrderView : Page
 	protected string downNotified;
 	protected string mailSent;
 	protected string adsEnabled;
+	protected string billingShow;
+	protected Billing billing;
 	protected FOrder order;
 	protected IDictionary<int,string> orderStatus;
 	protected User user;
@@ -71,6 +73,7 @@ public partial class _OrderView : Page
 		ILoggerRepository lrep = RepositoryFactory.getInstance<ILoggerRepository>("ILoggerRepository");
 		IShippingAddressRepository shiprep = RepositoryFactory.getInstance<IShippingAddressRepository>("IShippingAddressRepository");
 		IBillsAddressRepository billsrep = RepositoryFactory.getInstance<IBillsAddressRepository>("IBillsAddressRepository");
+		IBillingRepository billingrep = RepositoryFactory.getInstance<IBillingRepository>("IBillingRepository");
 		IFeeRepository feerep = RepositoryFactory.getInstance<IFeeRepository>("IFeeRepository");
 		productrep = RepositoryFactory.getInstance<IProductRepository>("IProductRepository");
 		contrep = RepositoryFactory.getInstance<IContentRepository>("IContentRepository");
@@ -92,6 +95,7 @@ public partial class _OrderView : Page
 		hasOrderRule = false;
 		hasProductRule = false;
 		pdone = "";
+		billingShow = "";
 		downNotified = "";
 		mailSent = "";
 		adsEnabled = "";
@@ -102,6 +106,7 @@ public partial class _OrderView : Page
 		builder = null;
 		orderFees = "";
 		orderRulesDesc = "";
+		billing = null;
 		
 	
 		if(!String.IsNullOrEmpty(Request["id"])){
@@ -133,8 +138,8 @@ public partial class _OrderView : Page
 				pdone = lang.getTranslated("portal.commons.no");
 				if(paymentDone){
 					pdone = lang.getTranslated("portal.commons.yes");
-				}	
-	
+				}				
+				
 				downNotified = lang.getTranslated("portal.commons.no");
 				if(order.downloadNotified){
 					downNotified = lang.getTranslated("portal.commons.yes");
@@ -216,6 +221,16 @@ public partial class _OrderView : Page
 				if(obillsaddr != null){
 					hasBillsAddress = true;
 				}
+				
+				billing = billingrep.find(orderid);		
+
+				if(billing != null){
+					billingShow = "<br/><span id='billing_show'><a href='/backoffice/billings/billingview.aspx?id="+billing.id+"&cssClass=LB'>"+lang.getTranslated("backend.ordini.view.table.label.view_billing")+"</a></span>";
+				}else{
+					if(order.paymentDone){
+						billingShow = "<br/><span id='billing_show'><a href='javascript:generateBilling("+order.id+");'>"+lang.getTranslated("backend.ordini.view.table.label.generate_billing")+"</a></span>";
+					}
+				}	
 				
 				orderRules = orderep.findOrderBusinessRule(orderid, false);
 				if(orderRules != null && orderRules.Count>0){

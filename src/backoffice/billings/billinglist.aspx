@@ -49,6 +49,10 @@ function insertBillingData(){
 
     document.form_billing_data.submit();
 }
+
+function registerBilling(idBilling){
+	location.href='/backoffice/billings/billinglist.aspx?cssClass=LB&operation=register&id_billing='+idBilling;
+}
 </script>
 </head>
 <body>
@@ -76,8 +80,10 @@ function insertBillingData(){
 					<input type="text" id="bills_name" name="bills_name" value="<%=billingData.name%>"></div>
 					<div style="float:left;margin-right:30px;"><strong><%=lang.getTranslated("backend.billing.lista.table.label.cfiscvat")%></strong><br>
 					<input type="text" id="bills_cfiscvat" name="bills_cfiscvat" value="<%=billingData.cfiscvat%>"></div>
-					<div><strong><%=lang.getTranslated("backend.billing.lista.table.label.phone")%></strong><br>
+					<div style="float:left;margin-right:30px;"><strong><%=lang.getTranslated("backend.billing.lista.table.label.phone")%></strong><br>
 					<input type="text" id="bills_phone" name="bills_phone" value="<%=billingData.phone%>"></div>
+					<div><strong><%=lang.getTranslated("backend.billing.lista.table.label.fax")%></strong><br>
+					<input type="text" id="bills_fax" name="bills_fax" value="<%=billingData.fax%>"></div>
 				</div>
 				<div style="margin-top:10px;">
 					<div style="float:left;margin-right:30px;"><strong><%=lang.getTranslated("backend.billing.lista.table.label.address")%></strong><br>
@@ -87,7 +93,7 @@ function insertBillingData(){
 					<div style="margin-right:30px;"><strong><%=lang.getTranslated("backend.billing.lista.table.label.city")%></strong><br>
 					<input type="text" id="bills_city" name="bills_city" value="<%=billingData.city%>"></div>
 				</div>
-				<div style="margin-top:10px;margin-bottom:20px;">
+				<div style="margin-top:10px;">
 					<div style="float:left;padding-right:30px;">
 						<strong><%=lang.getTranslated("backend.billing.lista.table.label.country")%></strong><br>
 						<select id="bills_country" name="bills_country">
@@ -108,6 +114,10 @@ function insertBillingData(){
 						}%>
 						</select>	
 					</div>
+				</div>
+				<div style="margin-top:10px;margin-bottom:20px;">
+					<div style="margin-right:30px;"><strong><%=lang.getTranslated("backend.billing.lista.table.label.ext_description")%></strong><br>
+					<textarea id="bills_description" name="bills_description" class="formFieldTXTAREA"><%=billingData.description%></textarea></div>				
 				</div>
 				
 				<script>
@@ -173,9 +183,9 @@ function insertBillingData(){
 							Billing k = billings[counter];%>	
 							<tr id="tr_delete_list_<%=counter%>" class="<%if(counter % 2 == 0){Response.Write("table-list-on");}else{Response.Write("table-list-off");}%>">
 							<td align="center" width="25"><a href="javascript:viewBilling(<%=k.id%>);"><img src="/backoffice/img/zoom.png" alt="<%=lang.getTranslated("backend.billing.lista.table.alt.view_billing")%>" title="<%=lang.getTranslated("backend.billing.lista.table.alt.view_billing")%>" hspace="2" vspace="0" border="0"></a></td>
-							<td align="center" width="25" id="edit_billing_<%=counter%>"><a href="javascript:editBilling(<%=k.id%>);"><img src="/backoffice/img/pencil.png" title="<%=lang.getTranslated("backend.billing.lista.table.alt.modify_billing")%>" hspace="2" vspace="0" border="0"></a></td>
-							<td align="center" width="25"><a href="javascript:deleteBilling(<%=k.id%>, 'tr_delete_list_<%=counter%>','tr_delete_list_');"><img src="/backoffice/img/cancel.png" title="<%=lang.getTranslated("backend.billing.detail.button.elimina.label")%>" hspace="2" vspace="0" border="0"></a></td>
-							<td id="billing_id_<%=counter%>"><%=k.id%></td>
+							<td align="center" width="25" id="edit_billing_<%=counter%>"><%if(k.idRegisteredBilling==0){%><a href="javascript:editBilling(<%=k.id%>);"><img src="/backoffice/img/pencil.png" title="<%=lang.getTranslated("backend.billing.lista.table.alt.modify_billing")%>" hspace="2" vspace="0" border="0"></a><%}%></td>
+							<td align="center" width="25"><%if(k.idRegisteredBilling==0){%><a href="javascript:deleteBilling(<%=k.id%>, 'tr_delete_list_<%=counter%>','tr_delete_list_');"><img src="/backoffice/img/cancel.png" title="<%=lang.getTranslated("backend.billing.detail.button.elimina.label")%>" hspace="2" vspace="0" border="0"></a><%}%></td>
+							<td id="billing_id_<%=counter%>"><%if(k.idRegisteredBilling==0){%><div class="register-billing"><a href="javascript:registerBilling(<%=k.id%>);"><%=lang.getTranslated("backend.billing.detail.button.register.label")%></a></div><%}else{Response.Write(k.idRegisteredBilling+"/"+k.registeredDate.ToString("yyyy"));}%></td>
 							<td><%=k.insertDate.ToString("dd/MM/yyyy HH:mm")%></td>
 							<td><%=k.idParentOrder%></td>
 							<td><%=k.orderDate.ToString("dd/MM/yyyy HH:mm")%></td>
@@ -200,13 +210,7 @@ function insertBillingData(){
 				</th>
 		      	</tr>
 			</table>
-			<br/>
-			
-			<form action="/backoffice/billings/insertbilling.aspx" method="post" name="form_crea">
-				<input type="hidden" value="<%=cssClass%>" name="cssClass">	
-				<input type="hidden" value="-1" name="id">
-				<input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.billing.lista.button.inserisci.label")%>" onclick="javascript:document.form_crea.submit();" />
-			</form>		
+			<br/>	
 		</div>
 	</div>
 	<CommonFooter:insert runat="server" />

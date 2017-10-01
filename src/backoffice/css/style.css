@@ -192,6 +192,10 @@ body {
 .cart-error { font-size:12px; text-align:left;color:#ff0000;}
 .bill-not-finalized {font-size:12px; text-align:left;color:#ff0000;}
 
+.register-billing{border: 1px solid #C9C9C9; background-color: #DEE4E8;	padding:2px;vertical-align:middle;font-weight: bold;width: 150px;text-align:center;}
+.register-billing a{text-decoration:none;color: #727272;}
+.register-billing a:hover{color: #000000;}
+
 span.rules{color:#FF0000;}
 
 /*#payment_commission{color:#FF0000;}*/

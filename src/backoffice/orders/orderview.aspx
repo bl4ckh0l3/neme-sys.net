@@ -82,6 +82,28 @@ function enableExternalShipping(orderId, provider, feeId){
 		}
 	});	
 }
+
+function generateBilling(orderId){
+	var query_string = "cssClass=LB&id_order="+orderId;	
+	//alert(query_string);
+
+	$.ajax({
+		async: true,
+		type: "GET",
+		cache: false,
+		url: "/backoffice/billings/ajaxbillingcreate.aspx",
+		data: query_string,
+		success: function(response) {
+			//alert(response);
+			$('#billing_show').empty();
+			$('#billing_show').append('<a href="/backoffice/billings/billingview.aspx?id='+response+'&cssClass=LB"><%=lang.getTranslated("backend.ordini.view.table.label.view_billing")%></a>');
+		},
+		error: function(response) {
+			//alert(response.responseText);	
+			alert("<%=lang.getTranslated("portal.commons.js.label.loading_error")%>");
+		}
+	});	
+}
 </script>
 </head>
 <body>
@@ -213,7 +235,7 @@ function enableExternalShipping(orderId, provider, feeId){
 				<tr>
 				<td><%=paymentType%></td>
 				<td class="separator">&nbsp;</td>
-				<td><%=pdone%></td>
+				<td><%=pdone+billingShow%></td>
 				<td class="separator">&nbsp;</td>
 				<td><%=downNotified%></td>
 				</tr>

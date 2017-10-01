@@ -24,43 +24,6 @@
 <head>
 <CommonMeta:insert runat="server" />
 <CommonCssJs:insert runat="server" />
-<script>
-function downloadStatus(orderid, productid){
-	var query_string = "id_element="+productid+"&id_order="+orderid;	
-	//alert(query_string);
-
-	$('#downloadContainer').empty();
-	$('#downloadContainer').append('<div align="center" style="padding-top:150px;" id="loading-menu"><img src="/common/img/loading_icon.gif" hspace="0" vspace="0" border="0" align="center" alt="" style="vertical-align:middle;text-align:center;padding-top:0px;padding-bottom:0px;"></div>');	
-	$('#downloadContainer').show();
-	
-	$.ajax({
-		async: true,
-		type: "GET",
-		cache: false,
-		url: "/backoffice/orders/ajaxdownloadstatus.aspx",
-		data: query_string,
-		success: function(response) {
-			//alert(response);
-			$('#downloadContainer').empty();
-			$('#downloadContainer').append('<div align="right"><span style="cursor:pointer;text-decoration:underline;" onclick="javascript:hideCommentDiv();">x</span></div>');
-			$('#downloadContainer').append(response);
-		},
-		error: function(response) {
-			//alert(response.responseText);	
-			$('#downloadContainer').hide();
-			alert("<%=lang.getTranslated("portal.commons.js.label.loading_error")%>");
-		}
-	});	
-}
-
-function hideCommentDiv(){
-	$('#downloadContainer').hide();
-}
-
-$(function() {
-	$("#downloadContainer").draggable();
-});
-</script>
 </head>
 <body>
 <div id="backend-warp">
@@ -68,13 +31,86 @@ $(function() {
 	<div id="container">
 		<CommonMenu:insert runat="server" />
 		<div id="backend-content">
-			<%if(order!=null){%>
+			<%if(billing!=null){%>
+				<table border="0" cellpadding="0" cellspacing="0" class="principal" style="border-collapse: collapse;">
+				<tr>
+				<td style="width:30%">
+				<strong style="margin-bottom:20px;"><%=billing.name%></strong><br/>
+				<%=billing.address%><br/>
+				<%=billing.zipCode+"&nbsp;-&nbsp;"+billing.city+"&nbsp;&nbsp;"+lang.getTranslated("portal.commons.select.option.country."+billing.country)+" - "+lang.getTranslated("portal.commons.select.option.country."+billing.stateRegion)%><br/>
+				<%=lang.getTranslated("backend.ordini.view.table.label.billing_data_cfiscvat")%>:&nbsp;<%=billing.cfiscvat%><br/>
+				<%=lang.getTranslated("backend.ordini.view.table.label.billing_data_phone")%>:&nbsp;<%=billing.phone%><br/>
+				<%=lang.getTranslated("backend.ordini.view.table.label.billing_data_fax")%>:&nbsp;<%=billing.fax%><br/>
+				<%=billing.description%>		
+				</td>
+				<td style="width:1px;border: 1px solid #bc9e9e;">&nbsp;</td>
+				<td style="width:70%">
+				<strong>mail:</strong>&nbsp;<%=user.email%><br/>
+				<%		
+				if(order.noRegistration && "1".Equals(confservice.get("show_user_field_on_direct_buy").value) && user.fields != null && user.fields.Count>0 && usrfields != null && usrfields.Count>0){							
+					foreach(UserFieldsMatch f in user.fields){
+						string label = "";
+						string value = "";
+						foreach(UserField uf in usrfields){
+							if(uf.id==f.idParentField){
+								label = uf.description;
+								value = f.value;
+								if(uf.typeContent==7 || uf.typeContent==8){
+									if(!String.IsNullOrEmpty(lang.getTranslated("portal.commons.select.option.country."+f.value))){
+										value = lang.getTranslated("portal.commons.select.option.country."+f.value);
+									}
+								}
+								if(!String.IsNullOrEmpty(lang.getTranslated("backend.utenti.detail.table.label.field_values_"+uf.description+"_"+f.value))){
+									label = lang.getTranslated("backend.utenti.detail.table.label.field_values_"+uf.description+"_"+f.value);
+								}
+								break;
+							}										
+						}
+						Response.Write(label+":&nbsp;<b>"+value+"</b><br/><br/>");							
+					}
+				}
 				
-				<div id="downloadWrapper" style="position:relative;">
-					<div id="downloadContainer" style="z-index:10000;position:absolute;top:0px;top:200px;left:400px;width:500px;height:200px;border:1px solid #000;padding:5px;display:none; overflow:auto; background-color:#FFFFFF;"></div>
-				</div>
+				//****** MANAGE SHIPPING ADDRESS
+				if(hasShipAddress){
+					string shipInfo = "";
+					string userLabelIsCompanyClient = "";
+					if(oshipaddr.isCompanyClient){
+						userLabelIsCompanyClient = lang.getTranslated("frontend.utenti.detail.table.label.is_company");
+					}else{
+						userLabelIsCompanyClient = lang.getTranslated("frontend.utenti.detail.table.label.is_private");
+					}								
+					
+					shipInfo = oshipaddr.name + " " + oshipaddr.surname + " ("+userLabelIsCompanyClient+")<br/>"+oshipaddr.address +"<br/>"+oshipaddr.zipCode+"&nbsp;-&nbsp;"+oshipaddr.city+"&nbsp;&nbsp;"+lang.getTranslated("portal.commons.select.option.country."+oshipaddr.country)+" - "+lang.getTranslated("portal.commons.select.option.country."+oshipaddr.stateRegion)+"<br/>"+lang.getTranslated("frontend.carrello.table.label.cfiscvat")+":&nbsp;"+oshipaddr.cfiscvat;
+					
+					Response.Write("<br/><b>"+lang.getTranslated("backend.ordini.view.table.label.shipping_address")+":</b><br/>"+shipInfo+"<br/>");	
+				}	
+				
+				//****** MANAGE BILLS ADDRESS
+				if(hasBillsAddress){
+					string billsInfo = obillsaddr.name + " " + obillsaddr.surname + "<br/>"+obillsaddr.address +"<br/>"+obillsaddr.zipCode+"&nbsp;-&nbsp;"+obillsaddr.city+"&nbsp;&nbsp;"+lang.getTranslated("portal.commons.select.option.country."+obillsaddr.country)+" - "+lang.getTranslated("portal.commons.select.option.country."+obillsaddr.stateRegion)+"<br/>"+lang.getTranslated("frontend.carrello.table.label.cfiscvat")+":&nbsp;"+obillsaddr.cfiscvat;
+									
+					Response.Write("<br/><b>"+lang.getTranslated("backend.ordini.view.table.label.bills_address")+":</b><br/>"+billsInfo+"<br/>");					
+				}%>				
+				</td>
+				</tr>
+				</table>
 				
 				<table border="0" cellpadding="0" cellspacing="0" class="principal">
+				<tr>
+				<th><%=lang.getTranslated("backend.ordini.view.table.label.doc_type")%></th>
+				<td class="separator">&nbsp;</td>
+				<th><%=lang.getTranslated("backend.ordini.view.table.label.dta_doc")%></th>
+				<td class="separator">&nbsp;</td>
+				<th><%=lang.getTranslated("backend.ordini.view.table.label.num_doc")%></th>
+				</tr>
+				<tr>
+				<td><%if(billing.idRegisteredBilling>0){Response.Write(lang.getTranslated("backend.ordini.view.table.label.doc_type_registered_bill"));}else{Response.Write(lang.getTranslated("backend.ordini.view.table.label.doc_type_pro_bill"));}%></td>
+				<td class="separator">&nbsp;</td>
+				<td><%=billing.insertDate.ToString("dd/MM/yyyy HH:mm")%></td>
+				<td class="separator">&nbsp;</td>
+				<td><%if(billing.idRegisteredBilling>0){Response.Write(billing.idRegisteredBilling+"/"+billing.registeredDate.ToString("yyyy"));}else{Response.Write("&nbsp;");}%></td>
+				</tr>
+				
 				<tr>
 				<th><%=lang.getTranslated("backend.ordini.view.table.label.id_ordine")%></th>
 				<td class="separator">&nbsp;</td>
@@ -124,90 +160,18 @@ $(function() {
 				<td colspan="5"><%=order.guid%>&nbsp;</td>
 				</tr>
 				<tr>
-				<th colspan="5"><%=lang.getTranslated("backend.ordini.view.table.label.order_notes")%></th>
-				</tr>
-				<tr>
-				<td colspan="5"><%=order.notes%>&nbsp;</td>
-				</tr>
-				<tr>
-				<th colspan="5"><%=lang.getTranslated("backend.ordini.view.table.label.order_client")%></th>
-				</tr>
-				<tr>
-				<td colspan="5">
-				<strong>ID:</strong>&nbsp;<%=user.username%>&nbsp;-&nbsp;<strong>mail:</strong>&nbsp;<%=user.email%><br/>
-				<%		
-				if(order.noRegistration && "1".Equals(confservice.get("show_user_field_on_direct_buy").value) && user.fields != null && user.fields.Count>0 && usrfields != null && usrfields.Count>0){							
-					foreach(UserFieldsMatch f in user.fields){
-						string label = "";
-						string value = "";
-						foreach(UserField uf in usrfields){
-							if(uf.id==f.idParentField){
-								label = uf.description;
-								value = f.value;
-								if(uf.typeContent==7 || uf.typeContent==8){
-									if(!String.IsNullOrEmpty(lang.getTranslated("portal.commons.select.option.country."+f.value))){
-										value = lang.getTranslated("portal.commons.select.option.country."+f.value);
-									}
-								}
-								if(!String.IsNullOrEmpty(lang.getTranslated("backend.utenti.detail.table.label.field_values_"+uf.description+"_"+f.value))){
-									label = lang.getTranslated("backend.utenti.detail.table.label.field_values_"+uf.description+"_"+f.value);
-								}
-								break;
-							}										
-						}
-						Response.Write(label+":&nbsp;<b>"+value+"</b><br/><br/>");							
-					}
-				}
-				
-				//****** MANAGE SHIPPING ADDRESS
-				if(hasShipAddress){
-					string shipInfo = "";
-					string userLabelIsCompanyClient = "";
-					if(oshipaddr.isCompanyClient){
-						userLabelIsCompanyClient = lang.getTranslated("frontend.utenti.detail.table.label.is_company");
-					}else{
-						userLabelIsCompanyClient = lang.getTranslated("frontend.utenti.detail.table.label.is_private");
-					}								
-					
-					shipInfo = oshipaddr.name + " " + oshipaddr.surname + " ("+userLabelIsCompanyClient+") - " + oshipaddr.cfiscvat + " - " +oshipaddr.address +" - "+oshipaddr.city+" ("+oshipaddr.zipCode+") - "+lang.getTranslated("portal.commons.select.option.country."+oshipaddr.country)+" - "+lang.getTranslated("portal.commons.select.option.country."+oshipaddr.stateRegion);
-						
-					Response.Write("<b>"+lang.getTranslated("backend.ordini.view.table.label.shipping_address")+":</b>&nbsp;"+shipInfo+"<br/>");	
-				}	
-				
-				//****** MANAGE BILLS ADDRESS
-				if(hasBillsAddress){
-					string billsInfo = obillsaddr.name + " " + obillsaddr.surname + " - " + obillsaddr.cfiscvat + " - " +obillsaddr.address +" - "+obillsaddr.city+" ("+obillsaddr.zipCode+") - "+lang.getTranslated("portal.commons.select.option.country."+obillsaddr.country)+" - "+lang.getTranslated("portal.commons.select.option.country."+obillsaddr.stateRegion);
-									
-					Response.Write("<b>"+lang.getTranslated("backend.ordini.view.table.label.bills_address")+":</b>&nbsp;"+billsInfo+"<br/>");					
-				}%></td>
-				</tr>
-				<tr>
 				<th><%=lang.getTranslated("backend.ordini.view.table.label.tipo_pagam_order")%></th>
 				<td class="separator">&nbsp;</td>
 				<th><%=lang.getTranslated("backend.ordini.view.table.label.pagam_order_done")%></th>
 				<td class="separator">&nbsp;</td>
-				<th><%=lang.getTranslated("backend.ordini.view.table.label.user_notified_x_download")%></th>
+				<th></th>
 				</tr>
 				<tr>
 				<td><%=paymentType%></td>
 				<td class="separator">&nbsp;</td>
 				<td><%=pdone%></td>
 				<td class="separator">&nbsp;</td>
-				<td><%=downNotified%></td>
-				</tr>
-				<tr>
-				<th><%=lang.getTranslated("backend.ordini.view.table.label.list_transaction_order")%></th>
-				<td class="separator">&nbsp;</td>
-				<th><%=lang.getTranslated("backend.ordini.view.table.label.mail_sent")%></th>
-				<td class="separator">&nbsp;</td>
-				<th><%=lang.getTranslated("backend.ordini.view.table.label.ads_enabled")%></th>					
-				</tr>
-				<tr>
-				<td><%=paymentTrans%>&nbsp;</td>
-				<td class="separator">&nbsp;</td>
-				<td><%=mailSent%></td>
-				<td class="separator">&nbsp;</td>
-				<td><%=adsEnabled%></td>
+				<td>&nbsp;</td>
 				</tr>
 				<tr>
 				<th colspan="5"><%=lang.getTranslated("backend.ordini.view.table.label.attached_prods")%></th>
@@ -221,8 +185,7 @@ $(function() {
 					<th><%=lang.getTranslated("backend.ordini.view.table.header.totale_tax")%></th>
 					<th><%=lang.getTranslated("backend.ordini.view.table.header.qta_prod")%></th>	
 					<th><%=lang.getTranslated("backend.ordini.detail.table.label.fields_prod")%></th>	
-					<th><%=lang.getTranslated("backend.ordini.view.table.header.prod_type")%></th>
-					<th><%=lang.getTranslated("backend.ordini.view.table.header.status_download")%></th>				
+					<th><%=lang.getTranslated("backend.ordini.view.table.header.prod_type")%></th>			
 					</tr>
 					<%		
 					if(order.products != null && order.products.Count>0){
@@ -376,11 +339,6 @@ $(function() {
 								}else if(op.productType == 2){ 
 									Response.Write(lang.getTranslated("backend.prodotti.detail.table.label.type_ads"));
 								}%></td>	
-								<td>
-								<%if(op.productType == 1){%>
-								<a href="javascript:downloadStatus(<%=order.id%>,<%=op.idProduct%>);" title="<%=lang.getTranslated("backend.ordini.view.table.alt.status_download")%>"><img src="/backoffice/img/zoom.png" hspace="0" vspace="0" border="0"></a>
-								<%}%>
-								&nbsp;</td>	
 							</tr>
 						<%
 						counter++;
@@ -394,14 +352,14 @@ $(function() {
 				<td class="separator">&nbsp;</td>
 				<th><%=lang.getTranslated("backend.ordini.view.table.label.payment_commission")%></th>
 				<td class="separator">&nbsp;</td>
-				<th><%=lang.getTranslated("backend.ordini.view.table.label.business_rules")%></th>
+				<th>&nbsp;</th>
 				</tr>
 				<tr>
 				<td><%=orderFees%></td>
 				<td class="separator">&nbsp;</td>
 				<td >&euro;&nbsp;<%=paymentCommissions.ToString("#,###0.00")%></td>
 				<td class="separator">&nbsp;</td>
-				<td><%=orderRulesDesc%></td>
+				<td>&nbsp;</td>
 				</tr>
 				<tr>
 				<th colspan="5"><%=lang.getTranslated("backend.ordini.view.table.label.totale_order")%></th>
@@ -410,7 +368,7 @@ $(function() {
 				<td colspan="5">&euro;&nbsp;<%=orderAmount.ToString("#,###0.00")%></td>
 				</tr>
 				</table><br/>
-				<input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.commons.back")%>" onclick="javascript:location.href='/backoffice/orders/orderlist.aspx?cssClass=LO';" />
+				<input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.commons.back")%>" onclick="javascript:location.href='/backoffice/billings/billinglist.aspx?cssClass=LB';" />
 				<br/><br/>
 			<%}%>
 		</div>

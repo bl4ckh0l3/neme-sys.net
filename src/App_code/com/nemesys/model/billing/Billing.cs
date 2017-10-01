@@ -19,8 +19,13 @@ namespace com.nemesys.model
 		private string _zipCode;
 		private string _country;
 		private string _stateRegion;
+		private string _phone;
+		private string _fax;
+		private string _description;
 		private DateTime _insertDate;
 		private DateTime _lastUpdate;
+		private int _idRegisteredBilling;
+		private DateTime _registeredDate;
 		
 		
 		public Billing(){}
@@ -80,6 +85,21 @@ namespace com.nemesys.model
 			set { _stateRegion = value; }
 		}
 
+		public virtual string phone {
+			get { return _phone; }
+			set { _phone = value; }
+		}
+
+		public virtual string fax {
+			get { return _fax; }
+			set { _fax = value; }
+		}
+
+		public virtual string description {
+			get { return _description; }
+			set { _description = value; }
+		}
+
 		public virtual DateTime insertDate {
 			get { return _insertDate; }
 			set { _insertDate = value; }
@@ -88,6 +108,16 @@ namespace com.nemesys.model
 		public virtual DateTime lastUpdate {
 			get { return _lastUpdate; }
 			set { _lastUpdate = value; }
+		}
+
+		public virtual int idRegisteredBilling {
+			get { return _idRegisteredBilling; }
+			set { _idRegisteredBilling = value; }
+		}
+
+		public virtual DateTime registeredDate {
+			get { return _registeredDate; }
+			set { _registeredDate = value; }
 		}
 
 		
@@ -104,8 +134,13 @@ namespace com.nemesys.model
 			.Append(" - zipCode: ").Append(this._zipCode)
 			.Append(" - country: ").Append(this._country)
 			.Append(" - stateRegion: ").Append(this._stateRegion)
+			.Append(" - phone: ").Append(this._phone)
+			.Append(" - fax: ").Append(this._fax)
+			.Append(" - description: ").Append(this._description)
 			.Append(" - insertDate: ").Append(this._insertDate)
-			.Append(" - lastUpdate: ").Append(this._lastUpdate);
+			.Append(" - lastUpdate: ").Append(this._lastUpdate)
+			.Append(" - idRegisteredBilling: ").Append(this._idRegisteredBilling)
+			.Append(" - registeredDate: ").Append(this._registeredDate);
 			
 			return builder.ToString();			
 		}

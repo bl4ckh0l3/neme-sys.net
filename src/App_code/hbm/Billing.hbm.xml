@@ -18,11 +18,18 @@
 		<property name="zipCode" column="zip_code" />
 		<property name="country" column="country" />
 		<property name="stateRegion" column="state_region" />
+		<property name="phone" column="phone" />
+		<property name="fax" column="fax" />
+		<property name="description" column="description" />
 		<property name="lastUpdate">
 		    <column name="last_update" sql-type="timestamp" />
 		</property>
 		<property name="insertDate">
 		    <column name="insert_date" sql-type="timestamp" />
+		</property>
+		<property name="idRegisteredBilling" column="id_registered_billing" not-null="true"  type="Int32" />
+		<property name="registeredDate">
+		    <column name="registered_date" sql-type="timestamp" />
 		</property>
     </class>
 
@@ -40,5 +47,7 @@
 		<property name="country" column="country" />
 		<property name="stateRegion" column="state_region" />
 		<property name="phone" column="phone" />
+		<property name="fax" column="fax" />
+		<property name="description" column="description" />
     </class>
 </hibernate-mapping>

@@ -49,37 +49,22 @@ namespace com.nemesys.database.repository
 				NHibernateHelper.closeSession();
 			}
 		}
-
-		public void saveCompleteBilling(Billing billing, IList<MultiLanguage> newtranslactions, IList<MultiLanguage> updtranslactions, IList<MultiLanguage> deltranslactions)
+		
+		public void registerBilling(Billing billing)
 		{
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			using (ITransaction tx = session.BeginTransaction())
-			{					
-				try{
-					if(billing.id != -1){
-						session.Update(billing);	
-					}else{
-						session.Save(billing);
-					}											
-					// ************** AGGIUNGO TGUTTE LE CHIAVI MULTILINGUA PER LE TRADUZIONI DI descrizione, meta_xxx ecc
-					foreach (MultiLanguage mu in deltranslactions){
-						session.Delete(mu);
-					}
-					foreach (MultiLanguage mu in updtranslactions){
-						session.SaveOrUpdate(mu);
-					}
-					foreach (MultiLanguage mi in newtranslactions){
-						session.Save(mi);
-					}
-					tx.Commit();
-					NHibernateHelper.closeSession();
-				}catch(Exception exx){
-					//System.Web.HttpContext.Current.Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
-					tx.Rollback();
-					NHibernateHelper.closeSession();
-					throw;	
-				}
-			}
+			{	
+				IQuery qpCount = session.CreateSQLQuery("select MAX(id_registered_billing) as registernum from BILLING").AddScalar("registernum", NHibernateUtil.Int32);
+				int result = qpCount.UniqueResult<int>();	
+				
+				billing.idRegisteredBilling = result+1;
+				billing.registeredDate = DateTime.Now;
+				
+				session.Update(billing);	
+				tx.Commit();
+				NHibernateHelper.closeSession();
+			}			
 		}
 	
 		public Billing getById(int id)
@@ -96,7 +81,7 @@ namespace com.nemesys.database.repository
 		public IList<Billing> findAll()
 		{		
 			IList<Billing> billings = null;		
-			string strSQL = "from Billing order by insertDate desc";			
+			string strSQL = "from Billing order by registeredDate desc";			
 			
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			using (ITransaction tx = session.BeginTransaction())
@@ -105,7 +90,6 @@ namespace com.nemesys.database.repository
 				try
 				{
 					billings = q.List<Billing>();
-					//System.Web.HttpContext.Current.Response.Write("currencies.Count: " + currencies.Count+"<br>");
 				}
 				catch(Exception ex)
 				{
@@ -118,10 +102,10 @@ namespace com.nemesys.database.repository
 			return billings;
 		}
 
-		public IList<Billing> find(int orderId)
+		public Billing find(int orderId)
 		{		
-			IList<Billing> billings = null;		
-			string strSQL = "from Billing where orderId=:orderId order by insertDate desc";			
+			Billing billing = null;		
+			string strSQL = "from Billing where idParentOrder=:orderId";			
 			
 			using (ISession session = NHibernateHelper.getCurrentSession())
 			using (ITransaction tx = session.BeginTransaction())
@@ -130,19 +114,18 @@ namespace com.nemesys.database.repository
 				try
 				{
 					q.SetInt32("orderId", Convert.ToInt32(orderId));
-					billings = q.List<Billing>();
-					//System.Web.HttpContext.Current.Response.Write("currencies.Count: " + currencies.Count+"<br>");
+					billing = q.UniqueResult<Billing>();
 				}
 				catch(Exception ex)
 				{
 					//System.Web.HttpContext.Current.Response.Write("find - An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
 					// DO NOTHING: RETURN NULL
-					billings = null;
+					billing = null;
 				}
 				tx.Commit();
 				NHibernateHelper.closeSession();
 			}			
-			return billings;
+			return billing;
 		}	
 		
 		public void insertBillingData(BillingData value)

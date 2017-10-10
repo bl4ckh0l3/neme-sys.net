@@ -55,7 +55,7 @@ public partial class _FeAds : Page
 		Session.CodePage  = 65001;	
 		cssClass="LN";	
 		
-		secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+		secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();
 		
 		login.acceptedRoles = "3";
 		if(!login.checkedUser()){

@@ -46,54 +46,6 @@ namespace com.nemesys.services
 			}
 		}
 		
-		public static void directoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
-		{
-			DirectoryInfo dir = new DirectoryInfo(sourceDirName);
-			DirectoryInfo[] dirs = dir.GetDirectories();
-	
-			if (!dir.Exists)
-			{
-				throw new DirectoryNotFoundException(
-					"Source directory does not exist or could not be found: "
-					+ sourceDirName);
-			}
-	
-			if (!Directory.Exists(destDirName))
-			{
-				Directory.CreateDirectory(destDirName);
-			}
-	
-			FileInfo[] files = dir.GetFiles();
-			foreach (FileInfo file in files)
-			{
-				string temppath = Path.Combine(destDirName, file.Name);
-				file.CopyTo(temppath, false);
-			}
-	
-			if (copySubDirs)
-			{
-				foreach (DirectoryInfo subdir in dirs)
-				{
-					string temppath = Path.Combine(destDirName, subdir.Name);
-					directoryCopy(subdir.FullName, temppath, copySubDirs);
-				}
-			}
-		}
-		
-		public static void SaveStreamToFile(Stream stream, string filename)
-		{  
-		   using(Stream destination = File.Create(filename))
-			  Write(stream, destination);
-		}
-		
-		//Typically I implement this Write method as a Stream extension method. 
-		//The framework handles buffering.		
-		static void Write(Stream from, Stream to)
-		{
-		   for(int a = from.ReadByte(); a != -1; a = from.ReadByte())
-			  to.WriteByte( (byte) a );
-		}
-		
 		public static bool deleteTemplateDirectory(string directory)
 		{
 			bool deleted = false;

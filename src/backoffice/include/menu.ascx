@@ -112,7 +112,7 @@ protected void Page_Load(Object sender, EventArgs e)
       <li><a href="/backoffice/orders/orderlist.aspx?cssClass=LO&resetMenu=1" class="<%if(String.Compare(cssClass, "LO") == 0) { Response.Write("active");}%>" title="<%=lang.getTranslated("backend.menu.item.ordini.lista")%>"><%=lang.getTranslated("backend.menu.item.ordini")%></a></li>
     </ul>		
     <ul>
-      <li><a href="/backoffice/billings/insertbilling.aspx?id=-1&cssClass=LB"><img src="/backoffice/img/table_add.png" border="0" title="<%=lang.getTranslated("backend.menu.item.billing.inserisci")%>"/></a></li>
+      <li><img src="/backoffice/img/spacer.png" border="0"/></li>
       <li><a href="/backoffice/billings/billinglist.aspx?cssClass=LB&resetMenu=1" class="<%if(String.Compare(cssClass, "LB") == 0) { Response.Write("active");}%>" title="<%=lang.getTranslated("backend.menu.item.billing.lista")%>"><%=lang.getTranslated("backend.menu.item.billing")%></a></li>
     </ul>		
     <ul>

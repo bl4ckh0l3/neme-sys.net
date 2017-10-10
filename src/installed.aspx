@@ -1,10 +1,11 @@
 <%@ Page Language="C#" %>
 <%@ import Namespace="com.nemesys.model" %>
+<%@ import Namespace="com.nemesys.services" %>
 <script runat="server">
 string copyright = "";
 protected void Page_Load(Object sender, EventArgs e)
 {
-	copyr.Text = Utils.getCurrentCopyrightYearRange();
+	copyr.Text = CommonService.getCurrentCopyrightYearRange();
 
 	Response.Charset="UTF-8";
 	Session.CodePage  = 65001;	
@@ -37,7 +38,7 @@ protected void Page_Load(Object sender, EventArgs e)
 		<div id="menu-left"></div>
 		<div id="content-center" style="width:100%;">
 		
-		<form name="install_login" method="post" action ="<%=Utils.getBaseUrl(Request.Url.ToString(),1).ToString()%>login.aspx">
+		<form name="install_login" method="post" action ="<%=CommonService.getBaseUrl(Request.Url.ToString(),1).ToString()%>login.aspx">
 		<p align="center">Il database e' stato correttamente istallato!<br/><br/>
 		
 		<input type="hidden" name="j_username" value="administrator">

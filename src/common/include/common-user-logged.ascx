@@ -5,6 +5,7 @@
 <%@ import Namespace="System.Data" %>
 <%@ import Namespace="com.nemesys.model" %>
 <%@ import Namespace="com.nemesys.database.repository" %>
+<%@ import Namespace="com.nemesys.services" %>
 <script runat="server">
 protected IUserRepository userep;
 
@@ -80,7 +81,7 @@ private bool checkedRoles()
 protected void Page_Load(Object sender, EventArgs e)
 {
 	if(!checkedUser()){
-		Response.Redirect(Utils.getBaseUrl(Request.Url.ToString(),1).ToString()+"login.aspx?error_code=002");
+		Response.Redirect(CommonService.getBaseUrl(Request.Url.ToString(),1).ToString()+"login.aspx?error_code=002");
 	}
 }
 </script>

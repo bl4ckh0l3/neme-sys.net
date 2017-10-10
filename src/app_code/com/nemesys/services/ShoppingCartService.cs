@@ -455,8 +455,8 @@ namespace com.nemesys.services
 											string name = Path.GetFileName(tmp.FileName);
 											if(!String.IsNullOrEmpty(name) && name==v)
 											{
-												if(Utils.isValidExtension(Path.GetExtension(name))){
-													OrderService.SaveStreamToFile(tmp.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/shoppingcarts/"+newitem.idCart+"/"+name));							
+												if(CommonService.isValidExtension(Path.GetExtension(name))){
+													CommonService.SaveStreamToFile(tmp.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/shoppingcarts/"+newitem.idCart+"/"+name));							
 													break;
 												}else{
 													throw new Exception("022");

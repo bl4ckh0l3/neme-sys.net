@@ -751,7 +751,7 @@ public partial class _Product : Page
 						string name = Path.GetFileName(tmp.FileName);
 						if(!String.IsNullOrEmpty(name) && name==fileName)
 						{							
-							if(Utils.isValidExtension(Path.GetExtension(name))){
+							if(CommonService.isValidExtension(Path.GetExtension(name))){
 								//Response.Write("found: fileName: "+name+" - productType: "+tmp.ContentType+" - label: "+label+" - dida: "+dida+"<br>");
 								ProductAttachment ca = new ProductAttachment();
 								ca.id=-1;
@@ -784,7 +784,7 @@ public partial class _Product : Page
 						string name = Path.GetFileName(tmp.FileName);
 						if(!String.IsNullOrEmpty(name) && name==fileName)
 						{
-							if(Utils.isValidExtension(Path.GetExtension(name))){
+							if(CommonService.isValidExtension(Path.GetExtension(name))){
 								//Response.Write("found: fileName: "+name+" - productType: "+tmp.ContentType+" - label: "+label+" - dida: "+dida+"<br>");
 								ProductAttachmentDownload ca = new ProductAttachmentDownload();
 								ca.id=-1;
@@ -1175,16 +1175,16 @@ public partial class _Product : Page
 						string fileName = Path.GetFileName(tmp.FileName);
 						if(!String.IsNullOrEmpty(fileName))
 						{
-							if(Utils.isValidExtension(Path.GetExtension(fileName)))
+							if(CommonService.isValidExtension(Path.GetExtension(fileName)))
 							{
 								if(newProductAttachmentDownload != null && newProductAttachmentDownload.Count >0){
 									foreach(ProductAttachmentDownload pad in newProductAttachmentDownload){
 										if(product.prodType == 1 && pad.fileName.Equals(fileName)){
-											TemplateService.SaveStreamToFile(tmp.InputStream, HttpContext.Current.Server.MapPath("~/app_data/products/"+product.id+"/"+tmp.FileName));
+											CommonService.SaveStreamToFile(tmp.InputStream, HttpContext.Current.Server.MapPath("~/app_data/products/"+product.id+"/"+tmp.FileName));
 										}
 									}
 								}else{
-									TemplateService.SaveStreamToFile(tmp.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/products/"+product.id+"/"+tmp.FileName));
+									CommonService.SaveStreamToFile(tmp.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/products/"+product.id+"/"+tmp.FileName));
 								}
 							}else{
 								throw new Exception("022");

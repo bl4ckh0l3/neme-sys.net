@@ -66,8 +66,8 @@ public partial class _FeContent : Page
 		Session.CodePage  = 65001;	
 		cssClass="LN";	
 		
-		secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
-		baseURL = Utils.getBaseUrl(Request.Url.ToString(),2).ToString();
+		secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();
+		baseURL = CommonService.getBaseUrl(Request.Url.ToString(),2).ToString();
 		
 		login.acceptedRoles = "3";
 		if(!login.checkedUser()){
@@ -451,7 +451,7 @@ public partial class _FeContent : Page
 						string name = Path.GetFileName(tmp.FileName);
 						if(!String.IsNullOrEmpty(name) && name==fileName)
 						{							
-							if(Utils.isValidExtension(Path.GetExtension(name))){
+							if(CommonService.isValidExtension(Path.GetExtension(name))){
 								//Response.Write("found: fileName: "+name+" - contentType: "+tmp.ContentType+" - label: "+label+" - dida: "+dida+"<br>");
 								ContentAttachment ca = new ContentAttachment();
 								ca.fileName=name;
@@ -492,9 +492,9 @@ public partial class _FeContent : Page
 						string fileName = Path.GetFileName(tmp.FileName);
 						if(!String.IsNullOrEmpty(fileName))
 						{
-							if(Utils.isValidExtension(Path.GetExtension(fileName)))
+							if(CommonService.isValidExtension(Path.GetExtension(fileName)))
 							{
-								TemplateService.SaveStreamToFile(tmp.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/contents/"+content.id+"/"+tmp.FileName));								
+								CommonService.SaveStreamToFile(tmp.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/contents/"+content.id+"/"+tmp.FileName));								
 							}else{
 								throw new Exception("022");
 							}

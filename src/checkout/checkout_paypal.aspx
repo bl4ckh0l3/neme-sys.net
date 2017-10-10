@@ -29,7 +29,7 @@ protected void Page_Load(object sender, EventArgs e)
 	ILoggerRepository lrep = RepositoryFactory.getInstance<ILoggerRepository>("ILoggerRepository");
 	ConfigurationService confservice = new ConfigurationService();
 	
-	string secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+	string secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();
 	
 	string apiVersion = "65.0";
 	bool carryOn = false;
@@ -59,7 +59,7 @@ protected void Page_Load(object sender, EventArgs e)
 				string cancelURL = secureURL+"checkout/checkin_failed.aspx";
 				string amount = order.amount.ToString("0.00").Replace(",",".");
 				string custom = order.id.ToString()+"|"+amount+langCode;
-				custom = Utils.encodeTo64(custom);
+				custom = CommonService.encodeTo64(custom);
 				string currency = "";
 				
 				bool found = true;

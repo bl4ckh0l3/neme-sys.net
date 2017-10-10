@@ -1,5 +1,6 @@
 <%@control Language="c#" description="login-control"%>
 <%@ import Namespace="com.nemesys.model" %>
+<%@ import Namespace="com.nemesys.services" %>
 <%@ import Namespace="com.nemesys.database.repository" %>
 <%@ Register TagPrefix="CommonHeader" TagName="insert" Src="~/public/layout/include/header.ascx" %>
 <%@ Register TagPrefix="CommonFooter" TagName="insert" Src="~/public/layout/include/footer.ascx" %>
@@ -30,7 +31,7 @@ protected void Page_Load(Object sender, EventArgs e)
 	Response.Charset="UTF-8";
 	Session.CodePage  = 65001;
 	
-	secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+	secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();
 }
 </script>
 <div id="warp">

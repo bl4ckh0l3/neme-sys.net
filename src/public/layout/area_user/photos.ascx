@@ -42,8 +42,8 @@
 		login.acceptedRoles = "3";
 		bool loggedin = login.checkedUser();
 
-		baseURL = Utils.getBaseUrl(Request.Url.ToString(),2).ToString();
-		secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();		
+		baseURL = CommonService.getBaseUrl(Request.Url.ToString(),2).ToString();
+		secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();		
 		
 		if(login.userLogged != null && (login.userLogged.role.isAdmin() || login.userLogged.role.isEditor())){
 			Response.Redirect(secureURL+"backoffice/index.aspx");
@@ -141,7 +141,7 @@
 					switch (Path.GetExtension(fileName).ToLower())
 					{
 						case ".jpg": case ".jpeg": case ".png": case ".gif": case ".bmp":					
-							UserService.SaveStreamToFile(MyFile.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/user/"+login.userLogged.id+"/"+MyFile.FileName));
+							CommonService.SaveStreamToFile(MyFile.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/user/"+login.userLogged.id+"/"+MyFile.FileName));
 		
 							User user = usrrep.getById(login.userLogged.id);	
 							

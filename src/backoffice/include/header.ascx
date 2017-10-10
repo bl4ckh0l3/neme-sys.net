@@ -82,8 +82,8 @@ protected void Page_Load(Object sender, EventArgs e)
 	//System.Web.HttpContext.Current.Response.Write("local identifier: "+identifier+"<br>");
 	
 	configService = new ConfigurationService();
-	baseURL = Utils.getBaseUrl(Request.Url.ToString(),0).ToString();
-	secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+	baseURL = CommonService.getBaseUrl(Request.Url.ToString(),0).ToString();
+	secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();
 }
 </script>
 <div id="backend-header">

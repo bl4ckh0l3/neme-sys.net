@@ -38,10 +38,10 @@ protected void Page_Load(object sender, EventArgs e)
 	//se il sito � offline rimando a pagina default
 	if ("1".Equals(confservice.get("go_offline").value)) 
 	{
-		Response.Redirect(Utils.getBaseUrl(Request.Url.ToString(),2).ToString());
+		Response.Redirect(CommonService.getBaseUrl(Request.Url.ToString(),2).ToString());
 	}
 			
-	basePath = Utils.getBaseUrl(Request.Url.ToString(),2).ToString()+"public/upload/files/user/";
+	basePath = CommonService.getBaseUrl(Request.Url.ToString(),2).ToString()+"public/upload/files/user/";
 	
 	try
 	{		

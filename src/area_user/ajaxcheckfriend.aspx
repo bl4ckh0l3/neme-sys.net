@@ -96,7 +96,7 @@ protected void Page_Load(Object sender, EventArgs e)
 						friend.friends.Add(uf);
 						usrrep.update(friend);					
 						
-						UriBuilder ubuilder = Utils.getBaseUrl(Request.Url.ToString(),1);
+						UriBuilder ubuilder = CommonService.getBaseUrl(Request.Url.ToString(),1);
 						try
 						{				
 							MailMsg mtemplate = mailrep.getByName("user-mail-check-friend", lang.currentLangCode, true);

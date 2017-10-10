@@ -23,7 +23,7 @@ protected void Page_Load(object sender, EventArgs e)
 		switch (Path.GetExtension(fileName))
 		{
 			case ".jpg": case ".jpeg": case ".png": case ".gif": case ".bmp":
-				TemplateService.SaveStreamToFile(MyFile.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/wysiwyg_editor/"+MyFile.FileName));
+				CommonService.SaveStreamToFile(MyFile.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/wysiwyg_editor/"+MyFile.FileName));
 				break;
 			default:
 				throw new Exception("022");										

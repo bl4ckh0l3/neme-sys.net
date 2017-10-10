@@ -50,7 +50,7 @@ protected void Page_Load(object sender, EventArgs e)
 			}
 		}
 					
-		Response.Redirect(Utils.getBaseUrl(Request.Url.ToString(),1).ToString()+"backoffice/include/error.aspx?error_code="+HttpUtility.UrlEncode(redirectErrCode)+"&"+redirectField+"="+HttpUtility.UrlEncode(redirectValue));
+		Response.Redirect(CommonService.getBaseUrl(Request.Url.ToString(),1).ToString()+"backoffice/include/error.aspx?error_code="+HttpUtility.UrlEncode(redirectErrCode)+"&"+redirectField+"="+HttpUtility.UrlEncode(redirectValue));
 	}
 }
 </script>

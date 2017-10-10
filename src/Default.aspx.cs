@@ -39,7 +39,7 @@ public partial class _Default : Page
 		{
 			try
 			{
-				UriBuilder builder0 = Utils.getBaseUrl(Request.Url.ToString(),2);
+				UriBuilder builder0 = CommonService.getBaseUrl(Request.Url.ToString(),2);
 				
 				resolved = TemplateService.resolveDefaultPath(builder0.Scheme, lang.currentLangCode, Request["categoryid"], Request["hierarchy"], out forcedLangCode, out categoryid, out hierarchy);
 				//Response.Write("resolved"+resolved);

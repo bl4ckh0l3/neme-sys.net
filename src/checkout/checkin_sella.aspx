@@ -36,7 +36,7 @@ protected void Page_Load(object sender, EventArgs e)
 	IOrderRepository orderep = RepositoryFactory.getInstance<IOrderRepository>("IOrderRepository");
 	ILoggerRepository lrep = RepositoryFactory.getInstance<ILoggerRepository>("ILoggerRepository");
 	
-	string secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+	string secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();
 	
 	if(!String.IsNullOrEmpty(Request["b"]) && !String.IsNullOrEmpty(Request["a"])){
 		bool carryOn = false;

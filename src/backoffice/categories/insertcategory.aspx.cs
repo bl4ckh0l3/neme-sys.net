@@ -367,7 +367,7 @@ public partial class _Category : Page
 						}					
 						if(!String.IsNullOrEmpty(fileName))
 						{
-							CategoryService.SaveStreamToFile(MyFile.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/categories/"+category.id+"/"+fileName));								
+							CommonService.SaveStreamToFile(MyFile.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/categories/"+category.id+"/"+fileName));								
 						}						
 												
 						log.usr= login.userLogged.username;

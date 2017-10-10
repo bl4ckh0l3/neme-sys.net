@@ -19,6 +19,6 @@ protected void Page_Load(object sender, EventArgs e)
 	//Response.Write("<br>username: "+Session["user-logged"]);
 	Session.Abandon();
 	
-	Response.Redirect(Utils.getBaseUrl(Request.Url.ToString(),0).ToString());
+	Response.Redirect(CommonService.getBaseUrl(Request.Url.ToString(),0).ToString());
 }
 </script>

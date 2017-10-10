@@ -1,5 +1,6 @@
 <%@control Language="c#" description="common-header" Debug="false"%>
 <%@ import Namespace="com.nemesys.model" %>
+<%@ import Namespace="com.nemesys.services" %>
 <%@ Register TagPrefix="lang" TagName="getTranslated" Src="~/common/include/multilanguage.ascx" %>
 <%@ Reference Control="~/common/include/multilanguage.ascx" %>
 <%@ Register TagPrefix="SearchWidget" TagName="insert" Src="~/public/layout/addson/search/search-widget.ascx" %>
@@ -19,7 +20,7 @@ protected void Page_Load(Object sender, EventArgs e)
 	Response.Charset="UTF-8";
 	Session.CodePage  = 65001;	
 	
-	url = Utils.getBaseUrl(Request.Url.ToString(),0).ToString();
+	url = CommonService.getBaseUrl(Request.Url.ToString(),0).ToString();
 }
 </script>
 

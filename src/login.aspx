@@ -28,7 +28,7 @@ protected void Page_Load(object sender, EventArgs e)
 	string keepLogged = Request["keep_logged"];
 	string backurl = Request["from"];
 	
-	string secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+	string secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();
 
 	if(backurl=="lost_pwd")
 	{

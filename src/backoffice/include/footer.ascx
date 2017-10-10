@@ -1,5 +1,6 @@
 <%@control Language="c#" description="backend-footer"%>
 <%@ import Namespace="com.nemesys.model" %>
+<%@ import Namespace="com.nemesys.services" %>
 <%@ Register TagPrefix="lang" TagName="getTranslated" Src="~/backoffice/include/bo-multilanguage.ascx" %>
 <%@ Reference Control="~/backoffice/include/bo-multilanguage.ascx" %>
 <script runat="server">
@@ -12,7 +13,7 @@ protected void Page_Init(Object sender, EventArgs e)
 protected void Page_Load(Object sender, EventArgs e)
 {
 	lang.set();
-	copyr.Text = Utils.getCurrentCopyrightYearRange();
+	copyr.Text = CommonService.getCurrentCopyrightYearRange();
 	Response.Charset="UTF-8";
 	Session.CodePage  = 65001;	
 }

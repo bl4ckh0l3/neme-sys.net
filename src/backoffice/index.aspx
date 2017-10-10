@@ -1,6 +1,7 @@
 <%@ Page Language="C#" %>
 <%@ import Namespace="com.nemesys.model" %>
 <%@ import Namespace="com.nemesys.database.repository" %>
+<%@ import Namespace="com.nemesys.services" %>
 <%@ Register TagPrefix="CommonMeta" TagName="insert" Src="~/backoffice/include/common-meta.ascx" %>
 <%@ Register TagPrefix="CommonCssJs" TagName="insert" Src="~/backoffice/include/common-css-js.ascx" %>
 <%@ Register TagPrefix="CommonHeader" TagName="insert" Src="~/backoffice/include/header.ascx" %>
@@ -28,7 +29,7 @@ protected void Page_Load(Object sender, EventArgs e)
 	Response.Charset="UTF-8";
 	Session.CodePage  = 65001;	
 	
-	secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+	secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();
 	
 	login.acceptedRoles = "1,2";
 	if(!login.checkedUser()){

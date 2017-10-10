@@ -49,5 +49,6 @@
 		<property name="phone" column="phone" />
 		<property name="fax" column="fax" />
 		<property name="description" column="description" />
+		<property name="filePath" column="file_path" />
     </class>
 </hibernate-mapping>

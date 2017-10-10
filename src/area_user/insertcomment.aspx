@@ -62,7 +62,7 @@ protected void Page_Load(Object sender, EventArgs e)
 				commentrep.insert(comment);
 				
 				if("1".Equals(confservice.get("use_comments_filter").value) && !String.IsNullOrEmpty(confservice.get("mail_comment_receiver").value)) {
-					UriBuilder ubuilder = Utils.getBaseUrl(Request.Url.ToString(),1);
+					UriBuilder ubuilder = CommonService.getBaseUrl(Request.Url.ToString(),1);
 					try
 					{	
 						FContent content = contentrep.getByIdCached(comment.elementId, true);

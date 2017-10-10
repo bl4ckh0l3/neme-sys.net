@@ -107,7 +107,7 @@ protected void Page_Load(Object sender, EventArgs e)
 					
 					//Response.Write("filePath: "+filePath+"<br><br>");
 				
-					Utils.SaveImageFrom64(labelBase64, filePath);
+					CommonService.SaveFileFrom64(labelBase64, filePath);
 					
 					// retrieve TrackingNumber
 					string trackingNumber = (string)o.SelectToken("ShipmentResponse.ShipmentResults.PackageResults[0].TrackingNumber");

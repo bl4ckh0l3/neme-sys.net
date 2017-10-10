@@ -92,7 +92,7 @@ protected void Page_Load(object sender, EventArgs e)
 	orderRules = null;
 	productRules = null;
 	IDictionary<int,string> statusOrder = OrderService.getOrderStatus();
-	secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+	secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();
 	
 	if(!String.IsNullOrEmpty(Request["orderid"])){	
 		try{

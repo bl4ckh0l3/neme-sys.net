@@ -32,7 +32,7 @@ protected void Page_Load(object sender, EventArgs e)
 	IOrderRepository orderep = RepositoryFactory.getInstance<IOrderRepository>("IOrderRepository");
 	ILoggerRepository lrep = RepositoryFactory.getInstance<ILoggerRepository>("ILoggerRepository");
 	
-	string secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+	string secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();
 	
 	string apiVersion = "65.0";
 	
@@ -134,7 +134,7 @@ protected void Page_Load(object sender, EventArgs e)
 						string refamount = "";
 						postValues.TryGetValue("CUSTOM", out custom);
 						custom = HttpUtility.UrlDecode(custom);				
-						string[] references = Utils.decodeFrom64(custom).Split('|');
+						string[] references = CommonService.decodeFrom64(custom).Split('|');
 						if(references != null && references.Length>=3){
 							reforderid = references[0];
 							//refguid = references[1];

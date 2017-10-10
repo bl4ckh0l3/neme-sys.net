@@ -35,7 +35,7 @@
 		bool loggedin = login.checkedUser();
 		
 		if(login.userLogged != null && (login.userLogged.role.isAdmin() || login.userLogged.role.isEditor())){
-			Response.Redirect(Utils.getBaseUrl(Request.Url.ToString(),1).ToString()+"backoffice/index.aspx");
+			Response.Redirect(CommonService.getBaseUrl(Request.Url.ToString(),1).ToString()+"backoffice/index.aspx");
 		}
 		
 		IUserRepository usrrep = RepositoryFactory.getInstance<IUserRepository>("IUserRepository");			

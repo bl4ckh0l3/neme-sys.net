@@ -89,7 +89,7 @@ function changeActiveLang(strAction, strLangCode){
 <ul>
 	<li><%	
 	foreach (Language x in languages){
-		string urlScheme = Utils.getBaseUrl(Request.Url.ToString(),2).Scheme;
+		string urlScheme = CommonService.getBaseUrl(Request.Url.ToString(),2).Scheme;
 			
 		if(template != null)
 		{

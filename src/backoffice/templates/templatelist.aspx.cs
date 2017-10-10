@@ -272,13 +272,13 @@ public partial class _TemplateList : Page
 									if(Directory.Exists(HttpContext.Current.Server.MapPath("~/public/templates/"+t.directory+"/img/"))){
 										iprefix = "img/";
 									}
-									TemplateService.SaveStreamToFile(tmp.InputStream, HttpContext.Current.Server.MapPath("~/public/templates/"+t.directory+"/"+iprefix+tmp.FileName));								
+									CommonService.SaveStreamToFile(tmp.InputStream, HttpContext.Current.Server.MapPath("~/public/templates/"+t.directory+"/"+iprefix+tmp.FileName));								
 									tp.filePath=t.directory+"/"+iprefix+Path.GetDirectoryName(tmp.FileName);
 									tp.priority=-1;									
 									addPage = true;
 									break;
 								case ".cs": case ".aspx": case ".ascx": case ".js": case ".css":
-									TemplateService.SaveStreamToFile(tmp.InputStream, HttpContext.Current.Server.MapPath("~/public/templates/"+t.directory+"/"+tmp.FileName));								
+									CommonService.SaveStreamToFile(tmp.InputStream, HttpContext.Current.Server.MapPath("~/public/templates/"+t.directory+"/"+tmp.FileName));								
 									tp.filePath=t.directory+"/"+Path.GetDirectoryName(tmp.FileName);
 									if(filext==".cs" || filext==".js" || filext==".css" || filext==".ascx")
 									{

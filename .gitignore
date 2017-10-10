@@ -2,3 +2,5 @@
 *.marks
 
 .DS_Store
+
+etc/.DS_Store

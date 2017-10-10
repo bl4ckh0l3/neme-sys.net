@@ -51,7 +51,7 @@ protected void Page_Load(Object sender, EventArgs e)
 	}
 	string deep = Request["deep"];
 	
-	StringBuilder builder = new StringBuilder(Utils.getBaseUrl(Request.Url.ToString(),2).Scheme).Append("://");
+	StringBuilder builder = new StringBuilder(CommonService.getBaseUrl(Request.Url.ToString(),2).Scheme).Append("://");
 		
 	try
 	{

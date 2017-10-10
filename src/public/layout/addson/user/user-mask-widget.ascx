@@ -63,8 +63,8 @@ protected void Page_Load(Object sender, EventArgs e)
 	usrHasAvatar = false;
 	avatarPath = "";
 	forcedAvHeight = "";
-	baseURL = Utils.getBaseUrl(Request.Url.ToString(),0).ToString();
-	secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+	baseURL = CommonService.getBaseUrl(Request.Url.ToString(),0).ToString();
+	secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();
 	
 	if(Request.ServerVariables["HTTP_USER_AGENT"].Contains("MSIE")){
 		//forcedAvHeight = " height=50";

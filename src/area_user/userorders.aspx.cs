@@ -42,7 +42,7 @@ public partial class _FeOrderList : Page
 		Session.CodePage  = 65001;	
 		cssClass="LN";	
 		login.acceptedRoles = "3";
-		secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+		secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();
 		
 		if(!login.checkedUser()){
 			Response.Redirect(secureURL+"login.aspx?error_code=002");

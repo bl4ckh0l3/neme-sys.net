@@ -7224,3 +7224,9 @@ INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.billing.lista.table.label.ext_description', 'IT', 'Informazioni aggiuntive');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.billing_data_fax', 'EN', 'Fax');
 INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.label.billing_data_fax', 'IT', 'Fax');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.header.taxable_amount', 'EN', 'Taxable amount');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.header.taxable_amount', 'IT', 'Imponibile');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.header.tax_amount', 'EN', 'Tax amount');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.header.tax_amount', 'IT', 'Imposta');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.header.totale_tax_prod', 'EN', 'Total tax amount');
+INSERT INTO `MULTI_LANGUAGES` (`keyword`, `lang_code`, `value`) VALUES('backend.ordini.view.table.header.totale_tax_prod', 'IT', 'Totale imposta');

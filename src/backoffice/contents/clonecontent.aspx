@@ -38,7 +38,7 @@ protected void Page_Load(Object sender, EventArgs e)
 		
 		//copio i file associati
 		if(original.attachments != null && original.attachments.Count>0){
-			ContentService.directoryCopy(HttpContext.Current.Server.MapPath("~/public/upload/files/contents/"+original.id), HttpContext.Current.Server.MapPath("~/public/upload/files/contents/"+newcontent.id), true);
+			CommonService.directoryCopy(HttpContext.Current.Server.MapPath("~/public/upload/files/contents/"+original.id), HttpContext.Current.Server.MapPath("~/public/upload/files/contents/"+newcontent.id), true);
 		}
 		
 		// rimuovo la cache

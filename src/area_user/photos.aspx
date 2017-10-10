@@ -10,7 +10,7 @@ protected void Page_Load(object sender, EventArgs e)
 	//se il sito è offline rimando a pagina default
 	if ("1".Equals(confservice.get("go_offline").value)) 
 	{
-		Response.Redirect(Utils.getBaseUrl(Request.Url.ToString(),2).ToString());
+		Response.Redirect(CommonService.getBaseUrl(Request.Url.ToString(),2).ToString());
 	}	
 	Response.Charset="UTF-8";
 	Session.CodePage  = 65001;	

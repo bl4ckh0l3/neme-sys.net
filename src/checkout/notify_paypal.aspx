@@ -41,7 +41,7 @@ protected void Page_Load(object sender, EventArgs e)
 			string reflang = "";
 			string mailLangCode = lang.currentLangCode;
 			custom = HttpUtility.UrlDecode(custom);				
-			custom = Utils.decodeFrom64(custom);
+			custom = CommonService.decodeFrom64(custom);
 			string[] references = custom.Split('|');
 			if(references != null && references.Length>=3){
 				reforderid = references[0];

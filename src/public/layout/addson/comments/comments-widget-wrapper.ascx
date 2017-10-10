@@ -66,7 +66,7 @@ protected void Page_Load(Object sender, EventArgs e)
 	cw1.from = from;
 	cw1.hierarchy = hierarchy;
 	cw1.categoryId = categoryId;
-	secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+	secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();
 }
 </script>
 

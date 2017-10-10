@@ -17,13 +17,14 @@
 <head>
 <CommonMeta:insert runat="server" />
 <CommonCssJs:insert runat="server" />
+<script type="text/javascript" src="/common/js/html2canvas.min.js"></script>
 <script language="JavaScript">
 function viewBilling(idBilling){
 	location.href='/backoffice/billings/billingview.aspx?cssClass=LB&id='+idBilling;
 }
 
-function editBilling(idBilling){
-	location.href='/backoffice/billings/insertbilling.aspx?cssClass=LB&id='+idBilling;
+function sendBillingEmail(idBilling){
+	location.href='/backoffice/billings/billinglist.aspx?cssClass=LB&operation=send&id_billing='+idBilling;
 }
 
 function deleteBilling(id_objref,row,refreshrows){
@@ -70,7 +71,7 @@ function registerBilling(idBilling){
 				<tr>
 					<td>			
 			
-			  <form action="<%=Request.Url.AbsolutePath%>" method="post" name="form_billing_data" accept-charset="UTF-8">
+			  <form action="<%=Request.Url.AbsolutePath%>" method="post" name="form_billing_data" accept-charset="UTF-8" enctype="multipart/form-data">
 			  <input type="hidden" value="<%=cssClass%>" name="cssClass">
 			  <input type="hidden" value="1" name="page">
 			  <input type="hidden" value="insert" name="operation">
@@ -115,10 +116,26 @@ function registerBilling(idBilling){
 						</select>	
 					</div>
 				</div>
-				<div style="margin-top:10px;margin-bottom:20px;">
-					<div style="margin-right:30px;"><strong><%=lang.getTranslated("backend.billing.lista.table.label.ext_description")%></strong><br>
-					<textarea id="bills_description" name="bills_description" class="formFieldTXTAREA"><%=billingData.description%></textarea></div>				
+				<div style="display:block;margin-top:10px;margin-bottom:20px;">
+					<div style="float:left;margin-right:30px;">
+						<div style="margin-right:30px;">
+							<strong><%=lang.getTranslated("backend.billing.lista.table.label.ext_description")%></strong><br>
+							<textarea id="bills_description" name="bills_description" class="formFieldTXTAREA"><%=billingData.description%></textarea>
+						</div>				
+					</div>
+					<div>
+						<strong><%=lang.getTranslated("backend.billing.lista.table.label.fileupload")%></strong><br>
+						<input type="file" name="billing_image" />
+						<%if(!String.IsNullOrEmpty(billingData.filePath)){%>
+							<br/><img class="billing_image" align="top"  src="<%="/public/upload/files/billing_data/"+billingData.filePath%>" />
+							&nbsp;<input type="checkbox" class="billing_image_checkbox" value="1" name="del_billingimage">&nbsp;<%=lang.getTranslated("backend.billing.lista.label.del_billingimage")%>
+						<%}%>				
+					</div>			  
 				</div>
+				<div style="padding-top:5px;margin-bottom:20px;float:top;clear:both;">
+				<input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.billing.lista.button.billing_data.insert")%>" onclick="javascript:insertBillingData();" />
+				</div>    
+			  </form>
 				
 				<script>
 				$('#bills_country').change(function() {
@@ -143,11 +160,7 @@ function registerBilling(idBilling){
 						}
 					});		
 				});	
-				</script>			  
-			  
-			  <input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.billing.lista.button.billing_data.insert")%>" onclick="javascript:insertBillingData();" />
-			  <br/><br/>    
-			  </form>
+				</script>
 			  </td>
 			  </tr>
 			</table>	
@@ -183,10 +196,10 @@ function registerBilling(idBilling){
 							Billing k = billings[counter];%>	
 							<tr id="tr_delete_list_<%=counter%>" class="<%if(counter % 2 == 0){Response.Write("table-list-on");}else{Response.Write("table-list-off");}%>">
 							<td align="center" width="25"><a href="javascript:viewBilling(<%=k.id%>);"><img src="/backoffice/img/zoom.png" alt="<%=lang.getTranslated("backend.billing.lista.table.alt.view_billing")%>" title="<%=lang.getTranslated("backend.billing.lista.table.alt.view_billing")%>" hspace="2" vspace="0" border="0"></a></td>
-							<td align="center" width="25" id="edit_billing_<%=counter%>"><%if(k.idRegisteredBilling==0){%><a href="javascript:editBilling(<%=k.id%>);"><img src="/backoffice/img/pencil.png" title="<%=lang.getTranslated("backend.billing.lista.table.alt.modify_billing")%>" hspace="2" vspace="0" border="0"></a><%}%></td>
+							<td align="center" width="25" id="send_billing_<%=counter%>"><a href="javascript:sendBillingEmail(<%=k.id%>);"><img src="/backoffice/img/email_go.png" title="<%=lang.getTranslated("backend.billing.lista.table.alt.send_billing")%>" hspace="2" vspace="0" border="0"></a></td>
 							<td align="center" width="25"><%if(k.idRegisteredBilling==0){%><a href="javascript:deleteBilling(<%=k.id%>, 'tr_delete_list_<%=counter%>','tr_delete_list_');"><img src="/backoffice/img/cancel.png" title="<%=lang.getTranslated("backend.billing.detail.button.elimina.label")%>" hspace="2" vspace="0" border="0"></a><%}%></td>
 							<td id="billing_id_<%=counter%>"><%if(k.idRegisteredBilling==0){%><div class="register-billing"><a href="javascript:registerBilling(<%=k.id%>);"><%=lang.getTranslated("backend.billing.detail.button.register.label")%></a></div><%}else{Response.Write(k.idRegisteredBilling+"/"+k.registeredDate.ToString("yyyy"));}%></td>
-							<td><%=k.insertDate.ToString("dd/MM/yyyy HH:mm")%></td>
+							<td><%if(k.idRegisteredBilling>0){Response.Write(k.registeredDate.ToString("dd/MM/yyyy HH:mm"));}else{Response.Write(k.insertDate.ToString("dd/MM/yyyy HH:mm"));}%></td>
 							<td><%=k.idParentOrder%></td>
 							<td><%=k.orderDate.ToString("dd/MM/yyyy HH:mm")%></td>
 							<td>&euro;&nbsp;<%=k.orderAmount.ToString("#,###0.00")%></td>

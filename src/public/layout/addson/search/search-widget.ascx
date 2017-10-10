@@ -23,7 +23,7 @@ protected void Page_Load(Object sender, EventArgs e)
 	Session.CodePage  = 65001;
 	cssClass = Request["cssClass"];
 	
-	url = Utils.getBaseUrl(Request.Url.ToString(),2).ToString();
+	url = CommonService.getBaseUrl(Request.Url.ToString(),2).ToString();
 }
 </script>
 

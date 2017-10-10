@@ -21,6 +21,8 @@ public partial class _BillingView : Page
 	protected decimal billsAmount;
 	protected decimal paymentCommissions;
 	protected decimal orderAmount;
+	protected decimal taxableAmount;
+	protected decimal taxAmount;
 	protected bool hasOrderRule;
 	protected bool hasProductRule;
 	protected IList<OrderBusinessRule> orderRules;
@@ -48,6 +50,7 @@ public partial class _BillingView : Page
 	protected IContentRepository contrep;
 	protected IAdsRepository adsrep;
 	protected IOrderRepository orderep;
+	protected string companyLogo;
 	
 	protected void Page_Init(Object sender, EventArgs e)
 	{
@@ -88,6 +91,8 @@ public partial class _BillingView : Page
 		paymentDone = false;
 		billsAmount = 0.00M;
 		paymentCommissions = 0.00M;
+		taxableAmount =  0.00M;
+		taxAmount =  0.00M;
 		orderAmount = 0.00M;
 		hasShipAddress = false;
 		hasBillsAddress = false;
@@ -106,6 +111,7 @@ public partial class _BillingView : Page
 		builder = null;
 		orderFees = "";
 		orderRulesDesc = "";
+		companyLogo = "";
 	
 		if(!String.IsNullOrEmpty(Request["id"])){
 			try{	
@@ -120,6 +126,12 @@ public partial class _BillingView : Page
 			try{
 				billingid = Convert.ToInt32(Request["id"]);
 				billing = billingrep.getById(billingid);
+				
+				BillingData billingData = billingrep.getBillingData();
+				
+				if(billingData != null && !String.IsNullOrEmpty(billingData.filePath)){
+					companyLogo = "/public/upload/files/billing_data/"+billingData.filePath;
+				}
 				
 				orderid = billing.idParentOrder;
 				order = orderep.getByIdExtended(orderid, true);

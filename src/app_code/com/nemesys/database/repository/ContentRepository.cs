@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.Data;
 using com.nemesys.model;
 using com.nemesys.database;
+using com.nemesys.services;
 using NHibernate;
 using NHibernate.Criterion;
 using System.Web;
@@ -1065,11 +1066,11 @@ namespace com.nemesys.database.repository
 			}
 			
 			StringBuilder cacheKey = new StringBuilder("list-fcontent")
-			.Append("-").Append(Utils.encodeTo64(title))
-			.Append("-").Append(Utils.encodeTo64(keyword))
+			.Append("-").Append(CommonService.encodeTo64(title))
+			.Append("-").Append(CommonService.encodeTo64(keyword))
 			.Append("-").Append(status)
-			.Append("-").Append(Utils.encodeTo64(publishDate))
-			.Append("-").Append(Utils.encodeTo64(deleteDate))
+			.Append("-").Append(CommonService.encodeTo64(publishDate))
+			.Append("-").Append(CommonService.encodeTo64(deleteDate))
 			.Append("-").Append(orderBy)
 			.Append("-").Append(idsCatC)
 			.Append("-").Append(idsLangC);

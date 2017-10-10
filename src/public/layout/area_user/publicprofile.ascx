@@ -55,8 +55,8 @@
 		bolFoundField = false;
 		bolFoundPhotos = false;
 		
-		baseURL = Utils.getBaseUrl(Request.Url.ToString(),2).ToString();
-		secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+		baseURL = CommonService.getBaseUrl(Request.Url.ToString(),2).ToString();
+		secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();
 
 		StringBuilder url = new StringBuilder(baseURL).Append("error.aspx?error_code=");	
 		StringBuilder happyUrl = new StringBuilder(secureURL).Append("area_user/publicprofile.aspx");		
@@ -214,7 +214,7 @@
 					switch (Path.GetExtension(fileName))
 					{
 						case ".jpg": case ".jpeg": case ".png": case ".gif": case ".bmp":
-							UserService.SaveStreamToFile(MyFile.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/user/"+publicuser.id+"/"+MyFile.FileName));
+							CommonService.SaveStreamToFile(MyFile.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/user/"+publicuser.id+"/"+MyFile.FileName));
 							message.Append("<br/><br/>").Append("<img align='top' src='/public/upload/files/user/").Append(publicuser.id).Append("/").Append(MyFile.FileName).Append("'>");
 							break;
 						default:

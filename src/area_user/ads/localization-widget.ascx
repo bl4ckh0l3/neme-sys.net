@@ -56,7 +56,7 @@ protected void Page_Load(Object sender, EventArgs e)
 	savetext = lang.getTranslated("backend.commons.detail.table.label.save");
 	class_style="backend-localization";
 	points = new List<Geolocalization>();
-	secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+	secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();
 	
 	//Response.Write("<br>load _idElem:"+_idElem);
 	//Response.Write("<br>load _elemType:"+_elemType);

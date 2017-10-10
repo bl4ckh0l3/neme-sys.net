@@ -66,7 +66,7 @@ protected void Page_Load(Object sender, EventArgs e)
 	commentrep = RepositoryFactory.getInstance<ICommentRepository>("ICommentRepository");
 	preferencerep = RepositoryFactory.getInstance<IUserPreferencesRepository>("IUserPreferencesRepository");
 	usrrep = RepositoryFactory.getInstance<IUserRepository>("IUserRepository");
-	secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+	secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();
 }
 </script>
 

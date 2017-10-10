@@ -47,7 +47,7 @@ public partial class _FeContentList : Page
 		Session.CodePage  = 65001;	
 		cssClass="LN";	
 		
-		UriBuilder baseBuilder = Utils.getBaseUrl(Request.Url.ToString(),1);
+		UriBuilder baseBuilder = CommonService.getBaseUrl(Request.Url.ToString(),1);
 		secureURL = baseBuilder.ToString();
 		baseBuilder.Path=Request.Url.AbsolutePath;
 		currentURL=baseBuilder.ToString();

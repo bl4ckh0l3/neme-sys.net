@@ -37,7 +37,7 @@ protected void Page_Load(object sender, EventArgs e)
 	bool carryOn = false;
 	string ECURL = "";
 	
-	string secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+	string secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();
 			
 	if(!String.IsNullOrEmpty(Request["orderid"])){
 		try{

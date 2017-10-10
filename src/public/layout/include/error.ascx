@@ -40,7 +40,7 @@ protected void Page_Load(object sender, EventArgs e)
 						id_user = Request["id_usr"];
 					}
 	
-					msg+="&nbsp;&nbsp;<a href="+Utils.getBaseUrl(Request.Url.ToString(),1).ToString()+"area_user/account.aspx?id="+id_user+">"+lang.getTranslated("portal.commons.errors.label.repeat_insert")+"</a>";
+					msg+="&nbsp;&nbsp;<a href="+CommonService.getBaseUrl(Request.Url.ToString(),1).ToString()+"area_user/account.aspx?id="+id_user+">"+lang.getTranslated("portal.commons.errors.label.repeat_insert")+"</a>";
 				}
 			}
 		}

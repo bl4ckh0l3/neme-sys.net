@@ -1877,8 +1877,8 @@ public partial class _Checkout : Page
 				
 				if(orderCompleted){			
 					//******************* COPIO I FILE UPLOADATI DAGLI UTENTI CON IL CARRELLO NELL ORDINE
-					OrderService.directoryCopy(HttpContext.Current.Server.MapPath("~/public/upload/files/shoppingcarts/"+shoppingCart.id), HttpContext.Current.Server.MapPath("~/public/upload/files/orders/"+finalOrderId), true, false);
-					OrderService.deleteDirectory(HttpContext.Current.Server.MapPath("~/public/upload/files/shoppingcarts/"+shoppingCart.id));
+					CommonService.directoryCopy(HttpContext.Current.Server.MapPath("~/public/upload/files/shoppingcarts/"+shoppingCart.id), HttpContext.Current.Server.MapPath("~/public/upload/files/orders/"+finalOrderId), true, false);
+					CommonService.deleteDirectory(HttpContext.Current.Server.MapPath("~/public/upload/files/shoppingcarts/"+shoppingCart.id));
 					
 					//******************* INVIO MAIL DI PRODOTTO ESAURITO SE NECESSARIO
 					foreach(OrderProduct op in ops){

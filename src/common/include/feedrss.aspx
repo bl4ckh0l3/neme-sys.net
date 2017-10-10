@@ -53,7 +53,7 @@ protected void Page_Load(object sender, EventArgs e)
 	templrep = RepositoryFactory.getInstance<ITemplateRepository>("ITemplateRepository");
 	catrep = RepositoryFactory.getInstance<ICategoryRepository>("ICategoryRepository");
 	confservice = new ConfigurationService();
-	path = Utils.getBaseUrl(Request.Url.ToString(),2);
+	path = CommonService.getBaseUrl(Request.Url.ToString(),2);
 
 	//se il sito � offline rimando a pagina default
 	if ("1".Equals(confservice.get("go_offline").value)) 

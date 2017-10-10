@@ -126,6 +126,22 @@ body {
 #backend-content table div.div-order-prod-list-head{width:100%;float:right;background-color: #bc9e9e;color:#FFFFFF;text-align:center;padding-bottom:0px;}
 #backend-content table div.div-order-prod-list{width:100%;border-top:1px solid #000000;float:right;padding-top:0px;}
 
+
+#backend-content table.invoice-table{width:100%;font-size: 11px;border:1px solid #C9C9C9;border-collapse: collapse;}
+#backend-content table.invoice-table th{text-align:left;font-weight: bold;color: #000000;vertical-align: middle;padding:3px;margin:0px;border:1px solid #C9C9C9;}
+#backend-content table.invoice-table th.upper{text-transform:uppercase;/*white-space:nowrap;*/}
+#backend-content table.invoice-table tr{margin:0px;padding:0px;height:20px;border:1px solid #C9C9C9;}
+#backend-content table.invoice-table td{text-align:left;vertical-align:top;padding:3px;margin:0px;border:1px solid #C9C9C9;}
+#backend-content table.invoice-table td.special{text-align:left;vertical-align: top;padding:3px;margin:0px;}
+#backend-content table.invoice-table a{font-size: 11px;}
+
+#backend-content table.invoice-table table.inner-table{width:100%;border:1px solid #C9C9C9;}
+#backend-content table.invoice-table table.inner-table th{text-align:left;font-weight: bold;color: #FFFFFF; background-color: #bc9e9e;vertical-align: middle;padding:3px;margin:0px;}
+#backend-content table.invoice-table table.inner-table tr{margin:0px;padding:0px;height:20px;}
+#backend-content table.invoice-table table.inner-table td{text-align:left;vertical-align: top;padding:3px;margin:0px;}
+#backend-content table.invoice-table table.inner-table a{font-size: 11px;}
+#backend-content table.invoice-table table.inner-table li{margin-left:2px;}
+
 #order-table-down-status{width: 100%;border: 1px solid #C9C9C9;}
 #order-table-down-status th{padding:3px;font-family: Verdana, Arial, Helvetica, sans-serif;	font-size: 11px;color: #727272;	text-decoration: none;	font-weight: bold;	text-align:left,margin:0px;background-color: #C9C9C9;}
 #order-table-down-status td{font-family: Verdana, Arial, Helvetica, sans-serif;	font-size: 11px;	font-weight: thin;	color: #000000;	text-align:left;	vertical-align:top;	padding:3px;margin:0px}

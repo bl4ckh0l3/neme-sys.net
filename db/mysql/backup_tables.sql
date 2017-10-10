@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `CATEGORY` (
   `meta_keyword` TEXT default NULL,
   `page_title` TEXT default NULL,
   `sub_domain_url` varchar(250) default NULL,  
-  `automatic` smallint(1) unsigned NOT NULL default '0',,  
+  `automatic` smallint(1) unsigned NOT NULL default '0',  
   `file_path` varchar(250) default NULL,
   PRIMARY KEY  (`id`),
   KEY `num_menu` (`num_menu`),
@@ -1419,6 +1419,7 @@ CREATE TABLE IF NOT EXISTS `BILLING_DATA` (
   `phone` varchar(50) default NULL,
   `fax` varchar(50) default NULL,
   `description` text,
+  `file_path` varchar(250) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

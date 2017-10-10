@@ -55,7 +55,7 @@ protected void Page_Load(Object sender, EventArgs e)
 	login.acceptedRoles = "3";
 	logged = login.checkedUser();
 	preftrep = RepositoryFactory.getInstance<IUserPreferencesRepository>("IUserPreferencesRepository");
-	secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+	secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();
 }
 </script>
 

@@ -95,15 +95,15 @@ protected void Page_Load(Object sender, EventArgs e)
 	catrep = RepositoryFactory.getInstance<ICategoryRepository>("ICategoryRepository");
 	langrep = RepositoryFactory.getInstance<ILanguageRepository>("ILanguageRepository");
 	categoryid = "";
-	baseURL = Utils.getBaseUrl(Request.Url.ToString(),2).ToString();
-	secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+	baseURL = CommonService.getBaseUrl(Request.Url.ToString(),2).ToString();
+	secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();
 }
 
 protected void renderNotAjax()
 {
 	int clevel = 0;
 	Category category = null;
-	StringBuilder builder = new StringBuilder(Utils.getBaseUrl(Request.Url.ToString(),2).Scheme).Append("://");
+	StringBuilder builder = new StringBuilder(CommonService.getBaseUrl(Request.Url.ToString(),2).Scheme).Append("://");
 		
 	try
 	{

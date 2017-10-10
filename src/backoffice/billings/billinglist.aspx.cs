@@ -166,21 +166,71 @@ public partial class _BillingList : Page
 			//Response.Write("<br>executed: "+executed);
 			try
 			{
-				billingData = new BillingData();
-				billingData.name = Request["bills_name"];
-				billingData.cfiscvat = Request["bills_cfiscvat"];
-				billingData.address = Request["bills_address"];
-				billingData.city = Request["bills_city"];
-				billingData.zipCode = Request["bills_zip_code"];
-				billingData.country = Request["bills_country"];
-				billingData.stateRegion = Request["bills_state_region"];  
-				billingData.phone = Request["bills_phone"];  
-				billingData.fax = Request["bills_fax"];  
-				billingData.description = Request["bills_description"];  
-			
-				//Response.Write("<br>billingData: "+billingData.ToString());
+				BillingData newBillingData = new BillingData();
+				newBillingData.name = Request["bills_name"];
+				newBillingData.cfiscvat = Request["bills_cfiscvat"];
+				newBillingData.address = Request["bills_address"];
+				newBillingData.city = Request["bills_city"];
+				newBillingData.zipCode = Request["bills_zip_code"];
+				newBillingData.country = Request["bills_country"];
+				newBillingData.stateRegion = Request["bills_state_region"];  
+				newBillingData.phone = Request["bills_phone"];  
+				newBillingData.fax = Request["bills_fax"];  
+				newBillingData.description = Request["bills_description"];  
+				newBillingData.filePath = billingData.filePath;
+
+				bool bolDelImg = false;
+				if(!String.IsNullOrEmpty(Request["del_billingimage"])){
+					bolDelImg = Convert.ToBoolean(Convert.ToInt32(Request["del_billingimage"]));	
+				}
 				
-				billingrep.saveBillingData(billingData);
+				// recupero l'immagine allegata alla categoria se presente
+				string delFilePath = "";
+				if(bolDelImg && !String.IsNullOrEmpty(billingData.filePath)){
+					delFilePath = billingData.filePath;
+					newBillingData.filePath = "";					
+				}		
+				
+				
+				HttpFileCollection MyFileCollection = Request.Files;
+				HttpPostedFile MyFile = null;
+				string fileName = "";
+				if(MyFileCollection != null && MyFileCollection.Count>0){
+					MyFile = MyFileCollection[0];						
+					fileName = Path.GetFileName(MyFile.FileName);
+					if(!String.IsNullOrEmpty(fileName)){	
+						switch (Path.GetExtension(fileName))
+						{
+							case ".jpg": case ".jpeg": case ".png": case ".gif": case ".bmp":						
+								newBillingData.filePath = fileName;
+								break;
+							default:
+								throw new Exception("022");										
+								break;
+						}						
+					}
+				}				
+					
+				//Response.Write("<br>billingData: "+billingData.ToString());				
+				
+				billingrep.saveBillingData(newBillingData);
+				
+				// cancello l'immagine di categoria						
+				if(bolDelImg)
+				{
+					CommonService.deleteFile(HttpContext.Current.Server.MapPath("~/public/upload/files/billing_data/"+delFilePath));								
+				}
+			
+				string dirName = HttpContext.Current.Server.MapPath("~/public/upload/files/billing_data/"); 
+				if (!Directory.Exists(dirName))
+				{
+					Directory.CreateDirectory(dirName);
+				}					
+				if(!String.IsNullOrEmpty(fileName))
+				{
+					CommonService.SaveStreamToFile(MyFile.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/billing_data/"+fileName));								
+				}				
+				
 				executed = true;
 			}
 			catch(Exception ex)
@@ -212,6 +262,44 @@ public partial class _BillingList : Page
 			{
 				Billing billingToRegister = billingrep.getById(Convert.ToInt32(Request["id_billing"]));
 				billingrep.registerBilling(billingToRegister);
+				executed = true;
+			}
+			catch(Exception ex)
+			{
+				//Response.Write("An error occured: " + ex.Message);
+				errorUrl.Append(Regex.Replace(ex.Message, @"\t|\n|\r", " "));
+				executed = false;
+			}
+				
+			//Response.Write("<br>executed post: "+executed);
+				
+			if(executed){
+				Response.Redirect("/backoffice/billings/billinglist.aspx?cssClass=LB&resetMenu=1");
+			}else{
+				Response.Redirect(errorUrl.ToString());
+			}			
+		}		
+		
+		
+		
+		//*************************** SEND BILLING  ***************************
+		
+		if("send".Equals(Request["operation"]))
+		{
+			bool executed = false;
+			//Response.Write("<br>executed: "+executed);
+			
+			try
+			{
+				Billing billingToSend = billingrep.getById(Convert.ToInt32(Request["id_billing"]));
+
+				/*
+				TODO: 
+				- create pdf (delete f exist and create new)
+				- send email with pdf attachment
+				- add flag email_sent = true to billing
+				*/
+				
 				executed = true;
 			}
 			catch(Exception ex)

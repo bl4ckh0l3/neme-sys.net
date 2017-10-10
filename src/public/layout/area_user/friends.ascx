@@ -42,8 +42,8 @@
 		login.acceptedRoles = "3";
 		bool loggedin = login.checkedUser();
 		
-		baseURL = Utils.getBaseUrl(Request.Url.ToString(),2).ToString();
-		secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+		baseURL = CommonService.getBaseUrl(Request.Url.ToString(),2).ToString();
+		secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();
 		
 		if(login.userLogged != null && (login.userLogged.role.isAdmin() || login.userLogged.role.isEditor())){
 			Response.Redirect(secureURL+"backoffice/index.aspx");

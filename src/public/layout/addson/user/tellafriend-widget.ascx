@@ -46,7 +46,7 @@ protected void Page_Load(object sender, EventArgs e)
 	//se il sito � offline rimando a pagina default
 	if ("1".Equals(confservice.get("go_offline").value)) 
 	{
-		Response.Redirect(Utils.getBaseUrl(Request.Url.ToString(),2).ToString());
+		Response.Redirect(CommonService.getBaseUrl(Request.Url.ToString(),2).ToString());
 	}
 }	
 </script>
@@ -86,7 +86,7 @@ function controllaCampiInput(){
 		async: false,
 		type: "POST",
 		cache: false,
-		url: "<%=Utils.getBaseUrl(Request.Url.ToString(),2).ToString()%>public/layout/addson/user/ajaxtellafriend.aspx",
+		url: "<%=CommonService.getBaseUrl(Request.Url.ToString(),2).ToString()%>public/layout/addson/user/ajaxtellafriend.aspx",
 		data: query_string,
 		success: function(response) {
 			//alert("response: "+response);

@@ -50,8 +50,8 @@
 		login.acceptedRoles = "3";
 		bool loggedin = login.checkedUser();
 		
-		baseURL = Utils.getBaseUrl(Request.Url.ToString(),2).ToString();
-		secureURL = Utils.getBaseUrl(Request.Url.ToString(),1).ToString();
+		baseURL = CommonService.getBaseUrl(Request.Url.ToString(),2).ToString();
+		secureURL = CommonService.getBaseUrl(Request.Url.ToString(),1).ToString();
 		
 		if(login.userLogged != null && (login.userLogged.role.isAdmin() || login.userLogged.role.isEditor())){
 			Response.Redirect(secureURL+"backoffice/index.aspx");
@@ -228,7 +228,7 @@
 			{
 				// resolve captcha code
 				UriBuilder errCaptcha = new UriBuilder(Request.Url);
-				errCaptcha.Scheme = Utils.getBaseUrl(Request.Url.ToString(),2).Scheme;
+				errCaptcha.Scheme = CommonService.getBaseUrl(Request.Url.ToString(),2).Scheme;
 				errCaptcha.Port = -1;
 				errCaptcha.Query = "captcha_err=1";	
 				if(confservice.get("use_recaptcha").value == "1"){
@@ -479,7 +479,7 @@
 								}					
 								if(!String.IsNullOrEmpty(fileName))
 								{
-									TemplateService.SaveStreamToFile(MyFile.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/user/"+user.id+"/"+MyFile.FileName));								
+									CommonService.SaveStreamToFile(MyFile.InputStream, HttpContext.Current.Server.MapPath("~/public/upload/files/user/"+user.id+"/"+MyFile.FileName));								
 								}	
 									
 								// se l'utente aggiornato è l'utente in sessione aggiorno la sessione

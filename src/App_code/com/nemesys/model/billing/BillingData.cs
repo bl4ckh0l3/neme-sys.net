@@ -19,6 +19,7 @@ namespace com.nemesys.model
 		private string _phone;
 		private string _fax;
 		private string _description;
+		private string _filePath;
 		
 		
 		public BillingData(){}
@@ -78,6 +79,11 @@ namespace com.nemesys.model
 			set { _description = value; }
 		}
 
+		public virtual string filePath {
+			get { return _filePath; }
+			set { _filePath = value; }
+		}
+
 		
 		public virtual string ToString() {
 			StringBuilder builder = new StringBuilder("BillingData id: ")
@@ -91,7 +97,8 @@ namespace com.nemesys.model
 			.Append(" - stateRegion: ").Append(this._stateRegion)
 			.Append(" - phone: ").Append(this._phone)
 			.Append(" - fax: ").Append(this._fax)
-			.Append(" - description: ").Append(this._description);
+			.Append(" - description: ").Append(this._description)
+			.Append(" - filePath: ").Append(this._filePath);
 			
 			return builder.ToString();			
 		}

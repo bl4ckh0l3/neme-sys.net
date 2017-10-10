@@ -723,19 +723,5 @@ namespace com.nemesys.services
 			
 			return result;
 		}
-		
-		public static void SaveStreamToFile(Stream stream, string filename)
-		{  
-		   using(Stream destination = File.Create(filename))
-			  Write(stream, destination);
-		}
-		
-		//Typically I implement this Write method as a Stream extension method. 
-		//The framework handles buffering.		
-		static void Write(Stream from, Stream to)
-		{
-		   for(int a = from.ReadByte(); a != -1; a = from.ReadByte())
-			  to.WriteByte( (byte) a );
-		}
 	}
 }

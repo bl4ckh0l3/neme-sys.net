@@ -27,75 +27,11 @@ namespace com.nemesys.services
 		protected static ILoggerRepository lrep = RepositoryFactory.getInstance<ILoggerRepository>("ILoggerRepository");
 		protected static IShippingAddressRepository shiprep = RepositoryFactory.getInstance<IShippingAddressRepository>("IShippingAddressRepository");
 		protected static IBillsAddressRepository billsrep = RepositoryFactory.getInstance<IBillsAddressRepository>("IBillsAddressRepository");
+		protected static IBillingRepository billingrep = RepositoryFactory.getInstance<IBillingRepository>("IBillingRepository");
 		protected static IProductRepository productrep = RepositoryFactory.getInstance<IProductRepository>("IProductRepository");
 		protected static IContentRepository contrep = RepositoryFactory.getInstance<IContentRepository>("IContentRepository");
 		protected static IAdsRepository adsrep = RepositoryFactory.getInstance<IAdsRepository>("IAdsRepository"); 
 		protected static ConfigurationService confservice = new ConfigurationService();		
-		
-		public static void directoryCopy(string sourceDirName, string destDirName, bool copySubDirs, bool errorIfDirNotExists)
-		{                                
-			if(Directory.Exists(sourceDirName)){
-				DirectoryInfo dir = new DirectoryInfo(sourceDirName);
-				DirectoryInfo[] dirs = dir.GetDirectories();
-		
-				if (!Directory.Exists(destDirName))
-				{
-					Directory.CreateDirectory(destDirName);
-				}
-		
-				FileInfo[] files = dir.GetFiles();
-				foreach (FileInfo file in files)
-				{
-					string temppath = Path.Combine(destDirName, file.Name);
-					file.CopyTo(temppath, false);
-				}
-		
-				if (copySubDirs)
-				{
-					foreach (DirectoryInfo subdir in dirs)
-					{
-						string temppath = Path.Combine(destDirName, subdir.Name);
-						directoryCopy(subdir.FullName, temppath, copySubDirs, errorIfDirNotExists);
-					}
-				}
-			}else{
-				if(errorIfDirNotExists){
-					throw new DirectoryNotFoundException("Source directory does not exist or could not be found: "+ sourceDirName);
-				}				
-			}
-		}
-		
-		public static void SaveStreamToFile(Stream stream, string filename)
-		{  
-		   using(Stream destination = File.Create(filename))
-			  Write(stream, destination);
-		}
-		
-		//Typically I implement this Write method as a Stream extension method. 
-		//The framework handles buffering.		
-		static void Write(Stream from, Stream to)
-		{
-		   for(int a = from.ReadByte(); a != -1; a = from.ReadByte())
-			  to.WriteByte( (byte) a );
-		}
-		
-		public static bool deleteDirectory(string directory)
-		{
-			bool deleted = false;
-			//cancello la directory fisica del template
-			try{
-				if(Directory.Exists(directory)) 
-				{
-					Directory.Delete(directory, true);
-					deleted = true;
-				}
-			}catch(Exception ex)
-			{
-				deleted = false;
-			}
-
-			return deleted;			
-		}
 		
 		public static IDictionary<int,string> getOrderStatus()
 		{
@@ -929,8 +865,6 @@ namespace com.nemesys.services
 				string filePath = System.Web.HttpContext.Current.Server.MapPath("~/public/upload/files/orders/"+orderId+"/shipping_label.gif");
 				
 				//attachements for user email
-				//Stream streamUser = Utils.StringToStream(File.ReadAllText(filePath));
-				//Attachment dataUser = new Attachment(streamUser, "shipping_label.gif", MediaTypeNames.Image.Gif);
 				Attachment dataUser = new Attachment(filePath, MediaTypeNames.Image.Gif);
 				// Add time stamp information for the file.
 				ContentDisposition dispositionUser = dataUser.ContentDisposition;
@@ -941,8 +875,6 @@ namespace com.nemesys.services
 				attachmentsUser.Add(dataUser);	
 
 				//attachements for admin email
-				//Stream streamAdmin = Utils.StringToStream(File.ReadAllText(filePath));
-				//Attachment dataAdmin = new Attachment(streamAdmin, "shipping_label.gif", MediaTypeNames.Image.Gif);
 				Attachment dataAdmin = new Attachment(filePath, MediaTypeNames.Image.Gif);
 				// Add time stamp information for the file.
 				ContentDisposition dispositionAdmin = dataAdmin.ContentDisposition;
@@ -967,6 +899,85 @@ namespace com.nemesys.services
 			
 			return mailShipSent;
 		}
+
+
+		
+		public static bool sendBillingOrderMail(int billingId, string langcode, string defLangCode, string url)
+		{
+			bool mailBillSent = false;
+
+			try{
+				Billing billing = billingrep.getById(billingId);
+				
+				FOrder order = orderep.getByIdExtended(billing.idParentOrder, true);
+				
+				User user = usrrep.getById(order.userId);
+						
+				ListDictionary replacementsUser = new ListDictionary();
+				ListDictionary replacementsAdmin = new ListDictionary();
+				StringBuilder userMessage = new StringBuilder();
+				StringBuilder adminMessage = new StringBuilder();	
+				replacementsUser.Add("mail_receiver",user.email);	
+		
+				string boLangCode = confservice.get("bo_lang_code_default").value;
+				if(String.IsNullOrEmpty(boLangCode)){
+					boLangCode = defLangCode;
+				}
+				
+				//start user message
+				userMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.id_ordine", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.id).Append("</b><br/><br/>")
+				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.guid_ordine", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.guid).Append("</b><br/><br/>");		
+				
+				//start admin message
+				adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.id_ordine", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(order.id).Append("</b><br/><br/>")
+				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.guid_ordine", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(order.guid).Append("</b><br/><br/>")
+				.Append(MultiLanguageService.translate("backend.ordini.view.table.label.order_client", boLangCode, defLangCode)).Append("&nbsp;-&nbsp;ID:&nbsp;<b>").Append(user.username).Append("</b>&nbsp;-&nbsp;")
+				.Append(MultiLanguageService.translate("frontend.registration.manage.label.email", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(user.email).Append("</b><br/><br/>");					
+					
+				userMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.dta_insert_order", langcode, defLangCode)).Append(":&nbsp;<b>").Append(order.insertDate.ToString("dd/MM/yyyy HH:mm")).Append("</b><br/><br/>");
+				adminMessage.Append(MultiLanguageService.translate("backend.ordini.view.table.label.dta_insert_order", boLangCode, defLangCode)).Append(":&nbsp;<b>").Append(order.insertDate.ToString("dd/MM/yyyy HH:mm")).Append("</b><br/><br/>");				
+				
+				replacementsUser.Add("<%content%>",HttpUtility.HtmlDecode(userMessage.ToString()));
+				replacementsAdmin.Add("<%content%>",HttpUtility.HtmlDecode(adminMessage.ToString()));
+
+				// Create  the file attachment for this e-mail message.
+				string filePath = System.Web.HttpContext.Current.Server.MapPath("~/public/upload/files/billings/invoice_"+billing.id+"_"+order.id+".pdf");
+				
+				//attachements for user email
+				Attachment dataUser = new Attachment(filePath, MediaTypeNames.Application.Pdf);
+				// Add time stamp information for the file.
+				ContentDisposition dispositionUser = dataUser.ContentDisposition;
+				dispositionUser.CreationDate = System.IO.File.GetCreationTime(filePath);
+				dispositionUser.ModificationDate = System.IO.File.GetLastWriteTime(filePath);
+				dispositionUser.ReadDate = System.IO.File.GetLastAccessTime(filePath);
+				IList<Attachment> attachmentsUser = new List<Attachment>();
+				attachmentsUser.Add(dataUser);	
+
+				//attachements for admin email
+				Attachment dataAdmin = new Attachment(filePath, MediaTypeNames.Application.Pdf);
+				// Add time stamp information for the file.
+				ContentDisposition dispositionAdmin = dataAdmin.ContentDisposition;
+				dispositionAdmin.CreationDate = System.IO.File.GetCreationTime(filePath);
+				dispositionAdmin.ModificationDate = System.IO.File.GetLastWriteTime(filePath);
+				dispositionAdmin.ReadDate = System.IO.File.GetLastAccessTime(filePath);
+				IList<Attachment> attachmentsAdmin = new List<Attachment>();
+				attachmentsAdmin.Add(dataAdmin);					
+				
+				MailService.prepareAndSend("order-billing-mail", langcode, defLangCode, "backend.mails.detail.table.label.subject_", replacementsUser, attachmentsUser, url);
+				MailService.prepareAndSend("order-billing-mail", boLangCode, defLangCode, "backend.mails.detail.table.label.subject_", replacementsAdmin, attachmentsAdmin, url);	
+			
+				mailBillSent = true;	
+			}catch(Exception ex){
+				StringBuilder builder = new StringBuilder("Exception: ")
+				.Append("An error occured: ").Append(ex.Message).Append("<br><br><br>").Append(ex.StackTrace);
+				Logger log = new Logger(builder.ToString(),"system","error",DateTime.Now);		
+				lrep.write(log);
+				
+				mailBillSent = false;
+			}
+			
+			return mailBillSent;
+		}		
 		
 		public static bool activateAds(int orderId, string langcode, string defLangCode)
 		{

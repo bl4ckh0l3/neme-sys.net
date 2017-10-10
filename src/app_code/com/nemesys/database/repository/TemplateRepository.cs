@@ -6,6 +6,7 @@ using System.IO;
 using System.Data;
 using com.nemesys.model;
 using com.nemesys.database;
+using com.nemesys.services;
 using NHibernate;
 using NHibernate.Criterion;
 using System.Web;
@@ -353,7 +354,7 @@ namespace com.nemesys.database.repository
 
 			if(cached)
 			{
-				tvo = (TemplateVO)HttpContext.Current.Cache.Get("template-urlrewrite-"+Utils.encodeTo64(urlRewrite));
+				tvo = (TemplateVO)HttpContext.Current.Cache.Get("template-urlrewrite-"+CommonService.encodeTo64(urlRewrite));
 				if(tvo != null){
 					return tvo;
 				}
@@ -413,7 +414,7 @@ namespace com.nemesys.database.repository
 				if(tvo == null || tvo.templatePage == null){
 					tvo = new TemplateVO();
 				}
-				HttpContext.Current.Cache.Insert("template-urlrewrite-"+Utils.encodeTo64(urlRewrite), tvo, null, DateTime.Now.AddHours(24), System.Web.Caching.Cache.NoSlidingExpiration, CacheItemPriority.High, null);
+				HttpContext.Current.Cache.Insert("template-urlrewrite-"+CommonService.encodeTo64(urlRewrite), tvo, null, DateTime.Now.AddHours(24), System.Web.Caching.Cache.NoSlidingExpiration, CacheItemPriority.High, null);
 			}
 			
 			//System.Web.HttpContext.Current.Response.Write("TemplateRepository.getByUrlRewriteCached - tvo!=null:"+(tvo!=null)+"<br>");
@@ -432,7 +433,7 @@ namespace com.nemesys.database.repository
 
 			if(cached)
 			{
-				result = (Template)HttpContext.Current.Cache.Get("template-directory-"+Utils.encodeTo64(directory));
+				result = (Template)HttpContext.Current.Cache.Get("template-directory-"+CommonService.encodeTo64(directory));
 				if(result != null){
 					return result;
 				}
@@ -478,7 +479,7 @@ namespace com.nemesys.database.repository
 					result = new Template();
 					result.id=-1;
 				}
-				HttpContext.Current.Cache.Insert("template-directory-"+Utils.encodeTo64(directory), result, null, DateTime.Now.AddHours(24), System.Web.Caching.Cache.NoSlidingExpiration, CacheItemPriority.High, null);
+				HttpContext.Current.Cache.Insert("template-directory-"+CommonService.encodeTo64(directory), result, null, DateTime.Now.AddHours(24), System.Web.Caching.Cache.NoSlidingExpiration, CacheItemPriority.High, null);
 			}
 								
 			return result;

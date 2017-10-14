@@ -100,7 +100,7 @@ function generateBilling(orderId){
 		},
 		error: function(response) {
 			//alert(response.responseText);	
-			alert("<%=lang.getTranslated("portal.commons.js.label.loading_error")%>");
+			alert("<%=lang.getTranslated("backend.ordini.view.js.alert.billing_not_created")%>");
 		}
 	});	
 }

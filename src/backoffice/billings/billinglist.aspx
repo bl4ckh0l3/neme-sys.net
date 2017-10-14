@@ -23,8 +23,37 @@ function viewBilling(idBilling){
 	location.href='/backoffice/billings/billingview.aspx?cssClass=LB&id='+idBilling;
 }
 
-function sendBillingEmail(idBilling){
-	location.href='/backoffice/billings/billinglist.aspx?cssClass=LB&operation=send&id_billing='+idBilling;
+function sendBillingEmail(idBilling,orderId,counter){
+	var query_string = "id_order="+orderId+"&id_billing="+idBilling;	
+	//alert(query_string);
+
+		$('#send_mail_'+counter).hide();
+		$('#loading_send_mail_'+counter).show();	
+	
+	$.ajax({
+		async: true,
+		type: "POST",
+		cache: false,
+		url: "/backoffice/billings/ajaxpdfbillingexist.aspx",
+		data: query_string,
+		success: function(response) {
+			location.href='/backoffice/billings/billinglist.aspx?cssClass=LB&operation=send&id_billing='+idBilling;
+		},
+		error: function(response) {
+			var statusResp = response.status;
+			
+			$('#loading_send_mail_'+counter).hide();
+			$('#send_mail_'+counter).show();
+			
+			//alert(statusResp);
+			
+			if(statusResp == 400){
+				alert("<%=lang.getTranslated("backend.billing.lista.js.alert.error_send_mail")%>");
+			}else if(statusResp == 404){
+				alert("<%=lang.getTranslated("backend.billing.lista.js.alert.must_generate_pdf")%>");
+			}
+		}
+	});	
 }
 
 function deleteBilling(id_objref,row,refreshrows){
@@ -63,7 +92,7 @@ function registerBilling(idBilling){
 		<CommonMenu:insert runat="server" />
 		<div id="backend-content">
 			<div id="ajaxresp" align="center" style="background-color:#FFFF00; border:1px solid #000000; color:#000000; display:none;"></div>	
-
+			
 			<table align="top" border="0" class="principal" cellpadding="0" cellspacing="0">	
 				<tr> 
 					<th><%=lang.getTranslated("backend.billing.lista.table.header.billing_data")%></th>
@@ -165,7 +194,13 @@ function registerBilling(idBilling){
 			  </tr>
 			</table>	
 		
-
+			<div id="mailsent" align="center" style="color:#FF0000; display:none;"><%=lang.getTranslated("backend.billing.lista.table.mail_sent")%></div>
+			<%if(mailSent){%>
+			<script>
+			$("#mailsent").fadeIn(1500,"linear");
+			$("#mailsent").fadeOut(1500,"linear");	
+			</script>
+			<%}%>
 			<table border="0" cellpadding="0" cellspacing="0" class="principal">
 				<tr> 
 				<th colspan="8" align="left">
@@ -196,14 +231,21 @@ function registerBilling(idBilling){
 							Billing k = billings[counter];%>	
 							<tr id="tr_delete_list_<%=counter%>" class="<%if(counter % 2 == 0){Response.Write("table-list-on");}else{Response.Write("table-list-off");}%>">
 							<td align="center" width="25"><a href="javascript:viewBilling(<%=k.id%>);"><img src="/backoffice/img/zoom.png" alt="<%=lang.getTranslated("backend.billing.lista.table.alt.view_billing")%>" title="<%=lang.getTranslated("backend.billing.lista.table.alt.view_billing")%>" hspace="2" vspace="0" border="0"></a></td>
-							<td align="center" width="25" id="send_billing_<%=counter%>"><a href="javascript:sendBillingEmail(<%=k.id%>);"><img src="/backoffice/img/email_go.png" title="<%=lang.getTranslated("backend.billing.lista.table.alt.send_billing")%>" hspace="2" vspace="0" border="0"></a></td>
+							<td align="center" width="25" id="send_billing_<%=counter%>">
+							<!--<a href="javascript:sendBillingEmail(<%=k.id%>, <%=k.idParentOrder%>);"><img src="/backoffice/img/email_go.png" title="<%=lang.getTranslated("backend.billing.lista.table.alt.send_billing")%>" hspace="2" vspace="0" border="0"></a>-->
+							<img style="cursor:pointer;" id="send_mail_<%=counter%>" src="/backoffice/img/email_go.png" title="<%=lang.getTranslated("backend.billing.lista.table.alt.send_billing")%>" alt="<%=lang.getTranslated("backend.billing.lista.table.alt.send_billing")%>" hspace="2" vspace="0" border="0">
+							<img style="display:none" id="loading_send_mail_<%=counter%>" src="/common/img/loading_icon3.gif" alt="" width="16" height="16" hspace="2" vspace="0" border="0">	
+							</td>
 							<td align="center" width="25"><%if(k.idRegisteredBilling==0){%><a href="javascript:deleteBilling(<%=k.id%>, 'tr_delete_list_<%=counter%>','tr_delete_list_');"><img src="/backoffice/img/cancel.png" title="<%=lang.getTranslated("backend.billing.detail.button.elimina.label")%>" hspace="2" vspace="0" border="0"></a><%}%></td>
 							<td id="billing_id_<%=counter%>"><%if(k.idRegisteredBilling==0){%><div class="register-billing"><a href="javascript:registerBilling(<%=k.id%>);"><%=lang.getTranslated("backend.billing.detail.button.register.label")%></a></div><%}else{Response.Write(k.idRegisteredBilling+"/"+k.registeredDate.ToString("yyyy"));}%></td>
 							<td><%if(k.idRegisteredBilling>0){Response.Write(k.registeredDate.ToString("dd/MM/yyyy HH:mm"));}else{Response.Write(k.insertDate.ToString("dd/MM/yyyy HH:mm"));}%></td>
 							<td><%=k.idParentOrder%></td>
 							<td><%=k.orderDate.ToString("dd/MM/yyyy HH:mm")%></td>
 							<td>&euro;&nbsp;<%=k.orderAmount.ToString("#,###0.00")%></td>
-							</tr>			
+							</tr>
+							<script>
+							$('#send_mail_<%=counter%>').click(function(){sendBillingEmail(<%=k.id%>, <%=k.idParentOrder%>, <%=counter%>);});
+							</script>					
 						<%
 					}
 				}%>	  

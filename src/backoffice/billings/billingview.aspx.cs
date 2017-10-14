@@ -51,6 +51,7 @@ public partial class _BillingView : Page
 	protected IAdsRepository adsrep;
 	protected IOrderRepository orderep;
 	protected string companyLogo;
+	protected bool hasInvoicePdf;
 	
 	protected void Page_Init(Object sender, EventArgs e)
 	{
@@ -112,6 +113,7 @@ public partial class _BillingView : Page
 		orderFees = "";
 		orderRulesDesc = "";
 		companyLogo = "";
+		hasInvoicePdf = false;
 	
 		if(!String.IsNullOrEmpty(Request["id"])){
 			try{	
@@ -137,6 +139,14 @@ public partial class _BillingView : Page
 				order = orderep.getByIdExtended(orderid, true);
 				
 				user = usrrep.getById(order.userId);
+
+					
+				string filePath = Server.MapPath("~/public/upload/files/billings/invoice_"+billingid+"_"+orderid+".pdf");	
+				
+				if(File.Exists(@filePath)){
+					hasInvoicePdf = true;
+				}				
+				
 				
 				builder = new UriBuilder(Request.Url);
 				builder.Scheme = "http";

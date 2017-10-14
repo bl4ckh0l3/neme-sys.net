@@ -25,8 +25,8 @@
 <CommonMeta:insert runat="server" />
 <CommonCssJs:insert runat="server" />
 <script type="text/javascript" src="/common/js/html2canvas.min.js"></script>
-<script type="text/javascript" src="/common/js/jspdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/2.3.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.min.js"></script>
+<script type="text/javascript" src="/common/js/jspdf.plugin.autotable.min.js"></script>
 
 <script>
 function generateBillingImage(imgData,orderId,billingId){
@@ -48,9 +48,14 @@ function generateBillingImage(imgData,orderId,billingId){
 		},
 		error: function(response) {
 			//alert(response.responseText);	
-			alert("<%=lang.getTranslated("portal.commons.js.label.loading_error")%>");
+			alert("<%=lang.getTranslated("backend.billing.lista.js.alert.error_generate_pdf")%>");
 		}
 	});	
+}
+
+function viewBillingfile(orderId,billingId){
+	var pdfPath = "/public/upload/files/billings/invoice_"+billingId+"_"+orderId+".pdf"; 
+	window.open(pdfPath, '_blank');
 }
 </script>
 </head>
@@ -62,7 +67,7 @@ function generateBillingImage(imgData,orderId,billingId){
 		<div id="backend-content">
 			<%if(billing!=null){%>
 				<div id="invoice-canvas" style="width:8.27in;">
-				<table border="0" cellpadding="0" cellspacing="0" class="invoice-table">
+				<table border="0" cellpadding="0" cellspacing="0" class="invoice-table" id="invoice-table">
 				<tr>
 				<td style="width:40%;" id="shippedFrom">
 				<%if(!String.IsNullOrEmpty(companyLogo)){%>
@@ -395,6 +400,9 @@ function generateBillingImage(imgData,orderId,billingId){
 				</div>
 				<br/>
 				<input type="button" id="create_invoice" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.invoice.label.create_invoice")%>" />
+				<%if(hasInvoicePdf){%>
+				<input type="button" id="view_invoice" class="buttonForm" style="margin-right:10px;" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.invoice.label.view_invoice")%>" />							
+				<%}%>
 				<br/><br/>
 				<input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.commons.back")%>" onclick="javascript:location.href='/backoffice/billings/billinglist.aspx?cssClass=LB';" />
 				<br/><br/>
@@ -403,6 +411,12 @@ function generateBillingImage(imgData,orderId,billingId){
 				<!--<a id="btn-Convert-Html2Image" href="#">Download</a>-->
 				
 				<script>
+				<%if(hasInvoicePdf){%>
+				$("#view_invoice").on('click', function () {
+					viewBillingfile(<%=order.id%>,<%=billing.id%>);
+				});	
+				<%}%>
+				
 				var invoice_element = $("#invoice-canvas"); // global variable		
 				
 				$("#create_invoice").on('click', function () {
@@ -427,7 +441,7 @@ function generateBillingImage(imgData,orderId,billingId){
 					  });	
 					*/
 					
-				
+					/*
 					var columns = [
 						{title: "", dataKey: "shippedFrom"},
 						{title: "", dataKey: "shippedTo"}
@@ -436,18 +450,13 @@ function generateBillingImage(imgData,orderId,billingId){
 						{"shippedFrom": $('#shippedFrom').html(), "shippedTo": $('#shippedTo').html()}
 					];					
 										
-					doc.autoTable(columns, rows/*, {
-						styles: {fillColor: [100, 255, 255]},
-						columnStyles: {
-							id: {fillColor: 255}
-						},
-						margin: {top: 60},
-						addPageContent: function(data) {
-							doc.text("Header", 40, 30);
-						}
-					}*/);					
-					  
-					  
+					doc.autoTable(columns, rows);					
+					*/  				
+
+					
+					var res = doc.autoTableHtmlToJson(document.getElementById("invoice-table"));
+					doc.autoTable(res.columns, res.data, {margin: {top: 80}});					
+					
 					var result = doc.output("datauristring");
 					result = result.replace(/^data:application\/pdf;base64,/, "");				
 					

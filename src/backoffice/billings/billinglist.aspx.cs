@@ -28,6 +28,7 @@ public partial class _BillingList : Page
 	protected IList<Country> stateRegions;
 	protected string internationalCountryCode = "";
 	protected string internationalStateRegionCode = "";
+	protected bool mailSent = false;
 	
 	private int _totalPages;	
 	public int totalPages {
@@ -52,6 +53,12 @@ public partial class _BillingList : Page
 		}	
 		
 		StringBuilder errorUrl = new StringBuilder("/backoffice/include/error.aspx?error_code=");
+
+		UriBuilder billingMailBuilder = new UriBuilder(Request.Url);
+		billingMailBuilder.Scheme = "http";
+		billingMailBuilder.Port = -1;
+		billingMailBuilder.Path="";
+		billingMailBuilder.Query="";		
 		
 		billingrep = RepositoryFactory.getInstance<IBillingRepository>("IBillingRepository");
 		countryrep = RepositoryFactory.getInstance<ICountryRepository>("ICountryRepository");
@@ -89,6 +96,9 @@ public partial class _BillingList : Page
 			numPage = (int)Session["billingPage"];
 		}	
 		
+		if(!String.IsNullOrEmpty(Request["mail_sent"]) && Request["mail_sent"] == "1"){
+			mailSent = true;
+		}
 		
 		try
 		{
@@ -293,12 +303,7 @@ public partial class _BillingList : Page
 			{
 				Billing billingToSend = billingrep.getById(Convert.ToInt32(Request["id_billing"]));
 
-				/*
-				TODO: 
-				- create pdf (delete f exist and create new)
-				- send email with pdf attachment
-				- add flag email_sent = true to billing
-				*/
+				OrderService.sendBillingOrderMail(billingToSend.id, lang.currentLangCode, lang.defaultLangCode, billingMailBuilder.ToString());
 				
 				executed = true;
 			}
@@ -312,7 +317,7 @@ public partial class _BillingList : Page
 			//Response.Write("<br>executed post: "+executed);
 				
 			if(executed){
-				Response.Redirect("/backoffice/billings/billinglist.aspx?cssClass=LB&resetMenu=1");
+				Response.Redirect("/backoffice/billings/billinglist.aspx?cssClass=LB&resetMenu=1&mail_sent=1");
 			}else{
 				Response.Redirect(errorUrl.ToString());
 			}			

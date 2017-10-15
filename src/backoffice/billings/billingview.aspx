@@ -24,16 +24,100 @@
 <head>
 <CommonMeta:insert runat="server" />
 <CommonCssJs:insert runat="server" />
-<script type="text/javascript" src="/common/js/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.min.js"></script>
 <script type="text/javascript" src="/common/js/jspdf.plugin.autotable.min.js"></script>
 
 <script>
-function generateBillingImage(imgData,orderId,billingId){
-	var query_string = "id_order="+orderId+"&id_billing="+billingId+"&img_data="+encodeURIComponent(imgData);	
+function generateBillingImage(imgId,imgType,orderId,billingId){
+
+	var doc = new jsPDF('p', 'pt', 'a4');
+	
+	var firstStartY = 20;
+	
+	if(imgId){
+		var c = document.createElement('canvas');
+		var ctx = c.getContext('2d');
+		var img = document.getElementById(imgId);
+		//c.height = img.naturalHeight;
+		//c.width = img.naturalWidth;
+		c.height = img.height;
+		c.width = img.width;
+		ctx.drawImage(img, 0, 0);
+		var base64String = c.toDataURL(imgType); 
+		var imgWidth = img.width/100*78;
+		var imgHeight = img.height/100*78;
+		firstStartY = img.height+20;
+		
+		//alert("real imgWidth: "+img.width+"\npdf imgWidth: "+imgWidth+"\nreal imgHeight: "+img.height+"\npdf imgHeight: "+imgHeight);
+	}
+	
+	var pageContent = function (data) {
+		if(imgId){
+			if (base64String) {
+				doc.addImage(base64String, imgType, data.settings.margin.left, 15, imgWidth, imgHeight);
+			}
+		}
+	}; 	
+	
+	var res = doc.autoTableHtmlToJson(document.getElementById('invoice-table'));
+	doc.autoTable(res.columns, res.data, {
+		addPageContent: pageContent,
+		startY: firstStartY,
+		theme: 'grid',
+		headerStyles: {fontStyle: 'normal',fillColor: false,textColor: 20,lineColor: 20,lineWidth: 1}
+	});
+	var res2 = doc.autoTableHtmlToJson(document.getElementById('invoice-table2'));
+	doc.autoTable(res2.columns, res2.data, {
+		startY: doc.autoTableEndPosY() + 10,
+		theme: 'grid',
+		headerStyles: {overflow: 'linebreak',fontStyle: 'bold',fillColor: false,textColor: 20,lineColor: 20,lineWidth: 1},
+		bodyStyles: {overflow: 'linebreak',fontStyle: 'normal',lineColor: 20,lineWidth: 1}
+	});
+	var res3 = doc.autoTableHtmlToJson(document.getElementById('invoice-table3'));
+	doc.autoTable(res3.columns, res3.data, {
+		startY: doc.autoTableEndPosY(),
+		theme: 'grid',
+		headerStyles: {overflow: 'linebreak',fontStyle: 'bold',fillColor: false,textColor: 20,lineColor: 20,lineWidth: 1},
+		bodyStyles: {overflow: 'linebreak',fontStyle: 'normal',lineColor: 20,lineWidth: 1}
+	});
+	var res4 = doc.autoTableHtmlToJson(document.getElementById('invoice-table4'));
+	doc.autoTable(res4.columns, res4.data, {
+		startY: doc.autoTableEndPosY(),
+		theme: 'grid',
+		headerStyles: {overflow: 'linebreak',fontStyle: 'bold',fillColor: false,textColor: 20,lineColor: 20,lineWidth: 1},
+		bodyStyles: {overflow: 'linebreak',fontStyle: 'normal',lineColor: 20,lineWidth: 1}
+	});
+	var res5 = doc.autoTableHtmlToJson(document.getElementById('invoice-table5'));
+	doc.autoTable(res5.columns, res5.data, {
+		startY: doc.autoTableEndPosY() + 10,
+		theme: 'grid',
+		headerStyles: {overflow: 'linebreak',fontStyle: 'bold',fillColor: false,textColor: 20,lineColor: 20,lineWidth: 1},
+		bodyStyles: {overflow: 'linebreak',fontStyle: 'normal',lineColor: 20,lineWidth: 1}
+	});
+	var res6 = doc.autoTableHtmlToJson(document.getElementById('invoice-table6'));
+	doc.autoTable(res6.columns, res6.data, {
+		startY: doc.autoTableEndPosY() + 10,
+		theme: 'grid',
+		headerStyles: {overflow: 'linebreak',fontStyle: 'bold',fillColor: false,textColor: 20,lineColor: 20,lineWidth: 1},
+		bodyStyles: {overflow: 'linebreak',fontStyle: 'normal',lineColor: 20,lineWidth: 1}
+	});
+	var res7 = doc.autoTableHtmlToJson(document.getElementById('invoice-table7'));
+	doc.autoTable(res7.columns, res7.data, {
+		startY: doc.autoTableEndPosY(),
+		theme: 'grid',
+		headerStyles: {overflow: 'linebreak',fontStyle: 'bold',fillColor: false,textColor: 20,lineColor: 20,lineWidth: 1},
+		bodyStyles: {overflow: 'linebreak',fontStyle: 'normal',lineColor: 20,lineWidth: 1}
+	});
+	
+	
+	//doc.save("table.pdf");
+
+	var result = doc.output("datauristring");
+	result = result.replace(/^data:application\/pdf;base64,/, "");	
+
+	var query_string = "id_order="+orderId+"&id_billing="+billingId+"&img_data="+encodeURIComponent(result);	
 	//alert(query_string);
 
-	//$("#show_img").append(query_string);
 	
 	$.ajax({
 		async: true,
@@ -43,8 +127,6 @@ function generateBillingImage(imgData,orderId,billingId){
 		data: query_string,
 		success: function(response) {
 			alert(response);
-			//$('#billing_show').empty();
-			//$('#billing_show').append('<a href="/backoffice/billings/billingview.aspx?id='+response+'&cssClass=LB"><%=lang.getTranslated("backend.ordini.view.table.label.view_billing")%></a>');
 		},
 		error: function(response) {
 			//alert(response.responseText);	
@@ -57,6 +139,10 @@ function viewBillingfile(orderId,billingId){
 	var pdfPath = "/public/upload/files/billings/invoice_"+billingId+"_"+orderId+".pdf"; 
 	window.open(pdfPath, '_blank');
 }
+
+function getExtension(filename) {
+    return filename.split('.').pop().toLowerCase();
+}
 </script>
 </head>
 <body>
@@ -66,12 +152,11 @@ function viewBillingfile(orderId,billingId){
 		<CommonMenu:insert runat="server" />
 		<div id="backend-content">
 			<%if(billing!=null){%>
-				<div id="invoice-canvas" style="width:8.27in;">
-				<table border="0" cellpadding="0" cellspacing="0" class="invoice-table" id="invoice-table">
+				<table border="0" cellpadding="5" cellspacing="0" id="invoice-table" style="border:1px solid #C9C9C9;width:800px;">
 				<tr>
-				<td style="width:40%;" id="shippedFrom">
+				<td style="width:300px;text-align:left;vertical-align:top;border:1px solid #C9C9C9;">
 				<%if(!String.IsNullOrEmpty(companyLogo)){%>
-				<img src="<%=companyLogo%>" border="0" align="top" style="margin-bottom:15px;display:block;"/>
+				<img src="<%=companyLogo%>" id="invoice-logo" border="0" align="top" style="margin-bottom:15px;display:block;"/>
 				<%}%>
 				<strong style="margin-bottom:20px;"><%=billing.name%></strong><br/>
 				<%=billing.address%><br/>
@@ -81,7 +166,7 @@ function viewBillingfile(orderId,billingId){
 				<%=lang.getTranslated("backend.ordini.view.table.label.billing_data_fax")%>:&nbsp;<%=billing.fax%><br/>
 				<%=billing.description%>		
 				</td>
-				<td style="width:60%;" id="shippedTo">
+				<td style="width:500px;text-align:left;vertical-align:top;border:1px solid #C9C9C9;">
 				<%		
 				if(order.noRegistration && "1".Equals(confservice.get("show_user_field_on_direct_buy").value) && user.fields != null && user.fields.Count>0 && usrfields != null && usrfields.Count>0){							
 					foreach(UserFieldsMatch f in user.fields){
@@ -133,30 +218,30 @@ function viewBillingfile(orderId,billingId){
 				</td>
 				</tr>
 				</table>
-				<br/><br/>
-				<table border="0" cellpadding="0" cellspacing="0" class="invoice-table">
+
+				<table border="0" cellpadding="5" cellspacing="0" id="invoice-table2" style="margin-top:20px;width:800px;text-align:left;vertical-align:top;border:1px solid #C9C9C9;">				
 				<tr>
-				<th style="width:40%"><%=lang.getTranslated("backend.ordini.view.table.label.doc_type")%></th>
-				<th style="width:30%"><%=lang.getTranslated("backend.ordini.view.table.label.dta_doc")%></th>
-				<th style="width:30%"><%=lang.getTranslated("backend.ordini.view.table.label.num_doc")%></th>
+				<th style="border:1px solid #C9C9C9;"><%=lang.getTranslated("backend.ordini.view.table.label.doc_type")%></th>
+				<th style="border:1px solid #C9C9C9;"><%=lang.getTranslated("backend.ordini.view.table.label.dta_doc")%></th>
+				<th style="border:1px solid #C9C9C9;"><%=lang.getTranslated("backend.ordini.view.table.label.num_doc")%></th>
 				</tr>
 				<tr>
-				<td><%if(billing.idRegisteredBilling>0){Response.Write(lang.getTranslated("backend.ordini.view.table.label.doc_type_registered_bill"));}else{Response.Write(lang.getTranslated("backend.ordini.view.table.label.doc_type_pro_bill"));}%></td>
-				<td><%if(billing.idRegisteredBilling>0){Response.Write(billing.registeredDate.ToString("dd/MM/yyyy HH:mm"));}else{Response.Write(billing.insertDate.ToString("dd/MM/yyyy HH:mm"));}%></td>
-				<td><%if(billing.idRegisteredBilling>0){Response.Write(billing.idRegisteredBilling+"/"+billing.registeredDate.ToString("yyyy"));}else{Response.Write("&nbsp;");}%></td>
+				<td style="border:1px solid #C9C9C9;"><%if(billing.idRegisteredBilling>0){Response.Write(lang.getTranslated("backend.ordini.view.table.label.doc_type_registered_bill"));}else{Response.Write(lang.getTranslated("backend.ordini.view.table.label.doc_type_pro_bill"));}%></td>
+				<td style="border:1px solid #C9C9C9;"><%if(billing.idRegisteredBilling>0){Response.Write(billing.registeredDate.ToString("dd/MM/yyyy HH:mm"));}else{Response.Write(billing.insertDate.ToString("dd/MM/yyyy HH:mm"));}%></td>
+				<td style="border:1px solid #C9C9C9;"><%if(billing.idRegisteredBilling>0){Response.Write(billing.idRegisteredBilling+"/"+billing.registeredDate.ToString("yyyy"));}else{Response.Write("&nbsp;");}%></td>
+				</tr>	
+				</table>
+
+				<table border="0" cellpadding="5" cellspacing="0" id="invoice-table3" style="width:800px;text-align:left;vertical-align:top;border:1px solid #C9C9C9;">
+				<tr>
+				<th style="padding-top:10px;border:1px solid #C9C9C9;"><%=lang.getTranslated("backend.ordini.view.table.label.id_ordine")%></th>
+				<th style="padding-top:10px;border:1px solid #C9C9C9;"><%=lang.getTranslated("backend.ordini.view.table.label.dta_insert_order")%></th>
+				<th style="padding-top:10px;border:1px solid #C9C9C9;"><%=lang.getTranslated("backend.ordini.view.table.label.stato_order")%></th>
 				</tr>
 				<tr>
-				<td colspan="3">&nbsp;</td>
-				</tr>				
-				<tr>
-				<th><%=lang.getTranslated("backend.ordini.view.table.label.id_ordine")%></th>
-				<th><%=lang.getTranslated("backend.ordini.view.table.label.dta_insert_order")%></th>
-				<th><%=lang.getTranslated("backend.ordini.view.table.label.stato_order")%></th>
-				</tr>
-				<tr>
-				<td><%=order.id%></td>
-				<td><%=order.insertDate.ToString("dd/MM/yyyy HH:mm")%></td>
-				<td>
+				<td style="border:1px solid #C9C9C9;"><%=order.id%></td>
+				<td style="border:1px solid #C9C9C9;"><%=order.insertDate.ToString("dd/MM/yyyy HH:mm")%></td>
+				<td style="border:1px solid #C9C9C9;">
 				<%
 				string labelStatus = "";
 				if (order.status==1) {
@@ -186,32 +271,29 @@ function viewBillingfile(orderId,billingId){
 				}
 				%></td>	
 				</tr>
+				</table>
+
+				<table border="0" cellpadding="5" cellspacing="0" id="invoice-table4" style="width:800px;text-align:left;vertical-align:top;border:1px solid #C9C9C9;">
 				<tr>
-				<td colspan="3">&nbsp;</td>
+				<th style="padding-top:10px;border:1px solid #C9C9C9;"><%=lang.getTranslated("backend.ordini.view.table.label.guid_ordine")%></th>
+				<th style="padding-top:10px;border:1px solid #C9C9C9;"><%=lang.getTranslated("backend.ordini.view.table.label.tipo_pagam_order")%></th>
+				<th style="padding-top:10px;border:1px solid #C9C9C9;"><%=lang.getTranslated("backend.ordini.view.table.label.pagam_order_done")%></th>
 				</tr>
 				<tr>
-				<th><%=lang.getTranslated("backend.ordini.view.table.label.guid_ordine")%></th>
-				<th><%=lang.getTranslated("backend.ordini.view.table.label.tipo_pagam_order")%></th>
-				<th><%=lang.getTranslated("backend.ordini.view.table.label.pagam_order_done")%></th>
+				<td style="border:1px solid #C9C9C9;"><%=order.guid%></td>
+				<td style="border:1px solid #C9C9C9;"><%=paymentType%></td>
+				<td style="border:1px solid #C9C9C9;"><%=pdone%></td>
 				</tr>
-				<tr>
-				<td><%=order.guid%></td>
-				<td><%=paymentType%></td>
-				<td><%=pdone%></td>
-				</tr>
-				<tr>
-				<td colspan="3">&nbsp;</td>
-				</tr>
-				<tr>
-				<td colspan="3">
-					<table border="0" align="top" cellpadding="0" cellspacing="0" class="inner-table">							
+				</table>
+
+				<table border="0" cellpadding="5" cellspacing="0" id="invoice-table5" style="width:800px;text-align:left;vertical-align:top;border:1px solid #C9C9C9;">									
 					<tr>
-					<th><%=lang.getTranslated("backend.ordini.view.table.header.nome_prod")%></th>
-					<th class="upper"><%=lang.getTranslated("backend.ordini.view.table.header.taxable_amount")%></th>
-					<th class="upper"><%=lang.getTranslated("backend.ordini.view.table.header.tax_amount")%></th>
-					<th><%=lang.getTranslated("backend.ordini.view.table.header.qta_prod")%></th>	
-					<th><%=lang.getTranslated("backend.ordini.detail.table.label.fields_prod")%></th>	
-					<th><%=lang.getTranslated("backend.ordini.view.table.header.prod_type")%></th>			
+					<th style="border:1px solid #C9C9C9;"><%=lang.getTranslated("backend.ordini.view.table.header.nome_prod")%></th>
+					<th style="border:1px solid #C9C9C9;"><%=lang.getTranslated("backend.ordini.view.table.header.taxable_amount")%></th>
+					<th style="border:1px solid #C9C9C9;"><%=lang.getTranslated("backend.ordini.view.table.header.tax_amount")%></th>
+					<th style="border:1px solid #C9C9C9;"><%=lang.getTranslated("backend.ordini.view.table.header.qta_prod")%></th>	
+					<th style="border:1px solid #C9C9C9;"><%=lang.getTranslated("backend.ordini.detail.table.label.fields_prod")%></th>	
+					<th style="border:1px solid #C9C9C9;"><%=lang.getTranslated("backend.ordini.view.table.header.prod_type")%></th>			
 					</tr>
 					<%		
 					if(order.products != null && order.products.Count>0){
@@ -351,16 +433,16 @@ function viewBillingfile(orderId,billingId){
 							}%>				
 						
 							<tr class="table-list-off">
-								<td><%=productrep.getMainFieldTranslationCached(op.idProduct, 1 , lang.currentLangCode, true,  op.productName, true).value+adsRefTitle%></td>
-								<td>&euro;&nbsp;<%=op.taxable.ToString("#,###0.00")%>
+								<td style="border:1px solid #C9C9C9;"><%=productrep.getMainFieldTranslationCached(op.idProduct, 1 , lang.currentLangCode, true,  op.productName, true).value+adsRefTitle%></td>
+								<td style="border:1px solid #C9C9C9;">&euro;&nbsp;<%=op.taxable.ToString("#,###0.00")%>
 									<ul style=padding-left:10px;padding-top:5px;margin:0px;>
 									<%=opmargin+opdiscPerc+orderProdRules%>
 									</ul>
 								</td>
-								<td>&euro;&nbsp;<%=op.supplement.ToString("#,###0.00")+suppdesc%></td>
-								<td><%=op.productQuantity%></td>	
-								<td><%=boproductCalendars+productFields%></td>	
-								<td>
+								<td style="border:1px solid #C9C9C9;">&euro;&nbsp;<%=op.supplement.ToString("#,###0.00")+suppdesc%></td>
+								<td style="border:1px solid #C9C9C9;"><%=op.productQuantity%></td>	
+								<td style="border:1px solid #C9C9C9;"><%=boproductCalendars+productFields%></td>	
+								<td style="border:1px solid #C9C9C9;">
 								<%if(op.productType == 0){ 
 									Response.Write(lang.getTranslated("backend.prodotti.detail.table.label.type_portable"));
 								}else if(op.productType == 1){ 
@@ -373,31 +455,31 @@ function viewBillingfile(orderId,billingId){
 						counter++;
 						}  
 					}%>	
-					</table><br/>
-				</td>
+				</table>
+
+				<table border="0" cellpadding="5" cellspacing="0" id="invoice-table6" style="width:800px;text-align:left;vertical-align:top;border:1px solid #C9C9C9;">
+				<tr>
+				<th style="border:1px solid #C9C9C9;"><%=lang.getTranslated("backend.ordini.view.table.label.spese_spediz_order")%></th>
+				<th style="border:1px solid #C9C9C9;"><%=lang.getTranslated("backend.ordini.view.table.label.payment_commission")%></th>
 				</tr>
 				<tr>
-				<th><%=lang.getTranslated("backend.ordini.view.table.label.spese_spediz_order")%></th>
-				<th><%=lang.getTranslated("backend.ordini.view.table.label.payment_commission")%></th>
-				<th>&nbsp;</th>
-				</tr>
-				<tr>
-				<td><%=orderFees%></td>
-				<td >&euro;&nbsp;<%=paymentCommissions.ToString("#,###0.00")%></td>
-				<td>&nbsp;</td>
-				</tr>
-				<tr>
-				<th><%=lang.getTranslated("backend.ordini.view.table.header.totale_prod")%></th>
-				<th><%=lang.getTranslated("backend.ordini.view.table.header.totale_tax_prod")%></th>
-				<th><%=lang.getTranslated("backend.ordini.view.table.label.totale_order")%></th>
-				</tr>
-				<tr>
-				<td>&euro;&nbsp;<%=taxableAmount.ToString("#,###0.00")%></td>
-				<td>&euro;&nbsp;<%=taxAmount.ToString("#,###0.00")%></td>
-				<td>&euro;&nbsp;<%=orderAmount.ToString("#,###0.00")%></td>
+				<td style="border:1px solid #C9C9C9;"><%=orderFees%></td>
+				<td style="border:1px solid #C9C9C9;">&euro;&nbsp;<%=paymentCommissions.ToString("#,###0.00")%></td>
 				</tr>
 				</table>
-				</div>
+
+				<table border="0" cellpadding="5" cellspacing="0" id="invoice-table7" style="width:800px;text-align:left;vertical-align:top;border:1px solid #C9C9C9;">
+				<tr>
+				<th style="border:1px solid #C9C9C9;"><%=lang.getTranslated("backend.ordini.view.table.header.totale_prod")%></th>
+				<th style="border:1px solid #C9C9C9;"><%=lang.getTranslated("backend.ordini.view.table.header.totale_tax_prod")%></th>
+				<th style="border:1px solid #C9C9C9;"><%=lang.getTranslated("backend.ordini.view.table.label.totale_order")%></th>
+				</tr>
+				<tr>
+				<td style="border:1px solid #C9C9C9;">&euro;&nbsp;<%=taxableAmount.ToString("#,###0.00")%></td>
+				<td style="border:1px solid #C9C9C9;">&euro;&nbsp;<%=taxAmount.ToString("#,###0.00")%></td>
+				<td style="border:1px solid #C9C9C9;">&euro;&nbsp;<%=orderAmount.ToString("#,###0.00")%></td>
+				</tr>
+				</table>
 				<br/>
 				<input type="button" id="create_invoice" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.invoice.label.create_invoice")%>" />
 				<%if(hasInvoicePdf){%>
@@ -407,9 +489,6 @@ function viewBillingfile(orderId,billingId){
 				<input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.commons.back")%>" onclick="javascript:location.href='/backoffice/billings/billinglist.aspx?cssClass=LB';" />
 				<br/><br/>
 				
-				<div id="show_img"></div>
-				<!--<a id="btn-Convert-Html2Image" href="#">Download</a>-->
-				
 				<script>
 				<%if(hasInvoicePdf){%>
 				$("#view_invoice").on('click', function () {
@@ -417,133 +496,18 @@ function viewBillingfile(orderId,billingId){
 				});	
 				<%}%>
 				
-				var invoice_element = $("#invoice-canvas"); // global variable		
-				
 				$("#create_invoice").on('click', function () {
+					var invoiceLogoId = "";
+					var invoiceLogoType = "";
 					
-					var doc = new jsPDF('p', 'in', 'a4');
-					
-					/*
-					var elementHandler = {
-					  '#ignorePDF': function (element, renderer) {
-						return true;
-					  }
-					};
-					//var source = window.document.getElementsByTagName("body")[0];
-					var source = $('#invoice-canvas').html();
-					doc.fromHTML(
-					  source,
-					  0.5,
-					  0.5,
-					  {
-						'width': 180
-						,'elementHandlers': elementHandler
-					  });	
-					*/
-					
-					/*
-					var columns = [
-						{title: "", dataKey: "shippedFrom"},
-						{title: "", dataKey: "shippedTo"}
-					];
-					var rows = [
-						{"shippedFrom": $('#shippedFrom').html(), "shippedTo": $('#shippedTo').html()}
-					];					
-										
-					doc.autoTable(columns, rows);					
-					*/  				
-
-					
-					var res = doc.autoTableHtmlToJson(document.getElementById("invoice-table"));
-					doc.autoTable(res.columns, res.data, {margin: {top: 80}});					
-					
-					var result = doc.output("datauristring");
-					result = result.replace(/^data:application\/pdf;base64,/, "");				
-					
-					generateBillingImage(result,<%=order.id%>,<%=billing.id%>);
+					<%if(!String.IsNullOrEmpty(companyLogo)){%>
+					invoiceLogoId = "invoice-logo";
+					var invoiceLogoSrc = $('#invoice-logo').attr('src');
+					invoiceLogoType = getExtension(invoiceLogoSrc);
+					<%}%>
 				
-				
-				
-				
-					/*
-					window.scrollTo(0,0);
-					
-					html2canvas(invoice_element, {
-					background: "#fff",
-					onrendered: function (canvas) {
-						var imgageData = canvas.toDataURL("image/png");
-						var newData = imgageData.replace(/^data:image\/png;base64,/, "");
-						
-						//generateBillingImage(newData,<%=order.id%>,<%=billing.id%>);	
-						
-						//$("#show_img").append(newData);
-						
-						
-						$("<img/>", {
-						  id: "image",
-						  src: imgageData,
-						  width: '100%',
-						  height: '100%'
-						}).appendTo($("#show_img").empty());		
-											
-					}
-					}); 
-					*/
-					
-					
-					/*
-					var scaleBy = 2;
-					//var w = invoice_element.width();
-					//var h = invoice_element.height();
-					
-					var w = window.innerWidth;
-					var h = window.innerHeight;
-					
-					var div = invoice_element;
-					var canvas = document.createElement('canvas');
-					canvas.width = w * scaleBy;
-					canvas.height = h * scaleBy;
-					canvas.style.width = w + 'px';
-					canvas.style.height = h + 'px';
-					var context = canvas.getContext('2d');
-					context.scale(scaleBy, scaleBy);
-					alert("invoice_element.width(): "+w+"\ninvoice_element.height(): "+h+"\ncanvas.width: "+canvas.width+"\canvas.height: "+canvas.height+"\ncanvas.style.width: "+canvas.style.width+"\ncanvas.style.height: "+canvas.style.height);
-				
-					window.scrollTo(0,0);
-					
-					html2canvas(div, {
-						canvas:canvas,
-						onrendered: function (canvas) {
-							var imgageData = canvas.toDataURL("image/png");
-							var newData = imgageData.replace(/^data:image\/png;base64,/, "");
-							
-							//generateBillingImage(newData,<%=order.id%>,<%=billing.id%>);	
-							
-							//$("#show_img").append(newData);
-							
-							
-							$("<img/>", {
-							  id: "image",
-							  src: imgageData,
-							  width: '100%',
-							  height: '100%'
-							}).appendTo($("#show_img").empty());	
-						}
-					});	
-					*/
-				});	
-				
-				/*
-				$("#btn-Convert-Html2Image").on('click', function () {
-					html2canvas(invoice_element, {
-					onrendered: function (canvas) {
-						var imgageData = canvas.toDataURL("image/png");
-						var newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
-						$("#btn-Convert-Html2Image").attr("download", "your_pic_name.png").attr("href", newData);						
-					}
-					});  
+					generateBillingImage(invoiceLogoId,invoiceLogoType,<%=order.id%>,<%=billing.id%>);
 				});
-				*/
 				</script>
 				
 			<%}%>

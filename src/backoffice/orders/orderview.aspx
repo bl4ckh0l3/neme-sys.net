@@ -261,8 +261,8 @@ function generateBilling(orderId){
 					<table border="0" align="top" cellpadding="0" cellspacing="0" class="inner-table">							
 					<tr>
 					<th><%=lang.getTranslated("backend.ordini.view.table.header.nome_prod")%></th>
-					<th class="upper"><%=lang.getTranslated("backend.ordini.view.table.header.taxable_amount")%></th>
-					<th class="upper"><%=lang.getTranslated("backend.ordini.view.table.header.tax_amount")%></th>
+					<th><%=lang.getTranslated("backend.ordini.view.table.header.taxable_amount")%></th>
+					<th><%=lang.getTranslated("backend.ordini.view.table.header.tax_amount")%></th>
 					<th><%=lang.getTranslated("backend.ordini.view.table.header.qta_prod")%></th>	
 					<th><%=lang.getTranslated("backend.ordini.detail.table.label.fields_prod")%></th>	
 					<th><%=lang.getTranslated("backend.ordini.view.table.header.prod_type")%></th>

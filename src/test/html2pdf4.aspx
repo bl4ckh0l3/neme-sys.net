@@ -44,10 +44,14 @@ function generate() {
 	c.width = img.width;
 	ctx.drawImage(img, 0, 0);
 	var base64String = c.toDataURL('png'); 
+	var imgWidth = img.width/100*78;
+	var imgHeight = img.height/100*78;
+	
+	//alert("real imgWidth: "+ img.width+"\npdf imgWidth: "+imgWidth+"\nreal imgHeight: "+img.height+"\npdf imgHeight: "+imgHeight):
 	
 	var pageContent = function (data) {
 		if (base64String) {
-			doc.addImage(base64String, 'png', data.settings.margin.left, 15, img.width, img.height);
+			doc.addImage(base64String, 'png', data.settings.margin.left, 15, imgWidth, imgHeight);
 		}
 	}; 
 	
@@ -105,8 +109,9 @@ function generate() {
 	});
 	
 	
-	//doc.save("table.pdf");
+	doc.save("table.pdf");
 
+	/*
 	var result = doc.output("datauristring");
 	result = result.replace(/^data:application\/pdf;base64,/, "");	
 	
@@ -126,8 +131,136 @@ function generate() {
 			//alert(response.responseText);	
 			alert("errore");
 		}
-	});		
+	});	
+	*/
 }
+
+
+
+// TEST WITH html2canvas
+					
+var doc = new jsPDF('p', 'in', 'a4');
+
+/*
+var elementHandler = {
+  '#ignorePDF': function (element, renderer) {
+	return true;
+  }
+};
+//var source = window.document.getElementsByTagName("body")[0];
+var source = $('#invoice-canvas').html();
+doc.fromHTML(
+  source,
+  0.5,
+  0.5,
+  {
+	'width': 180
+	,'elementHandlers': elementHandler
+  });	
+*/
+
+/*
+var columns = [
+	{title: "", dataKey: "shippedFrom"},
+	{title: "", dataKey: "shippedTo"}
+];
+var rows = [
+	{"shippedFrom": $('#shippedFrom').html(), "shippedTo": $('#shippedTo').html()}
+];					
+					
+doc.autoTable(columns, rows);					
+*/  				
+
+
+var res = doc.autoTableHtmlToJson(document.getElementById("invoice-table"));
+doc.autoTable(res.columns, res.data, {margin: {top: 80}});					
+
+var result = doc.output("datauristring");
+result = result.replace(/^data:application\/pdf;base64,/, "");				
+
+generateBillingImage(result,<%=order.id%>,<%=billing.id%>);
+
+
+
+
+/*
+window.scrollTo(0,0);
+
+html2canvas(invoice_element, {
+background: "#fff",
+onrendered: function (canvas) {
+	var imgageData = canvas.toDataURL("image/png");
+	var newData = imgageData.replace(/^data:image\/png;base64,/, "");
+	
+	//generateBillingImage(newData,<%=order.id%>,<%=billing.id%>);	
+	
+	//$("#show_img").append(newData);
+	
+	
+	$("<img/>", {
+	  id: "image",
+	  src: imgageData,
+	  width: '100%',
+	  height: '100%'
+	}).appendTo($("#show_img").empty());		
+						
+}
+}); 
+*/
+
+
+/*
+var scaleBy = 2;
+//var w = invoice_element.width();
+//var h = invoice_element.height();
+
+var w = window.innerWidth;
+var h = window.innerHeight;
+
+var div = invoice_element;
+var canvas = document.createElement('canvas');
+canvas.width = w * scaleBy;
+canvas.height = h * scaleBy;
+canvas.style.width = w + 'px';
+canvas.style.height = h + 'px';
+var context = canvas.getContext('2d');
+context.scale(scaleBy, scaleBy);
+alert("invoice_element.width(): "+w+"\ninvoice_element.height(): "+h+"\ncanvas.width: "+canvas.width+"\canvas.height: "+canvas.height+"\ncanvas.style.width: "+canvas.style.width+"\ncanvas.style.height: "+canvas.style.height);
+
+window.scrollTo(0,0);
+
+html2canvas(div, {
+	canvas:canvas,
+	onrendered: function (canvas) {
+		var imgageData = canvas.toDataURL("image/png");
+		var newData = imgageData.replace(/^data:image\/png;base64,/, "");
+		
+		//generateBillingImage(newData,<%=order.id%>,<%=billing.id%>);	
+		
+		//$("#show_img").append(newData);
+		
+		
+		$("<img/>", {
+		  id: "image",
+		  src: imgageData,
+		  width: '100%',
+		  height: '100%'
+		}).appendTo($("#show_img").empty());	
+	}
+});	
+*/
+				
+/*
+$("#btn-Convert-Html2Image").on('click', function () {
+	html2canvas(invoice_element, {
+	onrendered: function (canvas) {
+		var imgageData = canvas.toDataURL("image/png");
+		var newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+		$("#btn-Convert-Html2Image").attr("download", "your_pic_name.png").attr("href", newData);						
+	}
+	});  
+});
+*/
 </script>
 </head>
 <body>

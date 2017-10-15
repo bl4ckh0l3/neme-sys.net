@@ -38,23 +38,20 @@
 		<echo message="task 3 = up to econeme-sys .net"/>
 		<echo message="--> build upgrate from neme-sys .net to econeme-sys .net"/>	
 		<echo message=""/>
-		<echo message="task 4 = all (neme-sys .net + econeme-sys .net + docs + upto econeme-sys .net)"/>
-		<echo message="--> build neme-sys .net+docs, econeme-sys .net+docs+upto econeme-sys .net"/>
-		<echo message=""/>
-		<echo message="task 5 = demo"/>
-		<echo message="--> build demo+docs"/>
-		<echo message=""/>
-		<echo message="task 6 = community module"/>
+		<echo message="task 4 = community module"/>
 		<echo message="--> build community module"/>
 		<echo message=""/>
-		<echo message="task 7 = blog module"/>
+		<echo message="task 5 = blog module"/>
 		<echo message="--> build blog module"/>
 		<echo message=""/>
-		<echo message="task 8 = ads module"/>
+		<echo message="task 6 = ads module"/>
 		<echo message="--> build ads module"/>
 		<echo message=""/>
-		<echo message="task 9 = voucher module"/>
+		<echo message="task 7 = voucher module"/>
 		<echo message="--> build voucher module"/>
+		<echo message=""/>
+		<echo message="task 8 = all (neme-sys .net + econeme-sys .net + docs + upto econeme-sys .net + community module + blog module + ads module + voucher module)"/>
+		<echo message="--> build neme-sys .net+docs, econeme-sys .net+docs+upto econeme-sys .net"/>
 		
 		
 		<echo message=""/>		
@@ -348,6 +345,7 @@
 				<exclude name="**/backoffice/business-strategy/**"/>
 				<exclude name="**/backoffice/vouchers/**"/>	
 				<exclude name="**/backoffice/supplements/**"/>
+				<exclude name="**/backoffice/billings/**"/>
 				<exclude name="public/layout/include/menu-frontend.ascx"/>
 				<exclude name="public/layout/area_user/account.ascx"/>
 				<exclude name="public/layout/area_user/friends.ascx"/>
@@ -373,6 +371,7 @@
 				<exclude name="**/public/upload/files/user/**/*"/>
 				<exclude name="**/public/upload/files/header/**/*"/>
 				<exclude name="**/public/upload/files/modules/**/*"/>
+				<exclude name="**/public/upload/files/billings/**/*"/>
 				
 				<exclude name="public/utils/${docname}"/>
 				<exclude name="public/utils/templates_econeme-sys.zip"/>
@@ -383,6 +382,7 @@
 				<exclude name="**/App_WebReferences/**"/>				
 				
 				<exclude name="App_code/hbm/Ads.hbm.xml"/>
+				<exclude name="App_code/hbm/Billing.hbm.xml"/>
 				<exclude name="App_code/hbm/BillsAddress.hbm.xml"/>
 				<exclude name="App_code/hbm/BusinessRule.hbm.xml"/>
 				<exclude name="App_code/hbm/Currency.hbm.xml"/>
@@ -400,6 +400,7 @@
 				<exclude name="**/App_code/com/nemesys/model/cart/**/*"/>
 				<exclude name="**/App_code/com/nemesys/model/currency/**/*"/>
 				<exclude name="**/App_code/com/nemesys/model/fees/**/*"/>
+				<exclude name="**/App_code/com/nemesys/model/billing/**/*"/>
 				<exclude name="**/App_code/com/nemesys/model/order/**/*"/>
 				<exclude name="**/App_code/com/nemesys/model/payment/**/*"/>
 				<exclude name="**/App_code/com/nemesys/model/product/**/*"/>
@@ -408,11 +409,13 @@
 				<exclude name="App_code/com/nemesys/model/commons/IProduct.cs"/>
 
 				<exclude name="App_code/com/nemesys/database/repository/AdsRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/BillingRepository.cs"/>
 				<exclude name="App_code/com/nemesys/database/repository/BillsAddressRepository.cs"/>
 				<exclude name="App_code/com/nemesys/database/repository/BusinessRuleRepository.cs"/>
 				<exclude name="App_code/com/nemesys/database/repository/CurrencyRepository.cs"/>
 				<exclude name="App_code/com/nemesys/database/repository/FeeRepository.cs"/>
 				<exclude name="App_code/com/nemesys/database/repository/IAdsRepository.cs"/>
+				<exclude name="App_code/com/nemesys/database/repository/IBillingRepository.cs"/>
 				<exclude name="App_code/com/nemesys/database/repository/IBillsAddressRepository.cs"/>
 				<exclude name="App_code/com/nemesys/database/repository/IBusinessRuleRepository.cs"/>
 				<exclude name="App_code/com/nemesys/database/repository/ICurrencyRepository.cs"/>
@@ -725,6 +728,7 @@
 				<exclude name="**/public/upload/files/user/**/*"/>
 				<exclude name="**/public/upload/files/header/**/*"/>
 				<exclude name="**/public/upload/files/modules/**/*"/>
+				<exclude name="**/public/upload/files/billings/**/*"/>
 				
 				<exclude name="public/utils/${docname}"/>
 				<exclude name="public/utils/templates_econeme-sys.zip"/>
@@ -945,7 +949,8 @@
 				<include name="backoffice/newsletter/newsletterlist.aspx.cs"/>
 				<include name="backoffice/newsletter/insertnewsletter.aspx"/>
 				<include name="backoffice/newsletter/insertnewsletter.aspx.cs"/>
-				<include name="backoffice/img/logo.png"/>				
+				<include name="backoffice/img/logo.png"/>		
+				<include name="**/backoffice/billings/**"/>				
 				<include name="**/backoffice/shoppingcart/**"/>
 				<include name="**/backoffice/orders/**"/>
 				<include name="**/backoffice/payments/**"/>
@@ -962,6 +967,7 @@
 				<include name="**/App_WebReferences/**"/>
 
 				<include name="App_code/hbm/Ads.hbm.xml"/>
+				<include name="App_code/hbm/Billing.hbm.xml"/>
 				<include name="App_code/hbm/BillsAddress.hbm.xml"/>
 				<include name="App_code/hbm/BusinessRule.hbm.xml"/>
 				<include name="App_code/hbm/Currency.hbm.xml"/>
@@ -979,6 +985,7 @@
 				<include name="**/App_code/com/nemesys/model/cart/**/*"/>
 				<include name="**/App_code/com/nemesys/model/currency/**/*"/>
 				<include name="**/App_code/com/nemesys/model/fees/**/*"/>
+				<include name="**/App_code/com/nemesys/model/billing/**/*"/>
 				<include name="**/App_code/com/nemesys/model/order/**/*"/>
 				<include name="**/App_code/com/nemesys/model/payment/**/*"/>
 				<include name="**/App_code/com/nemesys/model/product/**/*"/>
@@ -987,11 +994,13 @@
 				<include name="App_code/com/nemesys/model/commons/IProduct.cs"/>
 
 				<include name="App_code/com/nemesys/database/repository/AdsRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/BillingRepository.cs"/>
 				<include name="App_code/com/nemesys/database/repository/BillsAddressRepository.cs"/>
 				<include name="App_code/com/nemesys/database/repository/BusinessRuleRepository.cs"/>
 				<include name="App_code/com/nemesys/database/repository/CurrencyRepository.cs"/>
 				<include name="App_code/com/nemesys/database/repository/FeeRepository.cs"/>
 				<include name="App_code/com/nemesys/database/repository/IAdsRepository.cs"/>
+				<include name="App_code/com/nemesys/database/repository/IBillingRepository.cs"/>
 				<include name="App_code/com/nemesys/database/repository/IBillsAddressRepository.cs"/>
 				<include name="App_code/com/nemesys/database/repository/IBusinessRuleRepository.cs"/>
 				<include name="App_code/com/nemesys/database/repository/ICurrencyRepository.cs"/>
@@ -1072,246 +1081,7 @@
 		</delete>
 
 	</target>	
-	
 
-
-<!--  *****************		BUILD ALL		***************** -->	
-	<target name="task4" depends="task1,task2,task3" description="build all"/>
-	
-
-
-<!--  *****************		BUILD DEMO	***************** -->		
-	<target name="taskReplaceDemo">
-		<loadproperties srcFile="${mod_install.dir}/replace-resource/demo_replace.properties"/>
-		
-		<copy file="${src.dir}/installed.asp" todir="${dist.dir}/demo/${buildVers}/src"/>
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/installed.asp" flags="gis" byline="false" match="(&lt;!--nsys-demoinst1--&gt;)(.*?)(&lt;!---nsys-demoinst1--&gt;)" replace="\1${nsys-demoinst1}\3" />	
-		
-		<copy file="${src.dir}/public/conf/nemesi_config.xml" todir="${dist.dir}/demo/${buildVers}/src/public/conf"/>
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/conf/nemesi_config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig1--&gt;)(.*?)(&lt;!---nsys-nemesiconfig1--&gt;)" replace="\1${nsys-nemesiconfig1}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/conf/nemesi_config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig2--&gt;)(.*?)(&lt;!---nsys-nemesiconfig2--&gt;)" replace="\1${nsys-nemesiconfig2}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/conf/nemesi_config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig3--&gt;)(.*?)(&lt;!---nsys-nemesiconfig3--&gt;)" replace="\1${nsys-nemesiconfig3}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/conf/nemesi_config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig4--&gt;)(.*?)(&lt;!---nsys-nemesiconfig4--&gt;)" replace="\1${nsys-nemesiconfig4}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/conf/nemesi_config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig5--&gt;)(.*?)(&lt;!---nsys-nemesiconfig5--&gt;)" replace="\1${nsys-nemesiconfig5}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/conf/nemesi_config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig6--&gt;)(.*?)(&lt;!---nsys-nemesiconfig6--&gt;)" replace="\1${nsys-nemesiconfig6}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/conf/nemesi_config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig7--&gt;)(.*?)(&lt;!---nsys-nemesiconfig7--&gt;)" replace="\1${nsys-nemesiconfig7}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/conf/nemesi_config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig8--&gt;)(.*?)(&lt;!---nsys-nemesiconfig8--&gt;)" replace="\1${nsys-nemesiconfig8}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/conf/nemesi_config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig9--&gt;)(.*?)(&lt;!---nsys-nemesiconfig9--&gt;)" replace="\1${nsys-nemesiconfig9}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/conf/nemesi_config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig10--&gt;)(.*?)(&lt;!---nsys-nemesiconfig10--&gt;)" replace="\1${nsys-nemesiconfig10}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/conf/nemesi_config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig11--&gt;)(.*?)(&lt;!---nsys-nemesiconfig11--&gt;)" replace="\1${nsys-nemesiconfig11}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/conf/nemesi_config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig12--&gt;)(.*?)(&lt;!---nsys-nemesiconfig12--&gt;)" replace="\1${nsys-nemesiconfig12}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/conf/nemesi_config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig13--&gt;)(.*?)(&lt;!---nsys-nemesiconfig13--&gt;)" replace="\1${nsys-nemesiconfig13}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/conf/nemesi_config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig14--&gt;)(.*?)(&lt;!---nsys-nemesiconfig14--&gt;)" replace="\1${nsys-nemesiconfig14}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/conf/nemesi_config.xml" flags="gis" byline="false" match="(&lt;!--nsys-nemesiconfig15--&gt;)(.*?)(&lt;!---nsys-nemesiconfig15--&gt;)" replace="\1${nsys-nemesiconfig15}\3" />
-
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/conf/nemesi_config.xml" flags="gis" byline="false" match="(&lt;/)(.*?)(&gt;)" replace="\1demo_\2\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/conf/nemesi_config.xml" flags="gis" byline="false" match="(attr_)(.*?)(&gt;)" replace="\1demo_\2\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/conf/nemesi_config.xml" flags="gis" byline="false" match="(&lt;)(([^/|!]).*?)(&gt;)" replace="\1demo_\2\4" />
-		
-		<copy file="${src.dir}/public/layout/css/stile.css" todir="${dist.dir}/demo/${buildVers}/src/public/layout/css"/>
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/layout/css/stile.css" flags="gis" byline="false" match="(/\*&lt;!--nsys-css1--&gt;\*/)(.*?)(/\*&lt;!---nsys-css1--&gt;\*/)" replace="\1${nsys-css1}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/layout/css/stile.css" flags="gis" byline="false" match="(/\*&lt;!--nsys-democss1--&gt;\*/)(.*?)(/\*&lt;!---nsys-democss1--&gt;\*/)" replace="\1${nsys-democss1}\3" />
-		
-		<copy file="${src.dir}/public/layout/include/header.inc" todir="${dist.dir}/demo/${buildVers}/src/public/layout/include"/>
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/layout/include/header.inc" flags="gis" byline="false" match="(&lt;!--nsys-head1--&gt;)(.*?)(&lt;!---nsys-head1--&gt;)" replace="\1${nsys-head1}\3" />
-		
-		<copy file="${src.dir}/common/include/logoff.asp" todir="${dist.dir}/demo/${buildVers}/src/common/include"/>
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/common/include/logoff.asp" flags="gis" byline="false" match="('&lt;!--nsys-demologoff1--&gt;)(.*?)('&lt;!---nsys-demologoff1--&gt;)" replace="\1${nsys-demologoff1}\3" />
-		
-		<copy file="${src.dir}/common/include/verificautente.asp" todir="${dist.dir}/demo/${buildVers}/src/common/include"/>
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/common/include/verificautente.asp" flags="gis" byline="false" match="('&lt;!--nsys-demoverify1--&gt;)(.*?)('&lt;!---nsys-demoverify1--&gt;)" replace="\1${nsys-demoverify1}\3" />
-		
-		<copy file="${src.dir}/backoffice/configuration/portalconfig.asp" todir="${dist.dir}/demo/${buildVers}/src/backoffice/configuration"/>
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/configuration/portalconfig.asp" flags="gis" byline="false" match="(&lt;!--nsys-democonf1--&gt;)(.*?)(&lt;!---nsys-democonf1--&gt;)" replace="\1${nsys-democonf1}\3" />
-		
-		<copy file="${src.dir}/backoffice/contenuti/processnews2.asp" todir="${dist.dir}/demo/${buildVers}/src/backoffice/contenuti"/>
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/contenuti/processnews2.asp" flags="gis" byline="false" match="('&lt;!--nsys-demonwsproc1--&gt;)(.*?)('&lt;!---nsys-demonwsproc1--&gt;)" replace="\1${nsys-demonwsproc1}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/contenuti/processnews2.asp" flags="gis" byline="false" match="('&lt;!--nsys-demonwsproc2--&gt;)(.*?)('&lt;!---nsys-demonwsproc2--&gt;)" replace="\1${nsys-demonwsproc2}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/contenuti/processnews2.asp" flags="gis" byline="false" match="('&lt;!--nsys-demonwsproc3--&gt;)(.*?)('&lt;!---nsys-demonwsproc3--&gt;)" replace="\1${nsys-demonwsproc3}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/contenuti/processnews2.asp" flags="gis" byline="false" match="('&lt;!--nsys-demonwsproc4--&gt;)(.*?)('&lt;!---nsys-demonwsproc4--&gt;)" replace="\1${nsys-demonwsproc4}\3" />
-		
-		<copy file="${src.dir}/backoffice/contenuti/processnews.asp" todir="${dist.dir}/demo/${buildVers}/src/backoffice/contenuti"/>
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/contenuti/processnews.asp" flags="gis" byline="false" match="('&lt;!--nsys-demonwsproc5--&gt;)(.*?)('&lt;!---nsys-demonwsproc5--&gt;)" replace="\1${nsys-demonwsproc5}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/contenuti/processnews.asp" flags="gis" byline="false" match="('&lt;!--nsys-demonwsproc6--&gt;)(.*?)('&lt;!---nsys-demonwsproc6--&gt;)" replace="\1${nsys-demonwsproc6}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/contenuti/processnews.asp" flags="gis" byline="false" match="('&lt;!--nsys-demonwsproc7--&gt;)(.*?)('&lt;!---nsys-demonwsproc7--&gt;)" replace="\1${nsys-demonwsproc7}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/contenuti/processnews.asp" flags="gis" byline="false" match="('&lt;!--nsys-demonwsproc8--&gt;)(.*?)('&lt;!---nsys-demonwsproc8--&gt;)" replace="\1${nsys-demonwsproc8}\3" />
-		
-		<copy file="${src.dir}/backoffice/prodotti/processprodotto.asp" todir="${dist.dir}/demo/${buildVers}/src/backoffice/prodotti"/>
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/prodotti/processprodotto.asp" flags="gis" byline="false" match="('&lt;!--nsys-demoprdproc1--&gt;)(.*?)('&lt;!---nsys-demoprdproc1--&gt;)" replace="\1${nsys-demoprdproc1}\3" />	
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/prodotti/processprodotto.asp" flags="gis" byline="false" match="('&lt;!--nsys-demoprdproc2--&gt;)(.*?)('&lt;!---nsys-demoprdproc2--&gt;)" replace="\1${nsys-demoprdproc2}\3" />	
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/prodotti/processprodotto.asp" flags="gis" byline="false" match="('&lt;!--nsys-demoprdproc3--&gt;)(.*?)('&lt;!---nsys-demoprdproc3--&gt;)" replace="\1${nsys-demoprdproc3}\3" />	
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/prodotti/processprodotto.asp" flags="gis" byline="false" match="('&lt;!--nsys-demoprdproc4--&gt;)(.*?)('&lt;!---nsys-demoprdproc4--&gt;)" replace="\1${nsys-demoprdproc4}\3" />	
-		
-		<copy file="${src.dir}/backoffice/prodotti/processprodotto2.asp" todir="${dist.dir}/demo/${buildVers}/src/backoffice/prodotti"/>
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/prodotti/processprodotto2.asp" flags="gis" byline="false" match="('&lt;!--nsys-demoprdproc5--&gt;)(.*?)('&lt;!---nsys-demoprdproc5--&gt;)" replace="\1${nsys-demoprdproc5}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/prodotti/processprodotto2.asp" flags="gis" byline="false" match="('&lt;!--nsys-demoprdproc6--&gt;)(.*?)('&lt;!---nsys-demoprdproc6--&gt;)" replace="\1${nsys-demoprdproc6}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/prodotti/processprodotto2.asp" flags="gis" byline="false" match="('&lt;!--nsys-demoprdproc7--&gt;)(.*?)('&lt;!---nsys-demoprdproc7--&gt;)" replace="\1${nsys-demoprdproc7}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/prodotti/processprodotto2.asp" flags="gis" byline="false" match="('&lt;!--nsys-demoprdproc8--&gt;)(.*?)('&lt;!---nsys-demoprdproc8--&gt;)" replace="\1${nsys-demoprdproc8}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/prodotti/processprodotto2.asp" flags="gis" byline="false" match="('&lt;!--nsys-demoprdproc9--&gt;)(.*?)('&lt;!---nsys-demoprdproc9--&gt;)" replace="\1${nsys-demoprdproc9}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/prodotti/processprodotto2.asp" flags="gis" byline="false" match="('&lt;!--nsys-demoprdproc10--&gt;)(.*?)('&lt;!---nsys-demoprdproc10--&gt;)" replace="\1${nsys-demoprdproc10}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/prodotti/processprodotto2.asp" flags="gis" byline="false" match="('&lt;!--nsys-demoprdproc11--&gt;)(.*?)('&lt;!---nsys-demoprdproc11--&gt;)" replace="\1${nsys-demoprdproc11}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/prodotti/processprodotto2.asp" flags="gis" byline="false" match="('&lt;!--nsys-demoprdproc12--&gt;)(.*?)('&lt;!---nsys-demoprdproc12--&gt;)" replace="\1${nsys-demoprdproc12}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/prodotti/processprodotto2.asp" flags="gis" byline="false" match="('&lt;!--nsys-demoprdproc13--&gt;)(.*?)('&lt;!---nsys-demoprdproc13--&gt;)" replace="\1${nsys-demoprdproc13}\3" />
-		
-		<copy file="${src.dir}/backoffice/users/listautenti.asp" todir="${dist.dir}/demo/${buildVers}/src/backoffice/users"/>
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/users/listautenti.asp" flags="gis" byline="false" match="(&lt;!--nsys-demoeditusr1--&gt;)(.*?)(&lt;!---nsys-demoeditusr1--&gt;)" replace="\1${nsys-demoeditusr1}\3" />
-				
-		<copy file="${src.dir}/backoffice/templates/listatemplates.asp" todir="${dist.dir}/demo/${buildVers}/src/backoffice/templates"/>
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/templates/listatemplates.asp" flags="gis" byline="false" match="(/\*&lt;!--nsys-demoedittmp1--&gt;\*/)(.*?)(/\*&lt;!---nsys-demoedittmp1--&gt;\*/)" replace="\1${nsys-demoedittmp1}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/templates/listatemplates.asp" flags="gis" byline="false" match="(/\*&lt;!--nsys-demoedittmp2--&gt;\*/)(.*?)(/\*&lt;!---nsys-demoedittmp2--&gt;\*/)" replace="\1${nsys-demoedittmp2}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/templates/listatemplates.asp" flags="gis" byline="false" match="(/\*&lt;!--nsys-demoedittmp3--&gt;\*/)(.*?)(/\*&lt;!---nsys-demoedittmp3--&gt;\*/)" replace="\1${nsys-demoedittmp3}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/templates/listatemplates.asp" flags="gis" byline="false" match="(/\*&lt;!--nsys-demoedittmp4--&gt;\*/)(.*?)(/\*&lt;!---nsys-demoedittmp4--&gt;\*/)" replace="\1${nsys-demoedittmp4}\3" />
-				
-		<copy file="${src.dir}/backoffice/language/inseriscilingua.asp" todir="${dist.dir}/demo/${buildVers}/src/backoffice/language"/>
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/language/inseriscilingua.asp" flags="gis" byline="false" match="(/\*&lt;!--nsys-demolangtmp1--&gt;\*/)(.*?)(/\*&lt;!---nsys-demolangtmp1--&gt;\*/)" replace="\1${nsys-demolangtmp1}\3" />
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/backoffice/language/inseriscilingua.asp" flags="gis" byline="false" match="(/\*&lt;!--nsys-demolangtmp2--&gt;\*/)(.*?)(/\*&lt;!---nsys-demolangtmp2--&gt;\*/)" replace="\1${nsys-demolangtmp2}\3" />
-		
-		<!-- includo il file global_install_query.sql di creazione/inserimento database -->
-		<copy file="${db.dir}/global_install_query_demo.sql" todir="${dist.dir}/demo/${buildVers}/src/public/install"/>
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/install/global_install_query_demo.sql" flags="gis" byline="false" match="buildVersSql" replace="${buildVers}" />
-		<!-- includo il file global_reload_query.sql di aggiornamento database -->
-		<copy file="${db.dir}/global_reload_query_demo.sql" todir="${dist.dir}/demo/${buildVers}/src/public/install"/>
-		<replaceregexp file="${dist.dir}/demo/${buildVers}/src/public/install/global_reload_query_demo.sql" flags="gis" byline="false" match="buildVersSql" replace="${buildVers}" />
-	</target>
-	
-	<target name="delete_zip_demo" if="zipToDeleteDemo"> 
-		<delete file="${dist.dir}/demo/${buildVers}/eco${name}.demo_${build.date}_${buildVers}.zip"/>
-	</target>
-	
-	<target name="task5" description="copy main source files into demo dir, generate zip files">
-
-		<condition property="dirToCreateDemo"> 
-			<and>
-				<not>		
-					<available file="${dist.dir}/demo/${buildVers}" type="dir"> 
-					</available>
-				</not>
-			</and> 
-		</condition> 
-		
-		<echo message=""/>
-		<echo message="dirToCreateDemo: ${dirToCreateDemo}" />		
-		<antcall target="make_dir_demo" /> 
-		<echo message=""/>
-
-		<condition property="zipToDeleteDemo"> 
-			<and>		
-				<available file="${dist.dir}/demo/${buildVers}/eco${name}.demo_${build.date}_${buildVers}.zip"> 
-				</available>
-			</and> 
-		</condition> 
-		
-		<echo message=""/>
-		<echo message="zipToDeleteDemo: ${zipToDeleteDemo}" />		
-		<antcall target="delete_zip_demo" /> 
-		<echo message=""/>
-		
-		<echo message=""/>
-		<echo message="refresh template zip" />		
-		<antcall target="refresh_template_zip" /> 
-		<echo message=""/>
-
-		<antcall target="taskReplaceDemo" />
-		
-		<copy todir="${dist.dir}/demo/${buildVers}/src">
-			<fileset dir="${src.dir}"> 
-				<include name="**/*"/>
-				
-				<exclude name="sitemap.xml"/>
-				<exclude name="installed.asp"/>
-				<exclude name="global.asa"/>
-				<exclude name="global.asa.remote"/>
-				<exclude name="global.asax.old"/>
-				<exclude name="web.config"/>
-				<exclude name="smsutils.asp"/>
-				<exclude name="**/public/demo/**"/>
-				<exclude name="**/test/**"/>
-				<exclude name="**/App_data/**/*"/>
-				<exclude name="favicon.ico"/>
-
-				<exclude name="/common/include/logoff.asp"/>				
-				<exclude name="/common/include/verificautente.asp"/>
-				
-				<exclude name="**/public/layout/css/stile.css"/>
-				<exclude name="**/public/layout/include/header.inc"/>
-				
-				<exclude name="**/public/templates/**/IT/**"/>
-				<exclude name="**/public/templates/**/EN/**"/>		
-				
-				<exclude name="**/backoffice/configuration/portalconfig.asp"/>
-				<exclude name="**/backoffice/contenuti/processnews.asp"/>
-				<exclude name="**/backoffice/contenuti/processnews2.asp"/>
-				<exclude name="**/backoffice/prodotti/processprodotto.asp"/>
-				<exclude name="**/backoffice/prodotti/processprodotto2.asp"/>
-				<exclude name="**/backoffice/users/listautenti.asp"/>
-				<exclude name="**/backoffice/templates/listatemplates.asp"/>
-				
-				<exclude name="**/public/upload/wysiwyg_editor/*.*"/>
-				<exclude name="**/public/upload/files/news/**/*"/>
-				<exclude name="**/public/upload/files/prod/**/*"/>
-				<include name="**/public/upload/files/prod/fields/*"/>
-				<exclude name="**/public/upload/files/user/**/*"/>
-				<exclude name="**/public/upload/files/header/**/*"/>
-				<exclude name="**/public/upload/files/modules/**/*"/>
-				
-				<exclude name="**/public/utils/${docname}"/>
-				
-				<exclude name="**/public/conf/nemesi_config.xml"/>		
-
-				<exclude name="**/public/utils/templates_neme-sys.zip"/>
-			</fileset>
-		</copy>
-
-		<!-- sostituisco  tutte le occorrenze di 
-				#include virtual="** 
-				con 
-				#include virtual="/public/demo 
-				e di
-				Application("
-				con
-				Application("demo_
-				-->
-		<replace dir="${dist.dir}/demo/${buildVers}/src" 
-						token="#include virtual=&quot;" 
-						value="#include virtual=&quot;/public/demo">
-						<include name="**/*"/>
-						<exclude name="**/*.sql"/>	
-		</replace>
-		<replace dir="${dist.dir}/demo/${buildVers}/src" 
-						token="Application(&quot;" 
-						value="Application(&quot;demo_">
-						<include name="**/*"/>
-						<exclude name="**/*.sql"/>
-		</replace>
-
-
-		<!--<xslt basedir="${dist.dir}/demo/${buildVers}/src" destdir="${dist.dir}/demo/${buildVers}/src" style="${dens}">
-			<include name="**/*"/>
-		</xslt> -->
-
-		<zip destfile="${dist.dir}/demo/${buildVers}/eco${name}.demo_${build.date}_${buildVers}.zip"> 
-			<zipfileset dir="${dist.dir}/demo/${buildVers}/src"> 
-				<include name="**/*"/>
-				<exclude name="**/public/utils/templates_econeme-sys.zip"/>				
-			</zipfileset>
-			
-			<zipfileset dir="${mod_install.dir}" includes="demoinstall.asp" fullpath="public/install/demoinstall.asp"/>
-			<zipfileset dir="${mod_install.dir}" includes="demoreload.asp" fullpath="public/install/demoreload.asp"/>
-			
-			<zipfileset dir="${docs.dir}" includes="eco${docname}" fullpath="public/utils/eco${docname}"/>
-
-			<!-- includo i template di esempio di econeme-sys dentro la directory public/utils -->
-			<zipfileset dir="${dist.dir}/demo/${buildVers}/src/public/utils" includes="templates_econeme-sys.zip" fullpath="public/utils/templates_neme-sys.zip"/>
-		</zip>
-
-		<!-- aggiorno nuovamente la directory ${src.dir}/public/demo con tutti i nuovi file modificati -->		
-		<!--<unzip src="${dist.dir}/demo/${buildVers}/eco${name}.demo_${build.date}_${buildVers}.zip" dest="${src.dir}/public/demo" overwrite="true"/>-->
-			
-		<delete includeemptydirs="true">
-			<fileset dir="${dist.dir}/demo/${buildVers}/src" includes="**/*"/>
-		</delete>
-
-	</target>
 	
 	
 	<!--  *****************		BUILD MODULE COMMUNITY		***************** -->
@@ -1324,7 +1094,7 @@
 		<delete file="${dist.dir}/${buildVers}/src/mod-community_${build.date}_${buildVers}.zip"/>
 	</target> 
 		
-	<target name="task6" description="copy main source files into deploy dir, generate zip files">
+	<target name="task4" description="copy main source files into deploy dir, generate zip files">
 
 		<condition property="dirToCreateApp"> 
 			<and>
@@ -1397,7 +1167,7 @@
 		<delete file="${dist.dir}/${buildVers}/src/mod-blog_${build.date}_${buildVers}.zip"/>
 	</target> 
 		
-	<target name="task7" description="copy main source files into deploy dir, generate zip files">
+	<target name="task5" description="copy main source files into deploy dir, generate zip files">
 
 		<condition property="dirToCreateApp"> 
 			<and>
@@ -1468,7 +1238,7 @@
 		<delete file="${dist.dir}/${buildVers}/src/mod-ads_${build.date}_${buildVers}.zip"/>
 	</target> 
 		
-	<target name="task8" description="copy main source files into deploy dir, generate zip files">
+	<target name="task6" description="copy main source files into deploy dir, generate zip files">
 
 		<condition property="dirToCreateApp"> 
 			<and>
@@ -1531,7 +1301,7 @@
 		<delete file="${dist.dir}/${buildVers}/src/mod-voucher_${build.date}_${buildVers}.zip"/>
 	</target> 
 		
-	<target name="task9" description="copy main source files into deploy dir, generate zip files">
+	<target name="task7" description="copy main source files into deploy dir, generate zip files">
 
 		<condition property="dirToCreateApp"> 
 			<and>
@@ -1588,35 +1358,7 @@
 		</delete>
 	</target>
 	
-	
 
-
-	<!--  *****************		TASK DI PROVA PER SPERIMENTARE FUNZIONALITA' ANT	***************** -->
-	<target name="tasktestreplace">
-		<loadproperties srcFile="${mod_install.dir}/test.properties"/>
-
-		<copy file="${src.dir}/area_user/ads/listanews.asp" todir="${dist.dir}/${buildVers}/tmp/area_user/ads"/>
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/area_user/ads/listanews.asp" flags="gis" byline="false" match="(/\*nsys-usr-lnews1\*/)(.*?)(/\*-nsys-usr-lnews1\*/)" replace="\1${nsys-usr-lnews1}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/area_user/ads/listanews.asp" flags="gis" byline="false" match="(&lt;!--nsys-usr-lnews2--&gt;)(.*?)(&lt;!---nsys-usr-lnews2--&gt;)" replace="\1${nsys-usr-lnews2}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/area_user/ads/listanews.asp" flags="gis" byline="false" match="(&lt;!--nsys-usr-lnews3--&gt;)(.*?)(&lt;!---nsys-usr-lnews3--&gt;)" replace="\1${nsys-usr-lnews3}\3" />
-		<replaceregexp file="${dist.dir}/${buildVers}/tmp/area_user/ads/listanews.asp" flags="gis" byline="false" match="(&lt;!--nsys-usr-lnews4--&gt;)(.*?)(&lt;!---nsys-usr-lnews4--&gt;)" replace="\1${nsys-usr-lnews4}\3" />		
-		
-		<!--<replaceregexp flags="gis" byline="false" match="(&lt;div id=&quot;top-bar-lenguage&quot;&gt;)(.*?)(&lt;/div&gt;)">
-		<substitution expression="\1${key.n}\3"/>
-		<fileset dir="${mod_install.dir}">
-			<include name="moduleinstall.asp"/>
-		</fileset>
-		</replaceregexp>-->
-
-		<!--<replace dir="${dist.dir}/demo/${buildVers}/src"> 
-			<include name="**/*"/>		    
-			<replacefilter>
-				<replacetoken><![CDATA[<cfinclude template="/MachII/customtags/view/helper/viewTagBuilder.cfm" />]]></replacetoken>  
-				<replacevalue><![CDATA[two line token]]></replacevalue>
-			</replacefilter>
-		</replace>
-		
-		<replace file="${temp.dir.web-inf}/applicationContext.xml" token="@db_url@" value="${db_url}" />
-		-->
-	</target>
+	<!--  *****************		BUILD ALL		***************** -->	
+	<target name="task8" depends="task1,task2,task3,task4,task5,task6,task7" description="build all"/>
 </project>

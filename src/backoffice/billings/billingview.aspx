@@ -24,10 +24,12 @@
 <head>
 <CommonMeta:insert runat="server" />
 <CommonCssJs:insert runat="server" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.min.js"></script>
-<script type="text/javascript" src="/common/js/jspdf.plugin.autotable.min.js"></script>
+<script src="/common/js/jspdf.min.js"></script>
+<script src="/common/js/jspdf.plugin.autotable.min.js"></script>
 
 <script>
+// https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.min.js
+
 function generateBillingImage(imgId,imgType,orderId,billingId){
 
 	var doc = new jsPDF('p', 'pt', 'a4');

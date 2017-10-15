@@ -17,7 +17,6 @@
 <head>
 <CommonMeta:insert runat="server" />
 <CommonCssJs:insert runat="server" />
-<script type="text/javascript" src="/common/js/html2canvas.min.js"></script>
 <script language="JavaScript">
 function viewBilling(idBilling){
 	location.href='/backoffice/billings/billingview.aspx?cssClass=LB&id='+idBilling;

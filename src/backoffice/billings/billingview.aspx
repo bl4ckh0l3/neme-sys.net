@@ -64,49 +64,56 @@ function generateBillingImage(imgId,imgType,orderId,billingId){
 		addPageContent: pageContent,
 		startY: firstStartY,
 		theme: 'grid',
-		headerStyles: {fontStyle: 'normal',fillColor: false,textColor: 20,lineColor: 20,lineWidth: 1}
+		headerStyles: {fontStyle: 'normal',fillColor: false,textColor: 20,lineColor: 20,lineWidth: 1},
+		showHeader: 'firstPage'
 	});
 	var res2 = doc.autoTableHtmlToJson(document.getElementById('invoice-table2'));
 	doc.autoTable(res2.columns, res2.data, {
 		startY: doc.autoTableEndPosY() + 10,
 		theme: 'grid',
 		headerStyles: {overflow: 'linebreak',fontStyle: 'bold',fillColor: false,textColor: 20,lineColor: 20,lineWidth: 1},
-		bodyStyles: {overflow: 'linebreak',fontStyle: 'normal',lineColor: 20,lineWidth: 1}
+		bodyStyles: {overflow: 'linebreak',fontStyle: 'normal',lineColor: 20,lineWidth: 1},
+		showHeader: 'firstPage'
 	});
 	var res3 = doc.autoTableHtmlToJson(document.getElementById('invoice-table3'));
 	doc.autoTable(res3.columns, res3.data, {
 		startY: doc.autoTableEndPosY(),
 		theme: 'grid',
 		headerStyles: {overflow: 'linebreak',fontStyle: 'bold',fillColor: false,textColor: 20,lineColor: 20,lineWidth: 1},
-		bodyStyles: {overflow: 'linebreak',fontStyle: 'normal',lineColor: 20,lineWidth: 1}
+		bodyStyles: {overflow: 'linebreak',fontStyle: 'normal',lineColor: 20,lineWidth: 1},
+		showHeader: 'firstPage'
 	});
 	var res4 = doc.autoTableHtmlToJson(document.getElementById('invoice-table4'));
 	doc.autoTable(res4.columns, res4.data, {
 		startY: doc.autoTableEndPosY(),
 		theme: 'grid',
 		headerStyles: {overflow: 'linebreak',fontStyle: 'bold',fillColor: false,textColor: 20,lineColor: 20,lineWidth: 1},
-		bodyStyles: {overflow: 'linebreak',fontStyle: 'normal',lineColor: 20,lineWidth: 1}
+		bodyStyles: {overflow: 'linebreak',fontStyle: 'normal',lineColor: 20,lineWidth: 1},
+		showHeader: 'firstPage'
 	});
 	var res5 = doc.autoTableHtmlToJson(document.getElementById('invoice-table5'));
 	doc.autoTable(res5.columns, res5.data, {
 		startY: doc.autoTableEndPosY() + 10,
 		theme: 'grid',
 		headerStyles: {overflow: 'linebreak',fontStyle: 'bold',fillColor: false,textColor: 20,lineColor: 20,lineWidth: 1},
-		bodyStyles: {overflow: 'linebreak',fontStyle: 'normal',lineColor: 20,lineWidth: 1}
+		bodyStyles: {overflow: 'linebreak',fontStyle: 'normal',lineColor: 20,lineWidth: 1},
+		showHeader: 'firstPage'
 	});
 	var res6 = doc.autoTableHtmlToJson(document.getElementById('invoice-table6'));
 	doc.autoTable(res6.columns, res6.data, {
 		startY: doc.autoTableEndPosY() + 10,
 		theme: 'grid',
 		headerStyles: {overflow: 'linebreak',fontStyle: 'bold',fillColor: false,textColor: 20,lineColor: 20,lineWidth: 1},
-		bodyStyles: {overflow: 'linebreak',fontStyle: 'normal',lineColor: 20,lineWidth: 1}
+		bodyStyles: {overflow: 'linebreak',fontStyle: 'normal',lineColor: 20,lineWidth: 1},
+		showHeader: 'firstPage'
 	});
 	var res7 = doc.autoTableHtmlToJson(document.getElementById('invoice-table7'));
 	doc.autoTable(res7.columns, res7.data, {
 		startY: doc.autoTableEndPosY(),
 		theme: 'grid',
 		headerStyles: {overflow: 'linebreak',fontStyle: 'bold',fillColor: false,textColor: 20,lineColor: 20,lineWidth: 1},
-		bodyStyles: {overflow: 'linebreak',fontStyle: 'normal',lineColor: 20,lineWidth: 1}
+		bodyStyles: {overflow: 'linebreak',fontStyle: 'normal',lineColor: 20,lineWidth: 1},
+		showHeader: 'firstPage'
 	});
 	
 	
@@ -118,6 +125,9 @@ function generateBillingImage(imgId,imgType,orderId,billingId){
 	var query_string = "id_order="+orderId+"&id_billing="+billingId+"&img_data="+encodeURIComponent(result);	
 	//alert(query_string);
 
+	$('#create_invoice').hide();
+	$('#view_invoice').hide();
+	$('#loading_billing_buttons').show();	
 	
 	$.ajax({
 		async: true,
@@ -126,10 +136,19 @@ function generateBillingImage(imgId,imgType,orderId,billingId){
 		url: "/backoffice/billings/ajaxbillingimagecreate.aspx",
 		data: query_string,
 		success: function(response) {
-			alert(response);
+			$('#loading_billing_buttons').hide();	
+			$('#create_invoice').show();
+			$('#view_invoice').show();
+			//$("#view_invoice").attr("style", "visibility:visible;display:inline;");
 		},
 		error: function(response) {
 			//alert(response.responseText);	
+			
+			$('#loading_billing_buttons').hide();	
+			$('#create_invoice').show();
+			$('#view_invoice').hide();
+			//$("#view_invoice").attr("style", "visibility:hidden;display:none;");
+			
 			alert("<%=lang.getTranslated("backend.billing.lista.js.alert.error_generate_pdf")%>");
 		}
 	});	
@@ -482,19 +501,21 @@ function getExtension(filename) {
 				</table>
 				<br/>
 				<input type="button" id="create_invoice" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.invoice.label.create_invoice")%>" />
-				<%if(hasInvoicePdf){%>
-				<input type="button" id="view_invoice" class="buttonForm" style="margin-right:10px;" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.invoice.label.view_invoice")%>" />							
-				<%}%>
+				<%
+				string view_button = "";
+				if(!hasInvoicePdf){
+					view_button = "display:none;";
+				}%>
+				<input type="button" id="view_invoice" class="buttonForm" style="margin-right:10px;<%=view_button%>" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.invoice.label.view_invoice")%>" />
+				<img style="display:none" id="loading_billing_buttons" src="/common/img/loading_icon3.gif" alt="" width="16" height="16" hspace="2" vspace="0" border="0">
 				<br/><br/>
 				<input type="button" class="buttonForm" hspace="2" vspace="4" border="0" align="absmiddle" value="<%=lang.getTranslated("backend.commons.back")%>" onclick="javascript:location.href='/backoffice/billings/billinglist.aspx?cssClass=LB';" />
 				<br/><br/>
 				
 				<script>
-				<%if(hasInvoicePdf){%>
 				$("#view_invoice").on('click', function () {
 					viewBillingfile(<%=order.id%>,<%=billing.id%>);
 				});	
-				<%}%>
 				
 				$("#create_invoice").on('click', function () {
 					var invoiceLogoId = "";

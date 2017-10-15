@@ -156,8 +156,8 @@ function registerBilling(idBilling){
 						<strong><%=lang.getTranslated("backend.billing.lista.table.label.fileupload")%></strong><br>
 						<input type="file" name="billing_image" />
 						<%if(!String.IsNullOrEmpty(billingData.filePath)){%>
+							<br/><input type="checkbox" style="margin-top:10px;" class="billing_image_checkbox" value="1" name="del_billingimage">&nbsp;<%=lang.getTranslated("backend.billing.lista.label.del_billingimage")%>
 							<br/><img class="billing_image" align="top"  src="<%="/public/upload/files/billing_data/"+billingData.filePath%>" />
-							&nbsp;<input type="checkbox" class="billing_image_checkbox" value="1" name="del_billingimage">&nbsp;<%=lang.getTranslated("backend.billing.lista.label.del_billingimage")%>
 						<%}%>				
 					</div>			  
 				</div>

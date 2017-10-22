@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="com.nemesys.model" assembly="App_Code">
+	<class name="MailMsg" table="MAIL">
+		<id name="id">
+		<column name="id" sql-type="int(11)" not-null="true"/>
+		<generator class="native" />
+		</id>
+		<property name="name" column="name" not-null="true" />
+		<property name="description" column="description" />
+		<property name="langCode" column="lang_code" />
+		<property name="sender" column="sender" />
+		<property name="receiver" column="receiver" />
+		<property name="cc" column="cc" />
+		<property name="bcc" column="bcc" />
+		<property name="priority" column="priority" />
+		<property name="subject" column="subject" />
+		<property name="body" column="body" />
+		<property name="isActive" type="Boolean" column="active" not-null="true" />
+		<property name="isBodyHTML" type="Boolean" column="body_html" not-null="true" />
+		<property name="isBase" type="Boolean" column="base" not-null="true" />
+		<property name="modifyDate">
+			<column name="modify_date" sql-type="timestamp" />
+		</property>
+		<!--<many-to-one name="mailCategory" column="mail_category" unique="true" lazy="false" />-->
+        <component name="mailCategory" class="MailCategory">
+            <property name="name" column="mail_category" />
+        </component>
+	</class>
+
+	<!--<class name="MailCategory" table="MAIL_CATEGORIES">
+		<id name="idCat">
+			<column name="id" sql-type="int(11)" not-null="true"/>
+			<generator class="native" />
+		</id>
+		<property name="name" column="name" not-null="true" />
+	</class>-->
+</hibernate-mapping>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="com.nemesys.model" assembly="App_Code">
+    <class name="Category" table="CATEGORY">
+        <id name="id">
+            <column name="id" sql-type="int(11)" not-null="true"/>
+            <generator class="native" />
+        </id>
+		<property name="numMenu" column="num_menu" not-null="true" />
+		<property name="hierarchy" column="hierarchy" not-null="true" />
+		<property name="description" column="description" />
+		<property name="hasElements" column="has_elements" type="Boolean" />
+		<property name="visible" column="visible" type="Boolean" />
+		<property name="automatic" column="automatic" type="Boolean" />
+		<property name="idTemplate" column="id_template" />
+		<property name="metaDescription" column="meta_description" />
+		<property name="metaKeyword" column="meta_keyword" />
+		<property name="pageTitle" column="page_title" />
+		<property name="subDomainUrl" column="sub_domain_url" />
+		<property name="filePath" column="file_path" />	
+		<bag name="templates" inverse="true" lazy="true" cascade="all">
+			<key column="categoryId"/>
+			<one-to-many class="CategoryTemplate"/>
+		</bag>	
+    </class>
+
+	<class name="CategoryTemplate" table="CATEGORY_TEMPLATES">
+		<composite-id>
+			<key-property name="categoryId" column="categoryid" type="Int32" />
+			<key-property name="templateId" column="templateid" type="Int32" />
+			<key-property name="templatePageId" column="templatepageid" type="Int32" />
+			<key-property name="langCode" column="lang_code" type="string" />
+			<key-property name="urlRewrite" column="url_rewrite" type="string" />
+		</composite-id>
+	</class>
+</hibernate-mapping>

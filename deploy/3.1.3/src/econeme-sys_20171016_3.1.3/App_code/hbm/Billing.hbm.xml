@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="com.nemesys.model" assembly="App_Code">
+    <class name="Billing" table="BILLING">
+		<id name="id">
+		    <column name="id" sql-type="int(11)" not-null="true"/>
+		    <generator class="native" />
+		</id>	
+	
+		<property name="idParentOrder" column="id_parent_order" not-null="true"  type="Int32" />
+		<property name="orderAmount" type="Decimal" column="order_amount" not-null="true" />
+		<property name="orderDate">
+		    <column name="order_date" sql-type="timestamp" />
+		</property>
+		<property name="name" column="name" />
+		<property name="cfiscvat" column="cfiscvat" />
+		<property name="address" column="address" />
+		<property name="city" column="city" />		
+		<property name="zipCode" column="zip_code" />
+		<property name="country" column="country" />
+		<property name="stateRegion" column="state_region" />
+		<property name="phone" column="phone" />
+		<property name="fax" column="fax" />
+		<property name="description" column="description" />
+		<property name="lastUpdate">
+		    <column name="last_update" sql-type="timestamp" />
+		</property>
+		<property name="insertDate">
+		    <column name="insert_date" sql-type="timestamp" />
+		</property>
+		<property name="idRegisteredBilling" column="id_registered_billing" not-null="true"  type="Int32" />
+		<property name="registeredDate">
+		    <column name="registered_date" sql-type="timestamp" />
+		</property>
+    </class>
+
+    <class name="BillingData" table="BILLING_DATA">
+		<id name="id">
+		    <column name="id" sql-type="int(11)" not-null="true"/>
+		    <generator class="native" />
+		</id>	
+	
+		<property name="name" column="name" />
+		<property name="cfiscvat" column="cfiscvat" />
+		<property name="address" column="address" />
+		<property name="city" column="city" />		
+		<property name="zipCode" column="zip_code" />
+		<property name="country" column="country" />
+		<property name="stateRegion" column="state_region" />
+		<property name="phone" column="phone" />
+		<property name="fax" column="fax" />
+		<property name="description" column="description" />
+		<property name="filePath" column="file_path" />
+    </class>
+</hibernate-mapping>

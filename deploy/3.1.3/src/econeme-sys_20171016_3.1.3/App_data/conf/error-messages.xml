@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>	
+<error-messages>
+	<keyword>001</keyword>
+	<value>portal.commons.errors.label.user_mail_already_exist</value>
+</error-messages>
+<error-messages>
+	<keyword>002</keyword>
+	<value>portal.commons.errors.label.no_user_found</value>
+</error-messages>
+<error-messages>
+	<keyword>003</keyword>
+	<value>portal.commons.errors.label.user_pwd_incorrect</value>
+</error-messages>
+<error-messages>
+	<keyword>004</keyword>
+	<value>portal.commons.errors.label.obj_no_found</value>
+</error-messages>
+<error-messages>
+	<keyword>005</keyword>
+	<value>portal.commons.errors.label.no_target_user</value>
+</error-messages>
+<error-messages>
+	<keyword>006</keyword>
+	<value>portal.commons.errors.label.no_target_news</value>
+</error-messages>
+<error-messages>
+	<keyword>007</keyword>
+	<value>portal.commons.errors.label.no_target_editor</value>
+</error-messages>
+<error-messages>
+	<keyword>008</keyword>
+	<value>portal.commons.templates.label.page_in_progress</value>
+</error-messages>
+<error-messages>
+	<keyword>009</keyword>
+	<value>portal.commons.errors.label.filesystem_no_correct</value>
+</error-messages>
+<error-messages>
+	<keyword>010</keyword>
+	<value>portal.commons.errors.label.no_target_exist</value>
+</error-messages>		
+<error-messages>
+	<keyword>011</keyword>
+	<value>portal.commons.errors.label.target_in_use</value>
+</error-messages>
+<error-messages>
+	<keyword>012</keyword>
+	<value>portal.commons.errors.label.user_in_use</value>
+</error-messages>
+<error-messages>
+	<keyword>013</keyword>
+	<value>portal.commons.errors.label.no_cat_found</value>
+</error-messages>
+<error-messages>
+	<keyword>014</keyword>
+	<value>portal.commons.errors.label.cat_in_use</value>
+</error-messages>
+<error-messages>
+	<keyword>015</keyword>
+	<value>portal.commons.errors.label.lang_in_use</value>
+</error-messages>
+<error-messages>
+	<keyword>016</keyword>
+	<value>portal.commons.errors.label.multi_lang_in_use</value>
+</error-messages>
+<error-messages>
+	<keyword>017</keyword>
+	<value>portal.commons.errors.label.no_result_found</value>
+</error-messages>
+<error-messages>
+	<keyword>018</keyword>
+	<value>portal.commons.errors.label.cat_already_exist</value>
+</error-messages>
+<error-messages>
+	<keyword>019</keyword>
+	<value>portal.commons.errors.label.newsletter_in_use</value>
+</error-messages>
+<error-messages>
+	<keyword>020</keyword>
+	<value>portal.commons.errors.label.user_already_in_use</value>
+</error-messages>
+<error-messages>
+	<keyword>021</keyword>
+	<value>portal.commons.errors.label.max_content_length</value>
+</error-messages>
+<error-messages>
+	<keyword>022</keyword>
+	<value>portal.commons.errors.label.invalid_contenttype</value>
+</error-messages>
+<error-messages>
+	<keyword>023</keyword>
+	<value>portal.commons.errors.label.generic_error</value>
+</error-messages>
+<error-messages>
+	<keyword>030</keyword>
+	<value>portal.commons.errors.label.no_product_found</value>
+</error-messages>
+<error-messages>
+	<keyword>031</keyword>
+	<value>portal.commons.errors.label.item_carrello_problem</value>
+</error-messages>
+<error-messages>
+	<keyword>032</keyword>
+	<value>portal.commons.errors.label.no_target_prod</value>
+</error-messages>
+<error-messages>
+	<keyword>033</keyword>
+	<value>portal.commons.errors.label.prod_in_use</value>
+</error-messages>
+<error-messages>
+	<keyword>034</keyword>
+	<value>portal.commons.errors.label.carrello_not_found</value>
+</error-messages>
+<error-messages>
+	<keyword>035</keyword>
+	<value>portal.commons.errors.label.user_not_enabled</value>
+</error-messages>
+<error-messages>
+	<keyword>036</keyword>
+	<value>portal.commons.errors.label.t_prod_or_t_lang_miss</value>
+</error-messages>
+<error-messages>
+	<keyword>037</keyword>
+	<value>portal.commons.errors.label.no_target_lang</value>
+</error-messages>
+<error-messages>
+	<keyword>038</keyword>
+	<value>portal.commons.errors.label.t_news_or_t_lang_miss</value>
+</error-messages>
+<error-messages>
+	<keyword>039</keyword>
+	<value>portal.commons.errors.label.qta_less_zero</value>
+</error-messages>
+<error-messages>
+	<keyword>040</keyword>
+	<value>portal.commons.errors.label.user_in_use</value>
+</error-messages>	
+<error-messages>
+	<keyword>041</keyword>
+	<value>portal.commons.errors.label.mail_template_already_exist</value>
+</error-messages>
+<error-messages>
+	<keyword>042</keyword>
+	<value>portal.commons.errors.label.usr_field_already_exist</value>
+</error-messages>
+<error-messages>
+	<keyword>043</keyword>
+	<value>portal.commons.payment_fault</value>
+</error-messages>
+</root>

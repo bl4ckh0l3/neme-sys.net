@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="com.nemesys.model" assembly="App_Code">
+    <class name="Country" table="COUNTRY">
+		<id name="id">
+		    <column name="id" sql-type="int(11)" not-null="true"/>
+		    <generator class="native" />
+		</id>	
+	
+		<property name="countryCode" column="country_code" not-null="true" />
+		<property name="countryDescription" column="country_description" not-null="true" />
+		<property name="stateRegionCode" column="state_region_code" />
+		<property name="stateRegionDescription" column="state_region_description" />
+		<property name="active" column="active" type="Boolean" />
+		<property name="useFor" column="use_for" />	
+    </class>
+</hibernate-mapping>

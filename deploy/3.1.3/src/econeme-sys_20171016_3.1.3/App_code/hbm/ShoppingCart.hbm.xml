@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="com.nemesys.model" assembly="App_Code">
+    <class name="ShoppingCart" table="SHOPPING_CART">
+		<id name="id">
+		    <column name="id" sql-type="int(11)" not-null="true"/>
+		    <generator class="native" />
+		</id>	
+	
+		<property name="idUser" type="Int32" column="id_user" not-null="true" />	
+		<property name="lastUpdate">
+		    <column name="last_update" sql-type="timestamp" />
+		</property>	
+    </class>
+
+	<class name="ShoppingCartProduct" table="SHOPPING_CART_PRODUCT">
+		<composite-id>
+			<key-property name="idCart" column="id_cart" type="Int32" />
+			<key-property name="idProduct" column="id_prod" type="Int32" />
+			<key-property name="productCounter" column="prod_counter" type="Int32" />
+		</composite-id>
+		<property name="productQuantity" column="prod_quantity" not-null="true" type="Int32" />
+		<property name="productType" column="prod_type" not-null="true" type="Int32" />
+		<property name="productName" column="prod_name" not-null="true" />
+		<property name="idAds" type="Int32" column="id_ads" not-null="true" />	
+	</class>
+
+	<class name="ShoppingCartProductField" table="SHOPPING_CART_PRODUCT_FIELD">
+		<composite-id>
+			<key-property name="idCart" column="id_cart" type="Int32" />
+			<key-property name="idProduct" column="id_prod" type="Int32" />
+			<key-property name="productCounter" column="prod_counter" type="Int32" />
+			<key-property name="idField" column="id_field" type="Int32" />
+			<key-property name="fieldType" column="field_type" type="Int32" />
+			<key-property name="value" column="value" />
+		</composite-id>
+		<property name="productQuantity" column="prod_quantity" not-null="true" type="Int32" />
+		<property name="description" column="description" />
+	</class>
+
+	<class name="ShoppingCartProductCalendar" table="SHOPPING_CART_PRODUCT_CALENDAR">
+		<composite-id>
+			<key-property name="idCart" column="id_cart" type="Int32" />
+			<key-property name="idProduct" column="id_prod" type="Int32" />
+			<key-property name="productCounter" column="prod_counter" type="Int32" />
+			<key-property name="date">
+				<column name="date" sql-type="timestamp" />
+			</key-property>
+		</composite-id>
+		<property name="adults" column="adults" not-null="true" type="Int32" />
+		<property name="children" column="children" not-null="true" type="Int32" />
+		<property name="rooms" column="rooms" not-null="true" type="Int32" />
+		<property name="childrenAge" column="children_age" />
+		<property name="searchText" column="search_text" />
+	</class>
+</hibernate-mapping>

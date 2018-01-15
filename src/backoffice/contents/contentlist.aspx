@@ -31,7 +31,7 @@ function confirmClone(id){
 
 function deleteContent(id_objref, row,refreshrows){
 	if(confirm("<%=lang.getTranslated("backend.contenuti.detail.js.alert.confirm_del_news")%>?")){	
-		ajaxDeleteItem(id_objref,"FContent|IContentRepository|com.nemesys.services.ContentService|deleteDirectory|static|"+id_objref,row,refreshrows);
+		ajaxDeleteItem(id_objref,"FContent|IContentRepository|com.nemesys.services.CommonService|deleteDirectory|static|"+id_objref,row,refreshrows);
 		$('#tr_preview_row_'+row.substring(row.indexOf("tr_preview_row_")+16)).hide();
 	}
 }

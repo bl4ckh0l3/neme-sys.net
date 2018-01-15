@@ -688,6 +688,7 @@ namespace com.nemesys.database.repository
 				}		
 				session.CreateQuery("DELETE FROM Geolocalization WHERE idElement=:idElement").SetInt32("idElement", product.id).ExecuteUpdate();	
 				session.CreateQuery("DELETE FROM ProductMainFieldTranslation WHERE idParentProduct=:idParentProduct").SetInt32("idParentProduct", product.id).ExecuteUpdate();	
+				session.CreateQuery("DELETE FROM ProductFieldTranslation WHERE idParentProduct=:idParentProduct").SetInt32("idParentProduct", product.id).ExecuteUpdate();	
 				session.Delete(product);	
 				tx.Commit();
 				NHibernateHelper.closeSession();
@@ -1324,12 +1325,12 @@ namespace com.nemesys.database.repository
 					//*
 					//* aggiorno i campi multilingu dei field
 					//*					
-					HttpContext.Current.Response.Write("ProductFieldTranslation count before save:"+fieldsTrans.Count+"<br>");
+					//HttpContext.Current.Response.Write("ProductFieldTranslation count before save:"+fieldsTrans.Count+"<br>");
 					foreach(ProductFieldTranslation m in fieldsTrans)
 					{	
 						//session.Delete(m);
 						m.idParentProduct=product.id;
-						HttpContext.Current.Response.Write("ProductFieldTranslation before save:"+m.ToString()+"<br>");
+						//HttpContext.Current.Response.Write("ProductFieldTranslation before save:"+m.ToString()+"<br>");
 						session.Save(m);
 					}
 					
@@ -1604,10 +1605,11 @@ namespace com.nemesys.database.repository
 						session.Save(k);
 					} 
 				}
+					
+				IDictionary<int,int> fieldIds = new Dictionary<int,int>();
+					
 				if(newProductField != null)
-				{
-					IDictionary<int,int> fieldIds = new Dictionary<int,int>();
-							
+				{			
 					foreach(ProductField k in newProductField){
 						k.idParentProduct = newproduct.id;
 						IList<ProductFieldsValue> fnvalues = null;	
@@ -1724,22 +1726,33 @@ namespace com.nemesys.database.repository
 				
 				// ** insert all field trans copy
 				IList<ProductFieldTranslation> fieldtrans = null;
+				//HttpContext.Current.Response.Write("ProductFieldTranslation before select: from ProductFieldTranslation where idParentProduct="+original.id+"<br>");
 				IQuery o = session.CreateQuery("from ProductFieldTranslation where idParentProduct=:idParentProduct");	
 				o.SetInt32("idParentProduct", original.id);
 				fieldtrans = o.List<ProductFieldTranslation>();			
+				
+				//HttpContext.Current.Response.Write("fieldtrans!=null:"+(fieldtrans!=null)+"<br>");
 				
 				if(fieldtrans!=null)
 				{
 					foreach(ProductFieldTranslation mfl in fieldtrans)
 					{
+						//HttpContext.Current.Response.Write("ProductFieldTranslation before save: "+mfl.ToString()+"<br>");
 						ProductFieldTranslation pt = new ProductFieldTranslation();
 						pt.idParentProduct = newproduct.id;
-						pt.idField = mfl.idField;
+						
+						int newrefid = -1;		
+						fieldIds.TryGetValue(mfl.idField, out newrefid);
+						if(newrefid!=-1){
+							pt.idField = newrefid;
+						}
+						
 						pt.type = mfl.type;
 						pt.baseVal = mfl.baseVal;
 						pt.langCode = mfl.langCode;
 						pt.value = mfl.value;
-						session.Save(pt);						
+						session.Save(pt);	
+						//HttpContext.Current.Response.Write("ProductFieldTranslation after save: "+pt.ToString()+"<br>");					
 					}
 				}				
 				

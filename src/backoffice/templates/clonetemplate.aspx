@@ -52,7 +52,7 @@ protected void Page_Load(Object sender, EventArgs e)
 			temprep.clone(original, newdirectory);
 			
 			//copio i file associati
-			CommonService.directoryCopy(HttpContext.Current.Server.MapPath("~/public/templates/"+original.directory), HttpContext.Current.Server.MapPath("~/public/templates/"+newdirectory), true);
+			CommonService.directoryCopy(HttpContext.Current.Server.MapPath("~/public/templates/"+original.directory), HttpContext.Current.Server.MapPath("~/public/templates/"+newdirectory), true, false);
 		}
 	}
 	catch(Exception ex)

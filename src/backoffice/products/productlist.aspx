@@ -31,7 +31,7 @@ function confirmClone(id){
 
 function deleteProduct(id_objref, row,refreshrows){
 	if(confirm("<%=lang.getTranslated("backend.product.detail.js.alert.confirm_del_prod")%>")){	
-		ajaxDeleteItem(id_objref,"Product|IProductRepository|com.nemesys.services.ProductService|deleteDirectory|static|"+id_objref,row,refreshrows);
+		ajaxDeleteItem(id_objref,"Product|IProductRepository|com.nemesys.services.CommonService|deleteDirectory|static|"+id_objref,row,refreshrows);
 		$('#tr_preview_row_'+row.substring(row.indexOf("tr_preview_row_")+16)).hide();
 	}
 }

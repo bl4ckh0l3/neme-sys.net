@@ -1,10 +1,11 @@
 <%@ Page Language="C#" %>
 <%@ import Namespace="com.nemesys.model" %>
+<%@ import Namespace="com.nemesys.services" %>
 <script runat="server">
 string copyright = "";
 protected void Page_Load(Object sender, EventArgs e)
 {
-	copyr.Text = Utils.getCurrentCopyrightYearRange();
+	copyr.Text = CommonService.getCurrentCopyrightYearRange();
 
 	Response.Charset="UTF-8";
 	Session.CodePage  = 65001;	

@@ -23,7 +23,7 @@ protected void Page_Load(Object sender, EventArgs e)
 	
 	StringBuilder builder = new StringBuilder(Request.Url.Scheme).Append("://");
 	
-	copyr.Text = Utils.getCurrentCopyrightYearRange();
+	copyr.Text = CommonService.getCurrentCopyrightYearRange();
 	
 	bool carryOn = false;
 	string pathInstall = HttpContext.Current.Server.MapPath("~/public/install/portalinstall.aspx");

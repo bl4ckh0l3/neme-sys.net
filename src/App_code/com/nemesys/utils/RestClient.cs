@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Collections;
+using System.Collections.Generic;
 
 public enum HttpVerb
 {
@@ -21,6 +23,7 @@ namespace com.nemesys.model
     private string _ContentType;
     private string _PostData;	
     private BasicAuthenticator _Authenticator; 
+    private IDictionary<string,string> _Headers;
   	  
 	public virtual string EndPoint {
 		get { return _EndPoint; }
@@ -42,6 +45,10 @@ namespace com.nemesys.model
 		get { return _Authenticator; }
 		set { _Authenticator = value; }
 	} 
+	public virtual IDictionary<string,string> Headers {
+		get { return _Headers; }
+		set { _Headers = value; }
+	} 
 	
 	
 
@@ -53,6 +60,7 @@ namespace com.nemesys.model
       _ContentType = "application/json";
       _PostData = "";
       _Authenticator = new BasicAuthenticator();
+      _Headers = new Dictionary<string,string>();
     }
     public RestClient(string endpoint)
     {
@@ -61,6 +69,7 @@ namespace com.nemesys.model
       _ContentType = "application/json";
       _PostData = "";
       _Authenticator = new BasicAuthenticator();
+      _Headers = new Dictionary<string,string>();
     }
     public RestClient(string endpoint, HttpVerb method)
     {
@@ -69,6 +78,7 @@ namespace com.nemesys.model
       _ContentType = "application/json";
       _PostData = "";
       _Authenticator = new BasicAuthenticator();
+      _Headers = new Dictionary<string,string>();
     }
 
     public RestClient(string endpoint, HttpVerb method, string postData)
@@ -78,6 +88,7 @@ namespace com.nemesys.model
       _ContentType = "application/json";
       _PostData = postData;
       _Authenticator = new BasicAuthenticator();
+      _Headers = new Dictionary<string,string>();
     }
 
     public RestClient(string endpoint, HttpVerb method, string postData, BasicAuthenticator Authenticator)
@@ -87,6 +98,17 @@ namespace com.nemesys.model
       _ContentType = "application/json";
       _PostData = postData;
       _Authenticator = Authenticator;
+      _Headers = new Dictionary<string,string>();
+    }
+
+    public RestClient(string endpoint, HttpVerb method, string postData, BasicAuthenticator Authenticator, Dictionary<string,string> Headers)
+    {
+      _EndPoint = endpoint;
+      _Method = method;
+      _ContentType = "application/json";
+      _PostData = postData;
+      _Authenticator = Authenticator;
+      _Headers = new Dictionary<string,string>();
     }
 
 
@@ -107,9 +129,23 @@ namespace com.nemesys.model
       request.Method = Method.ToString();
       request.ContentLength = 0;
       request.ContentType = ContentType;
+      
       if(!string.IsNullOrEmpty(_Authenticator.user) && !string.IsNullOrEmpty(_Authenticator.password)){
       	  request.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes(_Authenticator.user+":"+_Authenticator.password));
       }
+      
+      if(_Headers.Count >0){
+		/*for(int i=0; i < _Headers.Count; i++){ 
+			request.Headers[_Headers.Keys[i]] = _Headers[i];
+		}*/
+		
+		foreach( KeyValuePair<string, string> kvp in _Headers )
+		{
+			request.Headers[kvp.Key.ToString()] = kvp.Value.ToString();
+		}		
+		
+      }
+      
       request.PreAuthenticate = true;
       request.KeepAlive = false;
       
@@ -123,7 +159,9 @@ namespace com.nemesys.model
         UTF8Encoding encoding = new UTF8Encoding();
         byte[] bytes = Encoding.GetEncoding("iso-8859-1").GetBytes(PostData);
         request.ContentLength = bytes.Length;
-        ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+        ServicePointManager.Expect100Continue = true;
+        ServicePointManager.DefaultConnectionLimit = 9999;   
+        ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls | (SecurityProtocolType)3072;
 
         //System.Web.HttpContext.Current.Response.Write("<br><b>before: request.GetRequestStream()</b><br>");
         

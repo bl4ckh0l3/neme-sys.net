@@ -1,1 +1,0 @@
-INSERT INTO `MODULES` (`keyword`, `description`, `version`, `active`) VALUES ('mod-community', 'community module installation', '3.1.3', '1');

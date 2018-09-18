@@ -40,7 +40,7 @@ html .jqueryslidemenu{height: 1%;} /*Holly Hack for IE7 and below*/
 
 <%if(!String.IsNullOrEmpty(confservice.get("googlemaps_key").value)){%>
 <!--  ****************************************** INTEGRAZIONE GOOGLEMAP API ****************************************** -->
-<script src="https://maps.googleapis.com/maps/api/js?key=<%=confservice.get("googlemaps_key").value%>&amp;sensor=false&amp;libraries=drawing,geometry" type="text/javascript"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=<%=confservice.get("googlemaps_key").value%>&amp;sensor=false&amp;libraries=drawing,geometry,places" type="text/javascript"></script>
 <script type="text/javascript" src="/common/js/markerclusterer_compiled.min.js"></script>
  <%}%>
 

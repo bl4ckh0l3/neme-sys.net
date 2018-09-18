@@ -127,14 +127,14 @@ public partial class _Detail : Page
 			{
 				template = TemplateService.resolveTemplateByVirtualPath(basePath, lang.currentLangCode, out newLangCode);
 				
-				Response.Write("template:"+ template.ToString() +"<br>");
+				//Response.Write("template:"+ template.ToString() +"<br>");
 				
 				if(CategoryService.isCategoryNull(category) && template != null)
 				{
 					category = catrep.getByTemplateCached(template.id, Page.Request.RawUrl.ToString(), true);
 					if(!CategoryService.isCategoryNull(category))
 					{
-						Response.Write("category:"+ category.ToString() +"<br>");
+						//Response.Write("category:"+ category.ToString() +"<br>");
 						
 						if(String.IsNullOrEmpty(Request["lang_code"]) && !String.IsNullOrEmpty(newLangCode)){
 							HttpContext.Current.Items["lang-code"] = newLangCode;

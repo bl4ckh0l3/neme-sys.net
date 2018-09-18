@@ -50,7 +50,10 @@
 		<echo message="task 7 = voucher module"/>
 		<echo message="--> build voucher module"/>
 		<echo message=""/>
-		<echo message="task 8 = all (neme-sys .net + econeme-sys .net + docs + upto econeme-sys .net + community module + blog module + ads module + voucher module)"/>
+		<echo message="task 8 = transfer module"/>
+		<echo message="--> build transfer module"/>
+		<echo message=""/>
+		<echo message="task 9 = all (neme-sys .net + econeme-sys .net + docs + upto econeme-sys .net + community module + blog module + ads module + voucher module + transfer module)"/>
 		<echo message="--> build neme-sys .net+docs, econeme-sys .net+docs+upto econeme-sys .net"/>
 		
 		
@@ -407,6 +410,8 @@
 				<exclude name="**/App_code/com/nemesys/model/supplement/**/*"/>
 				<exclude name="**/App_code/com/nemesys/model/voucher/**/*"/>
 				<exclude name="App_code/com/nemesys/model/commons/IProduct.cs"/>
+				<exclude name="**/App_code/com/nemesys/model/transfer/**/*"/>
+				<exclude name="**/App_code/com/nemesys/model/bestenergy/**/*"/>
 
 				<exclude name="App_code/com/nemesys/database/repository/AdsRepository.cs"/>
 				<exclude name="App_code/com/nemesys/database/repository/BillingRepository.cs"/>
@@ -734,6 +739,9 @@
 				<exclude name="public/utils/templates_econeme-sys.zip"/>
 				
 				<exclude name="App_data/conf/nemesys-config.xml"/>
+				
+				<exclude name="**/App_code/com/nemesys/model/transfer/**/*"/>
+				<exclude name="**/App_code/com/nemesys/model/bestenergy/**/*"/>
 				
 			</zipfileset>
 			
@@ -1357,8 +1365,71 @@
 			<fileset dir="${dist.dir}/${buildVers}/tmp" includes="**/*"/>
 		</delete>
 	</target>
+
 	
+	
+	<!--  *****************		BUILD MODULE TRANSFER		***************** -->
+	<target name="taskReplaceModTransfer">		
+		<copy file="${mod_install.dir}/sql-resource/mod-transfer_install_query.sql" todir="${dist.dir}/${buildVers}/tmp"/>
+		<replaceregexp file="${dist.dir}/${buildVers}/tmp/mod-transfer_install_query.sql" flags="gis" byline="false" match="buildVersSql" replace="${buildVers}" />		
+	</target>
+	
+	<target name="delete_zip_mod_transfer" if="zipToDeleteModTransfer"> 
+		<delete file="${dist.dir}/${buildVers}/src/mod-transfer_${build.date}_${buildVers}.zip"/>
+	</target> 
+		
+	<target name="task8" description="copy main source files into deploy dir, generate zip files">
+
+		<condition property="dirToCreateApp"> 
+			<and>
+				<not>		
+					<available file="${dist.dir}/${buildVers}" type="dir"> 
+					</available>
+				</not>
+			</and> 
+		</condition> 
+		
+		<echo message=""/>
+		<echo message="dirToCreateApp: ${dirToCreateApp}" />		
+		<antcall target="make_dir_app" />
+		<echo message=""/>
+
+		<condition property="zipToDeleteModTransfer"> 
+			<and>		
+				<available file="${dist.dir}/${buildVers}/src/mod-transfer_${build.date}_${buildVers}.zip"> 
+				</available>
+			</and> 
+		</condition> 
+		
+		<echo message=""/>
+		<echo message="zipToDeleteModTransfer: ${zipToDeleteModTransfer}" />		
+		<antcall target="delete_zip_mod_transfer" /> 
+		<echo message=""/>
+
+		<antcall target="taskReplaceModTransfer" />
+		
+		<zip destfile="${dist.dir}/${buildVers}/src/mod-transfer_${build.date}_${buildVers}.zip"> 
+			<zipfileset dir="${src.dir}">
+				
+				<!-- file inclusi -->		
+				<include name="**/App_code/com/nemesys/model/transfer/**/*"/>			
+			</zipfileset>
+			
+			<zipfileset dir="${mod_install.dir}" includes="mod-transferinstall.aspx" fullpath="public/install/moduleinstall.aspx"/>
+			<zipfileset dir="${mod_install.dir}/replace-resource" includes="mod-transfer_replace.properties" prefix="public/install"/>			
+			<zipfileset dir="${mod_install.dir}/file-resource" includes="installed.aspx"/>
+			<zipfileset dir="${mod_install.dir}/file-resource" includes="ReadMe.txt"/>
+			
+			<!-- includo il file global_install_query.sql di creazione/inserimento database -->
+			<zipfileset dir="${dist.dir}/${buildVers}/tmp" includes="mod-transfer_install_query.sql" fullpath="public/install/module_install_query.sql"/>
+		</zip>
+
+		<delete includeemptydirs="true">
+			<fileset dir="${dist.dir}/${buildVers}/tmp" includes="**/*"/>
+		</delete>
+	</target>	
+		
 
 	<!--  *****************		BUILD ALL		***************** -->	
-	<target name="task8" depends="task1,task2,task3,task4,task5,task6,task7" description="build all"/>
+	<target name="task9" depends="task1,task2,task3,task4,task5,task6,task7,task8" description="build all"/>
 </project>

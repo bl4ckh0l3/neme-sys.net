@@ -1,9 +1,14 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Net.Security;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security;
+using System.Security.Cryptography;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 
 public enum HttpVerb
 {
@@ -57,7 +62,7 @@ namespace com.nemesys.model
     {
       _EndPoint = "";
       _Method = HttpVerb.GET;
-      _ContentType = "application/json";
+      _ContentType = "application/json;charset=utf-8";
       _PostData = "";
       _Authenticator = new BasicAuthenticator();
       _Headers = new Dictionary<string,string>();
@@ -66,7 +71,7 @@ namespace com.nemesys.model
     {
       _EndPoint = endpoint;
       _Method = HttpVerb.GET;
-      _ContentType = "application/json";
+      _ContentType = "application/json;charset=utf-8";
       _PostData = "";
       _Authenticator = new BasicAuthenticator();
       _Headers = new Dictionary<string,string>();
@@ -75,7 +80,7 @@ namespace com.nemesys.model
     {
       _EndPoint = endpoint;
       _Method = method;
-      _ContentType = "application/json";
+      _ContentType = "application/json;charset=utf-8";
       _PostData = "";
       _Authenticator = new BasicAuthenticator();
       _Headers = new Dictionary<string,string>();
@@ -85,7 +90,7 @@ namespace com.nemesys.model
     {
       _EndPoint = endpoint;
       _Method = method;
-      _ContentType = "application/json";
+      _ContentType = "application/json;charset=utf-8";
       _PostData = postData;
       _Authenticator = new BasicAuthenticator();
       _Headers = new Dictionary<string,string>();
@@ -95,7 +100,7 @@ namespace com.nemesys.model
     {
       _EndPoint = endpoint;
       _Method = method;
-      _ContentType = "application/json";
+      _ContentType = "application/json;charset=utf-8";
       _PostData = postData;
       _Authenticator = Authenticator;
       _Headers = new Dictionary<string,string>();
@@ -105,7 +110,17 @@ namespace com.nemesys.model
     {
       _EndPoint = endpoint;
       _Method = method;
-      _ContentType = "application/json";
+      _ContentType = "application/json;charset=utf-8";
+      _PostData = postData;
+      _Authenticator = Authenticator;
+      _Headers = new Dictionary<string,string>();
+    }
+
+    public RestClient(string endpoint, HttpVerb method, string postData, BasicAuthenticator Authenticator, Dictionary<string,string> Headers, string contentType)
+    {
+      _EndPoint = endpoint;
+      _Method = method;
+      _ContentType = contentType;
       _PostData = postData;
       _Authenticator = Authenticator;
       _Headers = new Dictionary<string,string>();
@@ -154,15 +169,28 @@ namespace com.nemesys.model
       //System.Web.HttpContext.Current.Response.Write("<br><b>PostData:</b>"+PostData+"<br>");
       //System.Web.HttpContext.Current.Response.Write("<br><b>request.Headers[Authorization]:</b>"+request.Headers["Authorization"]+"<br><br>");
 
+		request.ProtocolVersion = HttpVersion.Version10; 
+		ServicePointManager.Expect100Continue = true;
+		//ServicePointManager.DefaultConnectionLimit = 999999;  
+		//ServicePointManager.MaxServicePointIdleTime = 1000;
+		//ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+		
+		//ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+		//ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | (SecurityProtocolType)3072;
+		
+		//ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
+		//System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+		
+		ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(callback); 
+		ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls | (SecurityProtocolType)3072;
+
+
+      
       if (!string.IsNullOrEmpty(PostData) && Method == HttpVerb.POST)
       {
         UTF8Encoding encoding = new UTF8Encoding();
         byte[] bytes = Encoding.GetEncoding("iso-8859-1").GetBytes(PostData);
         request.ContentLength = bytes.Length;
-        ServicePointManager.Expect100Continue = true;
-        ServicePointManager.DefaultConnectionLimit = 9999;   
-        ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls | (SecurityProtocolType)3072;
-
         //System.Web.HttpContext.Current.Response.Write("<br><b>before: request.GetRequestStream()</b><br>");
         
         using (Stream writeStream = request.GetRequestStream())
@@ -172,6 +200,8 @@ namespace com.nemesys.model
       }
 
       //System.Web.HttpContext.Current.Response.Write("<br><b>before: request.GetResponse()</b><br>");
+      
+      //Certificates.Instance.GetCertificatesAutomatically();
       
 	  using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
 	  {
@@ -213,9 +243,10 @@ namespace com.nemesys.model
 		
 	  return results;
 	  
-}catch(Exception ex){
-	throw ex;
-}
+	}catch(Exception ex){
+		//System.Web.HttpContext.Current.Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
+		throw ex;
+	}
 		
 	  
 	  /*
@@ -259,8 +290,25 @@ namespace com.nemesys.model
 	  
 	  return results;
 	  */
-			
-    }
+    }  
+    
+	private bool callback(object obj, X509Certificate cert, X509Chain chain, SslPolicyErrors err)
+	{
+		return true;
+	}  
+	
+	private bool ValidateServerCertificate(
+		  object sender,
+		  X509Certificate certificate,
+		  X509Chain chain,
+		  SslPolicyErrors sslPolicyErrors)
+	{
+		if (sslPolicyErrors == SslPolicyErrors.None){
+			return true;
+		}
+
+		return false;
+	}
 
   } // class
 

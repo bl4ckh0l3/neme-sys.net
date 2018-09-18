@@ -164,7 +164,7 @@ public partial class _List : Page
 				categoryid = category.id.ToString();
 			}
 		}catch (Exception ex){
-			Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
+			//Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
 			bolHasDetailLink = false;
 		}
 	

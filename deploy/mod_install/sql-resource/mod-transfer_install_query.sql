@@ -1,0 +1,1 @@
+INSERT INTO `MODULES` (`keyword`, `description`, `version`, `active`) VALUES ('mod-transfer', 'transfer module installation', 'buildVersSql', '1');

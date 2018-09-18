@@ -118,7 +118,7 @@ namespace com.nemesys.services
 			
 			//'*** verifico esistenza del sottodominio per categoria e compongo la base_url
 			string catSubDomUrl = "";
-			if(category != null){
+			if(category != null && !String.IsNullOrEmpty(category.subDomainUrl)){
 				catSubDomUrl = category.subDomainUrl.Replace(" ","");
 			}
 

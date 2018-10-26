@@ -98,6 +98,7 @@ namespace com.nemesys.services
 		{
 			string resolveHrefUrl = null;
 			string tmpBaseUrl = basePath;
+			
 			/*
 			System.Web.HttpContext.Current.Response.Write("<b>MenuService.resolvePageHrefUrl:</b><br>");
 			System.Web.HttpContext.Current.Response.Write("<b>0- basePath:</b>"+basePath+"<br>");

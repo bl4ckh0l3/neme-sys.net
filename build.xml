@@ -1412,7 +1412,7 @@
 			<zipfileset dir="${src.dir}">
 				
 				<!-- file inclusi -->		
-				<include name="**/App_code/com/nemesys/model/transfer/**/*"/>			
+				<include name="**/App_code/com/nemesys/model/transfer/**/*"/>		
 			</zipfileset>
 			
 			<zipfileset dir="${mod_install.dir}" includes="mod-transferinstall.aspx" fullpath="public/install/moduleinstall.aspx"/>

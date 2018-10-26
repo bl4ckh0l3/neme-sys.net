@@ -34,6 +34,10 @@ public partial class _Default : Page
 		forcedLangCode = "";
 		resolved = "";
 		ConfigurationService confService = new ConfigurationService();
+		string thisLangCode = lang.currentLangCode;
+		if(String.IsNullOrEmpty(thisLangCode)){
+			thisLangCode = lang.defaultLangCode;
+		}
 		
 		if (!"1".Equals(confService.get("go_offline").value)) 
 		{
@@ -41,8 +45,8 @@ public partial class _Default : Page
 			{
 				UriBuilder builder0 = CommonService.getBaseUrl(Request.Url.ToString(),2);
 				
-				resolved = TemplateService.resolveDefaultPath(builder0.Scheme, lang.currentLangCode, Request["categoryid"], Request["hierarchy"], out forcedLangCode, out categoryid, out hierarchy);
-				//Response.Write("resolved"+resolved);
+				resolved = TemplateService.resolveDefaultPath(builder0.Scheme, thisLangCode, Request["categoryid"], Request["hierarchy"], out forcedLangCode, out categoryid, out hierarchy);
+				//Response.Write("resolved:"+resolved);
 				if(!String.IsNullOrEmpty(resolved)){
 					builder0.Path = resolved;		
 					resolved = builder0.ToString();	

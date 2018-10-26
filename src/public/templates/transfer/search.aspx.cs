@@ -18,15 +18,15 @@ public partial class _Search : Page
 	public ASP.MultiLanguageControl lang;
 	public ASP.UserLoginControl login;
 	protected ConfigurationService confservice;
-	protected FContent content;
-	protected int numPage, modelPageNum;
+	protected IList<FContent> contentAuthors;
+	protected IList<FContent> contentAdvantages;
+	protected IList<FContent> contentKpis;
+	protected bool foundAuthors, foundAdvantages, foundKpis;
+	protected int numPage, modelPageNum, itemsXpage, orderBy;
 	protected IList<int> matchCategories = null;
-	protected IDictionary<string, IList<ContentAttachment>> attachmentsDictionary = null;
-	protected IList<ContentAttachmentLabel> attachmentsLabel = null;
-	protected IList<ContentField> contentFields = null;
+	protected string status;
 	protected string hierarchy;
 	protected string categoryid;
-	protected string detailURL = "#";
 	
 	protected List<Transfer> tresult = new List<Transfer>();
 	protected DateTime searchDtOut = DateTime.Now;
@@ -84,6 +84,7 @@ public partial class _Search : Page
 			defRedirect.Query = "";
 			Response.Redirect(defRedirect.ToString());
 		}
+
 		
 		StringBuilder builder = new StringBuilder(Request.Url.Scheme).Append("://");
 		string basePath = Request.Path.ToLower();
@@ -93,78 +94,60 @@ public partial class _Search : Page
 		Template template = null;	
 		IList<int> matchLanguages = null;
 		numPage = 1;
-		string status = "1";
-		int orderBy = 1;
-		modelPageNum = 1;
-		hierarchy = (string)HttpContext.Current.Items["hierarchy"];
-		categoryid = (string)HttpContext.Current.Items["categoryid"];
-		attachmentsDictionary = new Dictionary<string, IList<ContentAttachment>>();
-		attachmentsLabel = contentrep.getContentAttachmentLabelCached(true);
-		contentFields = new List<ContentField>();			
+		status = "1";
+		orderBy = 1;
+		modelPageNum = 1;	
 		
-		
+		contentAuthors = new List<FContent>();
+		contentAdvantages = new List<FContent>();
+		contentKpis = new List<FContent>();
+		foundAuthors = false;
+		foundAdvantages = false;
+		foundKpis = false;
+
 		if (!String.IsNullOrEmpty(Request["page"])) {
 			numPage = Convert.ToInt32(Request["page"]);
 		}
+		if (!String.IsNullOrEmpty(Request["content_preview"])) {
+			status = null;
+		}
+		
+		
+		
 		
 		try
 		{
-			if(!String.IsNullOrEmpty(Request["hierarchy"]))
-			{
-				hierarchy = Request["hierarchy"];
-			}
+			// tento di risolvere la categoria e il template in base ai parametri della request
 			if(!String.IsNullOrEmpty(Request["categoryid"]))
 			{
-				categoryid = Request["categoryid"];
-			}
-					
-			// tento di risolvere la categoria e il template in base ai parametri della request
-			if(!String.IsNullOrEmpty(categoryid))
-			{
-				category = catrep.getByIdCached(Convert.ToInt32(categoryid), true);
+				category = catrep.getByIdCached(Convert.ToInt32(Request["categoryid"]), true);
 				hierarchy = category.hierarchy;				
 			}
 			if(CategoryService.isCategoryNull(category))
 			{	
-				if(!String.IsNullOrEmpty(hierarchy))
+				if(!String.IsNullOrEmpty(Request["hierarchy"]))
 				{
+					hierarchy = Request["hierarchy"];
 					category = catrep.getByHierarchyCached(hierarchy, true);	
 				}			
-			}	
-			
+			}
+
+			//Response.Write("category:"+category.ToString()+"<br>");			
 			if(!CategoryService.isCategoryNull(category)){				
 				setMetaCategory(category);
 				if(category.idTemplate>0){
 					template = templrep.getByIdCached(category.idTemplate,true);
 				}
-			}
-										
+			}	
+
 			if(template == null)
 			{
 				template = TemplateService.resolveTemplateByVirtualPath(basePath, lang.currentLangCode, out newLangCode);
-				
-				//Response.Write("template:"+ template.ToString() +"<br>");
-				//Response.Write("category is null:"+ CategoryService.isCategoryNull(category) +"<br>");
-				
 				if(CategoryService.isCategoryNull(category) && template != null)
 				{
-					//Response.Write("template.id:"+ template.id +"<br>");
-					//Response.Write("page:"+ Page.Request.RawUrl.ToString() +"<br>");
-					
-					string pageUrl = Page.Request.RawUrl.ToString();
-					if(!String.IsNullOrEmpty(pageUrl) && pageUrl.IndexOf("?")>0){
-						pageUrl = pageUrl.Substring(0,pageUrl.IndexOf("?"));
-					}
-					//Response.Write("page after:"+ pageUrl +"<br>");
-					
-					category = catrep.getByTemplateCached(template.id, pageUrl, true);
-					
-					//Response.Write("category:"+ category.ToString() +"<br>");
-					
+					category = catrep.getByTemplateCached(template.id, Page.Request.RawUrl.ToString(), true);
 					if(!CategoryService.isCategoryNull(category))
 					{
-						//Response.Write("category:"+ category.ToString() +"<br>");
-						
 						if(String.IsNullOrEmpty(Request["lang_code"]) && !String.IsNullOrEmpty(newLangCode)){
 							HttpContext.Current.Items["lang-code"] = newLangCode;
 							lang.set();
@@ -174,12 +157,10 @@ public partial class _Search : Page
 					}
 				}
 			}
-			if(!CategoryService.isCategoryNull(category))
-			{
-				categoryid = category.id.ToString();
-			}
 			
-			if(template!=null&&category!=null){
+			if(template != null){
+				itemsXpage = template.elemXpage;
+				orderBy = template.orderBy;
 				bool langHasSubDomainActive = false;
 				string langUrlSubdomain = "";
 				Language language = langrep.getByLabel(lang.currentLangCode, true);
@@ -187,168 +168,87 @@ public partial class _Search : Page
 				{	
 					langHasSubDomainActive = language.subdomainActive;
 					langUrlSubdomain = language.urlSubdomain;
+				}								
+				
+				formAction = MenuService.resolvePageHrefUrl(builder.ToString(), modelPageNum+1, lang.currentLangCode, langHasSubDomainActive, langUrlSubdomain, category, template, true);
+				if(String.IsNullOrEmpty(formAction)){
+					formAction = "";
 				}				
-				
-				
-				formAction = MenuService.resolvePageHrefUrl(Request.Url.Scheme+"://", modelPageNum+1, lang.currentLangCode, langHasSubDomainActive, langUrlSubdomain, category, template, true);
 			}
 			
-			if(String.IsNullOrEmpty(formAction)){
-				formAction = "";
-			}			
-							
-			// tento il recupero del contenuto tramite id
-			if(!String.IsNullOrEmpty(Request["contentid"]))
+			if(!CategoryService.isCategoryNull(category))
 			{
-				content = contentrep.getByIdCached(Convert.ToInt32(Request["contentid"]), true);	
-			}			
-
-			// se non trovo nulla tento il recupero dalla categoria
-			if(ContentService.isContentNull(content))
-			{	
-				if (!String.IsNullOrEmpty(lang.currentLangCode)) {
-					matchLanguages = new List<int>();
-					matchLanguages.Add(langrep.getByLabel(lang.currentLangCode).id);
-				}
-		
-				if (!String.IsNullOrEmpty(Request["content_preview"])) {
-					status = null;
-				}
-					
-				if(!String.IsNullOrEmpty(Request["order_by"]))
-				{
-					orderBy = Convert.ToInt32(Request["order_by"]);	
-				}
-								
-				try
-				{			
-					IList<FContent> contents = contentrep.find(null,"intro",status,0,null,null,orderBy,matchCategories,matchLanguages,true,true,true,true,true);
-					
-					//Response.Write("contents != null:"+ contents!=null +"<br>");
-					
-					if(contents != null){								
-						foreach(FContent c in contents){
-							content = c;
-							break;      
-						}					
-					}	
-				}
-				catch (Exception ex){
-					//Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
-					throw;
-				}
-				
+				categoryid = category.id.ToString();
 			}
 		}catch (Exception ex){
 			//Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
-			content = null;
 		}
-		
-		//gestisco attachment
-		if(content != null)
+	
+		if (!String.IsNullOrEmpty(lang.currentLangCode)) {
+			matchLanguages = new List<int>();
+			matchLanguages.Add(langrep.getByLabel(lang.currentLangCode, true).id);
+		}
+	
+		if(!String.IsNullOrEmpty(Request["order_by"]))
 		{
-			if (!String.IsNullOrEmpty(lang.getTranslated(content.pageTitle))) {
-				_pageTitle+= " " + lang.getTranslated(content.pageTitle);
-			}else{
-				if (!String.IsNullOrEmpty(content.pageTitle)) {
-					_pageTitle+= " " + content.pageTitle;
-				}
-			}
-			
-			if (!String.IsNullOrEmpty(lang.getTranslated(content.metaDescription))) {
-				_metaDescription+= " " + lang.getTranslated(content.metaDescription);
-			}else{
-				if (!String.IsNullOrEmpty(content.metaDescription)) {
-					_metaDescription+= " " + content.metaDescription;
-				}
-			}
-			
-			if (!String.IsNullOrEmpty(lang.getTranslated(content.metaKeyword))) {
-				_metaKeyword+= " " + lang.getTranslated(content.metaKeyword);
-			}else{
-				if (!String.IsNullOrEmpty(content.metaKeyword)) {
-					_metaKeyword+= " " + content.metaKeyword;
-				}
-			}
-					
-			bool langHasSubDomainActive = false;
-			string langUrlSubdomain = "";
-			Language language = langrep.getByLabel(lang.currentLangCode, true);
-			if(!LanguageService.isLanguageNull(language))
-			{	
-				langHasSubDomainActive = language.subdomainActive;
-				langUrlSubdomain = language.urlSubdomain;
-			}
-												
-			cwwc1.elemId = content.id.ToString();
-			string cwwc1Link = MenuService.resolvePageHrefUrl(Request.Url.Scheme+"://", modelPageNum, lang.currentLangCode, langHasSubDomainActive, langUrlSubdomain, category, template, true);
-			if(cwwc1Link==null){
-				cwwc1Link = "#";
-			}
-			cwwc1.from = cwwc1Link;
-			cwwc1.hierarchy = hierarchy;
-			cwwc1.categoryId = categoryid;	
-			// set comment type
-			cwwc1.elemType="1";
-			
-			ctitle.Text = content.title;
-			csummary.Text = content.summary;
-			cdescription.Text = content.description;
-			
-			if(content.attachments != null)
-			{
-				foreach(ContentAttachment ca in content.attachments)
-				{				
-					int label = ca.fileLabel;
-					string alabel = "";
-					foreach(ContentAttachmentLabel cal in attachmentsLabel)
-					{
-						if(cal.id==label)
-						{
-							alabel = cal.description;
-							break;
-						}
-					}
-					
-					if(attachmentsDictionary.ContainsKey(alabel))
-					{
-						IList<ContentAttachment> items = null;
-						if(attachmentsDictionary.TryGetValue(alabel, out items)){
-							items.Add(ca);
-							attachmentsDictionary[alabel] = items;
-						}
-					}
-					else
-					{
-						IList<ContentAttachment> items = new List<ContentAttachment>();
-						items.Add(ca);
-						attachmentsDictionary[alabel] = items;
-					}
-				}
-			}
-			
-			// gestisco i field per contenuto
-			if(content.fields != null && content.fields.Count>0){
-				contentFields = content.fields;
-			}
+			orderBy = Convert.ToInt32(Request["order_by"]);	
 		}
-		
-		// init menu frontend
-		this.mf1.modelPageNum = this.modelPageNum;
-		this.mf1.categoryid = categoryid;	
-		this.mf1.hierarchy = hierarchy;	
-		this.mf2.modelPageNum = this.modelPageNum;
-		this.mf2.categoryid = categoryid;	
-		this.mf2.hierarchy = hierarchy;	
-		this.mf3.modelPageNum = this.modelPageNum;
-		this.mf3.categoryid = categoryid;	
-		this.mf3.hierarchy = hierarchy;
-		//this.mf4.modelPageNum = this.modelPageNum;
-		//this.mf4.categoryid = categoryid;	
-		//this.mf4.hierarchy = hierarchy;
-		this.mf5.modelPageNum = this.modelPageNum;
-		this.mf5.categoryid = categoryid;	
-		this.mf5.hierarchy = hierarchy;		
+						
+		try
+		{			
+			IList<FContent> contents = contentrep.find(null,null,status,0,null,null,orderBy,matchCategories,matchLanguages,true,true,true,true,true);
+			
+			//Response.Write("contents != null:"+ contents!=null +"<br>");
+			
+			if(contents != null && contents.Count>0){			
+				
+				foreach(FContent c in contents){
+					if (!String.IsNullOrEmpty(lang.getTranslated(c.metaDescription))) {
+						_metaDescription+= " " + lang.getTranslated(c.metaDescription);
+					}else{
+						if (!String.IsNullOrEmpty(c.metaDescription)) {
+							_metaDescription+= " " + c.metaDescription;
+						}
+					}
+					
+					if (!String.IsNullOrEmpty(lang.getTranslated(c.metaKeyword))) {
+						_metaKeyword+= " " + lang.getTranslated(c.metaKeyword);
+					}else{
+						if (!String.IsNullOrEmpty(c.metaKeyword)) {
+							_metaKeyword+= " " + c.metaKeyword;
+						}
+					}   
+					
+					if("author".Equals(c.keyword)){
+						contentAuthors.Add(c);					
+					}
+					
+					if("adv".Equals(c.keyword)){
+						contentAdvantages.Add(c);	
+					}
+					
+					if("kpis".Equals(c.keyword)){
+						contentKpis.Add(c);	
+					}
+				}
+				
+				if(contentAuthors != null && contentAuthors.Count>0){
+					foundAuthors = true;
+				}
+				if(contentAdvantages != null && contentAdvantages.Count>0){
+					foundAdvantages = true;		
+				}
+				if(contentKpis != null && contentKpis.Count>0){
+					foundKpis = true;		
+				}
+			}	
+		}
+		catch (Exception ex){
+			//Response.Write("An error occured: " + ex.Message+"<br><br><br>"+ex.StackTrace);
+			contentAuthors = new List<FContent>();
+			contentAdvantages = new List<FContent>();
+			contentKpis = new List<FContent>();
+		}		
 	}
 	
 	private void setMetaCategory(Category category)

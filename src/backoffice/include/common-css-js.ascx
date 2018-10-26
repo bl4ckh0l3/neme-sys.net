@@ -18,10 +18,10 @@ protected void Page_Load(Object sender, EventArgs e)
 	Session.CodePage  = 65001;	
 }
 </script>
-<link rel="stylesheet" href="/backoffice/css/jquery-ui-latest.custom.css" type="text/css">
+<link rel="stylesheet" href="/backoffice/css/jquery-ui.min.css" type="text/css">
 <link rel="stylesheet" href="/backoffice/css/jquery.datetimepicker.css" type="text/css">
 <script type="text/javascript" src="/common/js/jquery-latest.min.js"></script>
-<script type="text/javascript" src="/common/js/jquery-ui-latest.custom.min.js"></script>
+<script type="text/javascript" src="/common/js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/common/js/jquery.google-analytics.js"></script>
 <!--script type="text/javascript" src="/common/js/jquery-ui-timepicker-addon.js"></script-->
 <script type="text/javascript" src="/common/js/jquery.form.min.js"></script>

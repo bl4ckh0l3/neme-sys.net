@@ -147,8 +147,8 @@ namespace com.nemesys.services
 			System.Web.HttpContext.Current.Response.Write("<b>TemplateService.resolveDefaultPath:</b><br>");
 			System.Web.HttpContext.Current.Response.Write("<b>0- scheme:</b>"+scheme+"<br>");
 			System.Web.HttpContext.Current.Response.Write("<b>1- currentLangCode:</b>"+currentLangCode+"<br>");
-			System.Web.HttpContext.Current.Response.Write("<b>1- categoryid:</b>"+categoryid+"<br>");
-			System.Web.HttpContext.Current.Response.Write("<b>1- hierarchy:</b>"+hierarchy+"<br>");
+			System.Web.HttpContext.Current.Response.Write("<b>2- categoryid:</b>"+categoryid+"<br>");
+			System.Web.HttpContext.Current.Response.Write("<b>3- hierarchy:</b>"+hierarchy+"<br>");
 			*/
 			
 			try
@@ -164,7 +164,8 @@ namespace com.nemesys.services
 					category = catrep.findFirstCategoryCached(true);					
 				}
 				
-				if(!CategoryService.isCategoryNull(category)){							
+				if(!CategoryService.isCategoryNull(category)){	
+					//System.Web.HttpContext.Current.Response.Write("<b>4- category:</b>"+category.ToString()+"<br>");
 					// recupero l'id template corretto in base alla lingua
 					int templateId = category.idTemplate;
 					Template template = null;
@@ -173,7 +174,7 @@ namespace com.nemesys.services
 					}
 					if(!TemplateService.isTemplateNull(template))
 					{
-						//Response.Write("template:"+template.ToString()+"<br>");
+						//System.Web.HttpContext.Current.Response.Write("template:"+template.ToString()+"<br>");
 						bool langHasSubDomainActive = false;
 						string langUrlSubdomain = "";
 						Language language = langrep.getByLabel(currentLangCode, true);									

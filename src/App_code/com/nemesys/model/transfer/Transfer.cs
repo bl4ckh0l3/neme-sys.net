@@ -22,6 +22,7 @@ namespace com.nemesys.model
 		private DateTime _dRtn;
 		private string _from;
 		private string _to;
+		private string _deeplink;
 		
 		public Transfer(){}
 
@@ -93,6 +94,11 @@ namespace com.nemesys.model
 		public virtual string to {
 			get { return _to; }
 			set { _to = value; }
+		}
+
+		public virtual string deeplink {
+			get { return _deeplink; }
+			set { _deeplink = value; }
 		}
 
 		public virtual int CompareTo(Transfer other)
@@ -172,7 +178,8 @@ namespace com.nemesys.model
 			.Append(" - dOut: ").Append(this._dOut)
 			.Append(" - dRtn: ").Append(this._dRtn)
 			.Append(" - from: ").Append(this._from)
-			.Append(" - to: ").Append(this._to);
+			.Append(" - to: ").Append(this._to)
+			.Append(" - deeplink: ").Append(this._deeplink);
 			
 			return builder.ToString();			
 		}

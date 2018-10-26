@@ -39,6 +39,7 @@ public partial class _Results : Page
 	protected string minDuration = "0";
 	protected string maxDuration = "0";
 	protected string durationsRange = "";
+	protected int passengers = 0;
 	
 	private string _pageTitle;	
 	public string pageTitle {
@@ -72,7 +73,9 @@ public partial class _Results : Page
 		ILanguageRepository langrep = RepositoryFactory.getInstance<ILanguageRepository>("ILanguageRepository");
 		ICategoryRepository catrep = RepositoryFactory.getInstance<ICategoryRepository>("ICategoryRepository");
 		ITemplateRepository templrep = RepositoryFactory.getInstance<ITemplateRepository>("ITemplateRepository");
+		ILoggerRepository lrep = RepositoryFactory.getInstance<ILoggerRepository>("ILoggerRepository");
 		confservice = new ConfigurationService();
+		Logger log = new Logger();
 
 		//se il sito � offline rimando a pagina default
 		if ("1".Equals(confservice.get("go_offline").value)) 
@@ -82,7 +85,7 @@ public partial class _Results : Page
 			defRedirect.Path = "";			
 			defRedirect.Query = "";
 			Response.Redirect(defRedirect.ToString());
-		}
+		}	
 		
 		StringBuilder builder = new StringBuilder(Request.Url.Scheme).Append("://");
 		string basePath = Request.Path.ToLower();
@@ -101,9 +104,17 @@ public partial class _Results : Page
 		attachmentsLabel = contentrep.getContentAttachmentLabelCached(true);
 		contentFields = new List<ContentField>();
 		
+		//url for search api development
+		//string baseSearchApi = "https://orange.indigo-connect.com/e/3/search?";
+		//string baseApiKey = "priv_FwHibPUhdRhesMuwFLRFPHfAb";
+		
+		//url for search api production
+		string baseSearchApi = "https://green.indigo-connect.com/e/3/search?";
+		string baseApiKey = "priv_pmYRungYEWXcwmftLgPyVAeiQvpXdLPJvY";
+		
 		if (!String.IsNullOrEmpty(Request["page"])) {
 			numPage = Convert.ToInt32(Request["page"]);
-		}
+		}		
 		
 		try
 		{
@@ -202,7 +213,7 @@ public partial class _Results : Page
 								
 				try
 				{			
-					IList<FContent> contents = contentrep.find(null,null,status,0,null,null,orderBy,matchCategories,matchLanguages,true,true,true,true,true);
+					IList<FContent> contents = contentrep.find(null,"search-results",status,0,null,null,orderBy,matchCategories,matchLanguages,true,true,true,true,true);
 					
 					//Response.Write("contents != null:"+ contents!=null +"<br>");
 					
@@ -259,17 +270,7 @@ public partial class _Results : Page
 				langHasSubDomainActive = language.subdomainActive;
 				langUrlSubdomain = language.urlSubdomain;
 			}
-												
-			cwwc1.elemId = content.id.ToString();
-			string cwwc1Link = MenuService.resolvePageHrefUrl(Request.Url.Scheme+"://", modelPageNum, lang.currentLangCode, langHasSubDomainActive, langUrlSubdomain, category, template, true);
-			if(cwwc1Link==null){
-				cwwc1Link = "#";
-			}
-			cwwc1.from = cwwc1Link;
-			cwwc1.hierarchy = hierarchy;
-			cwwc1.categoryId = categoryid;	
-			// set comment type
-			cwwc1.elemType="1";
+
 			
 			ctitle.Text = content.title;
 			csummary.Text = content.summary;
@@ -313,39 +314,27 @@ public partial class _Results : Page
 			}
 		}
 		
-		// init menu frontend
-		this.mf1.modelPageNum = this.modelPageNum;
-		this.mf1.categoryid = categoryid;	
-		this.mf1.hierarchy = hierarchy;	
-		this.mf2.modelPageNum = this.modelPageNum;
-		this.mf2.categoryid = categoryid;	
-		this.mf2.hierarchy = hierarchy;	
-		this.mf3.modelPageNum = this.modelPageNum;
-		this.mf3.categoryid = categoryid;	
-		this.mf3.hierarchy = hierarchy;
-		//this.mf4.modelPageNum = this.modelPageNum;
-		//this.mf4.categoryid = categoryid;	
-		//this.mf4.hierarchy = hierarchy;
-		this.mf5.modelPageNum = this.modelPageNum;
-		this.mf5.categoryid = categoryid;	
-		this.mf5.hierarchy = hierarchy;
 		
 		
 		
-		
-		/*************  START TRANFER SEARCH **************/
+		/*************  START TRANFER SEARCH **************/		
 		
 		string sfrom_type = Request["from_type"];
 		string sfrom = Request["pickupLatitude"]+","+Request["pickupLongitude"];
 		string sto_type = Request["to_type"];
 		string sto = Request["dropoffLatitude"]+","+Request["dropoffLongitude"];
-		string sdtout = Request["pickupDate"]+"T12:00";
+		//string sdtout = Request["pickupDate"]+"T12:00";
+		//string sdtout = DateTime.ParseExact(Request["pickupDate"], "dd/MM/yyyyTHH:mm", null).ToString("yyyy-MM-ddTHH:mm");
+		string sdtout = DateTime.ParseExact(Request["pickupDate"], "dd/MM/yyyy HH:mm", null).ToString("yyyy-MM-ddTHH:mm");
 		string sdtrtn = "";
 		if(!string.IsNullOrEmpty(Request["returnDate"])){
-			sdtrtn = Request["returnDate"]+"T12:00";
+			//sdtrtn = Request["returnDate"]+"T12:00";
+			//sdtrtn = DateTime.ParseExact(Request["returnDate"], "dd/MM/yyyyTHH:mm", null).ToString("yyyy-MM-ddTHH:mm");
+			sdtrtn = DateTime.ParseExact(Request["returnDate"], "dd/MM/yyyy HH:mm", null).ToString("yyyy-MM-ddTHH:mm");
 		}
+		passengers = Convert.ToInt32(Request["passenger"]);
 		
-		string urlCall = "https://orange.indigo-connect.com/e/3/search?";
+		string urlCall = baseSearchApi;
 		urlCall+="from_type="+sfrom_type;
 		urlCall+="&from="+sfrom;
 		urlCall+="&to_type="+sto_type;
@@ -354,11 +343,19 @@ public partial class _Results : Page
 		if(!string.IsNullOrEmpty(sdtrtn)){
 			urlCall+="&rtn_dt="+sdtrtn;
 		}
+		urlCall+="&language="+lang.currentLangCode.ToLower();
+		
+		//Response.Write(urlCall);
+		log.usr= "frontend";
+		log.msg = "save transfer search: "+urlCall;
+		log.type = "info";
+		log.date = DateTime.Now;
+		lrep.write(log);
 
 		RestClient client = new com.nemesys.model.RestClient();
 		
 		client.Headers = new Dictionary<string,string>();
-		client.Headers.Add("api-key","priv_FwHibPUhdRhesMuwFLRFPHfAb");
+		client.Headers.Add("api-key",baseApiKey);
 		client.EndPoint = @urlCall;		
 		
 		string jsonresult = "";
@@ -387,15 +384,25 @@ public partial class _Results : Page
 					foreach(JToken jt in results){
 						Transfer t = new Transfer();
 						
-						string service_name = jt.SelectToken("out.service_name").ToString();
-						string op = jt.SelectToken("out.operator").ToString();		
+						string service_type = jt.SelectToken("summary.booking.mode").ToString();
+						if (!String.IsNullOrEmpty(service_type)) {
+							if(!String.IsNullOrEmpty(lang.getTranslated("frontend.transfer.result.type.label."+service_type))){
+								service_type = lang.getTranslated("frontend.transfer.result.type.label."+service_type);
+							}
+						}
+						//Response.Write("service_name: "+service_name+"<br>");
+						string op = jt.SelectToken("out.operator").ToString();	
+						//Response.Write("operator: "+op+"<br>");	
 						string seats = jt.SelectToken("out.max_pax").ToString();
+						//Response.Write("seats: 1-"+seats+" passeggeri<br>");
 						
-						string logo = jt.SelectToken("summary.logo.bw").ToString();
+						//string logo = jt.SelectToken("summary.logo.bw").ToString();
+						string logo = jt.SelectToken("summary.logo").ToString();
+						//Response.Write("<img src="+logo+" width=70 align=left><br>");
 						string image = jt.SelectToken("summary.image").ToString();
+						//Response.Write("<img src="+image+" width=200 align=left><br>");
 						
 						string luggage = "";
-						//IList<JToken> luggages = jt["extras"]["out"].Children().ToList();
 						var luggages = jt["extras"]["out"].Children();
 						foreach(JToken jl in luggages){
 							if("bagstandard".Equals(jl.SelectToken("name").ToString())){
@@ -403,10 +410,24 @@ public partial class _Results : Page
 								break;
 							}
 						}
+						//Response.Write(luggage +" valigie<br>");	
 						
-						string duration = jt.SelectToken("summary.out.duration").ToString();			
+						//string duration = jt.SelectToken("summary.out.duration").ToString();
+						//Response.Write("duration: "+duration+"<br>");	
+						
+						// calculate trip duration based on departur and arrival date; the duration fields it's inconsistent
+						string dt = jt.SelectToken("summary.out.dt").ToString();
+						string dtArrive = jt.SelectToken("summary.out.dt_arrive").ToString();
+						DateTime dtParsed = DateTime.Parse(dt);
+						DateTime dtArriveParsed = DateTime.Parse(dtArrive);
+						System.TimeSpan diffResult = dtArriveParsed.Subtract(dtParsed);
+						int duration = Convert.ToInt32(diffResult.TotalMinutes);
+						//Response.Write("duration: "+duration+"<br>");	
+						
 						string cost = jt.SelectToken("cost.user_amount").ToString();
 						string currency = jt.SelectToken("cost.user_currency").ToString();
+						
+						//Response.Write("amount: "+currency+" "+cost+"<br>");
 						
 						string dOut = jt.SelectToken("out_dt").ToString();
 						string dRtn = null;
@@ -415,36 +436,29 @@ public partial class _Results : Page
 						}
 						string from = jt.SelectToken("out.from.display2").ToString();
 						string to = jt.SelectToken("out.to.display2").ToString();
-	 
-						//Response.Write("service_name: "+service_name+"<br>");
-						//Response.Write("<img src="+logo+" width=70 align=left><br>");
-						//Response.Write("operator: "+op+"<br>");
-						//Response.Write("seats: 1-"+seats+" passeggeri<br>");
-						//Response.Write("<img src="+image+" width=200 align=left><br>");
-						//Response.Write("amount: "+currency+" "+cost+"<br>");
-						//Response.Write("duration: "+date+"<br>");
-						//Response.Write(luggage +" valigie<br>");					
-		
-		
-						if(counter % 3==0){
-							service_name="traco";
-						}					
 						
-						t.serviceName=service_name;
+						string deeplink = jt.SelectToken("deeplink.landing").ToString();
+				
+						
+						t.serviceName=service_type;
 						t.operatorName=op;
 						t.seat=Convert.ToInt32(seats);
 						t.logo=logo;
 						t.image=image;
 						t.maxLuggage=Convert.ToInt32(luggage);
-						t.duration=Convert.ToInt32(duration);
+						//t.duration=Convert.ToInt32(duration);
+						t.duration=duration;
 						t.amount=Convert.ToDecimal(cost);
 						t.currency=currency;
-						t.dOut = DateTime.ParseExact(dOut, "dd/MM/yyyy hh:mm:ss", null);
+						//t.dOut = DateTime.ParseExact(dOut, "yyyy-MM-ddTHH:mm:ss", null);
+						t.dOut = DateTime.Parse(dOut);
 						if(!string.IsNullOrEmpty(dRtn)){
-							t.dRtn = DateTime.ParseExact(dRtn, "dd/MM/yyyy hh:mm:ss", null);
+							//t.dRtn = DateTime.ParseExact(dRtn, "yyyy-MM-ddTHH:mm:ss", null);
+							t.dRtn = DateTime.Parse(dRtn);
 						}
 						t.from = from;
 						t.to = to;
+						t.deeplink = deeplink;
 						
 						tresult.Add(t);
 						

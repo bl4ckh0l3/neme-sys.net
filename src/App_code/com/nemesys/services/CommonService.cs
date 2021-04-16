@@ -11,6 +11,7 @@ using System.Threading;
 using System.Web.Caching;
 using System.Xml;
 using System.IO;
+using System.Linq;
 using com.nemesys.model;
 
 namespace com.nemesys.services
@@ -52,8 +53,12 @@ namespace com.nemesys.services
 			{	    
 				DateTime current = DateTime.Now;
 				int syyyy = current.Year;
-				int eyyyy = syyyy-yearsRange;
-				copyright=eyyyy+"-"+syyyy;
+				if(yearsRange==0){
+					copyright=syyyy.ToString();
+				}else{
+					int eyyyy = syyyy-yearsRange;
+					copyright=eyyyy+"-"+syyyy;
+				}
 			}
 			catch (Exception ex)
 			{
@@ -61,6 +66,17 @@ namespace com.nemesys.services
 			}
 			return copyright;			
 		}
+
+		public static string getCurrencySymbol(string code)  
+		{  
+		 System.Globalization.RegionInfo regionInfo = (from culture in System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.InstalledWin32Cultures)  
+					  where culture.Name.Length > 0 && !culture.IsNeutralCulture  
+					  let region = new System.Globalization.RegionInfo(culture.LCID)  
+					  where String.Equals(region.ISOCurrencySymbol, code, StringComparison.InvariantCultureIgnoreCase)  
+					  select region).First();  
+		
+		 return regionInfo.CurrencySymbol;  
+		}		
 		
 		public static string encodeTo64(string toEncode)
 		{

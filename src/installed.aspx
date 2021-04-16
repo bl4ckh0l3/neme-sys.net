@@ -15,6 +15,8 @@ protected void Page_Load(Object sender, EventArgs e)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>installed page</title>
+<meta name="robots" content="noindex">
+<meta name="googlebot" content="noindex">
 <meta name="autore" content="Neme-sys; email:info@neme-sys.org">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link rel="stylesheet" href="/public/layout/css/stile.css" type="text/css">

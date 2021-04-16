@@ -4,6 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
 	<title></title>
+	<meta name="robots" content="noindex">
+	<meta name="googlebot" content="noindex">
 </head>
 <%if(!String.IsNullOrEmpty(resolved)) {%>
 	<body onload="document.controller_redirect.submit();"><!--  -->

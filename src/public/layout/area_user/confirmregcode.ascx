@@ -84,6 +84,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title><%=lang.getTranslated("frontend.page.title")%></title>
+<meta name="robots" content="noindex">
+<meta name="googlebot" content="noindex">
 <meta name="autore" content="Neme-sys; email:info@neme-sys.org">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <CommonCssJs:insert runat="server" />

@@ -319,7 +319,7 @@ public partial class _OrderList : Page
 		}
 		catch (Exception ex)
 		{
-			Response.Write("An error occured: " + ex.Message);
+			//Response.Write("An error occured: " + ex.Message);
 			totalOrderc = 0;
 			showChart = false;
 			chartReference = "";

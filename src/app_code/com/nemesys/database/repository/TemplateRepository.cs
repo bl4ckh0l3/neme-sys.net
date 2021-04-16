@@ -102,7 +102,7 @@ namespace com.nemesys.database.repository
 				{ 
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}				 
-				else if(cacheKey.Contains("template-directory-"+template.directory))
+				else if(cacheKey.Contains("template-directory-"))
 				{ 
 					HttpContext.Current.Cache.Remove(cacheKey);
 				}				 
@@ -180,7 +180,7 @@ namespace com.nemesys.database.repository
 					{ 
 						HttpContext.Current.Cache.Remove(cacheKey);
 					}				 
-					else if(cacheKey.Contains("template-directory-"+template.directory))
+					else if(cacheKey.Contains("template-directory-"))
 					{ 
 						HttpContext.Current.Cache.Remove(cacheKey);
 					}				 
@@ -664,7 +664,11 @@ namespace com.nemesys.database.repository
 				else if(cacheKey.Contains("template-urlrewrite-"))
 				{ 
 					HttpContext.Current.Cache.Remove(cacheKey);
-				} 
+				}  
+				else if(cacheKey.Contains("template-directory-"))
+				{ 
+					HttpContext.Current.Cache.Remove(cacheKey);
+				}
 				else if(cacheKey.Contains("category-"))
 				{ 
 					HttpContext.Current.Cache.Remove(cacheKey);
